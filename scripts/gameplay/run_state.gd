@@ -6,20 +6,40 @@ const GRID_SIZE := Vector2i(6, 4)
 const MAX_LEVEL := 3
 const DEFINITIONS := {
 	"sword": {"name": "旅人短剑", "size": Vector2i(1, 2), "cost": 4, "description": "每 1.25 秒攻击。相同装备可合成；短剑 + 磨刀石 = 长剑。", "category": "weapon", "color": "a7c5d5"},
-	"longsword": {"name": "淬锋长剑", "size": Vector2i(1, 2), "cost": 8, "description": "每 1.35 秒重击。由短剑和磨刀石合成。", "category": "weapon", "color": "eed898"},
+	"longsword": {"name": "淬锋长剑", "size": Vector2i(1, 3), "cost": 8, "description": "占据三格，每 1.35 秒重击。长剑 + 火种 = 焰纹大剑。", "category": "weapon", "color": "eed898"},
+	"flame_sword": {"name": "焰纹大剑", "size": Vector2i(1, 3), "cost": 12, "description": "每 1.4 秒斩击，造成强力火焰伤害。", "category": "weapon", "color": "ef9c65"},
+	"thorn_shield": {"name": "荆棘木盾", "size": Vector2i(2, 2), "cost": 9, "description": "提供护甲，受到攻击后向敌人反弹伤害。", "category": "armor", "color": "91b77c"},
+	"windbow": {"name": "逐风猎弓", "size": Vector2i(3, 1), "cost": 9, "description": "占据三格，每 0.9 秒射击，增加 8% 暴击。", "category": "weapon", "color": "9acdbb"},
+	"greater_potion": {"name": "浓缩暖心药", "size": Vector2i(1, 2), "cost": 8, "description": "每战一次：生命低于 50% 时大量恢复生命。", "category": "healing", "color": "dea3d2"},
 	"shield": {"name": "橡木圆盾", "size": Vector2i(2, 2), "cost": 6, "description": "护甲减少每次受到的伤害，至少承受 1 点。", "category": "armor", "color": "c99662"},
 	"bow": {"name": "林地猎弓", "size": Vector2i(2, 1), "cost": 5, "description": "每 1.05 秒射击，并增加 5% 暴击率。", "category": "weapon", "color": "cba87b"},
 	"herb": {"name": "月露草", "size": Vector2i(1, 1), "cost": 3, "description": "战斗中每 2 秒恢复生命；升级提升恢复量。", "category": "healing", "color": "8cc89b"},
 	"potion": {"name": "暖心药水", "size": Vector2i(1, 1), "cost": 5, "description": "每场战斗一次：生命低于 50% 时自动治疗。", "category": "healing", "color": "e0a4b6"},
-	"whetstone": {"name": "银纹磨刀石", "size": Vector2i(1, 1), "cost": 4, "description": "上下左右相邻武器增加攻击力。与短剑合成长剑。", "category": "support", "color": "b1abc7"},
+	"whetstone": {"name": "银纹磨刀石", "size": Vector2i(1, 1), "cost": 4, "description": "强化左右蓝点上的武器；旋转后强化上下。与短剑合成长剑。", "category": "support", "color": "b1abc7"},
 	"ember": {"name": "不熄火种", "size": Vector2i(1, 1), "cost": 4, "description": "增加暴击率，相邻武器获得额外攻击力。", "category": "support", "color": "efad68"},
 }
+const RECIPES: Array[Dictionary] = [
+	{"first": "sword", "second": "whetstone", "result": "longsword", "label": "淬锋锻造"},
+	{"first": "longsword", "second": "ember", "result": "flame_sword", "label": "焰纹锻造"},
+	{"first": "shield", "second": "herb", "result": "thorn_shield", "label": "荆棘编织"},
+	{"first": "bow", "second": "ember", "result": "windbow", "label": "逐风附魔"},
+	{"first": "potion", "second": "herb", "result": "greater_potion", "label": "暖心浓缩"},
+]
+const BLESSINGS := {
+	"vitality": {"name": "旅人的韧性", "description": "最大生命 +18，并恢复 18 点生命。", "icon": "vitality", "max_hp": 18, "heal": 18},
+	"coin_pouch": {"name": "路边的宝藏", "description": "立即获得 8 金币，下一次补给更从容。", "icon": "fortune", "gold": 8},
+	"keen_edge": {"name": "破甲之锋", "description": "每件武器攻击 +2，护甲 -1。", "icon": "fury", "attack_bonus": 2, "armor_bonus": -1},
+	"ironbark": {"name": "古树庇佑", "description": "护甲 +2，暴击率 -3%。", "icon": "bastion", "armor_bonus": 2, "crit_bonus": -0.03},
+	"moonwater": {"name": "月露低语", "description": "战斗中每 2 秒额外恢复 2 点生命。", "icon": "renewal", "regen_bonus": 2},
+	"focus": {"name": "孤注一掷", "description": "暴击率 +12%，每 2 秒恢复量 -1。", "icon": "precision", "crit_bonus": 0.12, "regen_bonus": -1},
+	"campfire": {"name": "温暖营火", "description": "立即恢复 28 点生命；每 2 秒恢复量 +1。", "icon": "potion", "heal": 28, "regen_bonus": 1},
+}
 const ENEMIES := [
-	{"name": "苔团", "hp": 72, "attack": 8, "interval": 1.8},
-	{"name": "暮林狼", "hp": 112, "attack": 11, "interval": 1.7},
-	{"name": "苔刃哥布林", "hp": 166, "attack": 15, "interval": 1.7},
-	{"name": "遗迹树卫", "hp": 238, "attack": 19, "interval": 1.6},
-	{"name": "灰烬树王", "hp": 350, "attack": 24, "interval": 1.5},
+	{"name": "苔团", "hp": 72, "attack": 8, "interval": 1.8, "trait": "行动缓慢，适合试验装备与蓝点布局。"},
+	{"name": "暮林狼", "hp": 112, "attack": 11, "interval": 1.7, "trait": "攻击更频繁，盾牌能减轻每次伤害。"},
+	{"name": "苔刃哥布林", "hp": 166, "attack": 15, "interval": 1.7, "trait": "生命与攻击提高，合成装备能加快战斗。"},
+	{"name": "遗迹树卫", "hp": 238, "attack": 19, "interval": 1.6, "trait": "耐久强敌，护甲与持续恢复尤其有用。"},
+	{"name": "灰烬树王", "hp": 350, "attack": 24, "interval": 1.5, "trait": "最终首领，用高阶装备和祝福挑战它。"},
 ]
 const SHOP_POOL := ["sword", "shield", "bow", "herb", "potion", "whetstone", "ember"]
 const SIMULATION_STEP := 0.05
@@ -38,6 +58,9 @@ var battle_time: float = 0.0
 var battle_duration: float = 0.0
 var last_reward: int = 0
 var reroll_cost: int = 2
+var reward_choices: Array[String] = []
+var blessings: Array[String] = []
+var reward_chosen: bool = false
 
 var _rng := RandomNumberGenerator.new()
 var _next_uid: int = 1
@@ -60,9 +83,13 @@ func new_run(seed_value: int = 12345) -> void:
 	max_hp = 100
 	_next_uid = 1
 	items.clear()
+	reward_choices.clear()
+	blessings.clear()
+	reward_chosen = false
 	_add_item("sword", Vector2i(0, 0))
 	_add_item("sword", Vector2i(1, 0))
-	_add_item("whetstone", Vector2i(0, 2))
+	var starting_stone: Dictionary = _add_item("whetstone", Vector2i(0, 2))
+	starting_stone["rotated"] = true
 	shop_offers.assign(["shield", "herb", "bow", "ember"])
 	battle_time = 0.0
 	battle_duration = 0.0
@@ -74,6 +101,15 @@ func new_run(seed_value: int = 12345) -> void:
 
 func get_definition(kind: String) -> Dictionary:
 	return DEFINITIONS.get(kind, {}).duplicate(true)
+
+func get_blessing_definition(id: String) -> Dictionary:
+	return BLESSINGS.get(id, {}).duplicate(true)
+
+func get_enemy_info() -> Dictionary:
+	var info: Dictionary = ENEMIES[clampi(wave - 1, 0, ENEMIES.size() - 1)].duplicate(true)
+	info["wave"] = wave
+	info["is_boss"] = wave == ENEMIES.size()
+	return info
 
 func get_item_size(item: Dictionary) -> Vector2i:
 	var size: Vector2i = DEFINITIONS.get(item.get("kind", ""), {}).get("size", Vector2i.ONE)
@@ -168,20 +204,44 @@ func get_merge_result(source: Dictionary, target: Dictionary) -> String:
 	var target_kind: String = target.get("kind", "")
 	if source_kind == target_kind and source.get("level", 1) == target.get("level", 1) and int(target.get("level", 1)) < MAX_LEVEL:
 		return source_kind
-	if (source_kind == "sword" and target_kind == "whetstone") or (source_kind == "whetstone" and target_kind == "sword"):
-		return "longsword"
+	for recipe in RECIPES:
+		if (source_kind == recipe["first"] and target_kind == recipe["second"]) or (source_kind == recipe["second"] and target_kind == recipe["first"]):
+			return recipe["result"]
 	return ""
 
 func can_merge(source: Dictionary, target: Dictionary) -> bool:
 	var merged: Dictionary = _get_merged_item(source, target)
 	return not merged.is_empty() and _fits(merged, merged["pos"], [source.get("uid", -1), target.get("uid", -2)])
 
+func get_merge_preview(source: Dictionary, target: Dictionary) -> Dictionary:
+	return _get_merged_item(source, target).duplicate(true)
+
+func get_support_cells(item: Dictionary) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	var directions: Array[Vector2i] = []
+	if item.get("kind", "") == "whetstone":
+		directions.assign([Vector2i.UP, Vector2i.DOWN] if item.get("rotated", false) else [Vector2i.LEFT, Vector2i.RIGHT])
+	elif item.get("kind", "") == "ember":
+		directions.assign([Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT])
+	var origin: Vector2i = item.get("pos", Vector2i.ZERO)
+	for direction in directions:
+		var cell: Vector2i = origin + direction
+		if Rect2i(Vector2i.ZERO, GRID_SIZE).has_point(cell):
+			result.append(cell)
+	return result
+
 func get_adjacency_bonus(item: Dictionary) -> int:
 	if DEFINITIONS[item["kind"]]["category"] != "weapon":
 		return 0
 	var bonus: int = 0
 	for support in items:
-		if not _adjacent(item, support):
+		var affected: bool = false
+		var weapon_rect := Rect2i(item["pos"], get_item_size(item))
+		for cell in get_support_cells(support):
+			if weapon_rect.has_point(cell):
+				affected = true
+				break
+		if not affected:
 			continue
 		var level_index: int = int(support["level"]) - 1
 		if support["kind"] == "whetstone":
@@ -191,8 +251,10 @@ func get_adjacency_bonus(item: Dictionary) -> int:
 	return bonus
 
 func get_weapon_damage(item: Dictionary) -> int:
-	var values: Array = {"sword": [5, 12, 27], "longsword": [10, 23, 48], "bow": [4, 10, 23]}.get(item["kind"], [0, 0, 0])
-	return int(values[int(item["level"]) - 1]) + get_adjacency_bonus(item)
+	if DEFINITIONS.get(item.get("kind", ""), {}).get("category", "") != "weapon":
+		return 0
+	var values: Array = {"sword": [5, 12, 27], "longsword": [12, 27, 56], "flame_sword": [17, 36, 72], "bow": [4, 10, 23], "windbow": [7, 17, 37]}.get(item["kind"], [0, 0, 0])
+	return maxi(1, int(values[int(item["level"]) - 1]) + get_adjacency_bonus(item) + int(_blessing_total("attack_bonus")))
 
 func get_weapon_cooldown_progress(uid: int) -> float:
 	var item: Dictionary = item_by_uid(uid)
@@ -203,7 +265,7 @@ func get_weapon_cooldown_progress(uid: int) -> float:
 	return clampf(1.0 - float(_weapon_timers[uid]) / _weapon_interval(item["kind"]), 0.0, 1.0)
 
 func get_stats() -> Dictionary:
-	var result := {"attack": 0, "armor": 0, "regen": 0, "crit": 0.05, "synergy_count": 0, "dps": 0.0}
+	var result := {"attack": 0, "armor": int(_blessing_total("armor_bonus")), "regen": int(_blessing_total("regen_bonus")), "crit": 0.05 + _blessing_total("crit_bonus"), "synergy_count": 0, "dps": 0.0, "thorns": 0}
 	for item in items:
 		var kind: String = item["kind"]
 		var level_index: int = int(item["level"]) - 1
@@ -215,13 +277,21 @@ func get_stats() -> Dictionary:
 				result["synergy_count"] += 1
 		if kind == "shield":
 			result["armor"] += [4, 8, 14][level_index]
+		elif kind == "thorn_shield":
+			result["armor"] += [5, 10, 17][level_index]
+			result["thorns"] += [3, 7, 14][level_index]
 		elif kind == "herb":
 			result["regen"] += [2, 5, 11][level_index]
 		elif kind == "ember":
 			result["crit"] += [0.08, 0.14, 0.22][level_index]
 		elif kind == "bow":
 			result["crit"] += 0.05
-	result["crit"] = minf(0.65, float(result["crit"]))
+		elif kind == "windbow":
+			result["crit"] += 0.08
+	result["armor"] = maxi(0, int(result["armor"]))
+	result["regen"] = maxi(0, int(result["regen"]))
+	result["crit"] = clampf(float(result["crit"]), 0.0, 0.65)
+	result["reflect"] = result["thorns"]
 	return result
 
 func start_battle() -> Dictionary:
@@ -259,11 +329,32 @@ func tick(delta: float) -> Array[Dictionary]:
 func claim_reward() -> Dictionary:
 	if phase != "reward":
 		return _result(false, "还没有可领取的战利品。")
+	if not reward_chosen:
+		return _result(false, "先选择一项旅途祝福，再继续出发。")
 	wave += 1
 	phase = "prepare"
+	reward_choices.clear()
+	reward_chosen = false
 	_roll_shop()
 	_set_enemy()
 	return _result(true, "前方是第 %d 场遭遇。" % wave, "prepare")
+
+func choose_reward(index: int) -> Dictionary:
+	if phase != "reward" or reward_chosen:
+		return _result(false, "当前没有可选择的旅途祝福。")
+	if index < 0 or index >= reward_choices.size():
+		return _result(false, "请选择一项旅途祝福。")
+	var id: String = reward_choices[index]
+	if not BLESSINGS.has(id) or id in blessings:
+		return _result(false, "这项旅途祝福已领取。")
+	var blessing: Dictionary = BLESSINGS[id]
+	blessings.append(id)
+	max_hp += int(blessing.get("max_hp", 0))
+	hp = mini(max_hp, hp + int(blessing.get("heal", 0)))
+	gold += int(blessing.get("gold", 0))
+	reward_choices.clear()
+	reward_chosen = true
+	return _result(true, "获得祝福：" + str(blessing["name"]) + "。", "blessing")
 
 func _add_item(kind: String, pos: Vector2i, level: int = 1) -> Dictionary:
 	var item := {"uid": _next_uid, "kind": kind, "level": level, "pos": pos, "rotated": false}
@@ -288,7 +379,7 @@ func _merge(source: Dictionary, target: Dictionary) -> Dictionary:
 	if merged.is_empty():
 		return _result(false, "同类同级物品才可升级。")
 	if not _fits(merged, merged["pos"], [source["uid"], target["uid"]]):
-		return _result(false, "合成后的长剑需要两格空间。")
+		return _result(false, "合成后的装备放不下，先腾出空间或旋转材料。")
 	var owned_source: Dictionary = item_by_uid(source["uid"])
 	if not owned_source.is_empty():
 		items.erase(owned_source)
@@ -302,8 +393,10 @@ func _get_merged_item(source: Dictionary, target: Dictionary) -> Dictionary:
 	var merged: Dictionary = target.duplicate()
 	merged["kind"] = result_kind
 	merged["level"] = int(target["level"]) + 1 if source["kind"] == target["kind"] else maxi(int(source["level"]), int(target["level"]))
-	if result_kind == "longsword" and target["kind"] == "whetstone":
-		merged["rotated"] = source.get("rotated", false)
+	for recipe in RECIPES:
+		if recipe["result"] == result_kind and source["kind"] == recipe["first"]:
+			merged["rotated"] = source.get("rotated", false)
+			break
 	return merged
 
 func _adjacent(a: Dictionary, b: Dictionary) -> bool:
@@ -314,7 +407,25 @@ func _adjacent(a: Dictionary, b: Dictionary) -> bool:
 	return ((ar.end.x == br.position.x or br.end.x == ar.position.x) and vertical_overlap) or ((ar.end.y == br.position.y or br.end.y == ar.position.y) and horizontal_overlap)
 
 func _weapon_interval(kind: String) -> float:
-	return {"sword": 1.25, "longsword": 1.35, "bow": 1.05}.get(kind, 1.25)
+	return {"sword": 1.25, "longsword": 1.35, "flame_sword": 1.4, "bow": 1.05, "windbow": 0.9}.get(kind, 1.25)
+
+func _blessing_total(key: String) -> float:
+	var total: float = 0.0
+	for id in blessings:
+		total += float(BLESSINGS.get(id, {}).get(key, 0.0))
+	return total
+
+func _roll_rewards() -> void:
+	reward_choices.clear()
+	reward_chosen = false
+	var available: Array[String] = []
+	for id in BLESSINGS:
+		if id not in blessings:
+			available.append(id)
+	for index in range(mini(3, available.size())):
+		var selected: int = _rng.randi_range(0, available.size() - 1)
+		reward_choices.append(available[selected])
+		available.remove_at(selected)
 
 func _roll_shop() -> void:
 	shop_offers.clear()
@@ -356,15 +467,30 @@ func _step_battle(step: float, events: Array[Dictionary]) -> void:
 			phase = "lost"
 			events.append({"type": "defeat", "uid": -1, "amount": 0})
 			return
+		var reflected: int = int(_battle_stats.get("reflect", 0))
+		if reflected > 0:
+			enemy_hp = maxi(0, enemy_hp - reflected)
+			var shield_uid: int = -1
+			for shield in items:
+				if shield["kind"] == "thorn_shield":
+					shield_uid = shield["uid"]
+					break
+			events.append({"type": "reflect", "uid": shield_uid, "source_uid": shield_uid, "amount": reflected, "critical": false, "reflected": true, "target": "enemy"})
+			if enemy_hp == 0:
+				_finish_victory(events)
+				return
 	_regen_timer -= step
 	if _regen_timer <= 0.0:
 		_regen_timer += 2.0
 		_heal(int(_battle_stats["regen"]), -1, events)
 	if hp <= max_hp / 2:
 		for item in items:
-			if item["kind"] == "potion" and not _potion_used.has(item["uid"]):
+			if hp > max_hp / 2:
+				break
+			if item["kind"] in ["potion", "greater_potion"] and not _potion_used.has(item["uid"]):
 				_potion_used[item["uid"]] = true
-				_heal([22, 44, 80][int(item["level"]) - 1], item["uid"], events)
+				var healing: Array = [42, 78, 130] if item["kind"] == "greater_potion" else [22, 44, 80]
+				_heal(healing[int(item["level"]) - 1], item["uid"], events)
 	if battle_time >= 90.0:
 		phase = "lost"
 		hp = 0
@@ -382,6 +508,11 @@ func _finish_victory(events: Array[Dictionary]) -> void:
 	gold += last_reward
 	hp = mini(max_hp, hp + 18)
 	phase = "won" if wave == 5 else "reward"
+	if phase == "reward":
+		_roll_rewards()
+	else:
+		reward_choices.clear()
+		reward_chosen = false
 	events.append({"type": "victory", "uid": -1, "amount": last_reward, "gold": last_reward, "final": wave == 5})
 
 func _result(ok: bool, message: String, event: String = "") -> Dictionary:

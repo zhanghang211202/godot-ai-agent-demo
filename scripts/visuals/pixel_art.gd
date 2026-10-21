@@ -17,7 +17,8 @@ const PALETTE := {
 	"S": Color("596b77"), "m": Color("98b4b6"), "L": Color("e0eeee"),
 	"G": Color("ad7d39"), "Y": Color("ebba62"), "F": Color("ffe5a3"),
 	"a": Color("446c37"), "c": Color("76a44c"), "e": Color("b6d470"),
-	"q": Color("695272"), "p": Color("ac7b9c"), "P": Color("edbecb")
+	"q": Color("695272"), "p": Color("ac7b9c"), "P": Color("edbecb"),
+	"B": Color("36536e"), "C": Color("86c8d1"), "D": Color("bde8df")
 }
 
 
@@ -27,7 +28,14 @@ static func icon(kind: String) -> Texture2D:
 	var pixels := _icon_pixels(kind)
 	var img := Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill(Color.TRANSPARENT)
-	_stamp_centered(img, pixels, PALETTE)
+	var palette := PALETTE
+	if kind == "fury":
+		palette = PALETTE.duplicate()
+		palette["L"] = Color("ffcf88")
+		palette["W"] = Color("fff0bc")
+		palette["m"] = Color("e27c55")
+		palette["S"] = Color("a74645")
+	_stamp_centered(img, pixels, palette)
 	var texture := ImageTexture.create_from_image(img)
 	_icons[kind] = texture
 	return texture
@@ -84,7 +92,155 @@ static func _stamp(img: Image, pixels: Array, offset: Vector2i, palette: Diction
 
 static func _icon_pixels(kind: String) -> Array:
 	match kind:
-		"sword":
+		"flame_sword":
+			return [
+				"......................X....",
+				".....................XyX...",
+				"...................XXyFX...",
+				"..................XoyFFX...",
+				"..................XyFWWX...",
+				"...............X.XoyFWyoX..",
+				"..............XoXXyFWyrX...",
+				"..............XyoyFWyrX....",
+				".............XoyyFWyrX.....",
+				".............XyyFWyrX......",
+				"..........X.XoyFWyrX.......",
+				".........XoXXyFWyrX........",
+				".........XyyyFWyrX.........",
+				"........XoyyFWyrX..........",
+				".....XX.XyyFWyrX...........",
+				"....XYFXyyFWyrX............",
+				"....XGYYXFWyrX.............",
+				".....XGYXXyrX..............",
+				"......XYoYYX...............",
+				".....XqXrrYYX..............",
+				"....XpqX.XYYGX.............",
+				"...XpqX...XYFX.............",
+				"..XpqX.....XX..............",
+				".XpqX......................",
+				"XYFYX......................",
+				"XFoGX......................",
+				".XGX.......................",
+				"..X........................"
+			]
+		"thorn_shield":
+			return [
+				"...........XX.............",
+				"......X...XeX....X........",
+				".....XcX.XecX...XcX.......",
+				"....XecXXXXcXXXXecX.......",
+				".....XclllbclllbcX........",
+				"..XX.XlYllllllbbX.XX......",
+				".XWlXXllXXXXXXbbXXlWX.....",
+				"..XWlXlXeecccaXbXlWX......",
+				"...XlXlXeWecccaXbXlX......",
+				"..XXlXlXeeecccaXbXlXX.....",
+				".XWllXlXeecccaaXbXllWX....",
+				"..XXlXlXeecXcaaXbXlXX.....",
+				"...XlXlXeccWcaaXbXlX......",
+				"...XlXlXccWWWaaXbXlX......",
+				"..XXlXlXcWWWWWaXbXlXX.....",
+				".XWllXlXccWWWaaXbXllWX....",
+				"..XWlXlXcccWaaaXbXlWX.....",
+				"...XlXlXcccWaaaXbXlX......",
+				"...XlXlXccaaaaaXbXlX......",
+				"....XlXlXcaaaaXbXlX.......",
+				"...XcXlXlXaaaXbXlXcX......",
+				"..XecXXlXlXXXbXlXXceX.....",
+				"...XX..XllbbbllX..XX......",
+				"........XllbllX...........",
+				".........XlbbX............",
+				"..........XbX.............",
+				"...........X.............."
+			]
+		"windbow":
+			return [
+				"...............XXXX.......",
+				"..............XDDuX.......",
+				".............XDeuX........",
+				"............XLvvgX........",
+				"...........XL.XDuvX.......",
+				"..........XL..XLDuvX......",
+				"...DDD...XL....XLDuvX.....",
+				"..D...D.XL.....XLDuvX.....",
+				".......XL.......XLDvgX....",
+				"......XL........XLDvgX....",
+				"..DD.XL.........XWvgX.....",
+				".D..XL..........XYYgX.....",
+				"...XL...........XYFgX.....",
+				"..XXXXXXXXXXXXXXXXXXXXXX..",
+				".XDDDuuuuuuuuuuuuuCYLLLX..",
+				"..XXXXXXXXXXXXXXXXXXXXXX..",
+				"...XL...........XYFgX.....",
+				".D..XL..........XYYgX.....",
+				"..DD.XL.........XWvgX.....",
+				"......XL........XLDvgX....",
+				".......XL.......XLDvgX....",
+				"..D....XL......XLDuvX.....",
+				"...DD...XL.....XLDuvX.....",
+				".........XL...XLDuvX......",
+				"..........XL..XDuvX.......",
+				"...........XL.XuvX........",
+				"............XDeuX.........",
+				".............XDuX.........",
+				"..............XX.........."
+			]
+		"greater_potion":
+			return [
+				"..........XXXXXX..........",
+				".........XLWWWmmX.........",
+				".........XWDDCmmX.........",
+				".........XXmmmSXX.........",
+				".........XlYYYGbX.........",
+				"........XXYYYYGGXX........",
+				"........XLDCCCCmSX........",
+				".........XLDCCmSX.........",
+				".........XLDCCmSX.........",
+				"........XLDCCCmmSX........",
+				".......XLDCCCCmmmSX.......",
+				"......XLDCCCCCCmmmSX......",
+				".....XLDCCCCCCCCmmmSX.....",
+				"....XLDDCCCCCCCCCmmmSX....",
+				"...XLDDCBBBBBBBBBCmmSSX...",
+				"...XLDCCBBWWBBBqBqmmSSX...",
+				"..XLDDCCBWWWBBqqqqBmmSSX..",
+				"..XLDDCCWWWBqqqqqqBmmSSX..",
+				"..XLDDCCWWWqqqqqqqBmmSSX..",
+				"..XLDCCCWWWqqqqqqqBmmSSX..",
+				"..XLDCCCBWWWqqqqWqBmmSSX..",
+				"..XLDCCCBWWWWqqWWqBmmSSX..",
+				"...XLDCCBBWWWWWWqqBmmSX...",
+				"...XLDCCBBBWWWWqqBBmmSX...",
+				"....XLDCCBBBBBBBBBmmSX....",
+				".....XLDCCCCCCCCCmmSX.....",
+				"......XXmmmmmmmmSSXX......",
+				"........XXXXXXXXXX........"
+			]
+		"precision":
+			return [
+				"........XXXXXXXX.........",
+				"......XXWWWWWWWWXX.......",
+				"....XXWWrrrrrrrrWWXX.....",
+				"...XWWrrWWWWWWWWrrWWX....",
+				"..XWWrWWWWWWWWWWWWrWWX...",
+				"..XWrWWrrXXXXrrWWWWrWX...",
+				".XWWrWrrWWWWWWrrWWWrrWX..",
+				".XWrWWrWWrrrrWWrWWWWrWX..",
+				"XWWrWWrWrrrrrrWrWWWWrWWX.",
+				"XWWrWWrWrYYYYrWrWWWWrWWX.",
+				"XWWrWWrWrYFYYrWrWWWWrWWX.",
+				"XWWrWWrWrYYYYrWrWWWWrWWX.",
+				"XWWrWWrWrrrrrrWrWWWWrWWX.",
+				".XWrWWrWWrrrrWWrWWWWrWX..",
+				".XWWrWrrWWWWWWrrWWWrrWX..",
+				"..XWrWWrrWWWWrrWWWWrWX...",
+				"..XWWrWWWWWWWWWWWWrWWX...",
+				"...XWWrrWWWWWWWWrrWWX....",
+				"....XXWWrrrrrrrrWWXX.....",
+				"......XXWWWWWWWWXX.......",
+				"........XXXXXXXX........."
+			]
+		"sword", "fury":
 			return [
 				".....................XXX",
 				"....................XWLX",
@@ -139,7 +295,7 @@ static func _icon_pixels(kind: String) -> Array:
 				"..XGX...................",
 				"...X...................."
 			]
-		"shield":
+		"shield", "bastion":
 			return [
 				".........XXXXX.........",
 				".....XXXXYYYFGXXXX.....",
@@ -196,7 +352,7 @@ static func _icon_pixels(kind: String) -> Array:
 				".............XlYbX........",
 				"..............XXX........."
 			]
-		"herb":
+		"herb", "renewal":
 			return [
 				"............XX.........",
 				"...........XeeX........",
@@ -296,7 +452,7 @@ static func _icon_pixels(kind: String) -> Array:
 				".....XXrrrrrrrXX.........",
 				".......XXXXXXX..........."
 			]
-		"coin":
+		"coin", "fortune":
 			return [
 				".......XXXXXXXX.......",
 				".....XXWYYYYYGGXX.....",
@@ -317,7 +473,7 @@ static func _icon_pixels(kind: String) -> Array:
 				".....XXGGGGGGGGXX.....",
 				".......XXXXXXXX......."
 			]
-		"heart":
+		"heart", "vitality":
 			return [
 				"...XXXXX....XXXXX...",
 				"..XPooooX..XoooooX..",
