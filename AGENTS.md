@@ -7,3 +7,5 @@
 - Run the relevant checks before completing a milestone. The user has requested milestone uploads to `https://github.com/zhanghang211202/godot-ai-agent-demo`; commit and push completed, verified work there.
 - Do not commit `.tools/`, `.godot/`, `node_modules/`, local MCP routing/configuration, credentials, or player saves.
 - Development records and blog text are Japanese; retain the existing Chinese game UI unless the user requests a language change.
+- Use `docs/requirements.md`, `docs/development-plan.md`, and `docs/art-direction.md` as the current product, milestone, and visual baseline. `docs/demo-plan.md` is historical v0.1 scope. Keep planned features distinct from implemented behavior.
+- Next development milestone is M1 / v0.3: layout/asset interfaces, then a running hero + slime + sword/shield/whetstone art sample before expanding assets. Preserve the current rule/content budget during that milestone; new status effects and enemy mechanics belong to M2 / v0.4.
