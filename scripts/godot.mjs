@@ -1,0 +1,98 @@
+import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { spawn, spawnSync } from 'node:child_process';
+import { deriveProjectIdentityV2 } from '../node_modules/godot-cli/dist/utils/project-identity.js';
+
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const tools = path.join(projectRoot, '.tools');
+const dotnetRoot = path.join(tools, 'dotnet');
+const dotnet = path.join(dotnetRoot, 'dotnet.exe');
+const editor = process.env.GODOT_BIN ?? process.env.GODOT4_BIN ?? 'D:\\Program Files\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe';
+const cli = path.join(projectRoot, 'node_modules', 'godot-cli', 'bin', 'godot-cli.js');
+const { port } = deriveProjectIdentityV2(projectRoot);
+const [command = 'open', ...args] = process.argv.slice(2);
+
+for (const executable of [dotnet, editor]) {
+  if (!existsSync(executable)) {
+    console.error(`Missing project-local tool: ${executable}`);
+    process.exit(1);
+  }
+}
+
+// Keep the editor's matching Godot packages in a project-local NuGet feed.
+const bundledFeed = path.join(path.dirname(editor), 'GodotSharp', 'Tools', 'nupkgs');
+const projectFeed = path.join(tools, 'godot-nupkgs');
+mkdirSync(projectFeed, { recursive: true });
+if (existsSync(bundledFeed)) {
+  for (const name of readdirSync(bundledFeed).filter((name) => name.endsWith('.nupkg'))) {
+    const destination = path.join(projectFeed, name);
+    if (!existsSync(destination)) copyFileSync(path.join(bundledFeed, name), destination);
+  }
+}
+
+const env = {
+  ...process.env,
+  PATH: `${dotnetRoot}${path.delimiter}${process.env.PATH ?? ''}`,
+  DOTNET_ROOT: dotnetRoot,
+  DOTNET_ROOT_X64: dotnetRoot,
+  DOTNET_MULTILEVEL_LOOKUP: '0',
+  DOTNET_CLI_HOME: path.join(tools, 'dotnet-home'),
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1',
+  DOTNET_ADD_GLOBAL_TOOLS_TO_PATH: '0',
+  DOTNET_GENERATE_ASPNET_CERTIFICATE: '0',
+  DOTNET_NOLOGO: '1',
+  NUGET_PACKAGES: path.join(tools, 'nuget', 'packages'),
+  NUGET_HTTP_CACHE_PATH: path.join(tools, 'nuget', 'http-cache'),
+  NUGET_PLUGINS_CACHE_PATH: path.join(tools, 'nuget', 'plugins-cache'),
+  GODOT_BIN: editor,
+  GODOT4_BIN: editor,
+  GODOT_MCP_CONNECTION_MODE: 'Custom',
+  GODOT_MCP_HOST: `http://127.0.0.1:${port}`,
+  GODOT_MCP_AUTH_OPTION: 'None',
+  GODOT_MCP_START_SERVER: 'true',
+};
+
+function run(executable, parameters) {
+  const result = spawnSync(executable, parameters, {
+    cwd: projectRoot,
+    env,
+    stdio: 'inherit',
+    windowsHide: true,
+  });
+  if (result.error) throw result.error;
+  return result.status ?? 1;
+}
+
+if (command === 'cli') {
+  process.exit(run(process.execPath, [cli, ...args]));
+} else if (command === 'build') {
+  process.exit(run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug', ...args]));
+} else if (command === 'test') {
+  for (const test of ['test_run_state.gd', 'ui_smoke.gd']) {
+    const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
+    if (status !== 0) process.exit(status);
+  }
+} else if (command === 'play' || command === 'open') {
+  if (command === 'open') {
+    const buildStatus = run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug']);
+    if (buildStatus !== 0) process.exit(buildStatus);
+  }
+  const logDirectory = path.join(tools, 'logs');
+  mkdirSync(logDirectory, { recursive: true });
+  const child = spawn(editor, [...(command === 'open' ? ['--editor'] : []), '--path', projectRoot, '--log-file', path.join(logDirectory, command === 'open' ? 'editor.log' : 'game.log'), ...args], {
+    cwd: projectRoot,
+    env,
+    detached: true,
+    stdio: 'ignore',
+  });
+  child.on('error', (error) => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+  child.unref();
+  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : 'Emberpack started.');
+} else {
+  console.error(`Unknown command: ${command}. Use play, test, open, build, or cli.`);
+  process.exit(1);
+}

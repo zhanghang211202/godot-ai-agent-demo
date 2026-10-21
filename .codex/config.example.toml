@@ -1,0 +1,10 @@
+# 在实际项目目录执行下列命令，以生成该目录对应的端口与项目路由：
+# npm run godot:cli -- setup-mcp codex . --url http://127.0.0.1:<项目端口>
+# npm run godot:status 可检查当前目录的本地端口。
+# 实际 config.toml 属于本机配置，已排除在 Git 之外。
+
+[mcp_servers.ai-game-developer]
+enabled = true
+url = "http://127.0.0.1:25527/mcp"
+tool_timeout_sec = 300
+startup_timeout_sec = 30

@@ -1,0 +1,21 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Project-local Node.js tools
+/node_modules/
+
+# Portable editors, SDKs, downloads, and dependency caches
+/.tools/
+
+# Generated AI-agent reference files and local MCP routing
+/.claude/
+/.codex/config.toml
+
+# Local exports and editor/OS files
+/builds/
+/exports/
+*.tmp
+*.log
+Thumbs.db
+.DS_Store

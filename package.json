@@ -1,0 +1,16 @@
+{
+  "name": "godot-demo-tools",
+  "private": true,
+  "scripts": {
+    "game": "node scripts/godot.mjs play",
+    "game:test": "node scripts/godot.mjs test",
+    "godot:cli": "node scripts/godot.mjs cli",
+    "godot:build": "node scripts/godot.mjs build",
+    "godot:open": "node scripts/godot.mjs open",
+    "godot:status": "node scripts/godot.mjs cli status .",
+    "postinstall": "node -e \"require('node:fs').writeFileSync('node_modules/.gdignore', '')\""
+  },
+  "devDependencies": {
+    "godot-cli": "0.31.0"
+  }
+}
