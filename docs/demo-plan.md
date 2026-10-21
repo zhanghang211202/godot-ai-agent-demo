@@ -1,6 +1,6 @@
 # 星火旅囊 / Emberpack — 首个可玩 Demo
 
-这份文档记录首版范围；后续变化见 [0.2 迭代](iteration-02.md)。
+这份文档保留 v0.1 首版范围与当时的简化规则，不作为当前需求基线。v0.2 变化见 [0.2 迭代](iteration-02.md)；2026-10-21 起后续工作以[产品需求](requirements.md)、[开发计划](development-plan.md)和[美术规格](art-direction.md)为准。
 
 ## 目标
 

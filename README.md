@@ -2,6 +2,8 @@
 
 一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前版本 **0.2**。
 
+后续开发以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线。计划先完成 v0.3 美术与交互升级，再做 v0.4 构筑/敌人机制，最后以 v0.5 交付完整章节；这些目标尚未实装。[全部文档入口](docs/README.md)。
+
 ![准备阶段](docs/screenshots/prepare.png)
 
 ## 已实现
@@ -86,12 +88,14 @@ npm run game:test
 
 ## 项目资料
 
-- [Demo 计划](docs/demo-plan.md)
+- [产品需求文档](docs/requirements.md)
+- [开发计划与里程碑](docs/development-plan.md)
+- [美术规格与提升计划](docs/art-direction.md)
+- [首个 Demo 计划（历史）](docs/demo-plan.md)
 - [0.2 迭代范围与验收](docs/iteration-02.md)
 - [日语开发记录与历代截图](docs/devlog/README.ja.md)
 - [日语博客草稿](docs/blog/emberpack-making-of.ja.md)
 - [实机与 Wiki 研究](docs/reference-research.md)
-- [美术方向与场景生成提示](docs/art-direction.md)
 - [素材来源](docs/asset-credits.md)
 - [本机 MCP 配置说明](MCP_SETUP.md)
 

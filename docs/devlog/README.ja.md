@@ -6,7 +6,9 @@
 ## 記録
 
 - [2026-10-21：環境構築から Demo 0.2 まで](2026-10-21.ja.md)
+- [2026-10-21：要件・開発計画とアート改善の整理](2026-10-21-planning.ja.md)
 - [日本語ブログ草稿](../blog/emberpack-making-of.ja.md)
+- [現在のドキュメント一覧](../README.md)
 - [最初の実装計画](../demo-plan.md)
 - [0.2 の実装範囲と検証](../iteration-02.md)
 - [参考ゲームの調査記録](../reference-research.md)
