@@ -12,6 +12,8 @@ func _initialize() -> void:
 	_test_battle_loop()
 	_test_loss_and_restart()
 	_test_timing_determinism()
+	_test_derived_equipment()
+	_test_blessings()
 	print("EmberRun: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -95,6 +97,14 @@ func _test_synergy() -> void:
 	check(run.get_stats()["synergy_count"] == 1 and run.get_stats()["attack"] == original_attack, "Side adjacency empowers a weapon")
 	check(run.move(stone_uid, Vector2i(2, 2))["ok"], "Support can be placed diagonally")
 	check(run.get_stats()["synergy_count"] == 0, "Diagonal contact does not grant adjacency")
+	check(run.move(stone_uid, Vector2i(0, 2))["ok"], "Unrotated whetstone can be placed below a weapon")
+	check(run.get_adjacency_bonus(run.items[0]) == 0, "Unrotated whetstone does not empower above or below")
+	check(run.get_support_cells(run.item_by_uid(stone_uid)) == [Vector2i(1, 2)], "Whetstone blue dots show only valid horizontal neighbors")
+	check(run.move(stone_uid, Vector2i(0, 2), true)["ok"], "Whetstone can rotate without changing its footprint")
+	check(run.get_adjacency_bonus(run.items[0]) == 3, "Rotated whetstone empowers the weapon above")
+	check(run.get_support_cells(run.item_by_uid(stone_uid)).has(Vector2i(0, 1)), "Blue dots agree with the actual directional bonus")
+	var ember := {"kind": "ember", "pos": Vector2i(3, 2), "rotated": true}
+	check(run.get_support_cells(ember).size() == 4, "Ember always empowers all four cardinal neighbors")
 
 func _test_battle_loop() -> void:
 	var run = RunRules.new()
@@ -123,8 +133,12 @@ func _test_battle_loop() -> void:
 		if run.phase == "lost":
 			break
 		if run.phase == "reward":
+			check(not run.claim_reward()["ok"], "Reward cannot be skipped before choosing a blessing")
+			check(not run.reward_choices.any(func(id): return id in run.blessings), "Victory never offers an already owned blessing")
+			check(run.reward_choices.size() == 3 and run.choose_reward(0)["ok"], "Victory offers three selectable blessings")
 			check(run.claim_reward()["ok"], "Victory advances to next preparation")
 	check(run.phase == "won" and run.wave == 5, "Five victories complete the campaign")
+	check(run.blessings.size() == 4 and run.reward_choices.is_empty(), "Completed campaign has four blessings and no final boss choice")
 	check(attacks > 10 and healing > 0, "Battle emits attack and healing animation events")
 	check(not run.start_battle()["ok"] and run.tick(1.0).is_empty(), "Won campaign cannot continue fighting")
 
@@ -173,3 +187,72 @@ func _test_timing_determinism() -> void:
 		fast_events.append_array(fast_frames.tick(0.05))
 	check(slow_frames.hp == fast_frames.hp and slow_frames.enemy_hp == fast_frames.enemy_hp, "Simulation outcome is independent of render frame size")
 	check(slow_events == fast_events, "Seeded combat emits deterministic events at different frame sizes")
+	var slow_ending: Array[Dictionary] = slow_frames.tick(90.0)
+	var fast_ending: Array[Dictionary] = []
+	while fast_frames.phase == "battle":
+		fast_ending.append_array(fast_frames.tick(0.05))
+	check(slow_ending == fast_ending and slow_frames.reward_choices == fast_frames.reward_choices, "Frame-independent combat also generates identical blessing choices")
+
+func _test_derived_equipment() -> void:
+	var run = RunRules.new()
+	check(run.get_definition("longsword")["size"] == Vector2i(1, 3), "Longsword occupies three cells")
+	check(run.get_definition("flame_sword")["size"] == Vector2i(1, 3), "Flame sword occupies three cells")
+	check(run.get_definition("windbow")["size"] == Vector2i(3, 1), "Windbow occupies three horizontal cells")
+	check(run.get_definition("greater_potion")["size"] == Vector2i(1, 2), "Greater potion occupies two cells")
+	check(RunRules.RECIPES.size() == 5, "Recipe guide exposes all five cross recipes")
+	for recipe in RunRules.RECIPES:
+		check(recipe["result"] not in RunRules.SHOP_POOL, "Derived item %s is crafted instead of sold" % recipe["result"])
+	check(run.move(run.items[2]["uid"], Vector2i(0, 0))["ok"], "Starter sword crafts a vertical three-cell longsword")
+	check(run.buy(3, Vector2i(0, 0))["ok"] and run.item_at(Vector2i(0, 0))["kind"] == "flame_sword", "Longsword and ember craft a flame sword")
+	check(run.buy(0, Vector2i(3, 0))["ok"] and run.buy(1, Vector2i(3, 0))["ok"], "Shield and herb craft thorn shield")
+	check(run.get_stats()["thorns"] == 3 and run.get_stats()["armor"] == 5, "Thorn shield grants both armor and reflection")
+	run.start_battle()
+	var reflected_events: Array[Dictionary] = run.tick(2.0)
+	check(reflected_events.any(func(event): return event.get("reflected", false) and event["amount"] == 3), "Thorn shield reflects enemy attacks during combat")
+	run.new_run()
+	run.shop_offers.assign(["bow", "ember", "potion", "herb"])
+	check(run.buy(0, Vector2i(3, 0))["ok"] and run.buy(1, Vector2i(3, 0))["ok"], "Bow and ember craft a fitting windbow")
+	check(run.item_at(Vector2i(5, 0))["kind"] == "windbow", "Windbow really occupies its third cell")
+	check(run.buy(2, Vector2i(4, 2))["ok"] and run.buy(3, Vector2i(4, 2))["ok"], "Potion and herb craft greater potion")
+	run.hp = 40
+	run.start_battle()
+	var potion_events: Array[Dictionary] = run.tick(0.1)
+	check(potion_events.any(func(event): return event["type"] == "heal" and event["amount"] == 42), "Greater potion delivers its enhanced one-use heal")
+	var later_events: Array[Dictionary] = run.tick(20.0)
+	check(not later_events.any(func(event): return event["type"] == "heal"), "Greater potion does not recharge within the same battle")
+	run.new_run()
+	check(run.buy(2, Vector2i(4, 3))["ok"], "Edge bow setup is legal")
+	var money_before: int = run.gold
+	check(not run.buy(3, Vector2i(4, 3))["ok"], "Windbow recipe is rejected when its third cell extends beyond the bag")
+	check(run.gold == money_before and run.shop_offers[3] == "ember" and run.item_at(Vector2i(4, 3))["kind"] == "bow", "Rejected shop recipe preserves ingredients, money, and stock")
+
+func _test_blessings() -> void:
+	var run = RunRules.new()
+	check(not run.choose_reward(0)["ok"], "A blessing cannot be chosen before victory")
+	run.start_battle()
+	run.tick(90.0)
+	check(run.phase == "reward" and run.reward_choices.size() == 3, "Victory exposes three blessing choices")
+	var chosen_id: String = run.reward_choices[0]
+	var original_choices: Array[String] = run.reward_choices.duplicate()
+	check(not run.choose_reward(-1)["ok"] and run.reward_choices == original_choices, "Invalid blessing index does not change rewards")
+	check(run.choose_reward(0)["ok"] and run.blessings == [chosen_id], "Choice records the actual selected blessing")
+	check(run.reward_chosen and run.reward_choices.is_empty(), "Choosing clears pending choices and marks the reward selected")
+	check(not run.choose_reward(0)["ok"], "A reward can only be selected once")
+	check(run.claim_reward()["ok"] and not run.reward_chosen and run.reward_choices.is_empty(), "Continuing resets pending reward state")
+	run.new_run()
+	check(run.blessings.is_empty() and not run.reward_chosen and run.reward_choices.is_empty(), "New run clears every blessing state")
+	# Exact effect fixtures use the same valid reward state exposed by a victory.
+	run.phase = "reward"
+	run.hp = 40
+	run.reward_choices.assign(["vitality", "coin_pouch", "campfire"])
+	check(run.choose_reward(0)["ok"] and run.max_hp == 118 and run.hp == 58, "Vitality increases maximum health and heals immediately")
+	run.new_run()
+	run.phase = "reward"
+	run.reward_choices.assign(["coin_pouch", "vitality", "campfire"])
+	check(run.choose_reward(0)["ok"] and run.gold == 26, "Coin blessing pays its immediate reward once")
+	run.new_run()
+	run.blessings.assign(["keen_edge", "ironbark", "moonwater", "focus"])
+	var stats: Dictionary = run.get_stats()
+	check(stats["attack"] == 17 and stats["armor"] == 1 and stats["regen"] == 1, "Blessing benefits and tradeoffs combine in combat statistics")
+	check(is_equal_approx(float(stats["crit"]), 0.14), "Critical chance includes positive and negative blessing effects")
+	check(not run.get_enemy_info()["trait"].is_empty() and run.get_enemy_info()["wave"] == 1, "Enemy preview includes a concise trait hint")

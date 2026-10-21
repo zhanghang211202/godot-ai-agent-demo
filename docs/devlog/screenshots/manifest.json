@@ -1,0 +1,84 @@
+{
+  "recorded_date": "2026-10-21",
+  "timezone": "Asia/Tokyo",
+  "note": "Actual Godot runtime captures. v0.1 recovered byte-for-byte from its published commit; v0.2 captures do not access real player saves.",
+  "files": [
+    {
+      "path": "screenshots/v0.1/prepare.png",
+      "milestone": "v0.1",
+      "source_commit": "ac878e9",
+      "role": "prepare",
+      "mode": "default preparation screen",
+      "bytes": 603495,
+      "width": 1296,
+      "height": 864,
+      "sha256": "b69a30ea35d6a2d154d1a4620430ec263bd2f0bc54e510d04bfc09b4b0504cd0"
+    },
+    {
+      "path": "screenshots/v0.1/battle.png",
+      "milestone": "v0.1",
+      "source_commit": "ac878e9",
+      "role": "battle",
+      "mode": "legal starter-loadout capture fixture",
+      "bytes": 601431,
+      "width": 1296,
+      "height": 864,
+      "sha256": "a13a0aa163461eedbcc03e36942164e688f60e313f7fae3ac17f9911e87a77bf"
+    },
+    {
+      "path": "screenshots/v0.2/prepare.png",
+      "milestone": "v0.2",
+      "role": "prepare",
+      "save_disabled": true,
+      "mode": "default preparation screen",
+      "bytes": 603580,
+      "width": 1296,
+      "height": 864,
+      "sha256": "c445a94ac4f2b07394fe608bda87c06c0020b155811f2619e08f4b533aa33550"
+    },
+    {
+      "path": "screenshots/v0.2/forging.png",
+      "milestone": "v0.2",
+      "role": "forging",
+      "save_disabled": true,
+      "mode": "fixture made solely through legal initial inventory and 18-gold purchases",
+      "bytes": 598182,
+      "width": 1296,
+      "height": 864,
+      "sha256": "8a7415c73606b1817df46b17a341198396e169e3a45eac72942adc2cff47e2e3"
+    },
+    {
+      "path": "screenshots/v0.2/blessings.png",
+      "milestone": "v0.2",
+      "role": "blessings",
+      "save_disabled": true,
+      "mode": "first encounter won through legal starter loadout; reward choice not yet taken",
+      "bytes": 310182,
+      "width": 1296,
+      "height": 864,
+      "sha256": "458d9e80a216d9cea443a977feef5db7b1fa259cc31e0c3aa4c96e292874c015"
+    },
+    {
+      "path": "screenshots/v0.2/menu.png",
+      "milestone": "v0.2",
+      "role": "menu",
+      "save_disabled": true,
+      "mode": "pause menu with no player save loaded",
+      "bytes": 270419,
+      "width": 1296,
+      "height": 864,
+      "sha256": "4e10cd030c02e1ded781c2f934f804a9e49fd0e578607b479a3fedcdd18293f5"
+    },
+    {
+      "path": "screenshots/v0.2/battle.png",
+      "milestone": "v0.2",
+      "role": "battle",
+      "save_disabled": true,
+      "mode": "legal starter-loadout capture fixture during first encounter",
+      "bytes": 601751,
+      "width": 1296,
+      "height": 864,
+      "sha256": "dc3bb306cff22e5c2fdc837b496c8cd87c040cc2e4c532964dfb791b7576dfa4"
+    }
+  ]
+}

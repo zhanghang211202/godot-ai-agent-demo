@@ -69,7 +69,7 @@ if (command === 'cli') {
 } else if (command === 'build') {
   process.exit(run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug', ...args]));
 } else if (command === 'test') {
-  for (const test of ['test_run_state.gd', 'ui_smoke.gd']) {
+  for (const test of ['test_run_state.gd', 'test_save.gd', 'ui_smoke.gd']) {
     const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
     if (status !== 0) process.exit(status);
   }
