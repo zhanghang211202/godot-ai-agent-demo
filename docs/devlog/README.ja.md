@@ -7,6 +7,7 @@
 
 - [2026-10-21：環境構築から Demo 0.2 まで](2026-10-21.ja.md)
 - [2026-10-21：要件・開発計画とアート改善の整理](2026-10-21-planning.ja.md)
+- [2026-10-22：実機アートサンプルと可変レイアウト](2026-10-22-art-sample.ja.md)
 - [日本語ブログ草稿](../blog/emberpack-making-of.ja.md)
 - [現在のドキュメント一覧](../README.md)
 - [最初の実装計画](../demo-plan.md)
@@ -25,6 +26,12 @@
 | 0.2 | 初期資源だけで作れる合成例 | [forging.png](screenshots/v0.2/forging.png) |
 | 0.2 | 勝利後の祝福選択 | [blessings.png](screenshots/v0.2/blessings.png) |
 | 0.2 | 一時停止とセーブのメニュー | [menu.png](screenshots/v0.2/menu.png) |
+| 0.3 sample | 主役・苔団と皮革バッグ / 紙の手記 | [prepare.png](screenshots/v0.3-sample/prepare.png) |
+| 0.3 sample | 実行中の戦闘、5秒 / 無音 / 縮小GIF | [battle-motion.gif](screenshots/v0.3-sample/battle-motion.gif) |
+| 0.3 sample | ドラッグの占有範囲プレビュー | [drag-preview.png](screenshots/v0.3-sample/drag-preview.png) |
+| 0.3 sample | 初期資源だけの合成例、旧素材を含む | [forging.png](screenshots/v0.3-sample/forging.png) |
+| 0.3 sample | 祝福カードと全画面マスク | [blessings.png](screenshots/v0.3-sample/blessings.png) |
+| 0.3 sample | 1280×800 / 1920×1080 | [小ウィンドウ](screenshots/v0.3-sample/prepare-1280x800.png) / [大ウィンドウ](screenshots/v0.3-sample/prepare-1920x1080.png) |
 
 すべて Godot で実行したゲーム画面です。0.1 の画像は公開済みコミット `ac878e9` からバイト単位で取り出しました。
 0.2 の合成例は、デバッグ用に資源を増やしたものではなく、初期アイテムと18ゴールドだけを通常の購入・合成APIで操作した状態です。

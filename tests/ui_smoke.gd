@@ -4,13 +4,13 @@ extends SceneTree
 
 const MAIN_SCENE := "res://scenes/main.tscn"
 const Save = preload("res://scripts/gameplay/run_save.gd")
+const RunRules = preload("res://scripts/gameplay/run_state.gd")
 const TEST_CHECKPOINT := "res://.tools/test-saves/ui-smoke.json"
 const CORRUPT_CHECKPOINT := "res://.tools/test-saves/ui-smoke-corrupt.json"
 const BLOCKED_CHECKPOINT := "res://.tools/test-saves/ui-smoke-blocked.json"
 const DELETE_FAILURE_DIRECTORY := "res://.tools/test-saves/ui-smoke-delete-target"
 var ui: Control
 var game: RefCounted
-var constants: Dictionary
 var checks := 0
 var failures := 0
 
@@ -18,18 +18,24 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	# The responsive UI uses the real window size rather than a stretched canvas.
+	# Give the headless window a supported size before its anchored Control opens.
+	root.size = Vector2i(1440, 960)
 	var scene: PackedScene = load(MAIN_SCENE)
 	if scene == null:
 		push_error("Unable to load the main scene")
 		quit(1)
 		return
 	ui = scene.instantiate()
+	if ui.get_script() == null:
+		push_error("Main script failed to load; stopping UI smoke before cascaded errors")
+		quit(1)
+		return
 	root.add_child(ui)
 	await process_frame
 	ui.set_process(false)
 	ui.set("muted", true)
 	game = ui.get("game")
-	constants = ui.get_script().get_script_constant_map()
 	check(game != null and game.get("phase") == "prepare", "Main scene opens in preparation")
 	check(ui.size.x >= 1000.0 and ui.size.y >= 700.0, "Main interface has a usable viewport")
 	_test_drag_merge_rotation()
@@ -42,6 +48,8 @@ func _run() -> void:
 	_test_defeat_restart()
 	_test_menu_save_load()
 	_test_checkpoint_failure_protection()
+	_test_visual_feedback()
+	await _test_responsive_layout()
 	print("EmberGame UI smoke: %d checks, %d failures" % [checks, failures])
 	ui.queue_free()
 	await process_frame
@@ -54,10 +62,15 @@ func check(condition: bool, description: String) -> void:
 		push_error("FAIL: " + description)
 
 func _cell(cell: Vector2i) -> Vector2:
-	return Vector2(constants["GRID_ORIGIN"]) + (Vector2(cell) + Vector2(0.5, 0.5)) * float(constants["CELL_SIZE"])
+	return Vector2(ui.get("GRID_ORIGIN")) + (Vector2(cell) + Vector2(0.5, 0.5)) * float(ui.get("CELL_SIZE"))
 
 func _center(name: String) -> Vector2:
-	var rect: Rect2 = constants[name]
+	var rect: Rect2 = ui.get(name)
+	return rect.get_center()
+
+func _layout_center(name: String) -> Vector2:
+	var layout: RefCounted = ui.get("layout")
+	var rect: Rect2 = layout.get(name)
 	return rect.get_center()
 
 func _click(position: Vector2) -> void:
@@ -112,7 +125,7 @@ func _test_drag_merge_rotation() -> void:
 	_drag(_cell(Vector2i(3, 3)), _cell(Vector2i(4, 3)))
 	check(game.call("item_by_uid", uid)["pos"] == Vector2i(3, 3), "Out-of-bounds three-cell UI drop preserves the item")
 	check(not bool(ui.get("toast_good")) and Dictionary(ui.get("drag")).is_empty(), "Invalid UI drop ends dragging and shows an error")
-	_drag(_cell(Vector2i(3, 3)), Vector2(30, 98))
+	_drag(_cell(Vector2i(3, 3)), Vector2(-20, -20))
 	check(_items().size() == 1 and game.call("item_by_uid", uid)["pos"] == Vector2i(3, 3), "Dropping outside the bag safely cancels")
 	_reset()
 	_drag(_cell(Vector2i(0, 1)), _cell(Vector2i(4, 2)))
@@ -148,7 +161,7 @@ func _test_purchase_cancel_sell() -> void:
 
 func _test_help_and_input() -> void:
 	_reset()
-	_click(Vector2(1361, 47))
+	_click(_layout_center("header_help_rect"))
 	check(bool(ui.get("help_open")), "Help button opens the gameplay instructions")
 	var blocked_key := InputEventKey.new()
 	blocked_key.keycode = KEY_SPACE
@@ -157,14 +170,14 @@ func _test_help_and_input() -> void:
 	check(bool(ui.get("help_open")) and game.get("phase") == "prepare", "Gameplay shortcuts cannot start a battle behind the help overlay")
 	_click(_center("PRIMARY_RECT"))
 	check(not bool(ui.get("help_open")) and game.get("phase") == "prepare", "Clicking while help is open closes it without starting battle")
-	_click(Vector2(1254, 47))
+	_click(_layout_center("header_sound_rect"))
 	check(not bool(ui.get("muted")), "Sound toggle updates the mute setting")
 	ui.set("muted", true)
-	_click(Vector2(992, 131))
+	_click(_layout_center("speed_rect"))
 	check(float(ui.get("speed")) == 2.0, "Battle speed toggle switches to 2x")
-	_click(Vector2(992, 131))
+	_click(_layout_center("speed_rect"))
 	check(float(ui.get("speed")) == 1.0, "Battle speed toggle switches back to 1x")
-	_click(Vector2(1316, 428))
+	_click(_layout_center("recipe_toggle_rect"))
 	check(bool(ui.get("recipes_open")), "Recipe book button opens the recipe panel")
 	var key := InputEventKey.new()
 	key.keycode = KEY_TAB
@@ -188,15 +201,15 @@ func _test_directional_support() -> void:
 
 func _test_menu_pause_and_codex() -> void:
 	_reset()
-	_click(Vector2(1316, 428))
+	_click(_layout_center("recipe_toggle_rect"))
 	var pages: int = ui.call("_recipe_page_count")
 	check(bool(ui.get("recipes_open")) and pages == 3, "Recipe guide opens with all v0.2 recipes across three pages")
-	_click(Vector2(1357, 825))
+	_click(_layout_center("recipe_next_rect"))
 	check(ui.get("recipe_page") == 1, "Recipe guide next arrow advances a page")
-	_click(Vector2(1357, 825))
-	_click(Vector2(1357, 825))
+	_click(_layout_center("recipe_next_rect"))
+	_click(_layout_center("recipe_next_rect"))
 	check(ui.get("recipe_page") == 0, "Recipe guide next arrow wraps after its last page")
-	_click(Vector2(1128, 825))
+	_click(_layout_center("recipe_prev_rect"))
 	check(ui.get("recipe_page") == pages - 1, "Recipe guide previous arrow wraps to its last page")
 	_key(KEY_TAB)
 	_click(_center("PRIMARY_RECT"))
@@ -264,9 +277,8 @@ func _test_native_input_route() -> void:
 	var press := InputEventMouseButton.new()
 	press.button_index = MOUSE_BUTTON_LEFT
 	press.pressed = true
-	# Dummy headless windows are 64x64; events enter in window coordinates.
-	# Convert the game's logical canvas coordinates through its stretch transform.
-	press.position = root.get_screen_transform() * Vector2(1254, 47)
+	# Native events enter in window coordinates; include any engine transform.
+	press.position = root.get_screen_transform() * _layout_center("header_sound_rect")
 	press.global_position = press.position
 	Input.parse_input_event(press)
 	await process_frame
@@ -430,3 +442,132 @@ func _test_checkpoint_failure_protection() -> void:
 	check(DirAccess.remove_absolute(delete_directory) == OK and not Save.exists(CORRUPT_CHECKPOINT) and not Save.exists(BLOCKED_CHECKPOINT), "Checkpoint-protection regression fixtures are fully cleaned from the project test directory")
 	ui.set("checkpoint_path", original_path)
 	_reset()
+
+func _test_responsive_layout() -> void:
+	# Exercise the actual anchored scene after real Window resizes. These are UI
+	# integration checks, not screenshots or a substitute for native visual review.
+	for output_size in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1600, 900), Vector2i(1440, 1080), Vector2i(1920, 1080)]:
+		_reset()
+		var before_resize := _rule_fingerprint(game)
+		root.size = output_size
+		await process_frame
+		ui.call("_update_layout")
+		await process_frame
+		var label := "%dx%d" % [output_size.x, output_size.y]
+		var viewport := Rect2(Vector2.ZERO, Vector2(output_size))
+		check(ui.size.is_equal_approx(Vector2(output_size)), label + " scene uses the real output size without stretching its logical canvas")
+		check(_rule_fingerprint(game) == before_resize, label + " resizing leaves inventory, money, stats, enemy and RNG untouched")
+		var cell_size: float = ui.get("CELL_SIZE")
+		check(cell_size >= 64.0 and is_equal_approx(fmod(cell_size, 32.0), 0.0), label + " item cells retain an integer multiple of the 32 px source grid")
+		var grid := Rect2(Vector2(ui.get("GRID_ORIGIN")), Vector2(6, 4) * cell_size)
+		var bag: Rect2 = ui.get("BAG_RECT")
+		var market: Rect2 = ui.get("MARKET_RECT")
+		var notes: Rect2 = ui.get("NOTES_RECT")
+		var battle: Rect2 = ui.get("BATTLE_RECT")
+		check(bag.encloses(grid) and viewport.encloses(bag) and viewport.encloses(market) and viewport.encloses(notes) and viewport.encloses(battle), label + " complete backpack, shop, details and battle panels remain within the viewport")
+		var background: Texture2D = ui.get("background")
+		var pixel_scale: int = int(cell_size / 32)
+		check(background.get_width() * pixel_scale >= battle.size.x and background.get_height() * pixel_scale >= battle.size.y, label + " pixel stage covers the battle view without sampling outside its texture")
+		var sell: Rect2 = ui.get("SELL_RECT")
+		check(grid.grow(8).end.y < sell.position.y, label + " leather grid frame and sell button do not overlap")
+		check(not bag.intersects(market) and not market.intersects(notes) and not bag.intersects(battle) and not market.intersects(battle), label + " main interactive panels do not overlap")
+		var controls_fit := true
+		for name in ["PRIMARY_RECT", "REFRESH_RECT", "SELL_RECT", "MENU_RECT", "MENU_CONTINUE", "MENU_SAVE", "MENU_LOAD", "MENU_NEW"]:
+			controls_fit = controls_fit and viewport.encloses(Rect2(ui.get(name)))
+		check(controls_fit, label + " primary and modal controls remain reachable inside the viewport")
+		var shop_slots_fit := true
+		for slot in range(4):
+			var slot_rect: Rect2 = ui.call("_shop_rect", slot)
+			shop_slots_fit = shop_slots_fit and market.encloses(slot_rect)
+			for previous in range(slot):
+				shop_slots_fit = shop_slots_fit and not slot_rect.intersects(ui.call("_shop_rect", previous))
+		check(shop_slots_fit, label + " all four shop slots fit without overlapping each other")
+		var reward_cards_fit := true
+		for index in range(3):
+			var card: Rect2 = ui.call("_reward_rect", index)
+			reward_cards_fit = reward_cards_fit and viewport.encloses(card)
+			for previous in range(index):
+				reward_cards_fit = reward_cards_fit and not card.intersects(ui.call("_reward_rect", previous))
+		check(reward_cards_fit, label + " three selectable blessing cards fit without overlap")
+		var overlay: Rect2 = ui.call("get_modal_overlay_rect")
+		check(overlay == viewport, label + " shared menu, help and reward mask covers the complete output viewport")
+		ui.set("muted", true)
+		await _native_click(_layout_center("header_sound_rect"))
+		check(not bool(ui.get("muted")), label + " native mouse events hit the relocated sound button")
+		ui.set("muted", true)
+		_drag_shop(0, Vector2i(4, 0))
+		_drag_shop(1, Vector2i(2, 2))
+		check(game.get("gold") == 9 and game.call("item_at", Vector2i(5, 1))["kind"] == "shield" and game.call("item_at", Vector2i(2, 2))["kind"] == "herb", label + " resized shop-to-grid dragging buys and occupies the intended cells")
+		_click(_cell(Vector2i(0, 2)))
+		var supported_attack: int = game.call("get_stats")["attack"]
+		_key(KEY_R)
+		check(game.call("get_stats")["attack"] == supported_attack - 3, label + " resized selection and rotation update the directional bonus")
+		_key(KEY_R)
+		_drag(_cell(Vector2i(1, 0)), _cell(Vector2i(0, 0)))
+		check(_items().size() == 4 and game.call("item_at", Vector2i(0, 0))["level"] == 2, label + " resized sword dragging performs the existing merge rule")
+		ui.set("selected_uid", -1)
+		var before_modal := _rule_fingerprint(game)
+		_click(_center("MENU_RECT"))
+		_click(_cell(Vector2i(0, 0)))
+		check(bool(ui.get("menu_open")) and ui.get("selected_uid") == -1 and _rule_fingerprint(game) == before_modal, label + " pause modal blocks equipment selection and keeps underlying resources unchanged")
+		_key(KEY_ESCAPE)
+		var reference: RefCounted = RunRules.new()
+		reference.call("buy", 0, Vector2i(4, 0))
+		reference.call("buy", 1, Vector2i(2, 2))
+		var reference_items: Array = reference.get("items")
+		reference.call("move", reference_items[1]["uid"], Vector2i(0, 0))
+		reference.call("start_battle")
+		reference.call("tick", 0.4)
+		_click(_center("PRIMARY_RECT"))
+		ui.call("_process", 0.4)
+		check(game.get("phase") == "battle" and not Array(ui.get("battle_log")).is_empty(), label + " relocated primary control starts a battle with actual attack feedback")
+		check(_rule_fingerprint(game) == _rule_fingerprint(reference), label + " UI layout and visual events preserve deterministic battle outcomes")
+		_click(_center("MENU_RECT"))
+		var paused := _rule_fingerprint(game)
+		ui.call("_process", 3.0)
+		check(_rule_fingerprint(game) == paused, label + " pause stops simulation and RNG consumption after resizing")
+	_reset()
+	root.size = Vector2i(1440, 960)
+	await process_frame
+	ui.call("_update_layout")
+
+func _native_click(position: Vector2) -> void:
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = root.get_screen_transform() * position
+	press.global_position = press.position
+	Input.parse_input_event(press)
+	await process_frame
+	var release: InputEventMouseButton = press.duplicate()
+	release.pressed = false
+	Input.parse_input_event(release)
+	await process_frame
+
+func _test_visual_feedback() -> void:
+	_reset()
+	_drag_shop(2, Vector2i(2, 2))
+	_click(_center("PRIMARY_RECT"))
+	ui.call("_process", 1.0)
+	var kinds: Array[String] = []
+	for effect in Array(ui.get("effects")):
+		kinds.append(str(effect["kind"]))
+	check(kinds.has("arrow") and kinds.has("slash"), "Real bow and sword attacks produce distinct event effects")
+	_click(_center("MENU_RECT"))
+	var visual_before := var_to_str([ui.get("elapsed"), ui.get("hero_clip_time"), ui.get("enemy_clip_time"), ui.get("effects"), ui.get("floating"), ui.get("item_flashes")])
+	ui.call("_process", 3.0)
+	check(visual_before == var_to_str([ui.get("elapsed"), ui.get("hero_clip_time"), ui.get("enemy_clip_time"), ui.get("effects"), ui.get("floating"), ui.get("item_flashes")]), "Pause freezes animation frames, particles, cooldown flashes and damage text")
+	_click(_center("MENU_NEW"))
+	_click(_center("MENU_NEW"))
+	check(game.get("phase") == "prepare" and ui.get("hero_clip") == "idle" and ui.get("enemy_clip") == "idle" and float(ui.get("hero_clip_time")) == 0.0 and float(ui.get("enemy_clip_time")) == 0.0, "Restarting from combat returns both actors to their initial idle pose")
+	check(Array(ui.get("effects")).is_empty() and Array(ui.get("floating")).is_empty() and Dictionary(ui.get("item_flashes")).is_empty() and float(ui.get("hero_flash")) == 0.0 and float(ui.get("enemy_flash")) == 0.0, "Restart clears prior-run effects before inventory UIDs are reused")
+	_reset()
+
+func _rule_fingerprint(run: RefCounted) -> String:
+	var rng: RandomNumberGenerator = run.get("_rng")
+	return var_to_str([
+		run.get("items"), run.get("shop_offers"), run.get("gold"),
+		run.get("wave"), run.get("hp"), run.get("max_hp"),
+		run.get("phase"), run.get("enemy_hp"), run.get("enemy_max_hp"),
+		run.get("battle_time"), run.call("get_stats"), rng.seed, rng.state,
+	])

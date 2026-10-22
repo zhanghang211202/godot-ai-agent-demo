@@ -5,7 +5,10 @@
 | 文件 | 来源与制作方式 |
 | --- | --- |
 | `scripts/visuals/pixel_art.gd` | 本项目原创代码像素美术。英雄、史莱姆、哥布林、狼、树人及装备、金币、生命等图标，使用手工编写的像素矩阵与调色板，通过 Godot `Image` 在运行时生成；没有加载参考游戏素材。 |
-| `assets/art/forest_background.png` | 本项目通过 OpenAI 内置 **imagegen**，根据原创场景提示生成的森林遗迹战斗背景。生成提示与美术方向记录在 [art-direction.md](art-direction.md)；不是参考游戏的原图或截图。 |
+| `scripts/visuals/pixel_art_v03.gd`、`assets/art/v03/` | 原创代码像素美术样板：主角与苔团各 14 帧、剑盾磨刀石的缩略图及占格图。PNG 由代码导出，原生绘制与导出一致；资源和 SHA-256 见 [manifest](../assets/art/v03/manifest.json)。其余装备和敌人明确登记为旧素材占位。 |
+| `scripts/ui/forest_stage.gd`、`assets/art/v03/environments/forest/stage.png` | 本轮原创代码绘制的 512×144 森林舞台，限定调色板、固定独立随机源，运行时缓存；层次合成为一张，没有使用原作或外部图片。 |
+| `scripts/ui/ember_theme.gd` | 本轮原创代码绘制的皮革、纸张、铜件与按钮样式。 |
+| `assets/art/forest_background.png` | v0.1/v0.2 采用的原创 **imagegen** 森林背景；保留供历史对比，当前样板使用上面的代码森林。生成提示保留在 [art-direction.md](art-direction.md) 附录；不是参考游戏的原图或截图。 |
 | `assets/fonts/NotoSansCJKsc-Regular.otf` | **Noto Sans CJK SC Regular**，字体内嵌版本为 **2.004**，版权声明为 **© 2014–2021 Adobe (http://www.adobe.com/)**。来源为 [Noto CJK 官方仓库中的字体文件](https://github.com/notofonts/noto-cjk/blob/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf)。 |
 
 Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许可证 [assets/fonts/OFL.txt](../assets/fonts/OFL.txt)，亦可查阅 [Noto CJK 官方许可证](https://github.com/notofonts/noto-cjk/blob/main/Sans/LICENSE)。字体保留其独立许可证及内嵌版权信息；随项目分发时应一并保留这些信息。

@@ -1,0 +1,558 @@
+{
+	"allowed_scales": [
+		2,
+		3
+	],
+	"assets": [
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"clips": {
+				"attack": {
+					"frame_seconds": 0.075,
+					"frames": [
+						4,
+						5,
+						6,
+						7
+					],
+					"loop": false
+				},
+				"defeat": {
+					"frame_seconds": 0.11,
+					"frames": [
+						12,
+						13,
+						14,
+						15
+					],
+					"loop": false
+				},
+				"hurt": {
+					"frame_seconds": 0.08,
+					"frames": [
+						8,
+						9
+					],
+					"loop": false
+				},
+				"idle": {
+					"frame_seconds": 0.15,
+					"frames": [
+						0,
+						1,
+						2,
+						3
+					],
+					"loop": true
+				}
+			},
+			"facing": "right",
+			"filter": "nearest",
+			"frame_size": [
+				64,
+				64
+			],
+			"id": "character.hero",
+			"kind": "character_sheet",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/characters/hero_sheet.png",
+			"pivot": [
+				32,
+				58
+			],
+			"prompt_record": null,
+			"sha256": "d689981705a2353ce3ac7caffdc3bddee57607277f7f61100a3f183ac8d0ec9f",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				256,
+				256
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"clips": {
+				"attack": {
+					"frame_seconds": 0.075,
+					"frames": [
+						4,
+						5,
+						6,
+						7
+					],
+					"loop": false
+				},
+				"defeat": {
+					"frame_seconds": 0.11,
+					"frames": [
+						12,
+						13,
+						14,
+						15
+					],
+					"loop": false
+				},
+				"hurt": {
+					"frame_seconds": 0.08,
+					"frames": [
+						8,
+						9
+					],
+					"loop": false
+				},
+				"idle": {
+					"frame_seconds": 0.15,
+					"frames": [
+						0,
+						1,
+						2,
+						3
+					],
+					"loop": true
+				}
+			},
+			"facing": "left",
+			"filter": "nearest",
+			"frame_size": [
+				64,
+				64
+			],
+			"id": "character.slime",
+			"kind": "character_sheet",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/characters/slime_sheet.png",
+			"pivot": [
+				32,
+				58
+			],
+			"prompt_record": null,
+			"sha256": "afcf035e019d9d75f16c47d3773c02095aa3acd5dd576f14ac902b665258c278",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				256,
+				256
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"footprint": [
+				1,
+				2
+			],
+			"id": "item.sword.inventory",
+			"kind": "inventory",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/items/inventory/sword.png",
+			"pivot": [
+				16,
+				32
+			],
+			"prompt_record": null,
+			"rotation_policy": "whole_image_90_degrees",
+			"sha256": "e80564e58df828e9533bd139a99c4c6c838baab8039c0f96b09a60c8cf56fff7",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				32,
+				64
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"id": "item.sword.icon",
+			"kind": "icon",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/items/icons/sword.png",
+			"prompt_record": null,
+			"sha256": "9f5a1a4965a4a04d64c7465ff04e7865e85edf4895befe58e37396d34dc1b7e6",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"footprint": [
+				2,
+				2
+			],
+			"id": "item.shield.inventory",
+			"kind": "inventory",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/items/inventory/shield.png",
+			"pivot": [
+				32,
+				32
+			],
+			"prompt_record": null,
+			"rotation_policy": "whole_image_90_degrees",
+			"sha256": "bc3c11c01ed6adc155080806323a30fe5ae21bd8069e79d97bbb3fb2df081f15",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				64,
+				64
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"id": "item.shield.icon",
+			"kind": "icon",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/items/icons/shield.png",
+			"prompt_record": null,
+			"sha256": "6fdf13355dd045bc3b53d6168321d9179f131acc0c3dbb66629887efa9d1fe5c",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"footprint": [
+				1,
+				1
+			],
+			"id": "item.whetstone.inventory",
+			"kind": "inventory",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/items/inventory/whetstone.png",
+			"pivot": [
+				16,
+				16
+			],
+			"prompt_record": null,
+			"rotation_policy": "whole_image_90_degrees",
+			"sha256": "19c74808f973ea27c7cb5830ac6fdc4629cb197beed434c7b9bff23ad47403d5",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"id": "item.whetstone.icon",
+			"kind": "icon",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/items/icons/whetstone.png",
+			"prompt_record": null,
+			"sha256": "19c74808f973ea27c7cb5830ac6fdc4629cb197beed434c7b9bff23ad47403d5",
+			"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		},
+		{
+			"allowed_scales": [
+				2,
+				3
+			],
+			"author": "Emberpack project / Codex",
+			"filter": "nearest",
+			"ground_y": 126,
+			"id": "environment.forest",
+			"kind": "environment",
+			"layering": "flattened_native_layers_with_runtime_side_extension",
+			"license": "project_original_no_third_party_art",
+			"method": "original_native_code_pixel_art",
+			"palette_id": "ember_forest_v1_sample",
+			"path": "res://assets/art/v03/environments/forest/stage.png",
+			"prompt_record": null,
+			"sha256": "5700011ac2ef50fbd61b2a9a13b5d81ed05654181a2d085bae6a75c2d62fd26f",
+			"source_path": "res://scripts/ui/forest_stage.gd",
+			"source_size": [
+				512,
+				144
+			],
+			"source_url": null,
+			"status": "integrated_in_runtime_art_sample",
+			"version": "v0.3-M1"
+		}
+	],
+	"author": "Emberpack project / Codex",
+	"fallbacks": [
+		{
+			"footprint": [
+				1,
+				3
+			],
+			"id": "item.longsword.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				32,
+				96
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				1,
+				3
+			],
+			"id": "item.flame_sword.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				32,
+				96
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				2,
+				2
+			],
+			"id": "item.thorn_shield.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				64,
+				64
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				2,
+				1
+			],
+			"id": "item.bow.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				64,
+				32
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				3,
+				1
+			],
+			"id": "item.windbow.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				96,
+				32
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				1,
+				1
+			],
+			"id": "item.herb.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				1,
+				1
+			],
+			"id": "item.potion.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				1,
+				2
+			],
+			"id": "item.greater_potion.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				32,
+				64
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"footprint": [
+				1,
+				1
+			],
+			"id": "item.ember.inventory",
+			"method": "legacy_32px_icon_centered_on_transparent_footprint_without_stretch",
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				32,
+				32
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"id": "character.wolf",
+			"method": "legacy_static_texture",
+			"pivot": [
+				48,
+				88
+			],
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				96,
+				96
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"id": "character.goblin",
+			"method": "legacy_static_texture",
+			"pivot": [
+				48,
+				88
+			],
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				96,
+				96
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"id": "character.boss",
+			"method": "legacy_static_texture",
+			"pivot": [
+				48,
+				88
+			],
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				96,
+				96
+			],
+			"status": "legacy_placeholder"
+		},
+		{
+			"id": "character.tree",
+			"method": "legacy_static_texture",
+			"pivot": [
+				48,
+				88
+			],
+			"source_path": "res://scripts/visuals/pixel_art.gd",
+			"source_size": [
+				96,
+				96
+			],
+			"status": "legacy_placeholder"
+		}
+	],
+	"filter": "nearest",
+	"license": "project_original_no_third_party_art",
+	"limitations": [
+		"New art covers hero/slime, sword/shield/whetstone and the forest stage; other items and enemies remain placeholders.",
+		"No weapon-specific character equipment layers.",
+		"Source contact sheets are not runtime game screenshots.",
+		"New animation does not add or modify combat mechanics.",
+		"Forest painting layers are flattened, without parallax."
+	],
+	"method": "original_native_code_pixel_art",
+	"milestone": "v0.3-M1-art-sample",
+	"palette_id": "ember_forest_v1_sample",
+	"preview": {
+		"animation": "previews/animation_contact.png",
+		"kind": "asset_contact_sheet_not_runtime",
+		"sample": "previews/sample_contact.png"
+	},
+	"prompt_record": null,
+	"schema_version": 1,
+	"source_path": "res://scripts/visuals/pixel_art_v03.gd",
+	"source_url": null,
+	"status": "integrated_in_runtime_art_sample"
+}
