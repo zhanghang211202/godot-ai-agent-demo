@@ -1,10 +1,14 @@
 # 星火旅囊 · Emberpack
 
-一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前版本 **0.2**。
+一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
 
-后续开发以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线。计划先完成 v0.3 美术与交互升级，再做 v0.4 构筑/敌人机制，最后以 v0.5 交付完整章节；这些目标尚未实装。[全部文档入口](docs/README.md)。
+后续开发以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线。本轮已完成 M1-A/B 布局与美术样板；M1-C 全量素材、渐进教学、属性比较与撤销仍待完成，v0.4 / v0.5 也尚未实装。[本轮范围与验证](docs/iteration-03-sample.md) · [全部文档入口](docs/README.md)。
 
 ![准备阶段](docs/screenshots/prepare.png)
+
+本轮加入原生窗口排版、皮革行囊与纸质手记、主角/苔团各 14 帧动画、短剑/盾/磨刀石的专用占格图，以及统一像素尺度的森林。其余 9 件装备和其他敌人仍使用登记过的旧素材占位。
+
+![实际运行的战斗片段（无声、缩小显示）](docs/devlog/screenshots/v0.3-sample/battle-motion.gif)
 
 ## 已实现
 
@@ -82,7 +86,7 @@ npm run game:test
 
 测试包括背包合法性、金币原子性、合成空间、方向旋转、祝福领取、帧率独立战斗、64 位随机状态保存、损坏记录和写入失败保护，以及通过鼠标交互构筑、五波通关、保存/读取和重开。
 
-0.2 验证结果：核心逻辑 **126 项**、存档 **148 项**、界面交互 **111 项**，共 **385 项检查**。
+当前验证结果：核心逻辑 **126 项**、存档 **148 项**、界面交互 **210 项**、美术资源契约 **465 项**，共 **949 项检查**。界面检查包含五种窗口尺寸、原生鼠标事件、重开清理、表现暂停，以及同种子战斗与纯规则结果一致性。实机截图确认了 1280×800、1440×960、1920×1080；不代表其他 DPI、平台或所有美术体验已经验收。
 
 ![自动战斗](docs/screenshots/battle.png)
 
@@ -93,6 +97,7 @@ npm run game:test
 - [美术规格与提升计划](docs/art-direction.md)
 - [首个 Demo 计划（历史）](docs/demo-plan.md)
 - [0.2 迭代范围与验收](docs/iteration-02.md)
+- [0.3 美术样板范围与验收](docs/iteration-03-sample.md)
 - [日语开发记录与历代截图](docs/devlog/README.ja.md)
 - [日语博客草稿](docs/blog/emberpack-making-of.ja.md)
 - [实机与 Wiki 研究](docs/reference-research.md)
