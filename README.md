@@ -2,9 +2,9 @@
 
 一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
 
-**2026-10-23：正在重新选择设定与标题。** 新方向使用更精细的 16-bit fantasy / tactical RPG 像素角色，构筑载体不再是背包。已制作[八个设定与角色概念](docs/art-style-exploration.md)，下载仓库后可打开[离线双图对照页](docs/concepts/2026-10-23/index.html)。这些是 AI 生成概念，尚未替换游戏；本页标题、操作和运行截图描述的是现有历史样板。
+**2026-10-23：后续方向确定为多职业背包构筑。** 初期做魔法师与 H 方向的近战骑士，每职业至少三种流派，分别设计资源获取、组合机制和背景；炼金术士后续再做。详见[职业与流派设计](docs/classes-and-builds.md)。美术以精细 16-bit fantasy / tactical RPG 为目标，[八套概念](docs/art-style-exploration.md)与[离线对照页](docs/concepts/2026-10-23/index.html)保留为早期探索。职业与新美术尚未接入；本页标题、操作和截图仍描述现有样板。
 
-后续开发以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线。M1-A/B 布局与森林样板已完成；接下来先选设定、比较同题材三种主角造型，再做新角色/背景/UI 的一战实机样板，之后恢复 M1-C 全量素材、渐进教学、属性比较与撤销。v0.4 / v0.5 也尚未实装。[样板范围与验证](docs/iteration-03-sample.md) · [全部文档入口](docs/README.md)。
+后续以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线，按 C0 职业规则与接口 → C1 双职业各一流派的一战切片 → C2 各三流派五战 → C3 教学、平衡与 Windows 交付推进。M1-A/B 森林样板已完成；旧未完成路线已按新需求重排。[样板范围与验证](docs/iteration-03-sample.md) · [全部文档入口](docs/README.md)。
 
 ![准备阶段](docs/screenshots/prepare.png)
 
@@ -94,6 +94,7 @@ npm run game:test
 
 ## 项目资料
 
+- [双职业与每职业三流派设计](docs/classes-and-builds.md)
 - [八个精细像素设定候选与概念图](docs/art-style-exploration.md)
 - [离线概念双图对照页](docs/concepts/2026-10-23/index.html)
 - [换设定与新实机样板计划](docs/art-retheme-plan.md)
