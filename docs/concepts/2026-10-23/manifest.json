@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-23",
+  "timezone": "Asia/Tokyo",
+  "classification": "AI-generated setting / art-direction concepts. Not Godot runtime screenshots, not production sprites or animation.",
+  "creationMethod": "Built-in imagegen, with the user's two local style charts supplied as visual references. Prompts are recorded in prompts.json.",
+  "reviewPage": "index.html",
+  "prompts": "prompts.json",
+  "references": "User-provided local style charts are not redistributed. The images are original concept explorations, not extracted assets from the references.",
+  "imageLimitations": [
+    "No pixel-exact source resolution, palette size or character proportions are inferred from the user's charts.",
+    "Generated large characters can be more slender than the final battle sprite; background detail and ornate frames need simplification.",
+    "Grid counts, item shapes, prices, labels, resources and connection marks in these boards are visual placeholders, not verified gameplay or implemented features.",
+    "Final game art requires separate protagonist sprites, real animation frames, consistent source pixel density and validation in Godot."
+  ],
+  "files": [
+    {
+      "id": "A",
+      "file": "A-moonwitch.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3355743,
+      "sha256": "34aa4c68305d5dd9c66eeb20e3bd0a9b51cbf59aa92d5f08ca67b9880170dafb",
+      "promptId": "A",
+      "sourceGenerationFilename": "exec-60e09b44-cee5-4233-ad4c-b47c34f91ebd.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "B",
+      "file": "B-clockwork.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3032674,
+      "sha256": "b63e9ace54540c910d249f9a0d9118c5750f61dbff6dd1de6b08f4d60568a81e",
+      "promptId": "B",
+      "sourceGenerationFilename": "exec-66be1384-0b52-47ba-a1dc-1859a8e2a0ad.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "C",
+      "file": "C-paper-spirit.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3078753,
+      "sha256": "8f444cf739dcc820bafdb26fb46f4f98e7baf74ae39a6c0eb6787fc12f063935",
+      "promptId": "C",
+      "sourceGenerationFilename": "exec-cc26db72-5bc7-4450-a15b-957d5749818a.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "D",
+      "file": "D-tide.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3225243,
+      "sha256": "b3f41a5744e2d4e44d09739235f8a86a0b6992b3f75df7b0d7b7e672ba5d49b2",
+      "promptId": "D",
+      "sourceGenerationFilename": "exec-d94bec81-6a0a-4340-a050-aea6196f913e.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "E",
+      "file": "E-glasshouse.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3298725,
+      "sha256": "f029baa4eae6ee3e4568d33d97fab62313c3e48f4f211d502a0944fb49da8ce6",
+      "promptId": "E",
+      "sourceGenerationFilename": "exec-f469265e-3959-4e1b-8672-67d1ce1f7964.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "F",
+      "file": "F-resonance.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2925337,
+      "sha256": "64d352fde0ddc56ec8343ed0b920b40750bd0235b094a728676d3e226ec1058a",
+      "promptId": "F",
+      "sourceGenerationFilename": "exec-04144dc1-3e08-4cb7-bdf5-231e58a8d46b.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "G",
+      "file": "G-alchemy.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2906255,
+      "sha256": "42b2e6c5764afeef97b44c863837e6c79f68e7b1d237514d06ac6eae83c7bb77",
+      "promptId": "G",
+      "sourceGenerationFilename": "exec-f2ea88b8-4e1a-49c3-8f9d-fabe9ff40621.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    },
+    {
+      "id": "H",
+      "file": "H-reliquary.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3206425,
+      "sha256": "38f12677682b2a95e52d261fed79aec8ff3410e4e6416bb44236f436cf08b364",
+      "promptId": "H",
+      "sourceGenerationFilename": "exec-c490cfd6-8c20-46fb-9229-a5f5549a28d9.png",
+      "role": "Art-direction comparison board",
+      "runtimeCapture": false,
+      "productionAsset": false
+    }
+  ]
+}

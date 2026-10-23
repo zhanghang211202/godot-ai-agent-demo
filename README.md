@@ -2,7 +2,9 @@
 
 一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
 
-后续开发以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线。本轮已完成 M1-A/B 布局与美术样板；M1-C 全量素材、渐进教学、属性比较与撤销仍待完成，v0.4 / v0.5 也尚未实装。[本轮范围与验证](docs/iteration-03-sample.md) · [全部文档入口](docs/README.md)。
+**2026-10-23：正在重新选择设定与标题。** 新方向使用更精细的 16-bit fantasy / tactical RPG 像素角色，构筑载体不再是背包。已制作[八个设定与角色概念](docs/art-style-exploration.md)，下载仓库后可打开[离线双图对照页](docs/concepts/2026-10-23/index.html)。这些是 AI 生成概念，尚未替换游戏；本页标题、操作和运行截图描述的是现有历史样板。
+
+后续开发以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线。M1-A/B 布局与森林样板已完成；接下来先选设定、比较同题材三种主角造型，再做新角色/背景/UI 的一战实机样板，之后恢复 M1-C 全量素材、渐进教学、属性比较与撤销。v0.4 / v0.5 也尚未实装。[样板范围与验证](docs/iteration-03-sample.md) · [全部文档入口](docs/README.md)。
 
 ![准备阶段](docs/screenshots/prepare.png)
 
@@ -92,6 +94,9 @@ npm run game:test
 
 ## 项目资料
 
+- [八个精细像素设定候选与概念图](docs/art-style-exploration.md)
+- [离线概念双图对照页](docs/concepts/2026-10-23/index.html)
+- [换设定与新实机样板计划](docs/art-retheme-plan.md)
 - [产品需求文档](docs/requirements.md)
 - [开发计划与里程碑](docs/development-plan.md)
 - [美术规格与提升计划](docs/art-direction.md)
