@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>八种新设定 · 像素美术方向对照</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #edf0f4;
+      --muted: #a5aab7;
+      --line: #343641;
+      --panel: #20212a;
+      --page: #14151c;
+      --accent: #e6c995;
+      --soft: #292631;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 80% 0, #302634 0, transparent 42rem), var(--page);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    button, select { font: inherit; }
+    button, a, select { -webkit-tap-highlight-color: transparent; }
+    button, select {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+    }
+    button { padding: .45rem .85rem; cursor: pointer; }
+    button:hover { background: #34333f; border-color: #72677a; }
+    button[aria-pressed="true"] {
+      color: #201b14;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    select { width: 100%; padding: .5rem 2rem .5rem .7rem; }
+    a { color: var(--accent); text-underline-offset: .2em; }
+    a:hover { color: #fff0d3; }
+    :focus-visible { outline: 3px solid #efdbac; outline-offset: 4px; }
+    [hidden] { display: none !important; }
+    .skip {
+      position: absolute; left: 1rem; top: -6rem; z-index: 10;
+      padding: .7rem 1rem; background: var(--panel);
+    }
+    .skip:focus { top: 1rem; }
+    .shell { width: min(1480px, 100% - 64px); margin: 0 auto; }
+    header { padding: 56px 0 24px; }
+    .eyebrow { color: var(--accent); font-size: 12px; letter-spacing: .16em; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { max-width: 28ch; margin: 12px 0 18px; font-size: clamp(28px, 3.5vw, 46px); line-height: 1.32; letter-spacing: -.025em; }
+    h2 { font-size: 21px; font-weight: 650; }
+    h3 { font-size: 17px; font-weight: 650; }
+    .intro { max-width: 860px; color: #c6c8d1; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; }
+    .tag { border: 1px solid #504452; border-radius: 100px; padding: 3px 11px; color: #d6c7da; font-size: 12px; }
+    .note { color: var(--muted); font-size: 13px; }
+    .baseline {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+      border-block: 1px solid var(--line); padding: 20px 0; margin-bottom: 32px;
+    }
+    .baseline strong { color: #d9dae3; display: block; margin-bottom: 4px; font-weight: 600; }
+    .baseline p { color: var(--muted); font-size: 13px; }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; }
+    .mode { display: inline-flex; gap: 6px; }
+    .mode button { min-width: 100px; }
+    .pixel-control { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); font-size: 13px; }
+    .pixel-control input { width: 17px; height: 17px; accent-color: var(--accent); }
+    .selectors { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    .selectors.is-single { grid-template-columns: minmax(0, 540px); }
+    .selector label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+    .stage { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 18px; }
+    .stage.is-single { grid-template-columns: 1fr; max-width: 1150px; margin-inline: auto; }
+    figure { margin: 0; min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .image-link { display: block; background: #101118; }
+    .image-link img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; }
+    .pixelated .image-link img, .pixelated .thumbnail img { image-rendering: pixelated; }
+    figcaption { padding: 16px 18px 18px; }
+    .figure-title { display: flex; gap: 8px; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .figure-title a { font-size: 12px; white-space: nowrap; }
+    .subtitle { color: var(--accent); font-size: 13px; margin-bottom: 8px; }
+    .figure-desc { color: #b5b9c6; font-size: 13px; }
+    .missing { color: #f1c4b5; padding: 12px 18px; background: #422c2b; font-size: 13px; }
+    .stage-note { margin-top: 12px; }
+    .gallery-section { margin-top: 46px; }
+    .gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+    .card { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .thumbnail { display: block; background: #101118; }
+    .thumbnail img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; }
+    .card-body { padding: 14px; }
+    .card-title { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .letter { color: var(--accent); font-size: 12px; font-weight: 600; }
+    .card p { color: var(--muted); font-size: 12px; margin-top: 7px; }
+    .card-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .card-actions button { min-height: 38px; padding: 4px 9px; font-size: 12px; }
+    .card-actions button:first-child { border-color: #6d5b48; color: #e9cfa7; }
+    .review {
+      margin-top: 36px; padding: 22px; border: 1px solid var(--line); border-radius: 12px;
+      background: linear-gradient(120deg, #292530, #1c2028);
+    }
+    .review h2 { margin-bottom: 10px; font-size: 18px; }
+    .review ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 28px; padding-left: 22px; margin: 0; }
+    .review li { color: #bdc0cb; font-size: 13px; padding-left: 2px; }
+    .review strong { color: #e8e5ed; font-weight: 600; }
+    footer { padding: 28px 0 44px; color: var(--muted); font-size: 12px; }
+    footer p + p { margin-top: 6px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (min-width: 1800px) { .stage.is-single { max-width: 1300px; } }
+    @media (max-width: 1080px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 700px) {
+      .shell { width: calc(100% - 28px); }
+      header { padding-top: 30px; }
+      .baseline { grid-template-columns: 1fr; gap: 14px; margin-bottom: 24px; }
+      .section-head { align-items: start; flex-direction: column; gap: 4px; }
+      .stage, .selectors { grid-template-columns: 1fr; gap: 14px; }
+      .review ol { grid-template-columns: 1fr; gap: 10px; }
+      .figure-title { flex-wrap: wrap; }
+      .gallery { gap: 12px; }
+      .card-body { padding: 12px; }
+      .card-title { align-items: start; flex-direction: column; gap: 0; }
+      .card h3 { font-size: 16px; }
+      .card-actions { gap: 5px; }
+      .card-actions button { flex: 1 1 auto; }
+      .card-actions button:first-child { flex-basis: 100%; }
+      .pixel-control { min-height: 42px; }
+    }
+    @media (max-width: 390px) { .gallery { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#comparison">跳到大图对照</a>
+  <div class="shell" id="app">
+    <header>
+      <p class="eyebrow">ART DIRECTION STUDY · 2026.10.23</p>
+      <h1>八种新世界，<br>同一套构筑玩法。</h1>
+      <p class="intro">把格子变成世界里的一件装置，再让角色、场景与界面讲同一个故事。下面八个方向用于选定新设定与整体气质；名称、主角性别与具体服装都还可以调整。</p>
+      <div class="legend" aria-label="图像性质">
+        <span class="tag">AI 生成概念图</span>
+        <span class="tag">不是 Godot 运行画面</span>
+        <span class="tag">不是生产用精灵表</span>
+        <span class="tag">最终方向待选择</span>
+      </div>
+    </header>
+
+    <aside class="baseline" aria-label="本次评审基准">
+      <div>
+        <strong>角色品质基准</strong>
+        <p>以参考图的 16-BIT FANTASY / TACTICAL RPG 为方向：清晰的脸与眼睛、成组的发束、可辨识的布料／皮革／金属、成年比例和武器剪影。概念大图不能替代小尺寸战斗精灵的实机验证。</p>
+      </div>
+      <div>
+        <strong>玩法保持</strong>
+        <p>6×4 摆放、旋转、同级合成、定向协同与自动战斗；当前 12 件物品、5 条特殊配方、7 种祝福、5 场战斗的预算不变。图中文字、价格、格形与按钮只表达视觉气氛，不作为规则承诺。</p>
+      </div>
+    </aside>
+
+    <main>
+      <section id="comparison" aria-labelledby="comparison-title">
+        <div class="section-head">
+          <h2 id="comparison-title">放在一起看</h2>
+          <p class="note">点击图像打开原图 · 单图模式可用 ← / → 切换</p>
+        </div>
+        <div class="toolbar">
+          <div class="mode" role="group" aria-label="查看模式">
+            <button type="button" id="mode-single" aria-pressed="false">单图查看</button>
+            <button type="button" id="mode-compare" aria-pressed="true">双图对照</button>
+          </div>
+          <label class="pixel-control"><input type="checkbox" id="pixelated">保留像素边缘显示</label>
+        </div>
+        <div class="selectors" id="selectors">
+          <div class="selector">
+            <label for="select-left" id="label-left">左侧方向</label>
+            <select id="select-left"></select>
+          </div>
+          <div class="selector" id="right-selector">
+            <label for="select-right">右侧方向</label>
+            <select id="select-right"></select>
+          </div>
+        </div>
+        <div class="stage" id="stage" aria-label="概念大图对照"></div>
+        <p class="note stage-note">保留完整 3:2 画面，不裁切角色或场景。像素边缘开关只改变浏览器缩放方式，不会增加图像细节。</p>
+        <p class="sr-only" aria-live="polite" aria-atomic="true" id="announcement"></p>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="gallery-title">
+        <div class="section-head">
+          <h2 id="gallery-title">全部八个方向</h2>
+          <p class="note">先选喜欢的世界，再做同一主角的三个具体方案。</p>
+        </div>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <aside class="review" aria-labelledby="review-title">
+        <h2 id="review-title">评审时，先看这三件事</h2>
+        <ol>
+          <li><strong>想不想成为这个角色？</strong><br>脸、身形、服装层次与武器是否有记忆点。</li>
+          <li><strong>格子为什么在这个世界里？</strong><br>盘面、物品与合成是否有自然的设定解释。</li>
+          <li><strong>能不能撑起整个游戏？</strong><br>背景、敌人、界面能否延续同一套色彩与材质语言。</li>
+        </ol>
+      </aside>
+      <noscript>
+        <p class="review">此页的对照切换需要 JavaScript。可直接打开原图：
+          <a href="A-moonwitch.png">A 月蚀咒庭</a> · <a href="B-clockwork.png">B 雾港机巧师</a> ·
+          <a href="C-paper-spirit.png">C 千纸夜行</a> · <a href="D-tide.png">D 潮音回廊</a> ·
+          <a href="E-glasshouse.png">E 荆棘温室</a> · <a href="F-resonance.png">F 零号共鸣</a> ·
+          <a href="G-alchemy.png">G 黄昏炼金室</a> · <a href="H-reliquary.png">H 圣像余烬</a>。
+        </p>
+      </noscript>
+    </main>
+    <footer>
+      <p>这些方向尚未替换游戏里的历史森林样板。选定设定后，依次验证主角方案、专用战斗精灵与背景／界面／一场战斗的运行样板。</p>
+      <p>离线评审页 · 无外部依赖、统计或上传 · 选择仅保存在当前页内存中，刷新后恢复 A / C 对照。</p>
+    </footer>
+  </div>
+  <script>
+    'use strict';
+    const concepts = [
+      { id: 'A', file: 'A-moonwitch.png', name: '月蚀咒庭', grid: '咒印星盘', palette: '紫金 · 月相 · 夜庭', hero: '紫金月相魔女',
+        world: '月光、咒印与幽深庭院共同构成魔法空间。让装备像被安放进星盘的咒物，以清晰轮廓对比繁密的夜色。' },
+      { id: 'B', file: 'B-clockwork.png', name: '雾港机巧师', grid: '核心模块盘', palette: '蓝铜 · 雨港 · 机械', hero: '雨港机巧师',
+        world: '冷蓝雨雾包住铜色机器与港口灯火。模块、齿轮与能源核心成为盘面的视觉语汇，角色以工具和机械配件建立身份。' },
+      { id: 'C', file: 'C-paper-spirit.png', name: '千纸夜行', grid: '折纸符阵', palette: '朱红 · 纸白 · 夜桥', hero: '纸灵与符术行者',
+        world: '红桥、夜灯与纸灵组成静谧而奇异的旅途。折纸和符札让旋转与拼合获得直观解释，衣料与纸面的层次决定角色质感。' },
+      { id: 'D', file: 'D-tide.png', name: '潮音回廊', grid: '珊瑚共鸣盘', palette: '珍珠 · 海蓝 · 王庭', hero: '海底王庭行者',
+        world: '珍珠光穿过海底王庭，珊瑚与石柱形成有节奏的空间。装备可围绕贝、珊瑚和共鸣器设计，透明水色衬托角色轮廓。' },
+      { id: 'E', file: 'E-glasshouse.png', name: '荆棘温室', grid: '活体花床', palette: '玉绿 · 酒红 · 玻璃', hero: '温室守护者',
+        world: '玻璃花房让玉绿色植被与酒红花朵交织。花床承载物品的生长与组合，角色以园艺、藤蔓和礼服感服装建立辨识度。' },
+      { id: 'F', file: 'F-resonance.png', name: '零号共鸣', grid: '回路矩阵', palette: '黑白 · 薄荷 · 轨道', hero: '轨道圣殿行者',
+        world: '轨道圣殿使用黑白结构与薄荷色能量刻线。回路矩阵把邻接与方向呈现为可读的连接关系，角色强调干净剪影和材质分区。' },
+      { id: 'G', file: 'G-alchemy.png', name: '黄昏炼金室', grid: '炼成工作台', palette: '琥珀 · 暖木 · 工房', hero: '黄昏炼金师',
+        world: '琥珀色灯光照亮暖木工房、瓶罐与金属器具。工作台直接解释物品摆放和炼成，服装通过围裙、皮具与饰件呈现层次。' },
+      { id: 'H', file: 'H-reliquary.png', name: '圣像余烬', grid: '遗物祭台', palette: '象牙金 · 绯红 · 废都', hero: '遗物巡礼者',
+        world: '象牙色石构与绯红余烬构成庄严的废都。遗物祭台为收集和组合提供仪式感，角色以金属、布料和圣像纹样形成视觉中心。' }
+    ];
+    const state = { mode: 'compare', left: 'A', right: 'C' };
+    const app = document.getElementById('app');
+    const stage = document.getElementById('stage');
+    const selectors = document.getElementById('selectors');
+    const leftSelect = document.getElementById('select-left');
+    const rightSelect = document.getElementById('select-right');
+    const rightSelector = document.getElementById('right-selector');
+    const singleButton = document.getElementById('mode-single');
+    const compareButton = document.getElementById('mode-compare');
+    const announcement = document.getElementById('announcement');
+    const getConcept = id => concepts.find(concept => concept.id === id);
+
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function makeImage(concept, lazy) {
+      const img = element('img');
+      img.src = concept.file;
+      img.alt = `${concept.id} ${concept.name}：${concept.hero}、${concept.grid}与${concept.palette}风格背景的生成概念图`;
+      img.width = 1536;
+      img.height = 1024;
+      img.decoding = 'async';
+      if (lazy) img.loading = 'lazy';
+      return img;
+    }
+
+    function makeOriginalLink(concept, className) {
+      const link = element('a', className);
+      link.href = concept.file;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.setAttribute('aria-label', `打开 ${concept.id} ${concept.name}原图（新标签页）`);
+      return link;
+    }
+
+    function makeFigure(concept) {
+      const figure = element('figure');
+      const imageLink = makeOriginalLink(concept, 'image-link');
+      const img = makeImage(concept, false);
+      imageLink.append(img);
+      figure.append(imageLink);
+      const missing = element('p', 'missing', '图像暂未就绪。请在同目录素材保存完成后刷新本页。');
+      missing.hidden = true;
+      img.addEventListener('error', () => { missing.hidden = false; });
+      figure.append(missing);
+      const caption = element('figcaption');
+      const title = element('div', 'figure-title');
+      title.append(element('h3', '', `${concept.id} · ${concept.name}`));
+      const original = makeOriginalLink(concept);
+      original.textContent = '打开原图 ↗';
+      title.append(original);
+      caption.append(title, element('p', 'subtitle', `${concept.grid} / ${concept.palette}`), element('p', 'figure-desc', concept.world));
+      figure.append(caption);
+      return figure;
+    }
+
+    function render(announce = true) {
+      const isSingle = state.mode === 'single';
+      singleButton.setAttribute('aria-pressed', String(isSingle));
+      compareButton.setAttribute('aria-pressed', String(!isSingle));
+      stage.classList.toggle('is-single', isSingle);
+      selectors.classList.toggle('is-single', isSingle);
+      rightSelector.hidden = isSingle;
+      document.getElementById('label-left').textContent = isSingle ? '当前方向' : '左侧方向';
+      leftSelect.value = state.left;
+      rightSelect.value = state.right;
+      const left = getConcept(state.left);
+      const right = getConcept(state.right);
+      stage.replaceChildren(makeFigure(left));
+      if (!isSingle) stage.append(makeFigure(right));
+      stage.setAttribute('aria-label', isSingle ? `单图：${left.name}` : `左侧 ${left.name}，右侧 ${right.name}`);
+      if (announce) announcement.textContent = isSingle ? `当前查看 ${left.id} ${left.name}` : `当前对照：左侧 ${left.id} ${left.name}，右侧 ${right.id} ${right.name}`;
+    }
+
+    function selectFromCard(id, target) {
+      if (target === 'single') {
+        state.mode = 'single';
+        state.left = id;
+      } else {
+        state.mode = 'compare';
+        state[target] = id;
+      }
+      render();
+      document.getElementById('comparison').scrollIntoView({ block: 'start' });
+      leftSelect.focus({ preventScroll: true });
+    }
+
+    function makeCard(concept) {
+      const card = element('article', 'card');
+      const thumbnail = makeOriginalLink(concept, 'thumbnail');
+      thumbnail.append(makeImage(concept, true));
+      const body = element('div', 'card-body');
+      const title = element('div', 'card-title');
+      title.append(element('span', 'letter', concept.id), element('h3', '', concept.name));
+      body.append(title, element('p', '', `${concept.grid} · ${concept.hero}`), element('p', '', concept.palette));
+      const actions = element('div', 'card-actions');
+      for (const [target, label] of [['single', '单独查看'], ['left', '放左侧'], ['right', '放右侧']]) {
+        const button = element('button', '', label);
+        button.type = 'button';
+        button.setAttribute('aria-label', `${label}：${concept.id} ${concept.name}`);
+        button.addEventListener('click', () => selectFromCard(concept.id, target));
+        actions.append(button);
+      }
+      body.append(actions);
+      card.append(thumbnail, body);
+      return card;
+    }
+
+    for (const concept of concepts) {
+      for (const select of [leftSelect, rightSelect]) {
+        const option = element('option', '', `${concept.id} · ${concept.name} — ${concept.grid}`);
+        option.value = concept.id;
+        select.append(option);
+      }
+      document.getElementById('gallery').append(makeCard(concept));
+    }
+    singleButton.addEventListener('click', () => { state.mode = 'single'; render(); });
+    compareButton.addEventListener('click', () => { state.mode = 'compare'; render(); });
+    leftSelect.addEventListener('change', () => { state.left = leftSelect.value; render(); });
+    rightSelect.addEventListener('change', () => { state.right = rightSelect.value; render(); });
+    document.getElementById('pixelated').addEventListener('change', event => {
+      app.classList.toggle('pixelated', event.target.checked);
+    });
+    document.addEventListener('keydown', event => {
+      if (state.mode !== 'single' || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.target.closest('input, select, textarea, button, a, [contenteditable="true"]')) return;
+      event.preventDefault();
+      const index = concepts.findIndex(concept => concept.id === state.left);
+      const delta = event.key === 'ArrowRight' ? 1 : -1;
+      state.left = concepts[(index + delta + concepts.length) % concepts.length].id;
+      render();
+    });
+    render(false);
+  </script>
+</body>
+</html>
