@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-24",
+  "timezone": "Asia/Tokyo",
+  "classification": "Six AI-generated original character appearance concepts, not runtime captures or production sprite sheets.",
+  "tool": "Built-in image_gen.imagegen; one transparent PNG generation per variant; no post-generation raster editing",
+  "prompts": "prompts.json",
+  "review": "../../character-design-review.md",
+  "selection": "No final appearance selected. Adult female presentation and shared palette are provisional comparison assumptions.",
+  "measurement": "Godot Image.load_from_file / get_used_rect (any nonzero alpha) / RGBA8 byte alpha counts / alpha >= 128 separate bounds; these bounds are measurements, not a guarantee of clean production sprites",
+  "limitations": [
+    "1024x1536 is the generated concept resolution, not the source resolution of any reference or the logical canvas of a battle sprite.",
+    "All visible source pixels have partial alpha (maximum below 255); faint nonzero pixels expand used_rect. Alpha is preserved and is not certified as production-ready.",
+    "Native review scales the same illustration to nonzero-alpha-bound heights of 128, 160 and 192 screen pixels. This is a silhouette aid, not RV-03 combat acceptance.",
+    "Private user reference charts are excluded from the repository. Prompted proportions, costume and prop details may deviate in the generated output; compare the review document."
+  ],
+  "files": [
+    {
+      "id": "MA",
+      "title": "法师A · 月庭礼装",
+      "file": "mage-a-lunar.png",
+      "bytes": 2597062,
+      "sha256": "d218f740f0cb2656c1c76ff80e9bb02870e33a45c7a864a06b1cd21bcce94e32",
+      "alpha_detection": 2,
+      "alpha_ge_128_bounds": {
+        "height": 1492,
+        "width": 990,
+        "x": 17,
+        "y": 19
+      },
+      "alpha_ge_128_pixels": 873235,
+      "height": 1536,
+      "max_alpha": 254,
+      "min_visible_alpha": 1,
+      "opaque_alpha_255_pixels": 0,
+      "partial_alpha_pixels": 979150,
+      "total_pixels": 1572864,
+      "transparent_alpha_zero_pixels": 593714,
+      "used_rect": {
+        "height": 1520,
+        "width": 1016,
+        "x": 0,
+        "y": 16
+      },
+      "width": 1024,
+      "role": "appearance concept; final selection pending"
+    },
+    {
+      "id": "MB",
+      "title": "法师B · 巡游短装",
+      "file": "mage-b-wayfarer.png",
+      "bytes": 2386718,
+      "sha256": "35a1e7d376d55bd68fb775da03eecf4b6f79909b96d40d46db4e76b602de03d9",
+      "alpha_detection": 2,
+      "alpha_ge_128_bounds": {
+        "height": 1488,
+        "width": 978,
+        "x": 37,
+        "y": 21
+      },
+      "alpha_ge_128_pixels": 775053,
+      "height": 1536,
+      "max_alpha": 254,
+      "min_visible_alpha": 1,
+      "opaque_alpha_255_pixels": 0,
+      "partial_alpha_pixels": 881315,
+      "total_pixels": 1572864,
+      "transparent_alpha_zero_pixels": 691549,
+      "used_rect": {
+        "height": 1519,
+        "width": 1024,
+        "x": 0,
+        "y": 17
+      },
+      "width": 1024,
+      "role": "appearance concept; final selection pending"
+    },
+    {
+      "id": "MC",
+      "title": "法师C · 奥术战装",
+      "file": "mage-c-arcane.png",
+      "bytes": 2466445,
+      "sha256": "94be082fb840e9746e40fb0b7c723e57266b697097c907ba6341f0fe1f695db4",
+      "alpha_detection": 2,
+      "alpha_ge_128_bounds": {
+        "height": 1510,
+        "width": 981,
+        "x": 25,
+        "y": 8
+      },
+      "alpha_ge_128_pixels": 791204,
+      "height": 1536,
+      "max_alpha": 254,
+      "min_visible_alpha": 1,
+      "opaque_alpha_255_pixels": 0,
+      "partial_alpha_pixels": 913571,
+      "total_pixels": 1572864,
+      "transparent_alpha_zero_pixels": 659293,
+      "used_rect": {
+        "height": 1536,
+        "width": 1010,
+        "x": 0,
+        "y": 0
+      },
+      "width": 1024,
+      "role": "appearance concept; final selection pending"
+    },
+    {
+      "id": "KA",
+      "title": "骑士A · 旌旗长枪",
+      "file": "knight-a-banner.png",
+      "bytes": 2239084,
+      "sha256": "2e1a17e8436437e38b17165021ac7f703c802b945e5473358daf39e325705660",
+      "alpha_detection": 2,
+      "alpha_ge_128_bounds": {
+        "height": 1510,
+        "width": 901,
+        "x": 89,
+        "y": 7
+      },
+      "alpha_ge_128_pixels": 674793,
+      "height": 1536,
+      "max_alpha": 254,
+      "min_visible_alpha": 1,
+      "opaque_alpha_255_pixels": 0,
+      "partial_alpha_pixels": 770742,
+      "total_pixels": 1572864,
+      "transparent_alpha_zero_pixels": 802122,
+      "used_rect": {
+        "height": 1520,
+        "width": 1010,
+        "x": 0,
+        "y": 0
+      },
+      "width": 1024,
+      "role": "appearance concept; final selection pending"
+    },
+    {
+      "id": "KB",
+      "title": "骑士B · 轻甲先锋",
+      "file": "knight-b-vanguard.png",
+      "bytes": 2231547,
+      "sha256": "b67c9c26db45de9576bf0e96215ea051726b4c519cd0e13e2691b74225f6524d",
+      "alpha_detection": 2,
+      "alpha_ge_128_bounds": {
+        "height": 1439,
+        "width": 938,
+        "x": 32,
+        "y": 53
+      },
+      "alpha_ge_128_pixels": 625178,
+      "height": 1536,
+      "max_alpha": 254,
+      "min_visible_alpha": 1,
+      "opaque_alpha_255_pixels": 0,
+      "partial_alpha_pixels": 717669,
+      "total_pixels": 1572864,
+      "transparent_alpha_zero_pixels": 855195,
+      "used_rect": {
+        "height": 1517,
+        "width": 1020,
+        "x": 0,
+        "y": 19
+      },
+      "width": 1024,
+      "role": "appearance concept; final selection pending"
+    },
+    {
+      "id": "KC",
+      "title": "骑士C · 遗物重刃",
+      "file": "knight-c-relic.png",
+      "bytes": 2375056,
+      "sha256": "ca475c3247d19c65e512cd9d72d8e332b3f9c6a71d6c260ea62e4a39ca2e0b7b",
+      "alpha_detection": 2,
+      "alpha_ge_128_bounds": {
+        "height": 1496,
+        "width": 992,
+        "x": 17,
+        "y": 23
+      },
+      "alpha_ge_128_pixels": 758004,
+      "height": 1536,
+      "max_alpha": 254,
+      "min_visible_alpha": 1,
+      "opaque_alpha_255_pixels": 0,
+      "partial_alpha_pixels": 861044,
+      "total_pixels": 1572864,
+      "transparent_alpha_zero_pixels": 711820,
+      "used_rect": {
+        "height": 1527,
+        "width": 1023,
+        "x": 0,
+        "y": 9
+      },
+      "width": 1024,
+      "role": "appearance concept; final selection pending"
+    }
+  ]
+}

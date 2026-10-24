@@ -4,6 +4,8 @@
 
 [本轮C0规则实验](iteration-c0-rules.md)只用明确标注的文字物件与战斗示意验证获取、组合和一战，不制作或验收新人物/背景。其截图属于真实运行的规则fixture，不能因此声称C1精细像素美术已完成。
 
+2026-10-24 人设比较材料已补齐：[法师三案与骑士三案](character-design-review.md)、[离线页](concepts/2026-10-24-characters/index.html)及原生静态审稿台（`npm run art:review`）。这轮交付外观探索与尺寸观察，不锁定人设，也未通过专用战斗帧或背景验收；按实际生成偏差继续收敛后进入C1制作。
+
 当前实现仍是[森林旅人 v0.3 样板](iteration-03-sample.md)。产品与阶段基线见[需求文档](requirements.md)、[开发计划](development-plan.md)，职业细则见[职业与构筑设计](classes-and-builds.md)，视觉验收见[美术规格](art-direction.md)。[八案探索](art-style-exploration.md)中的 PNG、提示、manifest 和离线对照页是原始探索快照，保留其当时状态；本页记录后续决策，不把新玩法写成已完成。
 
 ## 1. 从单一换皮转为职业差异

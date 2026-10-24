@@ -82,15 +82,15 @@ if (command === 'cli') {
     const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
     if (status !== 0) process.exit(status);
   }
-} else if (command === 'play' || command === 'open' || command === 'class-lab') {
+} else if (command === 'play' || command === 'open' || command === 'class-lab' || command === 'art-review') {
   if (command === 'open') {
     const buildStatus = run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug']);
     if (buildStatus !== 0) process.exit(buildStatus);
   }
   const logDirectory = path.join(tools, 'logs');
   mkdirSync(logDirectory, { recursive: true });
-  const logName = command === 'open' ? 'editor.log' : command === 'class-lab' ? 'classes.log' : 'game.log';
-  const sceneArgs = command === 'class-lab' ? ['res://scenes/class_lab.tscn'] : [];
+  const logName = command === 'open' ? 'editor.log' : command === 'class-lab' ? 'classes.log' : command === 'art-review' ? 'art-review.log' : 'game.log';
+  const sceneArgs = command === 'class-lab' ? ['res://scenes/class_lab.tscn'] : command === 'art-review' ? ['res://scenes/character_review.tscn'] : [];
   const child = spawn(editor, [...(command === 'open' ? ['--editor'] : []), '--path', projectRoot, '--log-file', path.join(logDirectory, logName), ...sceneArgs, ...args], {
     cwd: projectRoot,
     env,
@@ -102,8 +102,8 @@ if (command === 'cli') {
     process.exitCode = 1;
   });
   child.unref();
-  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : command === 'class-lab' ? 'Native Godot class rules prototype started.' : 'Emberpack started.');
+  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : command === 'class-lab' ? 'Native Godot class rules prototype started.' : command === 'art-review' ? 'Native character concept review started (static appearance study, not combat).' : 'Emberpack started.');
 } else {
-  console.error(`Unknown command: ${command}. Use play, class-lab, test, class-test, script, open, build, or cli.`);
+  console.error(`Unknown command: ${command}. Use play, class-lab, art-review, test, class-test, script, open, build, or cli.`);
   process.exit(1);
 }
