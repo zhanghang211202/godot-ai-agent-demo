@@ -2,7 +2,21 @@
 
 一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
 
-**2026-10-23：后续方向确定为多职业背包构筑。** 初期做魔法师与 H 方向的近战骑士，每职业至少三种流派，分别设计资源获取、组合机制和背景；炼金术士后续再做。详见[职业与流派设计](docs/classes-and-builds.md)。美术以精细 16-bit fantasy / tactical RPG 为目标，[八套概念](docs/art-style-exploration.md)与[离线对照页](docs/concepts/2026-10-23/index.html)保留为早期探索。职业与新美术尚未接入；本页标题、操作和截图仍描述现有样板。
+**2026-10-24：新增可玩的 C0 双职业规则实验。** 运行：
+
+```powershell
+npm run game:classes
+```
+
+法师可免费吸收有限火/水/风元素，编织单次焰爆与三段潮汐法术；骑士用有限金币购买武装，锻造占六格的重刃。两者都可摆放、旋转、方向支援、自动训练一战，并查看实际来源复盘。界面中的文字物件和法/刃/靶符号是规则示意，正式人物与背景尚未制作；召唤、循环、盾反、连击及职业五战仍待开发。[本轮范围、操作与验证](docs/iteration-c0-rules.md)。
+
+法师入门：点「火元素」再点左上微光术式，生成焰爆；把水元素放在第4列第3行，再把风元素叠上去，生成横向三格潮汐连枪。骑士入门：点「蓄势徽记」叠到左上长剑，锻造重刃；第二枚徽记可放在第3列第2行连接强化。点击/拖放物件，R旋转、右键取消，空格开战。结算后「恢复战前」可调整同一资源配置；「新法师/骑士实验」开始新配置。
+
+实验在开战前写入独立 `user://class-prototype-run.json`，也可手动保存/读取准备；不会读取或迁移旧远征。`npm run game` 继续启动下方的森林样板。新增检查用 `npm run game:classes:test`。
+
+![C0实际运行的法师规则fixture；文字物件与战斗示意，不是最终美术](docs/devlog/screenshots/c0-class-rules-v1/mage-built.png)
+
+**2026-10-23产品方向：多职业背包构筑。** 初期魔法师与H近战骑士各至少三种流派，炼金术士后续。详见[职业与流派设计](docs/classes-and-builds.md)。美术以精细16-bit fantasy / tactical RPG为目标，[八套概念](docs/art-style-exploration.md)与[离线对照页](docs/concepts/2026-10-23/index.html)保留为探索资料。C0实验只交付上述规则；下方历史截图与操作仍描述森林样板。
 
 后续以[产品需求](docs/requirements.md)、[开发计划](docs/development-plan.md)和[美术规格](docs/art-direction.md)为基线，按 C0 职业规则与接口 → C1 双职业各一流派的一战切片 → C2 各三流派五战 → C3 教学、平衡与 Windows 交付推进。M1-A/B 森林样板已完成；旧未完成路线已按新需求重排。[样板范围与验证](docs/iteration-03-sample.md) · [全部文档入口](docs/README.md)。
 
@@ -94,6 +108,8 @@ npm run game:test
 
 ## 项目资料
 
+- [C0双职业规则实验：实际范围与操作](docs/iteration-c0-rules.md)
+- [C0冻结规则与保存契约](docs/class-prototype-contract.md)
 - [双职业与每职业三流派设计](docs/classes-and-builds.md)
 - [八个精细像素设定候选与概念图](docs/art-style-exploration.md)
 - [离线概念双图对照页](docs/concepts/2026-10-23/index.html)

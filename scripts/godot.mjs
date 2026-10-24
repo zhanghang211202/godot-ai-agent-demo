@@ -68,19 +68,30 @@ if (command === 'cli') {
   process.exit(run(process.execPath, [cli, ...args]));
 } else if (command === 'build') {
   process.exit(run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug', ...args]));
-} else if (command === 'test') {
-  for (const test of ['test_run_state.gd', 'test_save.gd', 'ui_smoke.gd', 'test_art_v03.gd']) {
+} else if (command === 'script') {
+  if (!args[0]?.startsWith('res://')) {
+    console.error('Provide a project script, for example res://tests/test_class_run.gd.');
+    process.exit(1);
+  }
+  process.exit(run(editor, ['--headless', '--path', projectRoot, '--script', ...args]));
+} else if (command === 'test' || command === 'class-test') {
+  const tests = command === 'test'
+    ? ['test_run_state.gd', 'test_save.gd', 'ui_smoke.gd', 'test_art_v03.gd']
+    : ['test_class_run.gd', 'test_class_battle.gd', 'test_class_save.gd', 'class_lab_smoke.gd'];
+  for (const test of tests) {
     const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
     if (status !== 0) process.exit(status);
   }
-} else if (command === 'play' || command === 'open') {
+} else if (command === 'play' || command === 'open' || command === 'class-lab') {
   if (command === 'open') {
     const buildStatus = run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug']);
     if (buildStatus !== 0) process.exit(buildStatus);
   }
   const logDirectory = path.join(tools, 'logs');
   mkdirSync(logDirectory, { recursive: true });
-  const child = spawn(editor, [...(command === 'open' ? ['--editor'] : []), '--path', projectRoot, '--log-file', path.join(logDirectory, command === 'open' ? 'editor.log' : 'game.log'), ...args], {
+  const logName = command === 'open' ? 'editor.log' : command === 'class-lab' ? 'classes.log' : 'game.log';
+  const sceneArgs = command === 'class-lab' ? ['res://scenes/class_lab.tscn'] : [];
+  const child = spawn(editor, [...(command === 'open' ? ['--editor'] : []), '--path', projectRoot, '--log-file', path.join(logDirectory, logName), ...sceneArgs, ...args], {
     cwd: projectRoot,
     env,
     detached: true,
@@ -91,8 +102,8 @@ if (command === 'cli') {
     process.exitCode = 1;
   });
   child.unref();
-  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : 'Emberpack started.');
+  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : command === 'class-lab' ? 'Native Godot class rules prototype started.' : 'Emberpack started.');
 } else {
-  console.error(`Unknown command: ${command}. Use play, test, open, build, or cli.`);
+  console.error(`Unknown command: ${command}. Use play, class-lab, test, class-test, script, open, build, or cli.`);
   process.exit(1);
 }
