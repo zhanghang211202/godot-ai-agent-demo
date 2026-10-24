@@ -12,6 +12,7 @@
 - [2026-10-23：バックパックを核にした二職業・六構築の要件](2026-10-23-dual-class-planning.ja.md)
 - [2026-10-24：二職業の資源・編織・一戦が動くC0原型](2026-10-24-class-rules.ja.md)
 - [2026-10-24：各三つの人物造形と顔の静的審稿台](2026-10-24-character-studies.ja.md)
+- [2026-10-25：魔法使いMA・騎士KAの選定反映を完了](2026-10-25-character-selection.ja.md)
 - [日本語ブログ草稿](../blog/emberpack-making-of.ja.md)
 - [現在のドキュメント一覧](../README.md)
 - [最初の実装計画](../demo-plan.md)

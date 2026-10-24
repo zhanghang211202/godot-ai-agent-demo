@@ -8,7 +8,8 @@
 
 | 文档 | 用途 |
 | --- | --- |
-| [双职业六套人设比较](character-design-review.md) | 全身／细节／缩小轮廓、离线页与 Godot 审稿台；实际不足与待选方向 |
+| [首发角色外观基准](character-baselines.md) | 用户已选MA月庭礼装＋KA旌旗长枪；采用特征、武器适配与专用素材任务 |
+| [双职业六套人设比较](character-design-review.md) | 全身／细节／缩小轮廓、离线页与 Godot 审稿台；保留六案与实际不足 |
 | [产品需求](requirements.md) | 目标体验、现状差距、内容预算、FR/NFR、验收与不做范围 |
 | [C0实际交付](iteration-c0-rules.md) | 原生规则实验入口、操作、检查、实机fixture与限制 |
 | [C0规则契约](class-prototype-contract.md) | 本轮资源、物件、配方、固定时序、事件和独立存档 |
@@ -25,6 +26,7 @@
 ## 开发过程与博客素材
 
 - [日语开发日志和版本截图](devlog/README.ja.md)
+- [A＋A 外观选定反映（日语）](devlog/2026-10-25-character-selection.ja.md)
 - [六套人设与原生审稿台记录（日语）](devlog/2026-10-24-character-studies.ja.md)
 - [C0双职业可玩原型记录（日语）](devlog/2026-10-24-class-rules.ja.md)
 - [双职业需求整理记录（日语）](devlog/2026-10-23-dual-class-planning.ja.md)

@@ -1,0 +1,24 @@
+{
+  "recorded_date": "2026-10-25",
+  "selection_date": "2026-10-24",
+  "timezone": "Asia/Tokyo",
+  "milestone": "character-selected-aa-v1",
+  "source_base_commit": "a40b5f9",
+  "source_state": "Selection reflection code and documents are committed with this manifest.",
+  "classification": "Actual native Godot static concept review fixture showing selected MA and KA. Not combat, animation, or dedicated battle-sprite evidence.",
+  "engine": "Godot 4.7.2 .NET, Windows, OpenGL compatibility renderer",
+  "mode": "Default MA/KA appearance review; no player-save access; generated source concepts unchanged.",
+  "files": [
+    {
+      "file": "character-study-MA-KA-1440x960.png",
+      "width": 1440,
+      "height": 960,
+      "bytes": 913027,
+      "sha256": "1a2289ef7f730f339a33e8a3bc45ba31c361a766c2d88a73e396da1b4ac997ee",
+      "role": "native static review capture reflecting selected appearance baselines",
+      "save_access": false,
+      "combat": false,
+      "final_art": false
+    }
+  ]
+}

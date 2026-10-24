@@ -27,7 +27,7 @@ func _run() -> void:
 	check(ui.failures.is_empty(), "All six raw concept PNGs loaded without importer dependency")
 	check(ui.textures.size() == 6 and ui.bounds.size() == 6, "Six distinct review entries have textures and nonempty bounds")
 	_test_sources()
-	check(ui.selections == [0, 1], "Review defaults to mage A and mage B, not a selected final design")
+	check(ui.selections == [0, 3], "Review defaults to the selected appearance baselines: mage A and knight A")
 	await _test_input()
 	await _test_layout()
 	for path in PLAYER_PATHS:
@@ -98,12 +98,12 @@ func _click(button: Button) -> void:
 
 func _test_input() -> void:
 	await _key(KEY_RIGHT)
-	check(ui.selections == [1, 1] and ui.selectors[0].selected == 1, "Native right key changes left selector to mage B")
+	check(ui.selections == [1, 3] and ui.selectors[0].selected == 1, "Native right key changes only the viewed left entry to mage B")
 	await _key(KEY_RIGHT)
-	check(ui.selections == [2, 1], "Native right key reaches mage C")
+	check(ui.selections == [2, 3], "Native right key reaches mage C")
 	await _key(KEY_TAB)
 	await _key(KEY_LEFT)
-	check(ui.active_column == 1 and ui.selections == [2, 0], "Tab changes active column and left key changes only that column")
+	check(ui.active_column == 1 and ui.selections == [2, 2], "Tab changes active column and left key changes only that viewed entry")
 	await _click(ui.filter_button)
 	check(not ui.nearest, "Native sampling button toggles linear filtering")
 	await _key(KEY_N)
@@ -123,7 +123,7 @@ func _test_input() -> void:
 			check(ui.head_views[0].source_rect == REVIEW.ENTRIES[index].face_rect, id + " face view uses its explicitly reviewed source region")
 			check(Rect2(Vector2.ZERO, texture.get_size()).encloses(ui.head_views[0].source_rect), id + " face region stays within the original PNG; no sprite slicing")
 	ui.select_entry(0, 0)
-	ui.select_entry(1, 1)
+	ui.select_entry(1, 3)
 
 func _test_layout() -> void:
 	for resolution in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
