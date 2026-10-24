@@ -4,6 +4,8 @@
   "scripts": {
     "game": "node scripts/godot.mjs play",
     "game:test": "node scripts/godot.mjs test",
+    "game:classes": "node scripts/godot.mjs class-lab",
+    "game:classes:test": "node scripts/godot.mjs class-test",
     "godot:cli": "node scripts/godot.mjs cli",
     "godot:build": "node scripts/godot.mjs build",
     "godot:open": "node scripts/godot.mjs open",
