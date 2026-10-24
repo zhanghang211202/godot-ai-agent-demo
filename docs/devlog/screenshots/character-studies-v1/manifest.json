@@ -1,0 +1,56 @@
+{
+  "recorded_date": "2026-10-24",
+  "timezone": "Asia/Tokyo",
+  "milestone": "character-studies-v1",
+  "source_base_commit": "5829e28",
+  "source_state": "Review scene, concept assets and manifest are committed together; see folder Git history.",
+  "classification": "Actual native Godot window captures of a static character concept review fixture. Not gameplay or combat captures, not dedicated sprites or animations.",
+  "engine": "Godot 4.7.2 .NET, Windows, OpenGL compatibility renderer",
+  "mode": "Raw concept PNGs displayed in two columns with manually selected face regions and nonzero-alpha-bound heights of 128/160/192 px. Player saves are never accessed.",
+  "files": [
+    {
+      "file": "character-study-MA-MC-1280x800.png",
+      "bytes": 528869,
+      "sha256": "9ff500715d8d9c9ad42518a7251c8519b794fc688aac01194b5fe0191b85628e",
+      "width": 1280,
+      "height": 800,
+      "role": "native static concept review fixture capture",
+      "save_access": false,
+      "final_art": false,
+      "combat": false
+    },
+    {
+      "file": "character-study-MA-MB-1440x960.png",
+      "bytes": 951800,
+      "sha256": "32bd171ef1213e9487bd3a7349951ca86b5df4845dd44af82cbfa45bc281f0fa",
+      "width": 1440,
+      "height": 960,
+      "role": "native static concept review fixture capture",
+      "save_access": false,
+      "final_art": false,
+      "combat": false
+    },
+    {
+      "file": "character-study-KA-KC-1920x1080.png",
+      "bytes": 1221324,
+      "sha256": "c8ce8d538ad710735338801b4005662eb115e9217e4dfeebcae9b8128e44563a",
+      "width": 1920,
+      "height": 1080,
+      "role": "native static concept review fixture capture",
+      "save_access": false,
+      "final_art": false,
+      "combat": false
+    },
+    {
+      "file": "character-study-MB-KB-1440x960.png",
+      "bytes": 861263,
+      "sha256": "a6cf545cb6c9dfc30497d4ee3b0de4179d1cd9d11c044caafdb5c0e51ba4c529",
+      "width": 1440,
+      "height": 960,
+      "role": "native static concept review fixture capture",
+      "save_access": false,
+      "final_art": false,
+      "combat": false
+    }
+  ]
+}

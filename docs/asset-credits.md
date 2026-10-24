@@ -13,6 +13,10 @@
 
 Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许可证 [assets/fonts/OFL.txt](../assets/fonts/OFL.txt)，亦可查阅 [Noto CJK 官方许可证](https://github.com/notofonts/noto-cjk/blob/main/Sans/LICENSE)。字体保留其独立许可证及内嵌版权信息；随项目分发时应一并保留这些信息。
 
+## 角色外观概念 · 2026-10-24
+
+`docs/concepts/2026-10-24-characters/` 的六张PNG由内置 **imagegen** 按本项目法师与H骑士方向分别生成，保留原始alpha，用于外观比较。它们不是战斗精灵、动画表或游戏实机截图。[完整提示集](concepts/2026-10-24-characters/prompts.json)、[尺寸与SHA-256](concepts/2026-10-24-characters/manifest.json)、[审查与限制](character-design-review.md)一并保存。旧A/H概念只作项目方向参考，用户两张图鉴仅作像素工艺参考，原图及其导入文件未随仓库公开。
+
 ## 第三方编辑器工具
 
 `addons/godot_mcp/` 来自 [IvanMurzak/Godot-MCP v0.31.0](https://github.com/IvanMurzak/Godot-MCP/tree/v0.31.0)，采用 Apache-2.0，随附 [完整许可证](../addons/godot_mcp/LICENSE)。其 NuGet 依赖通过工程引用恢复，不包含在本仓库中。

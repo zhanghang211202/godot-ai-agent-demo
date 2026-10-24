@@ -6,6 +6,8 @@
     "game:test": "node scripts/godot.mjs test",
     "game:classes": "node scripts/godot.mjs class-lab",
     "game:classes:test": "node scripts/godot.mjs class-test",
+    "art:review": "node scripts/godot.mjs art-review",
+    "art:review:test": "node scripts/godot.mjs script res://tests/character_review_smoke.gd",
     "godot:cli": "node scripts/godot.mjs cli",
     "godot:build": "node scripts/godot.mjs build",
     "godot:open": "node scripts/godot.mjs open",

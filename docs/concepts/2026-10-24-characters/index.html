@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>法师与骑士 · 六套像素角色造型比较</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page: #14151b;
+      --panel: #20212a;
+      --panel-raised: #292a34;
+      --line: #3b3b49;
+      --ink: #eeedf3;
+      --muted: #b0adbd;
+      --accent: #e0c791;
+      --violet: #c9b6e1;
+      --matte: #292936;
+      --matte-line: #2c2c39;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 85% 0, #302635 0, transparent 42rem), var(--page);
+      color: var(--ink);
+      font: 15px/1.7 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    }
+    h1, h2, h3, p, figure { margin: 0; }
+    a { color: var(--accent); text-underline-offset: .22em; }
+    a:hover { color: #ffebc7; }
+    button, select { font: inherit; }
+    button, select, a { -webkit-tap-highlight-color: transparent; }
+    button, select {
+      min-height: 42px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--ink);
+    }
+    button { padding: .45rem .85rem; cursor: pointer; }
+    button:hover { background: #35333f; border-color: #897a92; }
+    button[aria-pressed="true"] { background: #e0c791; border-color: #e0c791; color: #241e15; }
+    select { width: 100%; padding: .5rem 2rem .5rem .7rem; }
+    :focus-visible { outline: 3px solid #e2c899; outline-offset: 4px; }
+    [hidden] { display: none !important; }
+    .shell { width: min(1400px, 100% - 64px); margin-inline: auto; }
+    .skip { position: absolute; top: -6rem; left: 1rem; z-index: 20; padding: .7rem 1rem; background: var(--panel); }
+    .skip:focus { top: 1rem; }
+    header { padding: 50px 0 30px; }
+    .eyebrow { font-size: 12px; color: var(--accent); letter-spacing: .16em; }
+    h1 { font-size: clamp(28px, 3.4vw, 44px); line-height: 1.35; letter-spacing: -.025em; margin: 12px 0 16px; }
+    .intro { max-width: 880px; color: #c7c3d0; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .tag { font-size: 12px; border: 1px solid #57495d; border-radius: 100px; padding: 3px 11px; color: #dbcbe7; }
+    .boundary { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 20px 0; border-block: 1px solid var(--line); margin-bottom: 30px; }
+    .boundary strong { display: block; font-weight: 600; margin-bottom: 4px; }
+    .boundary p, .note { font-size: 13px; color: var(--muted); }
+    .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    h2 { font-size: 22px; font-weight: 650; }
+    h3 { font-size: 17px; font-weight: 650; }
+    .toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 14px; }
+    .tabs, .matte-controls { display: inline-flex; flex-wrap: wrap; gap: 7px; }
+    .tabs button { min-width: 126px; }
+    .tabs button[aria-selected="true"] { color: #211d18; background: var(--accent); border-color: var(--accent); }
+    .matte-controls { align-items: center; }
+    .matte-controls span { font-size: 12px; color: var(--muted); margin-right: 4px; }
+    .class-note { margin: 12px 0 20px; color: #ccc5d8; max-width: 950px; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .look { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; min-width: 0; }
+    .look-top { padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .look-top label { color: var(--muted); font-size: 12px; display: block; margin-bottom: 6px; }
+    .matte {
+      background-color: var(--matte);
+      background-image: linear-gradient(45deg, var(--matte-line) 25%, transparent 25%), linear-gradient(-45deg, var(--matte-line) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--matte-line) 75%), linear-gradient(-45deg, transparent 75%, var(--matte-line) 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+    }
+    body[data-matte="light"] { --matte: #e0dcd4; --matte-line: #dedad2; }
+    .full-body { display: block; position: relative; height: clamp(480px, 51vw, 720px); }
+    .full-body img { width: 100%; height: 100%; display: block; object-fit: contain; padding: 18px; }
+    .art-image { image-rendering: pixelated; }
+    .missing { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; padding: 24px; text-align: center; color: #edc1a3; background: #30292f; font-size: 13px; }
+    .image-failed > .missing { display: flex; }
+    .image-failed > img { visibility: hidden; }
+    figcaption { padding: 18px; }
+    .look-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .look-title a { white-space: nowrap; font-size: 12px; }
+    .look-subtitle { color: var(--violet); font-size: 13px; margin: 7px 0 8px; }
+    .look-description { color: #c6c1d0; font-size: 13px; min-height: 4.5em; }
+    .studies { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid var(--line); margin-top: 18px; padding-top: 15px; }
+    .study-title { display: block; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .face-study, .small-study { height: 164px; position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 7px; }
+    .face-study > img { display: block; width: 100%; height: 100%; object-fit: none; object-position: 57% 15%; }
+    .small-study { display: flex; align-items: end; justify-content: center; padding: 12px; }
+    .small-study > img { display: block; width: auto; height: 112px; max-width: 100%; object-fit: contain; }
+    .study-note { font-size: 11px; line-height: 1.6; color: var(--muted); margin-top: 7px; }
+    .compare-note { margin-top: 14px; }
+    .gallery-section { margin-top: 44px; }
+    .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--panel); min-width: 0; }
+    .card.is-compared { border-color: #a58cbb; }
+    .thumbnail { display: block; height: 248px; position: relative; }
+    .thumbnail img { width: 100%; height: 100%; display: block; object-fit: contain; padding: 12px; }
+    .card-content { padding: 16px; }
+    .card-id { color: var(--accent); font-size: 12px; letter-spacing: .08em; margin-right: 8px; }
+    .card-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+    .card-description { color: var(--muted); font-size: 13px; min-height: 3.4em; }
+    .card-actions { display: flex; gap: 7px; margin-top: 13px; }
+    .card-actions button { flex: 1; font-size: 13px; min-height: 38px; padding-inline: .4rem; }
+    .checklist { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding: 22px 0; margin-top: 40px; border-block: 1px solid var(--line); }
+    .checklist strong { font-weight: 600; color: #e2d7eb; }
+    .checklist p { font-size: 13px; color: var(--muted); margin-top: 5px; }
+    footer { padding: 24px 0 42px; color: var(--muted); font-size: 12px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-bottom: 10px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (min-width: 1550px) { .full-body { height: 720px; } }
+    @media (max-width: 800px) {
+      .shell { width: calc(100% - 36px); }
+      header { padding-top: 32px; }
+      .compare { gap: 14px; }
+      .look-top, figcaption { padding: 13px; }
+      .full-body { height: 450px; }
+      .look-title { align-items: start; }
+      .studies { grid-template-columns: 1fr; }
+      .face-study { height: 170px; }
+      .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .card-content { padding: 13px; }
+      .thumbnail { height: 230px; }
+      .checklist { gap: 14px; }
+    }
+    @media (max-width: 560px) {
+      .shell { width: calc(100% - 28px); }
+      header { padding-top: 26px; }
+      h1 { font-size: 29px; }
+      .boundary { grid-template-columns: 1fr; gap: 14px; }
+      .toolbar { align-items: stretch; }
+      .tabs { width: 100%; }
+      .tabs button { flex: 1; min-width: 0; }
+      .section-heading { align-items: start; flex-direction: column; gap: 5px; }
+      .compare { grid-template-columns: 1fr; gap: 20px; }
+      .full-body { height: 490px; }
+      .studies { grid-template-columns: 1fr 1fr; }
+      .face-study, .small-study { height: 155px; }
+      .look-description { min-height: 0; }
+      .look-title h3 { font-size: 18px; }
+      .gallery { gap: 12px; }
+      .thumbnail { height: 208px; }
+      .card-heading { display: block; }
+      .card-heading h3 { font-size: 15px; margin-top: 2px; }
+      .card-description { min-height: 5em; font-size: 12px; }
+      .card-actions { flex-direction: column; }
+      .checklist { grid-template-columns: 1fr; gap: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body data-matte="dark">
+  <a class="skip" href="#comparison">跳到角色比较</a>
+  <div class="shell">
+    <header>
+      <p class="eyebrow">CHARACTER STUDIES · 2026.10.24</p>
+      <h1>法师与骑士，先把角色做好看。</h1>
+      <p class="intro">两位角色各三套造型，比较脸、发束、衣甲层次与武器轮廓。法师沿用月庭幻想方向，骑士沿用 H「圣像余烬」方向；同职业的 A / B / C 是外观方案，不是三条构筑流派。</p>
+      <div class="tags"><span class="tag">精细 16-bit fantasy</span><span class="tag">Tactical RPG 轮廓</span><span class="tag">生成式像素立绘概念</span><span class="tag">尚未接入 Godot</span></div>
+    </header>
+
+    <aside class="boundary" aria-label="本轮范围与边界">
+      <div><strong>这次选择：你想和怎样的主角冒险？</strong><p>两位角色均以成年女性制作本轮外观比较；最终性别、名字与服装尚待选择。图中武器与元素是美术表达，不代表对应能力已经实现。</p></div>
+      <div><strong>接下来：重新设计专用战斗精灵。</strong><p>本页大图、面部裁切和缩小预览都来自同一张立绘。缩小预览不是战斗 sprite，也不是 Godot 实机截图；不会把概念图切片当成成品动画。</p></div>
+    </aside>
+
+    <main>
+      <section id="comparison" aria-labelledby="compare-heading">
+        <div class="section-heading"><h2 id="compare-heading">并排比较</h2><p class="note">点击立绘或「查看原图」放大观察</p></div>
+        <div class="toolbar">
+          <div class="tabs" role="tablist" aria-label="选择职业">
+            <button type="button" role="tab" id="tab-mage" data-class="mage" aria-selected="true" aria-controls="class-comparison">魔法师 · MA–MC</button>
+            <button type="button" role="tab" id="tab-knight" data-class="knight" aria-selected="false" aria-controls="class-comparison" tabindex="-1">骑士 · KA–KC</button>
+          </div>
+          <div class="matte-controls" role="group" aria-label="透明区观察底色"><span>观察底色</span><button type="button" data-matte="dark" aria-pressed="true">深色</button><button type="button" data-matte="light" aria-pressed="false">浅色</button></div>
+        </div>
+        <p class="class-note" id="class-note"></p>
+        <div id="class-comparison" role="tabpanel" aria-labelledby="tab-mage">
+          <div class="compare">
+            <figure class="look" id="look-left">
+              <div class="look-top"><label for="select-left">左侧方案</label><select id="select-left" aria-label="选择左侧造型"></select></div>
+              <a class="full-body matte" target="_blank" rel="noopener" data-art-link="left"><img class="art-image" data-art="left" alt=""><span class="missing">图片尚未放入本地目录，请检查对应 PNG 文件。</span></a>
+              <figcaption>
+                <div class="look-title"><h3 data-title="left"></h3><a target="_blank" rel="noopener" data-original="left">查看原图 ↗</a></div>
+                <p class="look-subtitle" data-subtitle="left"></p><p class="look-description" data-description="left"></p>
+                <div class="studies">
+                  <div><span class="study-title">面部观察 · 同张立绘局部放大</span><div class="face-study matte"><img class="art-image" data-face="left" alt=""><span class="missing">局部预览待图片到位</span></div><p class="study-note">CSS 裁切仅辅助审稿，以完整原图为准。</p></div>
+                  <div><span class="study-title">立绘轮廓预览</span><div class="small-study matte"><img class="art-image" data-small="left" alt=""><span class="missing">缩小预览待图片到位</span></div><p class="study-note">静态缩小，非战斗 sprite / 非 Godot 战斗截图。</p></div>
+                </div>
+              </figcaption>
+            </figure>
+            <figure class="look" id="look-right">
+              <div class="look-top"><label for="select-right">右侧方案</label><select id="select-right" aria-label="选择右侧造型"></select></div>
+              <a class="full-body matte" target="_blank" rel="noopener" data-art-link="right"><img class="art-image" data-art="right" alt=""><span class="missing">图片尚未放入本地目录，请检查对应 PNG 文件。</span></a>
+              <figcaption>
+                <div class="look-title"><h3 data-title="right"></h3><a target="_blank" rel="noopener" data-original="right">查看原图 ↗</a></div>
+                <p class="look-subtitle" data-subtitle="right"></p><p class="look-description" data-description="right"></p>
+                <div class="studies">
+                  <div><span class="study-title">面部观察 · 同张立绘局部放大</span><div class="face-study matte"><img class="art-image" data-face="right" alt=""><span class="missing">局部预览待图片到位</span></div><p class="study-note">CSS 裁切仅辅助审稿，以完整原图为准。</p></div>
+                  <div><span class="study-title">立绘轮廓预览</span><div class="small-study matte"><img class="art-image" data-small="right" alt=""><span class="missing">缩小预览待图片到位</span></div><p class="study-note">静态缩小，非战斗 sprite / 非 Godot 战斗截图。</p></div>
+                </div>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        <p class="note compare-note">服装的装饰密度、长武器和披风会影响小尺寸可读性。这里先比较角色方向，战斗画布尺寸、动画帧与实机效果在下一步单独验证。这些是有透明底的生成概念；边缘残留和主体透明度尚未按生产资产验收。</p>
+        <p class="sr-only" role="status" aria-live="polite" id="status"></p>
+      </section>
+
+      <section class="gallery-section" aria-labelledby="gallery-heading">
+        <div class="section-heading"><h2 id="gallery-heading">六套造型一览</h2><p class="note">选入任一侧时，会切换到对应职业。</p></div>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <aside class="checklist" aria-label="选择标准">
+        <div><strong>01 · 脸与角色气质</strong><p>面部、发束与成年角色比例是否清楚？保留你愿意反复看到的主角，而不是只比较装饰数量。</p></div>
+        <div><strong>02 · 衣甲与轮廓</strong><p>象牙、紫、旧金与赤红如何分层？大武器和服装下摆是否与身体留出清楚的负形？</p></div>
+        <div><strong>03 · 留给动作的空间</strong><p>选择后还需重绘专用战斗精灵、动作与背景。不同职业的资源和构筑系统继续以需求文档为准。</p></div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="footer-links"><a href="../../classes-and-builds.md">职业与构筑文档</a><a href="../../art-direction.md">美术基线</a><a href="../2026-10-23/index.html">前一轮八种世界设定</a><a href="prompts.json">生成提示词记录</a><a href="manifest.json">图片与校验记录</a></div>
+      <p>本地离线审稿页 · 无远程字体、脚本或图片服务 · 不上传图片，不保存选择。所有选择仅保留在本次页面内；刷新后恢复 MA / MB。</p>
+    </footer>
+  </div>
+  <noscript><p style="padding: 24px; color: #ead6b5;">请启用 JavaScript 使用本地对照页。也可以直接在文件夹中打开六张 PNG；本页不需要联网。</p></noscript>
+  <script>
+    "use strict";
+    const looks = [
+      { id: "MA", classId: "mage", name: "月庭礼装", file: "mage-a-lunar.png", subtitle: "法师 A · 宽檐帽 / 层叠长裙 / 月牙法杖", description: "礼装与月牙轮廓强调学者气质，帽檐和裙装的层次丰富。需要继续验证帽檐阴影、裙摆与法杖在战斗小尺寸中的辨识度。", short: "古典月庭学者。帽檐、长裙与月牙轮廓最鲜明。" },
+      { id: "MB", classId: "mage", name: "巡游短装", file: "mage-b-wayfarer.png", subtitle: "法师 B · 编发 / 裤装 / 长法杖", description: "裤装、编发和较短的前衣摆带来巡游者气质。不过现图仍使用长法杖与宽大披风，紧凑短杖的目标未实现；需要继续收束轮廓，再验证行动姿态。", short: "裤装与编发较轻快，披风和长杖仍偏宽大。" },
+      { id: "MC", classId: "mage", name: "奥术战装", file: "mage-c-arcane.png", subtitle: "法师 C · 高马尾 / 紧凑战衣 / 双手元素", description: "高马尾、短战衣与双手元素突出主动编织魔法的姿态。元素仅是本轮外观提示，未来需控制特效范围，确保手部与身体轮廓清楚。", short: "主动编织元素。高马尾、短战衣与双手施法。" },
+      { id: "KA", classId: "knight", name: "旌旗长枪", file: "knight-a-banner.png", subtitle: "骑士 A · 高马尾 / 象牙金甲 / 长枪与赤红披风", description: "修长枪身、象牙金甲和赤红披风延续战术 RPG 骑士气质。长枪占据较大横纵空间，正式战斗精灵需要重设计握姿与攻击留白。", short: "战术骑士气质。长枪、高马尾与赤红披风。" },
+      { id: "KB", classId: "knight", name: "轻甲先锋", file: "knight-b-vanguard.png", subtitle: "骑士 B · 剑盾 / 分段甲 / 高蓬发尾", description: "剑盾比长枪更容易收束，但现图仍保留厚实肩甲与高蓬发尾，轻装方向的差异有限，尚需减轻甲片和披挂。剑盾是外观比较，不意味着盾反流派已经交付。", short: "剑盾先锋。现图甲片仍厚实，轻装差异有限。" },
+      { id: "KC", classId: "knight", name: "遗物重刃", file: "knight-c-relic.png", subtitle: "骑士 C · 沉稳甲片 / 双手重刃 / 遗物纹章", description: "大块甲片与双手重刃强调沉稳和力量，更接近当前近战规则原型的重刃意象。需继续检验重刃与身体重叠处、面部和关节的可读性。", short: "沉稳遗物骑士。大块甲片与双手重刃。" }
+    ];
+    const classNotes = {
+      mage: "同一位法师的三套外观：成年女性、紫发与琥珀眼，主色为紫 / 靛蓝 / 象牙 / 旧金。比较礼装、巡游与战斗三种气质，技能路线仍由职业设计决定。",
+      knight: "同一位 H 方向骑士的三套外观：成年女性、栗发与琥珀眼，象牙金甲配赤红披风。比较长枪、轻装与重刃的轮廓，武器选择尚未定稿。"
+    };
+    const facePositions = { MA: "57% 15%", MB: "56% 9%", MC: "63% 12%", KA: "61% 19.5%", KB: "62% 12.5%", KC: "54% 23%" };
+    const state = { classId: "mage", left: "MA", right: "MB" };
+    const remembered = { mage: { left: "MA", right: "MB" }, knight: { left: "KA", right: "KB" } };
+    const findLook = id => looks.find(look => look.id === id);
+    const query = selector => document.querySelector(selector);
+
+    function connectImage(image, file, alt) {
+      image.parentElement.classList.remove("image-failed");
+      image.alt = alt;
+      image.onload = () => image.parentElement.classList.remove("image-failed");
+      image.onerror = () => image.parentElement.classList.add("image-failed");
+      image.src = file;
+    }
+
+    function renderSide(side) {
+      const look = findLook(state[side]);
+      query(`[data-title="${side}"]`).textContent = `${look.id} · ${look.name}`;
+      query(`[data-subtitle="${side}"]`).textContent = look.subtitle;
+      query(`[data-description="${side}"]`).textContent = look.description;
+      query(`[data-art-link="${side}"]`).href = look.file;
+      query(`[data-art-link="${side}"]`).setAttribute("aria-label", `放大查看 ${look.id} ${look.name} 完整立绘`);
+      query(`[data-original="${side}"]`).href = look.file;
+      connectImage(query(`[data-art="${side}"]`), look.file, `${look.id} ${look.name}，透明底全身像素立绘概念`);
+      connectImage(query(`[data-face="${side}"]`), look.file, `${look.id} 同张立绘的面部局部放大，仅供审稿`);
+      query(`[data-face="${side}"]`).style.objectPosition = facePositions[look.id];
+      connectImage(query(`[data-small="${side}"]`), look.file, `${look.id} 立绘静态缩小预览，非战斗精灵`);
+    }
+
+    function render() {
+      const available = looks.filter(look => look.classId === state.classId);
+      query("#class-note").textContent = classNotes[state.classId];
+      query("#class-comparison").setAttribute("aria-labelledby", `tab-${state.classId}`);
+      document.querySelectorAll("[data-class]").forEach(button => {
+        const active = button.dataset.class === state.classId;
+        button.setAttribute("aria-selected", String(active));
+        button.tabIndex = active ? 0 : -1;
+      });
+      for (const side of ["left", "right"]) {
+        const select = query(`#select-${side}`);
+        select.replaceChildren(...available.map(look => {
+          const option = document.createElement("option");
+          option.value = look.id;
+          option.textContent = `${look.id} · ${look.name}`;
+          return option;
+        }));
+        select.value = state[side];
+        renderSide(side);
+      }
+      document.querySelectorAll(".card").forEach(card => {
+        card.classList.toggle("is-compared", [state.left, state.right].includes(card.dataset.id));
+        card.querySelectorAll("[data-pick]").forEach(button => {
+          button.setAttribute("aria-pressed", String(state[button.dataset.pick] === card.dataset.id));
+        });
+      });
+      query("#status").textContent = `正在比较：左侧 ${state.left} ${findLook(state.left).name}，右侧 ${state.right} ${findLook(state.right).name}。`;
+    }
+
+    function switchClass(classId) {
+      remembered[state.classId] = { left: state.left, right: state.right };
+      state.classId = classId;
+      Object.assign(state, remembered[classId]);
+      render();
+    }
+
+    function pickLook(id, side) {
+      const look = findLook(id);
+      if (state.classId !== look.classId) switchClass(look.classId);
+      state[side] = id;
+      render();
+    }
+
+    const gallery = query("#gallery");
+    for (const look of looks) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.dataset.id = look.id;
+      card.innerHTML = `<a class="thumbnail matte" target="_blank" rel="noopener"><img class="art-image" loading="lazy" alt=""><span class="missing">图片尚未放入本地目录</span></a><div class="card-content"><div class="card-heading"><span class="card-id"></span><h3></h3></div><p class="card-description"></p><div class="card-actions"><button type="button" data-pick="left" aria-pressed="false">放到左侧</button><button type="button" data-pick="right" aria-pressed="false">放到右侧</button></div></div>`;
+      card.querySelector("a").href = look.file;
+      card.querySelector("a").setAttribute("aria-label", `查看 ${look.id} ${look.name} 原图`);
+      connectImage(card.querySelector("img"), look.file, `${look.id} ${look.name} 全身造型缩略图`);
+      card.querySelector(".card-id").textContent = look.id;
+      card.querySelector("h3").textContent = look.name;
+      card.querySelector(".card-description").textContent = look.short;
+      card.querySelectorAll("[data-pick]").forEach(button => {
+        button.setAttribute("aria-label", `把 ${look.id} ${look.name} 放到${button.dataset.pick === "left" ? "左" : "右"}侧比较`);
+        button.addEventListener("click", () => pickLook(look.id, button.dataset.pick));
+      });
+      gallery.append(card);
+    }
+
+    for (const side of ["left", "right"]) {
+      query(`#select-${side}`).addEventListener("change", event => {
+        state[side] = event.target.value;
+        render();
+      });
+    }
+    document.querySelectorAll("[data-class]").forEach(button => {
+      button.addEventListener("click", () => switchClass(button.dataset.class));
+      button.addEventListener("keydown", event => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        const nextClass = event.key === "Home" ? "mage" : event.key === "End" ? "knight" : state.classId === "mage" ? "knight" : "mage";
+        switchClass(nextClass);
+        query(`#tab-${nextClass}`).focus();
+      });
+    });
+    document.querySelectorAll("button[data-matte]").forEach(button => {
+      button.addEventListener("click", () => {
+        document.body.dataset.matte = button.dataset.matte;
+        document.querySelectorAll("button[data-matte]").forEach(choice => choice.setAttribute("aria-pressed", String(choice === button)));
+      });
+    });
+    render();
+  </script>
+</body>
+</html>
