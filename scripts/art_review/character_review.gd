@@ -45,7 +45,7 @@ class ImageStudy extends Control:
 var textures: Dictionary = {}
 var bounds: Dictionary = {}
 var failures: Array[String] = []
-var selections := [0, 1]
+var selections := [0, 3]
 var selectors: Array[OptionButton] = []
 var full_views: Array[ImageStudy] = []
 var head_views: Array[ImageStudy] = []
@@ -130,7 +130,7 @@ func _build_interface() -> void:
 	root_box.add_theme_constant_override("separation", 8)
 	margin.add_child(root_box)
 	root_box.add_child(_label("角色造型概念审稿  /  CHARACTER STUDY", 24, Color("efe4d1")))
-	var warning := _label("未选定最终造型 · 非正式战斗精灵 · 无动画\n静态立绘缩放只观察轮廓；不代表战斗尺寸、像素密度或 RV-03 战斗验收通过。", 15, Color("f0c98d"))
+	var warning := _label("已选外观基准：MA 月庭礼装＋KA 旌旗长枪 · 专用战斗精灵/动画待制作\n切换仅供观察，不改变基准；静态缩放不代表战斗尺寸、像素密度或 RV-03 验收通过。", 15, Color("f0c98d"))
 	root_box.add_child(warning)
 	var toolbar := HBoxContainer.new()
 	toolbar.add_theme_constant_override("separation", 12)

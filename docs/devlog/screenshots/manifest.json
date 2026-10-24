@@ -453,8 +453,24 @@
       "recorded_date": "2026-10-24",
       "classification": "Actual native Godot window captures of a static character concept review fixture. Not gameplay or combat captures, not dedicated sprites or animations.",
       "mode": "Raw concept PNGs displayed in two columns with manually selected face regions and nonzero-alpha-bound heights of 128/160/192 px. Player saves are never accessed."
+    },
+    {
+      "file": "character-study-MA-KA-1440x960.png",
+      "width": 1440,
+      "height": 960,
+      "bytes": 913027,
+      "sha256": "1a2289ef7f730f339a33e8a3bc45ba31c361a766c2d88a73e396da1b4ac997ee",
+      "role": "native static review capture reflecting selected appearance baselines",
+      "save_access": false,
+      "combat": false,
+      "final_art": false,
+      "path": "screenshots/character-selected-aa-v1/character-study-MA-KA-1440x960.png",
+      "milestone": "character-selected-aa-v1",
+      "recorded_date": "2026-10-25",
+      "classification": "Actual native Godot static concept review fixture showing selected MA and KA. Not combat, animation, or dedicated battle-sprite evidence.",
+      "mode": "Default MA/KA appearance review; no player-save access; generated source concepts unchanged."
     }
   ],
   "updated_date": "2026-10-22",
-  "last_updated_date": "2026-10-24"
+  "last_updated_date": "2026-10-25"
 }
