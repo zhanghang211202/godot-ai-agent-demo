@@ -1,0 +1,25 @@
+{
+	"checks": 6,
+	"failures": 0,
+	"renderer": "NVIDIA GeForce RTX 3070 Laptop GPU",
+	"samples": [
+		{
+			"cutout_enabled": false,
+			"readback_alpha": [
+				0.250980406999588,
+				0.501960813999176,
+				0.996078431606293,
+				1.0
+			]
+		},
+		{
+			"cutout_enabled": true,
+			"readback_alpha": [
+				0.0,
+				1.0,
+				1.0,
+				1.0
+			]
+		}
+	]
+}

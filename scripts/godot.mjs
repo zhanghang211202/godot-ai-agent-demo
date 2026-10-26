@@ -68,12 +68,12 @@ if (command === 'cli') {
   process.exit(run(process.execPath, [cli, ...args]));
 } else if (command === 'build') {
   process.exit(run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug', ...args]));
-} else if (command === 'script') {
+} else if (command === 'script' || command === 'render-script') {
   if (!args[0]?.startsWith('res://')) {
     console.error('Provide a project script, for example res://tests/test_class_run.gd.');
     process.exit(1);
   }
-  process.exit(run(editor, ['--headless', '--path', projectRoot, '--script', ...args]));
+  process.exit(run(editor, [...(command === 'script' ? ['--headless'] : []), '--path', projectRoot, '--script', ...args]));
 } else if (command === 'class-capture') {
   // Foreground process for bounded native render capture; the caller chooses
   // fresh output paths and --auto-quit. Keep the same local tool environment.
@@ -83,7 +83,7 @@ if (command === 'cli') {
     ? ['test_run_state.gd', 'test_save.gd', 'ui_smoke.gd', 'test_art_v03.gd']
     : command === 'class-test'
       ? ['test_class_run.gd', 'test_class_battle.gd', 'test_class_save.gd', 'class_lab_smoke.gd']
-      : ['test_class_art_static.gd', 'test_class_grid_labels.gd', 'test_class_motion.gd'];
+      : ['test_class_art_static.gd', 'test_class_grid_labels.gd', 'test_class_motion.gd', 'test_class_feedback.gd'];
   for (const test of tests) {
     const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
     if (status !== 0) process.exit(status);
@@ -110,6 +110,6 @@ if (command === 'cli') {
   child.unref();
   console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : command === 'class-lab' ? 'Native Godot class rules prototype started.' : command === 'art-review' ? 'Native character concept review started (static appearance study, not combat).' : 'Emberpack started.');
 } else {
-  console.error(`Unknown command: ${command}. Use play, class-lab, art-review, test, class-test, class-art-test, script, open, build, or cli.`);
+  console.error(`Unknown command: ${command}. Use play, class-lab, class-capture, art-review, test, class-test, class-art-test, script, render-script, open, build, or cli.`);
   process.exit(1);
 }

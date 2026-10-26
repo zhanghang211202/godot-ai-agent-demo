@@ -25,6 +25,10 @@ Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许
 
 `assets/art/c1-motion-v1/` 的三张专用动作图集由内置 **imagegen** 生成及编辑，以项目MA／KA人设和静态姿态为身份参考。它们是为四帧动作专门绘制的图集，不是旧概念裁切。原PNG保持生成alpha；Godot使用独立源区域、统一组倍率和脚底锚点播放。[提示与留存范围](../assets/art/c1-motion-v1/prompts.json)、[实际尺寸／alpha／SHA-256及限制](../assets/art/c1-motion-v1/manifest.json)均保存。法师早期逐字提示未完整留存，清单明确区分保留下来的规格摘要与本轮逐字编辑提示。用户指出的手部与法杖裁图只用于定位问题，未公开用户临时截图或私有参考图。运行GIF来自Godot实际帧，按16FPS固定录制、整数最近邻缩小与GIF量化；不是把生成图直接拼成运行证明。
 
+## C1 战斗反馈 · 2026-10-27
+
+2026-10-27反馈样板继续使用`c1-motion-v1`原图，源文件未改。`class_actor.gdshader`仅在运行中进行角色alpha阈值、受击色与淡出；木靶、浮字、命中环与轻晃为项目代码。三次内置imagegen像素整理试验未采用，[试验记录与提示](concepts/2026-10-26-pixel-cleanup/README.ja.md)单独标明非实机、非生产素材。实际游戏截图/GIF与GPU程序纹理的读回记录分开归档于[本轮清单](devlog/screenshots/c1-feedback-v1/manifest.json)。
+
 ## 第三方编辑器工具
 
 `addons/godot_mcp/` 来自 [IvanMurzak/Godot-MCP v0.31.0](https://github.com/IvanMurzak/Godot-MCP/tree/v0.31.0)，采用 Apache-2.0，随附 [完整许可证](../addons/godot_mcp/LICENSE)。其 NuGet 依赖通过工程引用恢复，不包含在本仓库中。
