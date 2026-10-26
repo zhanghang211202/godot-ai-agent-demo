@@ -1,0 +1,184 @@
+{
+	"actions": [
+		{
+			"cell": [
+				0,
+				0
+			],
+			"result": {
+				"cost": 4,
+				"event": "merge",
+				"kind": "greatblade",
+				"message": "合成完成：誓约重刃",
+				"ok": true,
+				"source_id": "armory_charge",
+				"uid": 1
+			},
+			"source_index": 1
+		},
+		{
+			"cell": [
+				2,
+				1
+			],
+			"result": {
+				"cost": 4,
+				"event": "acquire",
+				"kind": "charge_seal",
+				"message": "已放置：蓄势徽记",
+				"ok": true,
+				"source_id": "armory_charge",
+				"uid": 4
+			},
+			"source_index": 1
+		}
+	],
+	"class_id": "knight",
+	"gold_after_acquisition": 4,
+	"persistence_enabled": false,
+	"remaining_sources": [
+		{
+			"cost": 6,
+			"id": "armory_blade",
+			"kind": "iron_blade",
+			"remaining": 1
+		},
+		{
+			"cost": 4,
+			"id": "armory_charge",
+			"kind": "charge_seal",
+			"remaining": 0
+		},
+		{
+			"cost": 3,
+			"id": "armory_ward",
+			"kind": "knight_ward",
+			"remaining": 1
+		}
+	],
+	"rules_version": 1,
+	"summary": {
+		"armor_mitigated": 12,
+		"by_source": [
+			{
+				"activations": 4,
+				"damage": 140,
+				"hits": 4,
+				"kind": "greatblade",
+				"name": "誓约重刃",
+				"raw_damage": 144,
+				"uid": 1
+			}
+		],
+		"class_id": "knight",
+		"damage_dealt": 140,
+		"damage_taken": 36,
+		"duration": 11.0,
+		"enemy_attacks": 6,
+		"enemy_hp": 0,
+		"enemy_max_hp": 140,
+		"event_count": 15,
+		"hp": 60,
+		"initial_hp": 96,
+		"max_hp": 96,
+		"overkill_damage_dealt": 4,
+		"overkill_damage_taken": 0,
+		"raw_damage_dealt": 144,
+		"raw_damage_taken": 48,
+		"result": "won",
+		"rules_version": 1
+	},
+	"type": "runtime_capture_fixture",
+	"viewport": [
+		1440,
+		960
+	],
+	"visuals": {
+		"alpha_threshold": 128,
+		"animated": false,
+		"assets_ready": true,
+		"background_id": "reliquary-hall",
+		"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+		"background_source_rect": [
+			0.0,
+			220.588943481445,
+			2172.0,
+			402.051055908203
+		],
+		"background_source_size": [
+			2172,
+			724
+		],
+		"class_id": "knight",
+		"enemy_placeholder": true,
+		"enemy_rect": [
+			1013.0,
+			155.0,
+			120.0,
+			166.0
+		],
+		"ground_anchor": [
+			367.0,
+			321.0
+		],
+		"ground_y": 321.0,
+		"health_rects": [
+			[
+				16.0,
+				12.0,
+				423.600006103516,
+				8.0
+			],
+			[
+				972.400024414063,
+				12.0,
+				423.600006103516,
+				8.0
+			]
+		],
+		"hero_id": "knight-greatblade-idle",
+		"hero_path": "res://assets/art/c1-static-v1/characters/knight-greatblade-idle.png",
+		"hero_rect": [
+			266.757781982422,
+			65.0,
+			200.484451293945,
+			256.0
+		],
+		"hero_visible": true,
+		"missing_assets": [],
+		"phase_rect": [
+			465.959991455078,
+			8.0,
+			480.079986572266,
+			43.0
+		],
+		"scaling_mode": "aspect-preserving nearest static source-fit experiment; logical sprite grid pending",
+		"scene_rect": [
+			1.0,
+			61.0,
+			1410.0,
+			261.0
+		],
+		"source_rect": [
+			137.0,
+			125.0,
+			957.0,
+			1222.0
+		],
+		"source_scale": [
+			0.209492638707161,
+			0.209492638707161
+		],
+		"source_scale_is_integer": false,
+		"source_size": [
+			1122,
+			1402
+		],
+		"stage_rect": [
+			0.0,
+			0.0,
+			1412.0,
+			350.0
+		]
+	}
+}

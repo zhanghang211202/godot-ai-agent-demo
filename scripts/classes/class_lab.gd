@@ -80,21 +80,21 @@ func _build_interface() -> void:
 	var margin := MarginContainer.new()
 	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for edge in ["left", "top", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_" + edge, 20)
+		margin.add_theme_constant_override("margin_" + edge, 14)
 	add_child(margin)
 	var root := VBoxContainer.new()
-	root.add_theme_constant_override("separation", 10)
+	root.add_theme_constant_override("separation", 6)
 	margin.add_child(root)
 	var header := HBoxContainer.new()
 	root.add_child(header)
-	var heading := _label("职业规则实验  /  C0", 27)
+	var heading := _label("职业构筑试炼", 25)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
 	for id in Catalog.CLASS_IDS:
 		var b := _button("新法师实验" if id == "mage" else "新 H 骑士实验", func(): _new_class(id))
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("规则原型：有限资源与固定训练敌人 · 正式人物/背景、召唤/循环/盾反/连击尚未接入", 15, Color("a4afc1"))
+	var notice := _label("C1 静态美术样板 · 角色动作待制作 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
@@ -128,7 +128,7 @@ func _build_interface() -> void:
 	source_scroll.add_child(source_list)
 	for index in range(3):
 		var b := _button("", func(): _select_source(index))
-		b.custom_minimum_size.y = 78
+		b.custom_minimum_size.y = 62
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		b.set_drag_forwarding(func(at: Vector2): return _source_drag(index, at), Callable(), Callable())
@@ -182,7 +182,7 @@ func _build_interface() -> void:
 	footer.add_child(primary_button)
 	status_label = _label("", 16, Color("dfc394"))
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	status_label.custom_minimum_size.y = 42
+	status_label.custom_minimum_size.y = 38
 	root.add_child(status_label)
 
 func _panel(parent: Control, minimum_width: float, ratio: float) -> VBoxContainer:
@@ -193,10 +193,10 @@ func _panel(parent: Control, minimum_width: float, ratio: float) -> VBoxContaine
 	parent.add_child(panel)
 	var margin := MarginContainer.new()
 	for edge in ["left", "top", "right", "bottom"]:
-		margin.add_theme_constant_override("margin_" + edge, 14)
+		margin.add_theme_constant_override("margin_" + edge, 10)
 	panel.add_child(margin)
 	var column := VBoxContainer.new()
-	column.add_theme_constant_override("separation", 10)
+	column.add_theme_constant_override("separation", 6)
 	margin.add_child(column)
 	return column
 
@@ -342,9 +342,9 @@ func _load() -> void:
 
 func _resize_layout() -> void:
 	if arena != null:
-		arena.custom_minimum_size.y = 154 if size.y >= 900 else 120
+		arena.custom_minimum_size.y = 350 if size.y >= 900 else 280
 	if grid != null:
-		grid.custom_minimum_size.y = 286 if size.y >= 900 else 202
+		grid.custom_minimum_size.y = 230 if size.y >= 900 else 184
 
 var _before_battle: Dictionary = {}
 
@@ -366,7 +366,7 @@ func _start_battle() -> void:
 	run.phase = "battle"
 	_last_phase = "battle"
 	_clear_selection()
-	_notice("训练开始。规则先结算，示意动画仅显示事件；可暂停或切换 1× / 2×。")
+	_notice("训练开始。静态角色与连线只显示规则事件；可暂停或切换 1× / 2×。")
 	_sync()
 
 func _restore_before_battle() -> void:
@@ -424,7 +424,7 @@ func _sync() -> void:
 		detail_label.text = "%s\n\n%s\n\n实际占格：%d × %d\n方向支援：+%d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y, run.get_adjacency_bonus(item)]
 	else:
 		var config: Dictionary = run.get_combat_config()
-		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n正式背景：%s（待制作）" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
+		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 人物与背景为静态首版，动作及其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
 	grid.selected_uid = selected_uid
 	grid.queue_redraw()
 	arena.queue_redraw()
@@ -533,7 +533,7 @@ func _capture_sequence() -> void:
 		push_error("Cannot write runtime fixture report")
 		get_tree().quit(1)
 		return
-	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary()}, "\t", true))
+	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report()}, "\t", true))
 	report.close()
 	if _auto_quit:
 		get_tree().quit()
