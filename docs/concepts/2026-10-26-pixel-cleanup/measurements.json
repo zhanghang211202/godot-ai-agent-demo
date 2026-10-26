@@ -1,0 +1,32 @@
+[
+  {
+    "file": "assets/art/c1-motion-v1/characters/mage-cast.png",
+    "source_size": [
+      1122,
+      1402
+    ],
+    "bytes": 1905050,
+    "sha256": "cae56c8cfa99cadd51f21b2a70a545600092e6ced4878bdca26732aef4aedbee",
+    "transparent_pixels": 788897,
+    "partial_pixels": 782823,
+    "opaque_pixels": 1324,
+    "alpha_ge_250_pixels": 674776,
+    "low_alpha_pixels": 65104,
+    "visible_rgb_colors": 304850
+  },
+  {
+    "file": "docs/concepts/2026-10-26-pixel-cleanup/mage-atlas-rejected.png",
+    "source_size": [
+      1122,
+      1402
+    ],
+    "bytes": 1906390,
+    "sha256": "b1801934b94a9bfcfa67348bb68725506121380e811c1ac26082fa07cd9ae5d0",
+    "transparent_pixels": 713326,
+    "partial_pixels": 858704,
+    "opaque_pixels": 1014,
+    "alpha_ge_250_pixels": 680628,
+    "low_alpha_pixels": 113715,
+    "visible_rgb_colors": 296361
+  }
+]

@@ -3,7 +3,13 @@ extends Control
 
 const Art = preload("res://scripts/classes/class_art.gd")
 const Motion = preload("res://scripts/classes/class_motion.gd")
+const Feedback = preload("res://scripts/classes/class_feedback.gd")
 var motion = Motion.new()
+var feedback = Feedback.new()
+var pixel_cutout_enabled := true
+var actor_sprite: Sprite2D
+var actor_material: ShaderMaterial
+var effects_layer: Node2D
 var playback_speed := 1.0
 var run: RefCounted
 var battle: RefCounted
@@ -16,9 +22,21 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
+	actor_sprite = Sprite2D.new()
+	actor_sprite.centered = false
+	actor_sprite.region_enabled = true
+	actor_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	actor_material = ShaderMaterial.new()
+	actor_material.shader = preload("res://scripts/classes/class_actor.gdshader")
+	actor_sprite.material = actor_material
+	add_child(actor_sprite)
+	effects_layer = Node2D.new()
+	effects_layer.draw.connect(_draw_feedback)
+	add_child(effects_layer)
 
 func show_event(event: Dictionary) -> void:
 	motion.show_event(event)
+	feedback.show_event(event)
 	if str(event.get("type", "")) == "battle_end":
 		motion.finish_battle()
 	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi", "attack", "heavy_charge", "charge"]:
@@ -30,15 +48,23 @@ func reset_presentation() -> void:
 	last_event = {}
 	flash = 0.0
 	motion.reset()
+	feedback.reset()
 	queue_redraw()
+	if effects_layer != null:
+		effects_layer.queue_redraw()
+
+func has_pending_presentation() -> bool:
+	return motion.state != "idle" or feedback.is_active()
 
 func _process(delta: float) -> void:
 	if battle != null and battle.paused:
 		return
-	if flash > 0 or motion.state != "idle":
+	if flash > 0 or has_pending_presentation():
 		motion.advance(delta * playback_speed)
+		feedback.advance(delta * playback_speed)
 		flash = maxf(0.0, flash - delta * playback_speed)
 		queue_redraw()
+		effects_layer.queue_redraw()
 
 func _active_actions() -> Array:
 	if run == null:
@@ -107,7 +133,9 @@ func get_art_layout() -> Dictionary:
 		"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
 		"alpha_threshold": 128, "assets_ready": missing.is_empty(), "missing_assets": missing,
 		"hero_visible": destination.has_area(), "animated": not animated_hero.is_empty(), "enemy_placeholder": true,
-		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index}
+		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index,
+		"alpha_render_mode": "cutout >=128, opaque interior" if pixel_cutout_enabled else "original alpha comparison",
+		"feedback": feedback.report()}
 
 func get_art_report() -> Dictionary:
 	var layout := get_art_layout()
@@ -137,24 +165,39 @@ func _draw() -> void:
 	# A continuous foreground ledge anchors both actors.
 	draw_rect(Rect2(1, layout.ground_y, size.x - 2, 8), Color("333748") if run.class_id == "mage" else Color("474036"))
 	draw_line(Vector2(1, layout.ground_y), Vector2(size.x - 1, layout.ground_y), Color("9e95af") if run.class_id == "mage" else Color("b2a184"), 1)
-	_shadow(layout.ground_anchor, 39, tint)
-	_shadow(Vector2(layout.enemy_rect.get_center().x, layout.ground_y), 35, tint)
+	_shadow(layout.ground_anchor, 39, tint, feedback.opacity("hero"))
+	_shadow(Vector2(layout.enemy_rect.get_center().x, layout.ground_y), 35, tint, feedback.opacity("enemy"))
 	var hero: Dictionary = Art.get_asset(layout.hero_id)
 	if layout.animated:
 		hero = Motion.get_asset(layout.motion_clip)
 	if layout.hero_visible:
-		draw_texture_rect_region(hero.texture, layout.hero_rect, layout.source_rect)
+		actor_sprite.visible = true
+		actor_sprite.texture = hero.texture
+		actor_sprite.region_rect = layout.source_rect
+		actor_sprite.position = layout.hero_rect.position + Vector2(roundf(sin(feedback.hero_hit * 90.0) * 3.0) if feedback.hero_hit > 0 else 0.0, 0)
+		actor_sprite.scale = layout.source_scale
+		actor_material.set_shader_parameter("cutout_enabled", pixel_cutout_enabled)
+		actor_material.set_shader_parameter("hurt_strength", 0.65 * feedback.hero_hit / Feedback.HIT_TIME)
+		actor_material.set_shader_parameter("actor_opacity", feedback.opacity("hero"))
 	else:
+		actor_sprite.visible = false
 		_center("待配武装" if layout.hero_id == "" else "角色静态稿待载入", layout.ground_anchor - Vector2(0, 55), 16, tint)
-	_draw_training_target(layout.enemy_rect, tint)
+	var enemy_alpha: float = feedback.opacity("enemy")
+	if enemy_alpha > 0:
+		var pivot := Vector2(layout.enemy_rect.get_center().x, layout.ground_y)
+		var lean := (1.0 - enemy_alpha) * 0.12 + sin(feedback.enemy_hit * 80) * 0.025
+		draw_set_transform(pivot, lean)
+		_draw_training_target(Rect2(layout.enemy_rect.position - pivot, layout.enemy_rect.size), Color(tint.lightened(feedback.enemy_hit), enemy_alpha))
+		draw_set_transform(Vector2.ZERO)
 	_draw_hud(layout, tint)
 	var footer_name := "月光观测庭" if run.class_id == "mage" else "余烬圣堂"
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
 	draw_string(font, Vector2(14, size.y - 6), footer_name + " · 动作样板", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
-	var note := "施法 / 攻击四帧 · 受击与退场待制作"
+	var note := "命中 / 受击 / 淡出反馈 · 专用姿势待制作"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
+	effects_layer.queue_redraw()
 
 func _draw_background(layout: Dictionary) -> void:
 	var background: Dictionary = Art.get_asset(layout.background_id)
@@ -178,17 +221,18 @@ func _background_crop(background: Dictionary, scene: Rect2) -> Rect2:
 func _draw_training_target(rect: Rect2, tint: Color) -> void:
 	var center := rect.get_center().x
 	var floor_y := rect.end.y
-	var wood := Color("6f5040")
-	var brass := Color("b49a65")
+	var alpha := tint.a
+	var wood := Color(Color("6f5040").lightened(feedback.enemy_hit), alpha)
+	var brass := Color(Color("b49a65").lightened(feedback.enemy_hit), alpha)
 	draw_rect(Rect2(center - 6, floor_y - 139, 12, 133), wood.darkened(0.15))
 	draw_rect(Rect2(center - 42, floor_y - 7, 84, 7), wood)
 	draw_rect(Rect2(center - 50, floor_y - 113, 100, 13), wood.darkened(0.1))
 	draw_rect(Rect2(center - 27, floor_y - 134, 54, 79), wood)
-	draw_rect(Rect2(center - 22, floor_y - 129, 44, 69), Color("473e3b"))
+	draw_rect(Rect2(center - 22, floor_y - 129, 44, 69), Color(Color("473e3b"), alpha))
 	draw_rect(Rect2(center - 19, floor_y - 125, 38, 61), brass.darkened(0.3), false, 2)
-	draw_circle(Vector2(center, floor_y - 153), 13, Color("8b7260"))
+	draw_circle(Vector2(center, floor_y - 153), 13, Color(Color("8b7260"), alpha))
 	draw_arc(Vector2(center, floor_y - 153), 13, 0, TAU, 12, brass, 2, false)
-	draw_line(Vector2(center - 7, floor_y - 153), Vector2(center + 7, floor_y - 153), Color("302d31"), 3)
+	draw_line(Vector2(center - 7, floor_y - 153), Vector2(center + 7, floor_y - 153), Color(Color("302d31"), alpha), 3)
 	draw_circle(Vector2(center, floor_y - 95), 13, tint.darkened(0.25))
 	draw_circle(Vector2(center, floor_y - 95), 7, wood.darkened(0.4))
 	draw_line(Vector2(center - 10, floor_y - 80), Vector2(center + 10, floor_y - 80), brass, 2)
@@ -222,11 +266,45 @@ func _draw_hud(layout: Dictionary, tint: Color) -> void:
 			draw_line(from, to, Color(tint, minf(0.85, flash * 1.8)), 2)
 		_center(label_text, Vector2(size.x / 2, 52), 15, tint)
 
-func _shadow(position: Vector2, radius: float, tint: Color) -> void:
+func _shadow(position: Vector2, radius: float, tint: Color, opacity := 1.0) -> void:
+	if opacity <= 0:
+		return
 	draw_set_transform(position - Vector2(0, 2), 0.0, Vector2(1, 0.19))
-	draw_circle(Vector2.ZERO, radius, Color(0.035, 0.025, 0.055, 0.6))
+	draw_circle(Vector2.ZERO, radius, Color(0.035, 0.025, 0.055, 0.6 * opacity))
 	draw_set_transform(Vector2.ZERO)
-	draw_line(position - Vector2(radius * 0.65, 0), position + Vector2(radius * 0.65, 0), tint.darkened(0.65), 1)
+	draw_line(position - Vector2(radius * 0.65, 0), position + Vector2(radius * 0.65, 0), Color(tint.darkened(0.65), opacity), 1)
+
+func _draw_feedback() -> void:
+	if run == null or battle == null:
+		return
+	var layout := get_art_layout()
+	var slots := {"hero": 0, "enemy": 0}
+	for index in range(feedback.numbers.size() - 1, -1, -1):
+		var number: Dictionary = feedback.numbers[index]
+		var target: String = number.target
+		var origin := Vector2(layout.hero_rect.end.x + 105, layout.ground_y - 75) if target == "hero" else Vector2(layout.enemy_rect.position.x - 110, layout.ground_y - 75)
+		var slot: int = slots[target]
+		if slot >= 3:
+			continue
+		slots[target] += 1
+		var progress: float = number.age / Feedback.NUMBER_TIME
+		var text := "-%d" % int(number.amount)
+		if int(number.hits) > 1:
+			text += " · %d段" % int(number.hits)
+		if int(number.armor) > 0:
+			text += "  护甲抵挡%d" % int(number.armor)
+		var point := origin + Vector2(0, -progress * 30 - slot * 24)
+		point.y = maxf(84, point.y)
+		var color := Color("ffb8b0") if target == "hero" else Color("ffe1a0") if number.kind == "greatblade" else Color("b9e7ff")
+		color.a = clampf((1.0 - progress) * 2, 0, 1)
+		var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x
+		point.x = clampf(point.x, 8 + width / 2, size.x - 8 - width / 2)
+		effects_layer.draw_string(font, point - Vector2(width / 2, 0) + Vector2(1, 2), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.03, 0.025, 0.04, color.a))
+		effects_layer.draw_string(font, point - Vector2(width / 2, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, color)
+	if feedback.enemy_hit > 0:
+		var center: Vector2 = layout.enemy_rect.get_center()
+		var radius: float = 10 + (1.0 - feedback.enemy_hit / Feedback.HIT_TIME) * 20
+		effects_layer.draw_arc(center, radius, 0, TAU, 12, Color(1.0, 0.87, 0.65, feedback.enemy_hit / Feedback.HIT_TIME), 2, false)
 
 func _center(text: String, position: Vector2, font_size: int, color: Color) -> void:
 	var width: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x

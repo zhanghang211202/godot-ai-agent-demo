@@ -2,11 +2,11 @@
 
 一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
 
-**2026-10-26：法师施法、骑士长剑／重刃已接入四帧动作样板。** 预备、命中、收势随实际战斗事件播放，支持暂停与1×／2×；法师出手帧补清了两只手和完整杖尾。训练木靶、物件图标、受击与退场仍待制作，源图像素密度和透明边缘仍需整理。[本轮动作、检查与限制](docs/iteration-c1-motion.md)；[此前静态接入](docs/iteration-c1-static-art.md)保留。
+**2026-10-27：四帧动作之上新增战斗反馈。** 实际命中数字、三段法术合并提示、护甲抵挡、受击闪色/轻晃、胜负淡出已接入，暂停与1×／2×同步。独立角色Shader过滤低透明杂边，原PNG不改；源像素密度、人体/武器一致性和专用受击/退场姿势仍待整理。[本轮反馈与检查](docs/iteration-c1-feedback.md)；[此前四帧动作](docs/iteration-c1-motion.md)及[静态接入](docs/iteration-c1-static-art.md)保留。
 
-![实际Godot运行的法师动作fixture：正常有限资源编织，固定训练敌人；无声六秒片段](docs/devlog/screenshots/c1-motion-v1/mage-motion.gif)
+![实际Godot法师fixture：有限资源编织、真实命中提示、训练木靶淡出；无声六秒](docs/devlog/screenshots/c1-feedback-v1/mage-feedback.gif)
 
-![实际Godot运行的骑士重刃fixture：双手攻击与收势，训练木靶和文字物件仍占位](docs/devlog/screenshots/c1-motion-v1/greatblade-motion.gif)
+![实际Godot重刃fixture：命中、受击与胜利淡出；木靶和文字物件仍占位，无声六秒](docs/devlog/screenshots/c1-feedback-v1/heavy-feedback.gif)
 
 **2026-10-24：可玩的 C0 双职业规则实验。** 运行：
 

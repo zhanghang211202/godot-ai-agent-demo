@@ -40,6 +40,8 @@ var _capture_done := false
 var _auto_quit := false
 var _capture_prepare_only := false
 var _capture_sword := false
+var _capture_loss := false
+var _original_alpha_comparison := false
 var _ready_frames := 0
 var _last_phase := "idle"
 
@@ -58,6 +60,10 @@ func _ready() -> void:
 			_capture_prepare_only = true
 		elif argument == "--capture-sword":
 			_capture_sword = true
+		elif argument == "--capture-loss":
+			_capture_loss = true
+		elif argument == "--compare-original-alpha":
+			_original_alpha_comparison = true
 	_build_interface()
 	resized.connect(_resize_layout)
 	_resize_layout()
@@ -97,11 +103,12 @@ func _build_interface() -> void:
 		var b := _button("新法师实验" if id == "mage" else "新 H 骑士实验", func(): _new_class(id))
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("C1 四帧动作样板 · 施法 / 长剑 / 重刃 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
+	var notice := _label("C1 战斗反馈样板 · 命中数字 / 护甲 / 受击 / 淡出 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
 	arena.battle = battle
+	arena.pixel_cutout_enabled = not _original_alpha_comparison
 	root.add_child(arena)
 	var body := HBoxContainer.new()
 	body.add_theme_constant_override("separation", 14)
@@ -426,7 +433,7 @@ func _sync() -> void:
 		detail_label.text = "%s\n\n%s\n\n实际占格：%d × %d\n方向支援：+%d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y, run.get_adjacency_bonus(item)]
 	else:
 		var config: Dictionary = run.get_combat_config()
-		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 已接入施法与攻击四帧；受击、退场及其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
+		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 四帧施法/攻击与受击/淡出反馈已接入；专用受击、退场姿势和其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
 	grid.selected_uid = selected_uid
 	grid.queue_redraw()
 	arena.queue_redraw()
@@ -499,11 +506,24 @@ func _capture_sequence() -> void:
 			get_tree().quit()
 		return
 	var fixture_actions: Array[Dictionary] = []
-	if run.class_id == "mage":
+	if _capture_loss:
+		if run.class_id != "mage":
+			push_error("The legal loss fixture requires --class=mage")
+			get_tree().quit(1)
+			return
+	elif run.class_id == "mage":
 		fixture_actions.assign([{"source": 0, "cell": Vector2i(0, 0)}, {"source": 1, "cell": Vector2i(3, 2)}, {"source": 2, "cell": Vector2i(3, 2)}])
 	elif not _capture_sword:
 		fixture_actions.assign([{"source": 1, "cell": Vector2i(0, 0)}, {"source": 1, "cell": Vector2i(2, 1)}])
 	var recorded_actions: Array[Dictionary] = []
+	if _capture_loss:
+		var uid: int = run.item_at(Vector2i.ZERO).uid
+		var discarded: Dictionary = run.discard(uid)
+		if not discarded.ok:
+			push_error("Legal loss fixture discard failed")
+			get_tree().quit(1)
+			return
+		recorded_actions.append({"operation": "discard", "uid": uid, "result": discarded})
 	for action in fixture_actions:
 		var result: Dictionary = run.acquire(int(action.source), action.cell)
 		if not result.ok:
@@ -522,11 +542,15 @@ func _capture_sequence() -> void:
 		return
 	var captured_states: Array[String] = []
 	var motion_samples: Array[Dictionary] = []
+	var feedback_samples: Array[Dictionary] = []
+	var feedback_captured: Array[String] = []
 	var battle_frame := 0
 	while battle.phase == "battle":
 		await get_tree().process_frame
 		await RenderingServer.frame_post_draw
 		battle_frame += 1
+		if not _capture_feedback(feedback_captured, feedback_samples):
+			return
 		var state: String = arena.motion.state
 		if state in ["windup", "impact", "recover"] and state not in captured_states:
 			captured_states.append(state)
@@ -537,8 +561,11 @@ func _capture_sequence() -> void:
 			if not _capture_frame("battle"):
 				return
 	# Let the final winning blow finish its visual follow-through.
-	while arena.motion.state != "idle":
+	while arena.has_pending_presentation():
 		await get_tree().process_frame
+		await RenderingServer.frame_post_draw
+		if not _capture_feedback(feedback_captured, feedback_samples):
+			return
 	await RenderingServer.frame_post_draw
 	if not _capture_frame("result"):
 		return
@@ -547,10 +574,34 @@ func _capture_sequence() -> void:
 		push_error("Cannot write runtime fixture report")
 		get_tree().quit(1)
 		return
-	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "sword" if _capture_sword else "built", "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples}, "\t", true))
+	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "loss" if _capture_loss else "sword" if _capture_sword else "built", "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples, "feedback_samples": feedback_samples}, "\t", true))
 	report.close()
 	if _auto_quit:
 		get_tree().quit()
+
+func _capture_feedback(captured: Array[String], samples: Array[Dictionary]) -> bool:
+	var feedback = arena.feedback
+	var stages: Array[String] = []
+	if feedback.hero_hit > 0:
+		stages.append("hero-hit")
+	if feedback.enemy_hit > 0:
+		stages.append("enemy-hit")
+	for number in feedback.numbers:
+		if int(number.hits) > 1:
+			stages.append("multi-hit")
+			break
+	if feedback.hero_exit >= 0 and feedback.hero_exit < 0.6:
+		stages.append("hero-exit")
+	if feedback.enemy_exit >= 0 and feedback.enemy_exit < 0.6:
+		stages.append("enemy-exit")
+	for stage in stages:
+		if stage in captured:
+			continue
+		if not _capture_frame(stage):
+			return false
+		captured.append(stage)
+		samples.append({"file": "%s-%s.png" % [run.class_id, stage], "battle_time": battle.battle_time, "visuals": arena.get_art_report()})
+	return true
 
 func _capture_frame(stage: String) -> bool:
 	var path := _capture_directory.path_join("%s-%s.png" % [run.class_id, stage])

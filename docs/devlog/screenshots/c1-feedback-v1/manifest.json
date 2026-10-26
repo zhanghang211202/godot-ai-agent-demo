@@ -1,0 +1,418 @@
+{
+  "schema_version": 1,
+  "completed_date": "2026-10-27",
+  "work_started": "2026-10-26",
+  "timezone": "Asia/Tokyo",
+  "classification": "Actual native Godot runtime fixtures. No player saves; legal acquisition/forge and a legal one-starter-discard loss configuration. Character hit/exit are tint/offset/fade feedback, not newly drawn hurt/death poses.",
+  "renderer": "Windows / Godot 4.7.2 .NET / OpenGL compatibility / RTX 3070 Laptop GPU",
+  "alpha_comparison": {
+    "changed_pixels": 11324,
+    "changed_rect": [
+      254,
+      154,
+      149,
+      188
+    ],
+    "note": "Same 1280x800 preparation pose, original alpha vs dedicated actor shader cutoff. Does not demonstrate source palette or logical-grid repair."
+  },
+  "movies": [
+    {
+      "file": "mage-feedback.gif",
+      "source_frames": 166,
+      "start": 70,
+      "frames": 96,
+      "duration_seconds": 6
+    },
+    {
+      "file": "heavy-feedback.gif",
+      "source_frames": 204,
+      "start": 108,
+      "frames": 96,
+      "duration_seconds": 6
+    },
+    {
+      "file": "loss-feedback.gif",
+      "source_frames": 432,
+      "start": 352,
+      "frames": 80,
+      "duration_seconds": 5
+    }
+  ],
+  "movie_conversion": {
+    "source_fps": 16,
+    "step": 1,
+    "scale": 2,
+    "output_size": [
+      720,
+      480
+    ],
+    "audio": false,
+    "note": "Fixed-rate Movie Maker capture; not a performance benchmark. Final crowded-number rendering later limits each target to three newest rows; a subsequent 1280x800 fixture verifies that final implementation. Loss recording predates the detail-text clarification of dedicated poses."
+  },
+  "files": [
+    {
+      "file": "alpha-cutout-1280x800.png",
+      "bytes": 586298,
+      "sha256": "d595bca54c70bb1c3f64176d687ca4aa3611d30dbd89eb72ad692459bf7a3f3e",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "alpha-original-1280x800.png",
+      "bytes": 586557,
+      "sha256": "3ce053ead7202f41c349716b7e1c6d1227d173336197f2a6159c4914ee59f71c",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "feedback-tests.json",
+      "bytes": 11335,
+      "sha256": "1325de9158d3533f29277f9dd43931efeacaed216a0208fadc2da2f8a2dbe18d"
+    },
+    {
+      "file": "gpu-readback.json",
+      "bytes": 341,
+      "sha256": "fce68b7f7bf35d59e8f7f3ae6b0139513934f4ab319d03dbc6950a4de6d40288"
+    },
+    {
+      "file": "heavy/knight-battle.png",
+      "bytes": 859108,
+      "sha256": "6e486093c85ca17f2875abda44771b0e0e1c43783eb20393db2671a457c03162",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-built.png",
+      "bytes": 870201,
+      "sha256": "ff6698bf94a5c773d01fbe31f47709853adc34200a709b3f5573da6b28810816",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-enemy-exit.png",
+      "bytes": 869679,
+      "sha256": "3769dc733e0f2237cbd84ea8cd82ed23c657dc05317b389a09d58bf29ad3eff6",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-enemy-hit.png",
+      "bytes": 864064,
+      "sha256": "ee32835b42b2e66f14fcbe6ce7507ddcbd09a489934a36cc686afac5d4ffd8fe",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-hero-hit.png",
+      "bytes": 862393,
+      "sha256": "0026e836043c71ca624ce1f289d718a2409922eb62c6495b1c2f71af4b6af19f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-motion-impact.png",
+      "bytes": 864064,
+      "sha256": "ee32835b42b2e66f14fcbe6ce7507ddcbd09a489934a36cc686afac5d4ffd8fe",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-motion-recover.png",
+      "bytes": 859108,
+      "sha256": "6e486093c85ca17f2875abda44771b0e0e1c43783eb20393db2671a457c03162",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-motion-windup.png",
+      "bytes": 872391,
+      "sha256": "b6bfaa66bd2e0c5075c573ee8b8900f3568422d52d7b12b10762a3f83af2a4b8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-prepare.png",
+      "bytes": 863073,
+      "sha256": "73e3ae3692b6e2a05ee6adb0725c93b6556042d44d49b88433869b2f427ce9c0",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy/knight-report.json",
+      "bytes": 17866,
+      "sha256": "d9fb3497b1ef7f859a85ff1db631956f4a30b15b7798023f709d936a6d2732b5"
+    },
+    {
+      "file": "heavy/knight-result.png",
+      "bytes": 875236,
+      "sha256": "f8e333532059250cfda9809b030c2b57bcdbe5a04154c3705b900b4ba930cc99",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "heavy-feedback.gif",
+      "bytes": 8193651,
+      "sha256": "73ac8b2ab3a579e50529f888a8ec88a17fd4aa29c205fc48194b59839de337df"
+    },
+    {
+      "file": "knight-prepare-1920x1080.png",
+      "bytes": 1077354,
+      "sha256": "c1cadf4b92c95060faf65d6ca1114ca8564e1d5b937db505562e27abba3a8b72",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "loss/mage-battle.png",
+      "bytes": 862533,
+      "sha256": "5fba471e2f239171d266573165a76a231fa043d8e90da87023f49c58e68218d3",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-built.png",
+      "bytes": 860688,
+      "sha256": "1c49592d544d1a2ebe32c1ea7e1e575ad81d69b52b26762927a71430017e41f4",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-enemy-hit.png",
+      "bytes": 861573,
+      "sha256": "bcff889ecce65f570738dba6ce31f716d2d7694cbcd19d12f3b3ad858e85fd11",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-hero-exit.png",
+      "bytes": 843501,
+      "sha256": "060d309a7e2a76d38f5152c674234f01c1cd81826fa928cb10edc4d6103b6746",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-hero-hit.png",
+      "bytes": 848823,
+      "sha256": "c4c724694b7226ca75071ac730e4979dfbce57856ebeea2475f07420819aa00e",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-motion-impact.png",
+      "bytes": 861573,
+      "sha256": "bcff889ecce65f570738dba6ce31f716d2d7694cbcd19d12f3b3ad858e85fd11",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-motion-recover.png",
+      "bytes": 862687,
+      "sha256": "a0456cefd1f48d62f16fec87d3047fa9daf095dbbba59bdc2b1f9a2864a35b85",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-motion-windup.png",
+      "bytes": 862648,
+      "sha256": "4b0db4b732b8441c80ba28d7dffd0528af7bfb1ea2b63796b1495004cd803b72",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-prepare.png",
+      "bytes": 863177,
+      "sha256": "2c99f00edda99b7627adacaafb56305f12ace209f81a47b2b57e33679db7f948",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-report.json",
+      "bytes": 16994,
+      "sha256": "f4b3de8e7ab97e4fcd4cef4a9e415ad66b9fff3b475b9d8ef7c6b4d6f7405b6d"
+    },
+    {
+      "file": "loss/mage-result.png",
+      "bytes": 813568,
+      "sha256": "b814c47838c379cf3d198b78210768cf09862b7d838d964ad8b2e8b4b0eadaf8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss-feedback.gif",
+      "bytes": 6266690,
+      "sha256": "8a10606a92db8619a33f7d908d16681ad928b63caf8a136696f9eaf65ced967e"
+    },
+    {
+      "file": "mage/mage-battle.png",
+      "bytes": 865378,
+      "sha256": "8823ea65c2cff9535c7519ac6ad6ca27211eefaced1d26bdb24374fced23bfc9",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-built.png",
+      "bytes": 863362,
+      "sha256": "e5853995d745bd2eef6fb1d0341881510adbd58eb50613fa520217249fdae05f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-enemy-exit.png",
+      "bytes": 870297,
+      "sha256": "ce7b1fbbb5ad01cc27d28e8dec71e57505665f33831fa34a511c7749976c4471",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-enemy-hit.png",
+      "bytes": 864037,
+      "sha256": "617a46bdd4817b8913b14e3789a0afe07cadde0e1513496e51afe740f22cfbc8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-hero-hit.png",
+      "bytes": 851349,
+      "sha256": "e375dfabfbc9abd5f43809a084dfd44974dca04610a97dd987aa50258928174b",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-motion-impact.png",
+      "bytes": 864037,
+      "sha256": "617a46bdd4817b8913b14e3789a0afe07cadde0e1513496e51afe740f22cfbc8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-motion-recover.png",
+      "bytes": 865314,
+      "sha256": "0b1626d8d13d4267c95fe36ddf78a02b062cd017487adad22f760a8fe7fb12f2",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-motion-windup.png",
+      "bytes": 865459,
+      "sha256": "c754d97ca1de956611fb0ecd891fe1a545af3cb619bce3bde7c0d5cfc33c9387",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-multi-hit.png",
+      "bytes": 865678,
+      "sha256": "6d91faada4ae8e229dc5cc70183eb531bd469bfdde4e6789c2805695e5ebc0b7",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-prepare.png",
+      "bytes": 860949,
+      "sha256": "2e9d3e9530c352313140f79954648bf9ed87bf205c3e0011996857c9cdcac422",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage/mage-report.json",
+      "bytes": 20642,
+      "sha256": "002a941a3dfc38da7d53a310cfd67e03aed1d4e83269fcca2543580338b47978"
+    },
+    {
+      "file": "mage/mage-result.png",
+      "bytes": 873025,
+      "sha256": "d20a01bd14e36d5f1267857d81c0b3179b057c61ae6400a3ac1258e2ba3b7931",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage-feedback.gif",
+      "bytes": 7439468,
+      "sha256": "72c0c7510dbde63b91d96dd7b1637efda975d7f60cf571e58e1d1d241c3769de"
+    },
+    {
+      "file": "mage-hero-hit-1280x800.png",
+      "bytes": 580284,
+      "sha256": "da72aab8054722bf2a4de87752abcaf9896762bb7d1589cce04e7e1ac45b28cd",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "mage-multi-hit-1280x800.png",
+      "bytes": 592641,
+      "sha256": "09e82b2ce62de5709dbc851cdf3ac10a8e380f180e209668128aacb321e6936b",
+      "dimensions": [
+        1280,
+        800
+      ]
+    }
+  ]
+}
