@@ -39,6 +39,7 @@ var _capture_class := "mage"
 var _capture_done := false
 var _auto_quit := false
 var _capture_prepare_only := false
+var _capture_sword := false
 var _ready_frames := 0
 var _last_phase := "idle"
 
@@ -55,6 +56,8 @@ func _ready() -> void:
 			_auto_quit = true
 		elif argument == "--capture-prepare-only":
 			_capture_prepare_only = true
+		elif argument == "--capture-sword":
+			_capture_sword = true
 	_build_interface()
 	resized.connect(_resize_layout)
 	_resize_layout()
@@ -94,7 +97,7 @@ func _build_interface() -> void:
 		var b := _button("新法师实验" if id == "mage" else "新 H 骑士实验", func(): _new_class(id))
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("C1 静态美术样板 · 角色动作待制作 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
+	var notice := _label("C1 四帧动作样板 · 施法 / 长剑 / 重刃 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
@@ -237,8 +240,7 @@ func _new_class(id: String) -> void:
 	battle = BattleRules.new()
 	_before_battle = {}
 	arena.battle = battle
-	arena.last_event = {}
-	arena.flash = 0.0
+	arena.reset_presentation()
 	_clear_selection()
 	summary_label.text = "本实验只验证一战，不是六流派完整 Demo。\n有限来源不会刷新；丢弃不返还素材或金币。"
 	_notice("法师：先点火元素，再点微光术式编织焰爆；水与风可组合三段法术。" if id == "mage" else "骑士：购入蓄势徽记并叠到长剑上，锻造六格重刃；保留徽记也可连接强化。")
@@ -334,8 +336,7 @@ func _load() -> void:
 		battle = BattleRules.new()
 		_before_battle = {}
 		arena.battle = battle
-		arena.last_event = {}
-		arena.flash = 0.0
+		arena.reset_presentation()
 		_clear_selection()
 		summary_label.text = "已恢复实验准备快照。旧版远征使用独立存档，不在这里转换。"
 	_sync()
@@ -363,10 +364,11 @@ func _start_battle() -> void:
 	_before_battle = {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "seed_value": run.seed_value, "next_uid": run._next_uid, "discarded": run.discarded_materials.duplicate(true)}
 	battle = candidate
 	arena.battle = battle
+	arena.reset_presentation()
 	run.phase = "battle"
 	_last_phase = "battle"
 	_clear_selection()
-	_notice("训练开始。静态角色与连线只显示规则事件；可暂停或切换 1× / 2×。")
+	_notice("训练开始。动作与连线显示规则事件；可暂停或切换 1× / 2×。")
 	_sync()
 
 func _restore_before_battle() -> void:
@@ -383,8 +385,7 @@ func _restore_before_battle() -> void:
 	run.discarded_materials = _before_battle.discarded.duplicate(true)
 	battle = BattleRules.new()
 	arena.battle = battle
-	arena.last_event = {}
-	arena.flash = 0.0
+	arena.reset_presentation()
 	_clear_selection()
 	summary_label.text = "回到原战前配置，不重复发资源，不刷新来源。"
 	_notice("已恢复战前。调整布局后可再次训练。")
@@ -404,6 +405,7 @@ func _notice(message: String) -> void:
 		status_label.text = message
 
 func _sync() -> void:
+	arena.playback_speed = speed
 	var info: Dictionary = Catalog.class_info(run.class_id)
 	carrier_label.text = str(info.carrier) + "   6 × 4"
 	resources_label.text = "吸收元素 · 免费 / 有限" if run.class_id == "mage" else "武装补给 · %d 金币" % run.gold
@@ -424,7 +426,7 @@ func _sync() -> void:
 		detail_label.text = "%s\n\n%s\n\n实际占格：%d × %d\n方向支援：+%d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y, run.get_adjacency_bonus(item)]
 	else:
 		var config: Dictionary = run.get_combat_config()
-		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 人物与背景为静态首版，动作及其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
+		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 已接入施法与攻击四帧；受击、退场及其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
 	grid.selected_uid = selected_uid
 	grid.queue_redraw()
 	arena.queue_redraw()
@@ -499,7 +501,7 @@ func _capture_sequence() -> void:
 	var fixture_actions: Array[Dictionary] = []
 	if run.class_id == "mage":
 		fixture_actions.assign([{"source": 0, "cell": Vector2i(0, 0)}, {"source": 1, "cell": Vector2i(3, 2)}, {"source": 2, "cell": Vector2i(3, 2)}])
-	else:
+	elif not _capture_sword:
 		fixture_actions.assign([{"source": 1, "cell": Vector2i(0, 0)}, {"source": 1, "cell": Vector2i(2, 1)}])
 	var recorded_actions: Array[Dictionary] = []
 	for action in fixture_actions:
@@ -518,12 +520,24 @@ func _capture_sequence() -> void:
 		push_error("Runtime capture battle did not start")
 		get_tree().quit(1)
 		return
-	for frame in range(75):
-		await get_tree().process_frame
-	await RenderingServer.frame_post_draw
-	if not _capture_frame("battle"):
-		return
+	var captured_states: Array[String] = []
+	var motion_samples: Array[Dictionary] = []
+	var battle_frame := 0
 	while battle.phase == "battle":
+		await get_tree().process_frame
+		await RenderingServer.frame_post_draw
+		battle_frame += 1
+		var state: String = arena.motion.state
+		if state in ["windup", "impact", "recover"] and state not in captured_states:
+			captured_states.append(state)
+			if not _capture_frame("motion-" + state):
+				return
+			motion_samples.append({"file": "%s-motion-%s.png" % [run.class_id, state], "battle_time": battle.battle_time, "visuals": arena.get_art_report()})
+		if battle_frame == 25:
+			if not _capture_frame("battle"):
+				return
+	# Let the final winning blow finish its visual follow-through.
+	while arena.motion.state != "idle":
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	if not _capture_frame("result"):
@@ -533,13 +547,18 @@ func _capture_sequence() -> void:
 		push_error("Cannot write runtime fixture report")
 		get_tree().quit(1)
 		return
-	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report()}, "\t", true))
+	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "sword" if _capture_sword else "built", "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples}, "\t", true))
 	report.close()
 	if _auto_quit:
 		get_tree().quit()
 
 func _capture_frame(stage: String) -> bool:
-	var error := get_viewport().get_texture().get_image().save_png(_capture_directory.path_join("%s-%s.png" % [run.class_id, stage]))
+	var path := _capture_directory.path_join("%s-%s.png" % [run.class_id, stage])
+	if FileAccess.file_exists(path):
+		push_error("Runtime capture refuses to overwrite existing evidence: " + path)
+		get_tree().quit(1)
+		return false
+	var error := get_viewport().get_texture().get_image().save_png(path)
 	if error != OK:
 		push_error("Runtime frame write failed: " + error_string(error))
 		get_tree().quit(1)

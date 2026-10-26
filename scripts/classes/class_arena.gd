@@ -1,7 +1,10 @@
 extends Control
-## C1 static battle-pose candidates over the unchanged C0 event engine.
+## Dedicated action-frame sample over the unchanged C0 event engine.
 
 const Art = preload("res://scripts/classes/class_art.gd")
+const Motion = preload("res://scripts/classes/class_motion.gd")
+var motion = Motion.new()
+var playback_speed := 1.0
 var run: RefCounted
 var battle: RefCounted
 var last_event: Dictionary = {}
@@ -15,16 +18,26 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 
 func show_event(event: Dictionary) -> void:
+	motion.show_event(event)
+	if str(event.get("type", "")) == "battle_end":
+		motion.finish_battle()
 	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi", "attack", "heavy_charge", "charge"]:
 		last_event = event
 		flash = 0.6
 	queue_redraw()
 
+func reset_presentation() -> void:
+	last_event = {}
+	flash = 0.0
+	motion.reset()
+	queue_redraw()
+
 func _process(delta: float) -> void:
 	if battle != null and battle.paused:
 		return
-	if flash > 0:
-		flash = maxf(0.0, flash - delta)
+	if flash > 0 or motion.state != "idle":
+		motion.advance(delta * playback_speed)
+		flash = maxf(0.0, flash - delta * playback_speed)
 		queue_redraw()
 
 func _active_actions() -> Array:
@@ -53,6 +66,10 @@ func get_art_layout() -> Dictionary:
 	var hero_id := _hero_id()
 	var background_id := "moon-court" if run != null and run.class_id == "mage" else "reliquary-hall"
 	var hero: Dictionary = Art.get_asset(hero_id)
+	var default_clip := {"mage-idle": "mage-cast", "knight-sword-idle": "knight-sword", "knight-greatblade-idle": "knight-greatblade"}.get(hero_id, "") as String
+	var clip_id: String = motion.clip if not motion.clip.is_empty() else default_clip
+	var animated_hero := Motion.get_asset(clip_id)
+	var frame_index: int = motion.frame_index() if not motion.clip.is_empty() else 0
 	var background: Dictionary = Art.get_asset(background_id)
 	var scene := Rect2(1, 61, maxf(0, size.x - 2), maxf(0, size.y - 89))
 	var background_crop := _background_crop(background, scene)
@@ -66,6 +83,12 @@ func get_art_layout() -> Dictionary:
 		factor = minf(desired_height / source.size.y, (size.x * 0.34) / source.size.x)
 		var extent := source.size * factor
 		destination = Rect2(anchor - Vector2(extent.x * 0.5, extent.y), extent)
+	if not animated_hero.is_empty():
+		var frame: Dictionary = animated_hero.frames[frame_index]
+		source = frame.source_rect
+		factor = minf(minf(256.0, scene.size.y - 3.0) / float(animated_hero.height), (size.x * 0.34) / float(animated_hero.left + animated_hero.right))
+		destination = Rect2(anchor + (source.position - Vector2(frame.pivot)) * factor, source.size * factor)
+		hero = animated_hero
 	var health: Array[Rect2] = [Rect2(16, 12, size.x * 0.30, 8), Rect2(size.x * 0.70 - 16, 12, size.x * 0.30, 8)]
 	var phase := Rect2(size.x * 0.33, 8, size.x * 0.34, 43)
 	var enemy := Rect2(Vector2(roundf(size.x * 0.76) - 60, ground - 166), Vector2(120, 166))
@@ -75,15 +98,16 @@ func get_art_layout() -> Dictionary:
 	if background.is_empty():
 		missing.append(background_id)
 	return {"class_id": str(run.class_id) if run != null else "", "hero_id": hero_id,
-		"hero_path": Art.asset_path(hero_id), "background_id": background_id, "background_path": Art.asset_path(background_id),
+		"hero_path": hero.get("path", ""), "background_id": background_id, "background_path": Art.asset_path(background_id),
 		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination,
 		"background_source_size": background.get("size", Vector2i.ZERO), "background_source_rect": background_crop,
 		"stage_rect": Rect2(Vector2.ZERO, size), "scene_rect": scene, "ground_anchor": anchor, "ground_y": ground,
 		"enemy_rect": enemy, "health_rects": health, "phase_rect": phase,
 		"source_scale": Vector2.ONE * factor, "source_scale_is_integer": factor >= 1.0 and is_equal_approx(factor, roundf(factor)),
-		"scaling_mode": "aspect-preserving nearest static source-fit experiment; logical sprite grid pending",
+		"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
 		"alpha_threshold": 128, "assets_ready": missing.is_empty(), "missing_assets": missing,
-		"hero_visible": destination.has_area(), "animated": false, "enemy_placeholder": true}
+		"hero_visible": destination.has_area(), "animated": not animated_hero.is_empty(), "enemy_placeholder": true,
+		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index}
 
 func get_art_report() -> Dictionary:
 	var layout := get_art_layout()
@@ -116,6 +140,8 @@ func _draw() -> void:
 	_shadow(layout.ground_anchor, 39, tint)
 	_shadow(Vector2(layout.enemy_rect.get_center().x, layout.ground_y), 35, tint)
 	var hero: Dictionary = Art.get_asset(layout.hero_id)
+	if layout.animated:
+		hero = Motion.get_asset(layout.motion_clip)
 	if layout.hero_visible:
 		draw_texture_rect_region(hero.texture, layout.hero_rect, layout.source_rect)
 	else:
@@ -124,8 +150,8 @@ func _draw() -> void:
 	_draw_hud(layout, tint)
 	var footer_name := "月光观测庭" if run.class_id == "mage" else "余烬圣堂"
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
-	draw_string(font, Vector2(14, size.y - 6), footer_name + " · 静态样板", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
-	var note := "角色动作待制作 · 训练敌人占位"
+	draw_string(font, Vector2(14, size.y - 6), footer_name + " · 动作样板", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
+	var note := "施法 / 攻击四帧 · 受击与退场待制作"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
