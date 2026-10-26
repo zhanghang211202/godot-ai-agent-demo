@@ -5,6 +5,12 @@ signal cell_selected(cell: Vector2i)
 signal drop_requested(data: Dictionary, cell: Vector2i)
 
 const Catalog = preload("res://scripts/classes/class_catalog.gd")
+const SHORT_LABELS := {
+	"spark": "微光", "fire_mote": "火", "water_mote": "水", "wind_mote": "风",
+	"flame_glyph": "焰爆", "tide_lances": "潮汐", "arcane_focus": "晶",
+	"mage_ward": "护符", "iron_blade": "长剑", "greatblade": "重刃",
+	"charge_seal": "势", "knight_ward": "甲片",
+}
 var run: RefCounted
 var selected_uid := -1
 var held: Dictionary = {}
@@ -61,6 +67,66 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	if data is Dictionary:
 		drop_requested.emit(data, cell_at(at_position))
 
+func _get_tooltip(at_position: Vector2) -> String:
+	if run == null:
+		return ""
+	var item: Dictionary = run.item_at(cell_at(at_position))
+	if item.is_empty():
+		return ""
+	var definition: Dictionary = run.get_definition(item.kind)
+	return str(definition.name) + "\n" + str(definition.get("description", ""))
+
+func label_layout(kind: String, rect: Rect2, rotated: bool) -> Dictionary:
+	var definition: Dictionary = Catalog.definition(kind)
+	var full_name := str(definition.get("name", kind))
+	var point_size := 16 if grid_rect().size.x >= 420 else 14
+	var text_rect := rect.grow(-4)
+	var line_height := font.get_height(point_size)
+	var lines := _label_lines(full_name, text_rect.size.x, point_size)
+	var abbreviated := not _label_fits(lines, text_rect.size, point_size)
+	if abbreviated:
+		lines = _label_lines(str(SHORT_LABELS.get(kind, full_name.left(1))), text_rect.size.x, point_size)
+	if not _label_fits(lines, text_rect.size, point_size):
+		lines.clear()
+	var baselines: Array[Vector2] = []
+	var bounds: Array[Rect2] = []
+	var first_y := text_rect.position.y + (text_rect.size.y - lines.size() * line_height) * 0.5 + font.get_ascent(point_size)
+	for index in range(lines.size()):
+		var width := font.get_string_size(lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1, point_size).x
+		var baseline := Vector2(text_rect.get_center().x - width * 0.5, first_y + index * line_height)
+		baselines.append(baseline)
+		bounds.append(Rect2(baseline - Vector2(0, font.get_ascent(point_size)), Vector2(width, line_height)))
+	var supports: Array[Vector2] = []
+	if str(definition.get("category", "")) == "support":
+		# Put the horizontal/vertical pair on the border, away from the label.
+		if rotated:
+			supports.assign([rect.position + Vector2(2, 4), Vector2(rect.position.x + 2, rect.end.y - 4)])
+		else:
+			supports.assign([rect.position + Vector2(4, 2), Vector2(rect.end.x - 4, rect.position.y + 2)])
+	return {"full_name": full_name, "lines": lines, "font_size": point_size,
+		"baselines": baselines, "bounds": bounds, "text_rect": text_rect,
+		"abbreviated": abbreviated, "support_points": supports}
+
+func _label_lines(text: String, width: float, point_size: int) -> Array[String]:
+	var lines: Array[String] = []
+	var current := ""
+	for character in text:
+		if not current.is_empty() and font.get_string_size(current + character, HORIZONTAL_ALIGNMENT_LEFT, -1, point_size).x > width:
+			lines.append(current)
+			current = ""
+		current += character
+	if not current.is_empty():
+		lines.append(current)
+	return lines
+
+func _label_fits(lines: Array[String], extent: Vector2, point_size: int) -> bool:
+	if lines.is_empty() or lines.size() * font.get_height(point_size) > extent.y:
+		return false
+	for line in lines:
+		if font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, point_size).x > extent.x:
+			return false
+	return true
+
 func _draw() -> void:
 	if run == null:
 		return
@@ -82,25 +148,11 @@ func _draw() -> void:
 		var definition: Dictionary = run.get_definition(item.kind)
 		var tint := Color(str(definition.get("color", "90a7be")))
 		draw_style_box(_box(tint.darkened(0.76), tint if int(item.uid) == selected_uid else tint.darkened(0.3)), rect)
-		var name_text: String = str(definition.get("name", item.kind))
-		var text_size := 16 if board.size.x >= 420 else 14
-		# Labels are honest schematic tokens; no simplified sprite claims.
-		var line_width: float = rect.size.x - 12.0
-		var lines: Array[String] = []
-		var current := ""
-		for character in name_text:
-			if font.get_string_size(current + character, HORIZONTAL_ALIGNMENT_LEFT, -1, text_size).x > line_width and not current.is_empty():
-				lines.append(current)
-				current = ""
-			current += character
-		lines.append(current)
-		for i in range(lines.size()):
-			var text_width: float = font.get_string_size(lines[i], HORIZONTAL_ALIGNMENT_LEFT, -1, text_size).x
-			draw_string(font, Vector2(rect.get_center().x - text_width / 2.0, rect.get_center().y + (i - (lines.size() - 1) / 2.0) * 21.0 + 5), lines[i], HORIZONTAL_ALIGNMENT_LEFT, -1, text_size, tint.lightened(0.35))
-		if str(definition.get("category", "")) == "support":
-			var direction := Vector2.DOWN if item.rotated else Vector2.RIGHT
-			for sign_value in [-1, 1]:
-				draw_circle(rect.get_center() + direction * minf(rect.size.x, rect.size.y) * 0.36 * sign_value, 3, Color("8bdfd1"))
+		var label := label_layout(str(item.kind), rect, bool(item.rotated))
+		for index in range(label.lines.size()):
+			draw_string(font, label.baselines[index], label.lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1, label.font_size, tint.lightened(0.35))
+		for point: Vector2 in label.support_points:
+			draw_circle(point, 2, Color("8bdfd1"))
 	if hover_cell.x >= 0 and not held.is_empty() and run.phase == "prepare":
 		var candidate: Dictionary = {}
 		if held.origin == "bag":

@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "generated_date": "2026-10-25",
+  "verified_date": "2026-10-26",
+  "timezone": "Asia/Tokyo",
+  "tool": "built-in image_gen.imagegen; one generation per asset",
+  "prompts": "prompts.json",
+  "classification": "New static battle-pose candidates and backgrounds integrated into the native playable C0 rules scene. Not animation sheets or finished logical-grid production sprites.",
+  "measurement": "Godot Image RGBA8 alpha-byte counts and alpha>=128 content rectangle; dimensions and SHA-256 measured from original PNGs.",
+  "limitations": [
+    "Requested 128x160 logical canvas and exact 8x enlargement were not delivered. Actual character sources are 1122x1402; background sources are 2172x724.",
+    "Original PNGs are preserved without raster editing. Character alpha has faint residuals and colored fringe; source rectangles are camera/draw regions, not saved sprite slices.",
+    "Native renderer uses aspect-preserving nearest-neighbor source-fit with noninteger scale as a static readability experiment. Controlled logical pixels, palette and animation acceptance remain pending.",
+    "Backgrounds use cover camera crops; some upper moon/astrolabe scenery is outside the runtime frame. Reliquary camera excludes the lower vertical front ledge so feet meet the floor.",
+    "Local checkout runtime is verified; raw PNG inclusion in a standalone export package is not yet verified."
+  ],
+  "files": [
+    {
+      "alpha_ge_128_pixels": 766988,
+      "alpha_ge_128_rect": [
+        55,
+        59,
+        1036,
+        1311
+      ],
+      "file": "characters/mage-idle.png",
+      "maximum_alpha": 255,
+      "minimum_nonzero_alpha": 1,
+      "nonzero_alpha_rect": [
+        0,
+        19,
+        1094,
+        1383
+      ],
+      "opaque_pixels": 1525,
+      "partial_pixels": 847811,
+      "sha256": "89c39b43b49ae656edd6175bb5fa27fba5d5a06644553c1ebe76036654a87c26",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "transparent_pixels": 723708,
+      "bytes": 1578569,
+      "role": "new static battle-pose candidate"
+    },
+    {
+      "alpha_ge_128_pixels": 466781,
+      "alpha_ge_128_rect": [
+        78,
+        113,
+        1019,
+        1207
+      ],
+      "file": "characters/knight-sword-idle.png",
+      "maximum_alpha": 255,
+      "minimum_nonzero_alpha": 1,
+      "nonzero_alpha_rect": [
+        0,
+        19,
+        1108,
+        1383
+      ],
+      "opaque_pixels": 655,
+      "partial_pixels": 520903,
+      "sha256": "ddf5c9df6048853c25be460aa60162176144a3d6ae77420d64f87a639afb419f",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "transparent_pixels": 1051486,
+      "bytes": 1034047,
+      "role": "new static battle-pose candidate"
+    },
+    {
+      "alpha_ge_128_pixels": 504858,
+      "alpha_ge_128_rect": [
+        137,
+        125,
+        957,
+        1222
+      ],
+      "file": "characters/knight-greatblade-idle.png",
+      "maximum_alpha": 255,
+      "minimum_nonzero_alpha": 1,
+      "nonzero_alpha_rect": [
+        0,
+        19,
+        1101,
+        1383
+      ],
+      "opaque_pixels": 1402,
+      "partial_pixels": 562578,
+      "sha256": "bcf541d0e13195af1276876babc3451a061b6b8df5609529ec84361442fc180b",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "transparent_pixels": 1009064,
+      "bytes": 1140279,
+      "role": "new static battle-pose candidate"
+    },
+    {
+      "alpha_ge_128_pixels": 1572528,
+      "alpha_ge_128_rect": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "file": "environments/moon-court.png",
+      "maximum_alpha": 255,
+      "minimum_nonzero_alpha": 255,
+      "nonzero_alpha_rect": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "opaque_pixels": 1572528,
+      "partial_pixels": 0,
+      "sha256": "acc9432b6954e0b7927eef7da30b52a2e019b92d9379ab60202b1e7168dda7f5",
+      "source_size": [
+        2172,
+        724
+      ],
+      "transparent_pixels": 0,
+      "bytes": 2435987,
+      "role": "static class background"
+    },
+    {
+      "alpha_ge_128_pixels": 1572528,
+      "alpha_ge_128_rect": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "file": "environments/reliquary-hall.png",
+      "maximum_alpha": 255,
+      "minimum_nonzero_alpha": 255,
+      "nonzero_alpha_rect": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "opaque_pixels": 1572528,
+      "partial_pixels": 0,
+      "sha256": "112c377b41967fa5f7203d90f1a3a1f7bbeb10773548cc9a6913aa4d0489b6a3",
+      "source_size": [
+        2172,
+        724
+      ],
+      "transparent_pixels": 0,
+      "bytes": 2435256,
+      "role": "static class background"
+    }
+  ]
+}

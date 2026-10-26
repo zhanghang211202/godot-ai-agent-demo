@@ -13,6 +13,7 @@
 - [2026-10-24：二職業の資源・編織・一戦が動くC0原型](2026-10-24-class-rules.ja.md)
 - [2026-10-24：各三つの人物造形と顔の静的審稿台](2026-10-24-character-studies.ja.md)
 - [2026-10-25：魔法使いMA・騎士KAの選定反映を完了](2026-10-25-character-selection.ja.md)
+- [2026-10-26：選んだ二人を職業場面へ接続、文字と地面を修正](2026-10-26-c1-static-art.ja.md)
 - [日本語ブログ草稿](../blog/emberpack-making-of.ja.md)
 - [現在のドキュメント一覧](../README.md)
 - [最初の実装計画](../demo-plan.md)
@@ -40,6 +41,9 @@
 | C0 rules v1 | 法師：有限元素の取得と二つの法術。規則fixture、完成美術ではない | [構築](screenshots/c0-class-rules-v1/mage-built.png) / [結果](screenshots/c0-class-rules-v1/mage-result.png) |
 | C0 rules v1 | 騎士：有限購入で重刃を鍛造。規則fixture、完成美術ではない | [構築](screenshots/c0-class-rules-v1/knight-built.png) / [結果](screenshots/c0-class-rules-v1/knight-result.png) |
 | C0 rules v1 | 実際の1280×800準備画面、長い列はスクロール | [小ウィンドウ](screenshots/c0-class-rules-v1/mage-prepare-1280x800.png) |
+| C1 static art v1 | MA月杖と月庭、実際の構築／戦闘。人物は静止素材 | [構築](screenshots/c1-static-art-v1/mage-built.png)／[戦闘](screenshots/c1-static-art-v1/mage-battle.png) |
+| C1 static art v1 | KA長剣から重刃へ、聖堂の地面と同じ訓練相手 | [長剣](screenshots/c1-static-art-v1/knight-prepare.png)／[重刃](screenshots/c1-static-art-v1/knight-built.png) |
+| C1 static art v1 | 1280のラベル溢れと石床立面への足合わせを修正 | [文字修正前](screenshots/c1-static-art-v1/before-label-fix-1280x800.png)／[修正後](screenshots/c1-static-art-v1/mage-prepare-1280x800.png) |
 
 上表は Godot で実行したゲーム／規則fixture画面です。0.1 の画像は公開済みコミット `ac878e9` からバイト単位で取り出しました。
 0.2 の合成例は、デバッグ用に資源を増やしたものではなく、初期アイテムと18ゴールドだけを通常の購入・合成APIで操作した状態です。

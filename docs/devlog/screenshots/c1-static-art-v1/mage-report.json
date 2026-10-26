@@ -1,0 +1,218 @@
+{
+	"actions": [
+		{
+			"cell": [
+				0,
+				0
+			],
+			"result": {
+				"cost": 0,
+				"event": "merge",
+				"kind": "flame_glyph",
+				"message": "合成完成：焰爆法印",
+				"ok": true,
+				"source_id": "observatory_fire",
+				"uid": 1
+			},
+			"source_index": 0
+		},
+		{
+			"cell": [
+				3,
+				2
+			],
+			"result": {
+				"cost": 0,
+				"event": "acquire",
+				"kind": "water_mote",
+				"message": "已放置：水元素",
+				"ok": true,
+				"source_id": "observatory_water",
+				"uid": 6
+			},
+			"source_index": 1
+		},
+		{
+			"cell": [
+				3,
+				2
+			],
+			"result": {
+				"cost": 0,
+				"event": "merge",
+				"kind": "tide_lances",
+				"message": "合成完成：潮汐连枪",
+				"ok": true,
+				"source_id": "observatory_wind",
+				"uid": 6
+			},
+			"source_index": 2
+		}
+	],
+	"class_id": "mage",
+	"gold_after_acquisition": 0,
+	"persistence_enabled": false,
+	"remaining_sources": [
+		{
+			"cost": 0,
+			"id": "observatory_fire",
+			"kind": "fire_mote",
+			"remaining": 1
+		},
+		{
+			"cost": 0,
+			"id": "observatory_water",
+			"kind": "water_mote",
+			"remaining": 1
+		},
+		{
+			"cost": 0,
+			"id": "observatory_wind",
+			"kind": "wind_mote",
+			"remaining": 1
+		}
+	],
+	"rules_version": 1,
+	"summary": {
+		"armor_mitigated": 8,
+		"by_source": [
+			{
+				"activations": 3,
+				"damage": 60,
+				"hits": 3,
+				"kind": "flame_glyph",
+				"name": "焰爆法印",
+				"raw_damage": 60,
+				"uid": 1
+			},
+			{
+				"activations": 6,
+				"damage": 30,
+				"hits": 6,
+				"kind": "spark",
+				"name": "微光术式",
+				"raw_damage": 30,
+				"uid": 2
+			},
+			{
+				"activations": 4,
+				"damage": 50,
+				"hits": 10,
+				"kind": "tide_lances",
+				"name": "潮汐连枪",
+				"raw_damage": 50,
+				"uid": 6
+			}
+		],
+		"class_id": "mage",
+		"damage_dealt": 140,
+		"damage_taken": 24,
+		"duration": 8.6,
+		"enemy_attacks": 4,
+		"enemy_hp": 0,
+		"enemy_max_hp": 140,
+		"event_count": 37,
+		"hp": 60,
+		"initial_hp": 84,
+		"max_hp": 84,
+		"overkill_damage_dealt": 0,
+		"overkill_damage_taken": 0,
+		"raw_damage_dealt": 140,
+		"raw_damage_taken": 32,
+		"result": "won",
+		"rules_version": 1
+	},
+	"type": "runtime_capture_fixture",
+	"viewport": [
+		1440,
+		960
+	],
+	"visuals": {
+		"alpha_threshold": 128,
+		"animated": false,
+		"assets_ready": true,
+		"background_id": "moon-court",
+		"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+		"background_source_rect": [
+			0.0,
+			321.948944091797,
+			2172.0,
+			402.051055908203
+		],
+		"background_source_size": [
+			2172,
+			724
+		],
+		"class_id": "mage",
+		"enemy_placeholder": true,
+		"enemy_rect": [
+			1013.0,
+			155.0,
+			120.0,
+			166.0
+		],
+		"ground_anchor": [
+			367.0,
+			321.0
+		],
+		"ground_y": 321.0,
+		"health_rects": [
+			[
+				16.0,
+				12.0,
+				423.600006103516,
+				8.0
+			],
+			[
+				972.400024414063,
+				12.0,
+				423.600006103516,
+				8.0
+			]
+		],
+		"hero_id": "mage-idle",
+		"hero_path": "res://assets/art/c1-static-v1/characters/mage-idle.png",
+		"hero_rect": [
+			265.849731445313,
+			65.0,
+			202.300537109375,
+			256.0
+		],
+		"hero_visible": true,
+		"missing_assets": [],
+		"phase_rect": [
+			465.959991455078,
+			8.0,
+			480.079986572266,
+			43.0
+		],
+		"scaling_mode": "aspect-preserving nearest static source-fit experiment; logical sprite grid pending",
+		"scene_rect": [
+			1.0,
+			61.0,
+			1410.0,
+			261.0
+		],
+		"source_rect": [
+			55.0,
+			59.0,
+			1036.0,
+			1311.0
+		],
+		"source_scale": [
+			0.195270791649818,
+			0.195270791649818
+		],
+		"source_scale_is_integer": false,
+		"source_size": [
+			1122,
+			1402
+		],
+		"stage_rect": [
+			0.0,
+			0.0,
+			1412.0,
+			350.0
+		]
+	}
+}

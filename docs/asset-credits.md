@@ -17,6 +17,10 @@ Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许
 
 `docs/concepts/2026-10-24-characters/` 的六张PNG由内置 **imagegen** 按本项目法师与H骑士方向分别生成，保留原始alpha，用于外观比较。它们不是战斗精灵、动画表或游戏实机截图。[完整提示集](concepts/2026-10-24-characters/prompts.json)、[尺寸与SHA-256](concepts/2026-10-24-characters/manifest.json)、[审查与限制](character-design-review.md)一并保存。旧A/H概念只作项目方向参考，用户两张图鉴仅作像素工艺参考，原图及其导入文件未随仓库公开。
 
+## C1 静态角色与背景 · 2026-10-26
+
+`assets/art/c1-static-v1/` 中三张战斗站姿与两张职业背景使用内置 **imagegen** 分别生成。角色以本项目已选MA／KA原创概念作身份参考，重新绘制姿态；没有裁切旧概念板或用户图鉴。原PNG保持生成结果，[完整提示集](../assets/art/c1-static-v1/prompts.json)与[原始尺寸／alpha／SHA-256](../assets/art/c1-static-v1/manifest.json)一并保存。它们已接入本地原生职业场景，仍是待整理像素网格、色阶与透明边缘的静态候选，不含逐帧动画。舞台前景地面、接触阴影与标明占位的训练木靶由本项目代码绘制。
+
 ## 第三方编辑器工具
 
 `addons/godot_mcp/` 来自 [IvanMurzak/Godot-MCP v0.31.0](https://github.com/IvanMurzak/Godot-MCP/tree/v0.31.0)，采用 Apache-2.0，随附 [完整许可证](../addons/godot_mcp/LICENSE)。其 NuGet 依赖通过工程引用恢复，不包含在本仓库中。
