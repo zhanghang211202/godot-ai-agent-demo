@@ -1,6 +1,6 @@
 # 多职业背包构筑 RPG 文档入口（新标题待定）
 
-默认 `npm run game` 为 **v0.3森林美术样板（M1-A/B）**。运行 `npm run game:classes` 可玩[C0规则](iteration-c0-rules.md)上的[C1双职业静态美术样板](iteration-c1-static-art.md)：MA月杖、KA长剑／重刃三姿态，两套背景、地面与真实一战。人物动画、专用敌人／物件和完整六路线仍待完成；旧森林与存档保持兼容。
+默认 `npm run game` 为 **v0.3森林美术样板（M1-A/B）**。运行 `npm run game:classes` 可玩[C0规则](iteration-c0-rules.md)上的[C1四帧动作样板](iteration-c1-motion.md)：MA施法、KA长剑／重刃，实际事件、暂停与倍速同步，两套背景、地面与真实一战。受击／退场、专用敌人／物件和完整六路线仍待完成；旧森林与存档保持兼容。
 
 2026-10-23 后续决策：**背包仍是核心，不同角色有独立职业玩法、资源获取与背景，每角色至少三种构筑。初期魔法师＋H近战骑士，炼金术士后续。** [职业与流派设计](classes-and-builds.md)细化六条首批路线；C0只实现其中两条的首原型，其他机制仍为计划。16-bit fantasy / tactical RPG角色细节是美术目标。[八案](art-style-exploration.md)与[离线对照页](concepts/2026-10-23/index.html)保留为早期探索。
 
@@ -8,6 +8,7 @@
 
 | 文档 | 用途 |
 | --- | --- |
+| [C1四帧动作实际交付](iteration-c1-motion.md) | 三组动作、事件时序、暂停倍速、实际GIF与源图限制 |
 | [C1静态美术实际交付](iteration-c1-static-art.md) | 三姿态、两背景、武器对应、实机截图、检查与待修画面问题 |
 | [首发角色外观基准](character-baselines.md) | 用户已选MA月庭礼装＋KA旌旗长枪；采用特征、武器适配与专用素材任务 |
 | [双职业六套人设比较](character-design-review.md) | 全身／细节／缩小轮廓、离线页与 Godot 审稿台；保留六案与实际不足 |
@@ -27,6 +28,7 @@
 ## 开发过程与博客素材
 
 - [日语开发日志和版本截图](devlog/README.ja.md)
+- [施法・長剣・重刃の四コマを実戦へ（日语）](devlog/2026-10-26-c1-motion.ja.md)
 - [双职业静态美术接入与修正（日语）](devlog/2026-10-26-c1-static-art.ja.md)
 - [A＋A 外观选定反映（日语）](devlog/2026-10-25-character-selection.ja.md)
 - [六套人设与原生审稿台记录（日语）](devlog/2026-10-24-character-studies.ja.md)

@@ -1,0 +1,3570 @@
+{
+	"checks": 264,
+	"failures": 0,
+	"layouts": [
+		{
+			"frame": 0,
+			"variant": "mage",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					239.656845092773,
+					63.0,
+					149.552856445313,
+					188.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "mage",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					232.814559936523,
+					67.2357025146484,
+					154.440200805664,
+					183.764297485352
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					593.0,
+					84.0,
+					474.0,
+					564.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "mage",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					228.578857421875,
+					64.6291198730469,
+					168.124786376953,
+					186.370880126953
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					41.0,
+					739.0,
+					516.0,
+					572.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "mage",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					236.72444152832,
+					64.6291198730469,
+					150.530319213867,
+					186.370880126953
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					606.0,
+					744.0,
+					462.0,
+					572.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "mage",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					249.426345825195,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "mage",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					240.109191894531,
+					70.7677612304688,
+					210.301559448242,
+					250.232238769531
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					593.0,
+					84.0,
+					474.0,
+					564.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "mage",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					234.341415405273,
+					67.2183685302734,
+					228.935882568359,
+					253.781631469727
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					41.0,
+					739.0,
+					516.0,
+					572.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "mage",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					245.43327331543,
+					67.2183685302734,
+					204.977462768555,
+					253.781631469727
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					606.0,
+					744.0,
+					462.0,
+					572.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "mage",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					374.426330566406,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "mage",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					365.109191894531,
+					70.7677612304688,
+					210.301559448242,
+					250.232238769531
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					593.0,
+					84.0,
+					474.0,
+					564.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "mage",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					359.341430664063,
+					67.2183685302734,
+					228.935882568359,
+					253.781631469727
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					41.0,
+					739.0,
+					516.0,
+					572.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "mage",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					370.433288574219,
+					67.2183685302734,
+					204.977462768555,
+					253.781631469727
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					606.0,
+					744.0,
+					462.0,
+					572.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "sword",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					253.624420166016,
+					102.276992797852,
+					165.492950439453,
+					148.723007202148
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					96.0,
+					250.0,
+					375.0,
+					337.0
+				],
+				"source_scale": [
+					0.441314548254013,
+					0.441314548254013
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "sword",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					249.652587890625,
+					63.0,
+					132.39436340332,
+					188.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					750.0,
+					161.0,
+					300.0,
+					426.0
+				],
+				"source_scale": [
+					0.441314548254013,
+					0.441314548254013
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "sword",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					255.830993652344,
+					113.309860229492,
+					183.586853027344,
+					137.690139770508
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					87.0,
+					945.0,
+					416.0,
+					312.0
+				],
+				"source_scale": [
+					0.441314548254013,
+					0.441314548254013
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "sword",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					254.065734863281,
+					111.985916137695,
+					139.014083862305,
+					139.014083862305
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					740.0,
+					943.0,
+					315.0,
+					315.0
+				],
+				"source_scale": [
+					0.441314548254013,
+					0.441314548254013
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "sword",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					268.446014404297,
+					118.48356628418,
+					225.352111816406,
+					202.51643371582
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					96.0,
+					250.0,
+					375.0,
+					337.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "sword",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					263.037567138672,
+					65.0,
+					180.281692504883,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					750.0,
+					161.0,
+					300.0,
+					426.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "sword",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					271.450714111328,
+					133.507034301758,
+					249.990615844727,
+					187.492965698242
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					87.0,
+					945.0,
+					416.0,
+					312.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "sword",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					269.046936035156,
+					131.704223632813,
+					189.295776367188,
+					189.295776367188
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					740.0,
+					943.0,
+					315.0,
+					315.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "sword",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					393.446014404297,
+					118.48356628418,
+					225.352111816406,
+					202.51643371582
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					96.0,
+					250.0,
+					375.0,
+					337.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "sword",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					388.037567138672,
+					65.0,
+					180.281692504883,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					750.0,
+					161.0,
+					300.0,
+					426.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "sword",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					396.450714111328,
+					133.507034301758,
+					249.990615844727,
+					187.492965698242
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					87.0,
+					945.0,
+					416.0,
+					312.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "sword",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-sword-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-sword.png",
+				"hero_rect": [
+					394.046936035156,
+					131.704223632813,
+					189.295776367188,
+					189.295776367188
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-sword",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					740.0,
+					943.0,
+					315.0,
+					315.0
+				],
+				"source_scale": [
+					0.600938975811005,
+					0.600938975811005
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "greatblade",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					259.610565185547,
+					68.5841522216797,
+					150.151824951172,
+					182.41584777832
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					35.0,
+					91.0,
+					484.0,
+					588.0
+				],
+				"source_scale": [
+					0.310231029987335,
+					0.310231029987335
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "greatblade",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					244.098999023438,
+					63.0,
+					137.742584228516,
+					188.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					660.0,
+					74.0,
+					444.0,
+					606.0
+				],
+				"source_scale": [
+					0.310231029987335,
+					0.310231029987335
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "greatblade",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					253.095703125,
+					110.775573730469,
+					172.48844909668,
+					140.224426269531
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					15.0,
+					841.0,
+					556.0,
+					452.0
+				],
+				"source_scale": [
+					0.310231029987335,
+					0.310231029987335
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "greatblade",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					290.758422851563,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					892.0,
+					85.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					249.372924804688,
+					129.079208374023,
+					160.699676513672,
+					121.920791625977
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"source_rect": [
+					595.0,
+					901.0,
+					518.0,
+					393.0
+				],
+				"source_scale": [
+					0.310231029987335,
+					0.310231029987335
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "greatblade",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					276.597351074219,
+					72.6039581298828,
+					204.462051391602,
+					248.396041870117
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					35.0,
+					91.0,
+					484.0,
+					588.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "greatblade",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					255.475250244141,
+					65.0,
+					187.564361572266,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					660.0,
+					74.0,
+					444.0,
+					606.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "greatblade",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					267.72607421875,
+					130.056106567383,
+					234.877899169922,
+					190.943893432617
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					15.0,
+					841.0,
+					556.0,
+					452.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "greatblade",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					220.588943481445,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1013.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					262.656768798828,
+					154.980194091797,
+					218.825088500977,
+					166.019805908203
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"source_rect": [
+					595.0,
+					901.0,
+					518.0,
+					393.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 0,
+			"variant": "greatblade",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					401.597351074219,
+					72.6039581298828,
+					204.462051391602,
+					248.396041870117
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					35.0,
+					91.0,
+					484.0,
+					588.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 1,
+			"variant": "greatblade",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					380.475250244141,
+					65.0,
+					187.564361572266,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 1,
+				"motion_state": "windup",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					660.0,
+					74.0,
+					444.0,
+					606.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 2,
+			"variant": "greatblade",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					392.72607421875,
+					130.056106567383,
+					234.877899169922,
+					190.943893432617
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 2,
+				"motion_state": "impact",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					15.0,
+					841.0,
+					556.0,
+					452.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"frame": 3,
+			"variant": "greatblade",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "reliquary-hall",
+				"background_path": "res://assets/art/c1-static-v1/environments/reliquary-hall.png",
+				"background_source_rect": [
+					0.0,
+					322.697174072266,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "knight",
+				"enemy_placeholder": true,
+				"enemy_rect": [
+					1378.0,
+					155.0,
+					120.0,
+					166.0
+				],
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_id": "knight-greatblade-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/knight-greatblade.png",
+				"hero_rect": [
+					387.656768798828,
+					154.980194091797,
+					218.825088500977,
+					166.019805908203
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "knight-greatblade",
+				"motion_frame": 3,
+				"motion_state": "recover",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"source_rect": [
+					595.0,
+					901.0,
+					518.0,
+					393.0
+				],
+				"source_scale": [
+					0.422442257404327,
+					0.422442257404327
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		}
+	]
+}

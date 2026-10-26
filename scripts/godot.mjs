@@ -74,12 +74,16 @@ if (command === 'cli') {
     process.exit(1);
   }
   process.exit(run(editor, ['--headless', '--path', projectRoot, '--script', ...args]));
+} else if (command === 'class-capture') {
+  // Foreground process for bounded native render capture; the caller chooses
+  // fresh output paths and --auto-quit. Keep the same local tool environment.
+  process.exit(run(editor, ['--path', projectRoot, 'res://scenes/class_lab.tscn', ...args]));
 } else if (command === 'test' || command === 'class-test' || command === 'class-art-test') {
   const tests = command === 'test'
     ? ['test_run_state.gd', 'test_save.gd', 'ui_smoke.gd', 'test_art_v03.gd']
     : command === 'class-test'
       ? ['test_class_run.gd', 'test_class_battle.gd', 'test_class_save.gd', 'class_lab_smoke.gd']
-      : ['test_class_art_static.gd', 'test_class_grid_labels.gd'];
+      : ['test_class_art_static.gd', 'test_class_grid_labels.gd', 'test_class_motion.gd'];
   for (const test of tests) {
     const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
     if (status !== 0) process.exit(status);

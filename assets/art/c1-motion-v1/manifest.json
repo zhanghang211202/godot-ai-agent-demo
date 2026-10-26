@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "timezone": "Asia/Tokyo",
+  "mode": "built-in image_gen",
+  "prompts": "prompts.json",
+  "classification": "Dedicated 4-frame animation atlas candidates integrated into the native class laboratory; not old concept slices or full RV-04 acceptance.",
+  "source_regions": "Mage/sword 2x2. Greatblade lower seam at x=582 instead of x=561 to retain complete tip in otherwise empty gutter. Bounds/pivots are runtime draw regions, source PNGs are unchanged.",
+  "limitations": [
+    "Not a controlled logical pixel grid; noninteger nearest-neighbor fit remains experimental.",
+    "Partial alpha and colored fringe remain. Body/weapon shape varies between poses; full anatomy and art-quality acceptance remains pending.",
+    "Static idle only, action anticipation/impact/recovery; hurt/exit/enemy animation and effects pending.",
+    "One representative actor visualizes concurrent automatic sources; some simultaneous charges are suppressed behind impact/recovery.",
+    "Mage exact earlier prompts were not retained; prompts.json distinguishes a retained specification from exact current edit prompts.",
+    "Local Windows checkout verified; standalone export and other platforms not tested."
+  ],
+  "files": [
+    {
+      "file": "characters/mage-cast.png",
+      "role": "dedicated four-frame action atlas candidate",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "bytes": 1905050,
+      "sha256": "cae56c8cfa99cadd51f21b2a70a545600092e6ced4878bdca26732aef4aedbee",
+      "transparent_pixels": 788897,
+      "opaque_pixels": 1324,
+      "partial_pixels": 782823,
+      "frames": [
+        {
+          "index": 0,
+          "source_rect_alpha_ge_128": [
+            42,
+            70,
+            459,
+            577
+          ]
+        },
+        {
+          "index": 1,
+          "source_rect_alpha_ge_128": [
+            593,
+            84,
+            474,
+            564
+          ]
+        },
+        {
+          "index": 2,
+          "source_rect_alpha_ge_128": [
+            41,
+            739,
+            516,
+            572
+          ]
+        },
+        {
+          "index": 3,
+          "source_rect_alpha_ge_128": [
+            606,
+            744,
+            462,
+            572
+          ]
+        }
+      ]
+    },
+    {
+      "file": "characters/knight-sword.png",
+      "role": "dedicated four-frame action atlas candidate",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "bytes": 785379,
+      "sha256": "ba314b271e1e85503dccee6398301963cb820416b7c4cd919a772ebbf953dfdf",
+      "transparent_pixels": 1297199,
+      "opaque_pixels": 770,
+      "partial_pixels": 275075,
+      "frames": [
+        {
+          "index": 0,
+          "source_rect_alpha_ge_128": [
+            96,
+            250,
+            375,
+            337
+          ]
+        },
+        {
+          "index": 1,
+          "source_rect_alpha_ge_128": [
+            750,
+            161,
+            300,
+            426
+          ]
+        },
+        {
+          "index": 2,
+          "source_rect_alpha_ge_128": [
+            87,
+            945,
+            416,
+            312
+          ]
+        },
+        {
+          "index": 3,
+          "source_rect_alpha_ge_128": [
+            740,
+            943,
+            315,
+            315
+          ]
+        }
+      ]
+    },
+    {
+      "file": "characters/knight-greatblade.png",
+      "role": "dedicated four-frame action atlas candidate",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "bytes": 1445123,
+      "sha256": "48e106b67d29ffeb9390c2646c8ef729357b4f472f4219cdfbcdd0a178e9089f",
+      "transparent_pixels": 1022240,
+      "opaque_pixels": 701,
+      "partial_pixels": 550103,
+      "frames": [
+        {
+          "index": 0,
+          "source_rect_alpha_ge_128": [
+            35,
+            91,
+            484,
+            588
+          ]
+        },
+        {
+          "index": 1,
+          "source_rect_alpha_ge_128": [
+            660,
+            74,
+            444,
+            606
+          ]
+        },
+        {
+          "index": 2,
+          "source_rect_alpha_ge_128": [
+            15,
+            841,
+            556,
+            452
+          ]
+        },
+        {
+          "index": 3,
+          "source_rect_alpha_ge_128": [
+            595,
+            901,
+            518,
+            393
+          ]
+        }
+      ]
+    }
+  ]
+}

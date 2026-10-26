@@ -2,7 +2,11 @@
 
 一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
 
-**2026-10-26：双 A 人物与职业背景已接入可玩场景。** 法师持月杖，骑士会随当前装备切换长剑／重刃；两职业分别使用月庭与圣堂舞台。人物目前使用新绘静态帧，动作、训练敌人及物件图标仍待完善。[本轮画面、操作与限制](docs/iteration-c1-static-art.md)。
+**2026-10-26：法师施法、骑士长剑／重刃已接入四帧动作样板。** 预备、命中、收势随实际战斗事件播放，支持暂停与1×／2×；法师出手帧补清了两只手和完整杖尾。训练木靶、物件图标、受击与退场仍待制作，源图像素密度和透明边缘仍需整理。[本轮动作、检查与限制](docs/iteration-c1-motion.md)；[此前静态接入](docs/iteration-c1-static-art.md)保留。
+
+![实际Godot运行的法师动作fixture：正常有限资源编织，固定训练敌人；无声六秒片段](docs/devlog/screenshots/c1-motion-v1/mage-motion.gif)
+
+![实际Godot运行的骑士重刃fixture：双手攻击与收势，训练木靶和文字物件仍占位](docs/devlog/screenshots/c1-motion-v1/greatblade-motion.gif)
 
 **2026-10-24：可玩的 C0 双职业规则实验。** 运行：
 
@@ -14,7 +18,7 @@ npm run game:classes
 
 法师入门：点「火元素」再点左上微光术式，生成焰爆；把水元素放在第4列第3行，再把风元素叠上去，生成横向三格潮汐连枪。骑士入门：点「蓄势徽记」叠到左上长剑，锻造重刃；第二枚徽记可放在第3列第2行连接强化。点击/拖放物件，R旋转、右键取消，空格开战。结算后「恢复战前」可调整同一资源配置；「新法师/骑士实验」开始新配置。
 
-实验在开战前写入独立 `user://class-prototype-run.json`，也可手动保存/读取准备；不会读取或迁移旧远征。`npm run game` 继续启动下方的森林样板。规则回归用 `npm run game:classes:test`，静态画面与小格文字检查用 `npm run game:classes:art:test`。
+实验在开战前写入独立 `user://class-prototype-run.json`，也可手动保存/读取准备；不会读取或迁移旧远征。`npm run game` 继续启动下方的森林样板。规则回归用 `npm run game:classes:test`，画面、小格文字和动作检查用 `npm run game:classes:art:test`。下两张PNG保留此前静态版本的历史画面。
 
 ![实际Godot运行：MA法师、月庭舞台与合法编织配置；人物为静态帧，木靶和物件仍占位](docs/devlog/screenshots/c1-static-art-v1/mage-built.png)
 
