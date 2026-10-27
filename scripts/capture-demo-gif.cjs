@@ -9,13 +9,19 @@ const { PNG } = mediaRequire('pngjs');
 const { GIFEncoder, quantize, applyPalette } = mediaRequire('gifenc');
 const [inputDirectory, outputFile, ...options] = process.argv.slice(2);
 if (!inputDirectory || !outputFile) {
-  console.error('Usage: node scripts/capture-demo-gif.cjs <movie-frame-directory> <output.gif> [--fps=16 --step=2 --scale=2 --start=0 --frames=all]');
+  console.error('Usage: node scripts/capture-demo-gif.cjs <movie-frame-directory> <output.gif> [--fps=16 --step=2 --scale=2 --start=0 --frames=all --crop=x,y,width,height]');
   process.exit(1);
 }
 const inputs = fs.readdirSync(inputDirectory).filter((name) => /^frame\d+\.png$/.test(name)).sort();
 if (!inputs.length) throw new Error('No Godot frame PNGs found');
 const settings = { fps: 16, step: 2, scale: 2, start: 0, frames: inputs.length };
+let crop = null;
 for (const option of options) {
+  const rectangle = /^--crop=(\d+),(\d+),(\d+),(\d+)$/.exec(option);
+  if (rectangle) {
+    crop = rectangle.slice(1).map(Number);
+    continue;
+  }
   const match = /^--(fps|step|scale|start|frames)=(\d+)$/.exec(option);
   if (!match) throw new Error(`Invalid option: ${option}`);
   settings[match[1]] = Number(match[2]);
@@ -29,8 +35,10 @@ let outputWidth = 0;
 let outputHeight = 0;
 for (let index = settings.start; index < end; index += settings.step) {
   const frame = PNG.sync.read(fs.readFileSync(path.join(inputDirectory, inputs[index])));
-  const width = Math.floor(frame.width / settings.scale);
-  const height = Math.floor(frame.height / settings.scale);
+  const [left, top, cropWidth, cropHeight] = crop ?? [0, 0, frame.width, frame.height];
+  if (cropWidth < 1 || cropHeight < 1 || left + cropWidth > frame.width || top + cropHeight > frame.height || cropWidth < settings.scale || cropHeight < settings.scale) throw new Error('Crop is outside source frame or smaller than output scale');
+  const width = Math.floor(cropWidth / settings.scale);
+  const height = Math.floor(cropHeight / settings.scale);
   if (frameCount && (width !== outputWidth || height !== outputHeight)) throw new Error('Frame sizes differ');
   outputWidth = width;
   outputHeight = height;
@@ -38,7 +46,7 @@ for (let index = settings.start; index < end; index += settings.step) {
   // Integer nearest-neighbor sampling of actual runtime frames.
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      const source = ((y * settings.scale) * frame.width + x * settings.scale) * 4;
+      const source = ((top + y * settings.scale) * frame.width + left + x * settings.scale) * 4;
       const target = (y * width + x) * 4;
       pixels.set(frame.data.subarray(source, source + 4), target);
     }
@@ -53,5 +61,5 @@ for (let index = settings.start; index < end; index += settings.step) {
 }
 gif.finish();
 fs.mkdirSync(path.dirname(path.resolve(outputFile)), { recursive: true });
-fs.writeFileSync(outputFile, gif.bytes());
-console.log(JSON.stringify({ outputFile, sourceFrames: inputs.length, sourceStart: settings.start, sourceEndExclusive: end, sourceFps: settings.fps, frameStep: settings.step, frames: frameCount, width: outputWidth, height: outputHeight, bytes: fs.statSync(outputFile).size, audio: false }));
+fs.writeFileSync(outputFile, gif.bytes(), { flag: 'wx' });
+console.log(JSON.stringify({ outputFile, sourceFrames: inputs.length, sourceStart: settings.start, sourceEndExclusive: end, sourceFps: settings.fps, frameStep: settings.step, crop, scale: settings.scale, frames: frameCount, width: outputWidth, height: outputHeight, bytes: fs.statSync(outputFile).size, audio: false }));

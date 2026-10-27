@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "classification": "Actual native Godot mage battle fixtures using finite normal acquisition/merge APIs, player persistence disabled. VFX masks authored in project code; no new generated source atlas.",
+  "runtime": "Windows Godot4.7.2.NET / OpenGL compatibility / NVIDIA RTX3070 Laptop GPU",
+  "movie": {
+    "file": "mage-vfx.gif",
+    "source_dimensions": [
+      1440,
+      960
+    ],
+    "source_fps": 24,
+    "source_frames": 243,
+    "source_start": 18,
+    "source_end_exclusive": 162,
+    "frame_step": 1,
+    "frames": 144,
+    "duration_seconds": 6,
+    "crop": [
+      208,
+      152,
+      1056,
+      262
+    ],
+    "dimensions": [
+      1056,
+      262
+    ],
+    "scale": 1,
+    "audio": false,
+    "conversion": "Actual Movie Maker PNGs cropped without scaling, GIF palette quantized. Fixed recording FPS is not measured gameplay performance. HUD/board omitted from this crop; full-window PNGs supplied separately."
+  },
+  "profiles": {
+    "baseline": "1440x960 normal legal fire/water/wind acquisition and weaving; published four phases of each source and result; derived report.",
+    "1280x800": "Same legal fixture at the smaller native window; three selected spell frames; derived report.",
+    "1920x1080": "Same legal fixture at the larger native window; three selected spell frames; derived report.",
+    "before_ribbon_fix": "Intermediate actual flight frame with dotted diamond trail, preceding continuous ribbon and ground-layer clipping fix; not final UI.",
+    "vfx_tests": "Complete native GPU test report: 45 checks, actual reference battle and framebuffer difference. Includes separate synthetic lethal-rule fixture in tests, not a player build or public gameplay footage."
+  },
+  "files": [
+    {
+      "file": "1280x800/mage-vfx-flight-spark.png",
+      "bytes": 641208,
+      "sha256": "e5c68b85512467a34e60a5474e7fd2fb361f9754a197f2182c9b64406688a6e3",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/mage-vfx-impact-flame_glyph.png",
+      "bytes": 629273,
+      "sha256": "eb165df2d60edab068798182de5873aae8b178802d160cc0b8c720c9bb19a50d",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/mage-vfx-impact-tide_lances.png",
+      "bytes": 635113,
+      "sha256": "6ed66696029d0a5a5e456f8cd84f927327678eaec0ca38ee6ca267abc6542441",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/summary.json",
+      "bytes": 17549,
+      "sha256": "32c7c2c87288201982fe028abe63415981574ad3d50d5d55c77d1cf14bdc3c1c"
+    },
+    {
+      "file": "1920x1080/mage-vfx-flight-tide_lances.png",
+      "bytes": 1159689,
+      "sha256": "566e8cb1c69896ce608b09168f3323ba9de6db5b3ce0d0330d9abd383e812dd5",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080/mage-vfx-impact-flame_glyph.png",
+      "bytes": 1144436,
+      "sha256": "989a9f58d9d09d151b4aa9632dbf77d6fc9f614c7486836e4823723a3d55a2cc",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080/mage-vfx-residue-spark.png",
+      "bytes": 1153639,
+      "sha256": "bc8b29fda9c0d71362a2dd3863a2f9a649bdb8d389a41bd4b4f30cf2c3a16664",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080/summary.json",
+      "bytes": 17810,
+      "sha256": "ab0e234098fd15d11f9090f05c8de2c1763b224d28cf5eea2132a1a340af3864"
+    },
+    {
+      "file": "baseline/mage-result.png",
+      "bytes": 907425,
+      "sha256": "38a2d17cd21f724d659c900b1d8c3e970791b2e84f3ccd18776775ee15954657",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-flight-enemy.png",
+      "bytes": 924450,
+      "sha256": "f964e0022657f50569b88ac62c47643c5a1bb172e133e5938c369361c7378bb8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-flight-flame_glyph.png",
+      "bytes": 936613,
+      "sha256": "b1c3041224e1944ec8ba5271cb918ea2627d39e909d5cba520f24717564274d1",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-flight-spark.png",
+      "bytes": 939082,
+      "sha256": "32cd0e39d1fa41ca7419a1b2f2403875ac23a368958a21188a86aef2c6f94c6f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-flight-tide_lances.png",
+      "bytes": 937813,
+      "sha256": "5dd15febed8fa9b7eb320017a00f5ad055056af42b7b45a31c0954ddeb8fd5d9",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-gather-enemy.png",
+      "bytes": 940571,
+      "sha256": "23c700b405737d20f81fe36c9ac085a7bf330148fac5f3cacf4f04bd8cc5e634",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-gather-flame_glyph.png",
+      "bytes": 936137,
+      "sha256": "84ee37628f563aaf8782b672650035e92febbf56bacaa5f55a8fb83e74525230",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-gather-spark.png",
+      "bytes": 940152,
+      "sha256": "12df69c3024b7f94a91b134c4a2271864c6dcc0aac41f303e8afb25de90c58aa",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-gather-tide_lances.png",
+      "bytes": 938598,
+      "sha256": "ac473e12a92d93288585cb0ead3decd0719180e67985c3f6b977b8b09df986e4",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-impact-enemy.png",
+      "bytes": 923681,
+      "sha256": "1b6be5018e727ff4fd7b427acb2a13a51f5af7f93b9903089d4fcb0bd42fd021",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-impact-flame_glyph.png",
+      "bytes": 924450,
+      "sha256": "f964e0022657f50569b88ac62c47643c5a1bb172e133e5938c369361c7378bb8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-impact-spark.png",
+      "bytes": 929143,
+      "sha256": "545f80d166aa7493c420f39eb653f2e4373f5bfed7271511262fc2aacf5f5155",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-impact-tide_lances.png",
+      "bytes": 930453,
+      "sha256": "dd0ff1f230feb03e836a981924e2ff04e5aa4b5087f3d8444f87a7587f99708a",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-residue-enemy.png",
+      "bytes": 931158,
+      "sha256": "03e9bc93c1aebce95c250c02deb0cb6b2fe42ace13e6b563cd58c138c7ced387",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-residue-flame_glyph.png",
+      "bytes": 927939,
+      "sha256": "041da8fe6a25aca44b533a40c4a285ed735faa187a51e11f42097d39ab4aef9f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-residue-spark.png",
+      "bytes": 932304,
+      "sha256": "a36c99862ac340b303b66727308db7d574d5c5d325534500a73c91a4683f3c36",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-vfx-residue-tide_lances.png",
+      "bytes": 936137,
+      "sha256": "84ee37628f563aaf8782b672650035e92febbf56bacaa5f55a8fb83e74525230",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/summary.json",
+      "bytes": 71306,
+      "sha256": "d4729726b65390d47206442c1c9ff730e8ca149c39f4eebafc7dbd34eca5df26"
+    },
+    {
+      "file": "before-ribbon-fix.png",
+      "bytes": 936904,
+      "sha256": "2eea8d5d1dd339f4ff8e4e7abb8536a532af5317a0fbc4fc69d2b6681a9634d8",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "mage-vfx.gif",
+      "bytes": 19096334,
+      "sha256": "8085c876eb1d8157fa8990bc6967bbbcd2e2ed29ef51a172257e4c77d097f9a3"
+    },
+    {
+      "file": "vfx-tests.json",
+      "bytes": 1766,
+      "sha256": "a44bdec9950555675bd3403b853fb258ac4a2f9c262176e9e26afc3d2e92161b"
+    }
+  ]
+}

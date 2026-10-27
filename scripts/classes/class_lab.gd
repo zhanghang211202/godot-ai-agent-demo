@@ -674,6 +674,11 @@ func _capture_feedback(captured: Array[String], samples: Array[Dictionary]) -> b
 	if run.class_id == "mage":
 		for effect: Dictionary in arena.get_art_layout().spell_effects:
 			stages.append("effect-" + str(effect.kind))
+			if float(effect.age) >= 0.06:
+				stages.append("vfx-" + str(effect.phase) + "-" + str(effect.kind))
+		for cast: Dictionary in arena.get_art_layout().spell_casts:
+			if cast.phase == "gather" or (cast.remaining <= 0.15 and cast.remaining >= 0.08):
+				stages.append("vfx-" + str(cast.phase) + "-" + str(cast.kind))
 		if battle.phase == "battle" and arena.enemy_frame() == 1:
 			stages.append("enemy-windup")
 	if feedback.hero_hit > 0:
