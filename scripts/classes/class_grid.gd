@@ -12,6 +12,7 @@ const SHORT_LABELS := {
 	"flame_glyph": "焰爆", "tide_lances": "潮汐", "arcane_focus": "晶",
 	"mage_ward": "护符", "iron_blade": "长剑", "greatblade": "重刃",
 	"charge_seal": "势", "knight_ward": "甲片",
+	"frost_bolt": "冰矢", "gale_blades": "风刃", "steam_burst": "蒸爆", "ember_tornado": "焰涡",
 }
 var run: RefCounted
 var battle: RefCounted

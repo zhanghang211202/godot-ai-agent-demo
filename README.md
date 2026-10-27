@@ -1,18 +1,18 @@
 # 月庭法师试炼（开发样板，正式标题待定）
 
-当前集中开发**法师、敌人、特效、道具与元素编织玩法**，骑士和C2后置。已接入巡卫四姿势、八种现有物件图标、编织预览、方向协同与实际冷却；最新一轮将三法术升级为聚能、曲线飞行、分层命中和残留，并加入专用小像素图样与连续拖尾。
+当前集中开发**法师、敌人、特效、道具与元素编织玩法**，骑士和C2后置。现在可选择巡卫、镜翼灵蛾或荆棘石像，使用六种配方编织法术。护身符板在受击减伤时展开法盾，并显示实际抵挡量。
 
 ```powershell
 npm run game:mage
 ```
 
-![实际Godot战斗区域：聚能、微光彗星、焰爆和潮汐连枪，固定24FPS录制后原寸裁剪；无声六秒](docs/devlog/screenshots/mage-vfx-v2/mage-vfx.gif)
+![实际Godot战斗区域：冰矢与风刃对战镜翼灵蛾，受击时展开法盾；固定24FPS录制、原寸裁剪，无声六秒](docs/devlog/screenshots/mage-expansion-v1/moth.gif)
 
-[新版特效、验证与限制](docs/iteration-mage-vfx.md) · [上一版完整界面片段](docs/devlog/screenshots/mage-trial-v1/mage-battle.gif)
+[新法盾、敌人、法术与操作](docs/iteration-mage-expansion.md) · [荆棘石像战斗片段](docs/devlog/screenshots/mage-expansion-v1/golem.gif) · [上一版特效](docs/iteration-mage-vfx.md)
 
-玩法：火元素叠到微光术式编织焰爆；水与风叠放成潮汐连枪。把聚能晶核移到潮汐左侧，可让三段都受支援。预览显示真实产物占格、伤害与协同，确认前不扣元素。R旋转，空格开战，结算后恢复战前调整。同资源固定配置对照：晶核支援焰爆8.60秒获胜，向下挪一格支援潮汐7.60秒获胜；这只是当前固定敌人的对照，不是一般平衡结论。
+玩法：火元素叠到微光术式编织焰爆；水与风叠放成潮汐连枪。把聚能晶核移到潮汐左侧，可让三段都受支援。预览显示真实产物占格、伤害与协同，确认前不扣元素。R旋转，空格开战，结算后恢复战前调整。对巡卫的同资源配置对照：晶核支援焰爆8.60秒获胜，向下挪一格支援潮汐7.60秒获胜；这只是固定对手上的例子。
 
-法师入口使用独立`user://mage-trial-run.json`，沿用已验证的准备检查点格式。[操作、范围与限制](docs/iteration-mage-trial.md) · [当前计划](docs/mage-first-plan.md) · [日语记录](docs/devlog/2026-10-27-mage-trial.ja.md)。这是固定一战的可玩首版，尚未加入新配方、敌人机制、五战或新流派。
+法师入口使用独立`user://mage-trial-run.json`准备检查点。[当前计划](docs/mage-first-plan.md) · [日语记录](docs/devlog/2026-10-27-mage-expansion.ja.md)。目前是三个对手中任选一场的实验，连战奖励、召唤与循环流派还未加入。
 
 下文保留旧森林与双职业实验资料。`npm run game`仍启动v0.3森林样板，`npm run game:classes`保留原职业实验入口；旧12装备/5配方/7祝福/5战与存档兼容。
 

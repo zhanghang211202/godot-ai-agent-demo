@@ -6,9 +6,12 @@ const Motion = preload("res://scripts/classes/class_motion.gd")
 const Feedback = preload("res://scripts/classes/class_feedback.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
 const MageEffects = preload("res://scripts/classes/mage_effects.gd")
+const Shield = preload("res://scripts/classes/mage_shield.gd")
+const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 var motion = Motion.new()
 var feedback = Feedback.new()
 var pixel_cutout_enabled := true
+var shield_effects_enabled := true
 var actor_sprite: Sprite2D
 var actor_material: ShaderMaterial
 var enemy_sprite: Sprite2D
@@ -16,6 +19,7 @@ var enemy_material: ShaderMaterial
 var effects_layer: Control
 var ground_effects_layer: Control
 var playback_speed := 1.0
+var encounter_id := "sentinel"
 var run: RefCounted
 var battle: RefCounted
 var last_event: Dictionary = {}
@@ -119,6 +123,16 @@ func _hero_id() -> String:
 			has_sword = true
 	return "knight-sword-idle" if has_sword else ""
 
+func _encounter() -> Dictionary:
+	return battle.get_encounter() if battle != null and battle.phase != "idle" else Encounters.definition(encounter_id)
+
+func _incoming_point(layout: Dictionary) -> Vector2:
+	var config: Dictionary = battle.get("_config") if battle != null and battle.phase != "idle" else run.get_combat_config()
+	if run.class_id == "mage" and int(config.get("armor", 0)) > 0:
+		var shape := Shield.geometry(layout.hero_rect)
+		return Vector2(shape.center) + Vector2(Vector2(shape.radius).x * 0.94, 0)
+	return Vector2(layout.ground_anchor) - Vector2(0, 110)
+
 func enemy_frame() -> int:
 	if feedback.enemy_exit >= 0:
 		return 3
@@ -126,7 +140,8 @@ func enemy_frame() -> int:
 		return 2
 	if feedback.enemy_hit > 0:
 		return 3
-	if battle != null and battle.phase == "battle" and float(battle.get_presentation_timing().enemy_remaining) <= 0.35:
+	var anticipation := 0.35 if _encounter().id == "sentinel" else float(_encounter().windup)
+	if battle != null and battle.phase == "battle" and float(battle.get_presentation_timing().enemy_remaining) <= anticipation:
 		return 1
 	return 0
 
@@ -163,16 +178,20 @@ func get_art_layout() -> Dictionary:
 	var health: Array[Rect2] = [Rect2(16, 12, size.x * 0.30, 8), Rect2(size.x * 0.70 - 16, 12, size.x * 0.30, 8)]
 	var phase := Rect2(size.x * 0.33, 8, size.x * 0.34, 43)
 	var enemy := Rect2(Vector2(roundf(size.x * 0.76) - 60, ground - 166), Vector2(120, 166))
-	var enemy_art: Dictionary = MageArt.enemy() if run != null and run.class_id == "mage" else {}
+	var encounter := _encounter()
+	var enemy_art: Dictionary = MageArt.enemy(str(encounter.id)) if run != null and run.class_id == "mage" else {}
 	var enemy_anchor := Vector2(roundf(size.x * 0.76), ground)
 	var enemy_source := Rect2()
+	var enemy_cast_point := enemy_anchor - Vector2(0, 100)
 	var enemy_factor := 0.0
 	var enemy_index := enemy_frame()
 	if not enemy_art.is_empty():
+		enemy_anchor.y -= float(encounter.lift)
 		var frame: Dictionary = enemy_art.frames[enemy_index]
 		enemy_source = frame.source_rect
-		enemy_factor = minf(minf(204, scene.size.y - 6) / float(enemy_art.height), size.x * 0.24 / float(enemy_art.left + enemy_art.right))
+		enemy_factor = minf(minf(float(encounter.height), scene.size.y - 6 - float(encounter.lift)) / float(enemy_art.height), size.x * 0.24 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)
+		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy_anchor - Vector2(0, 100)
 	var missing: Array[String] = []
 	if hero_id != "" and hero.is_empty():
 		missing.append(hero_id)
@@ -192,7 +211,9 @@ func get_art_layout() -> Dictionary:
 		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index,
 		"alpha_render_mode": "cutout >=128, opaque interior" if pixel_cutout_enabled else "original alpha comparison",
 		"feedback": feedback.report(), "spell_effects": MageEffects.visible_effects(feedback.numbers) if run != null and run.class_id == "mage" else [],
-		"spell_casts": _upcoming_casts(), "effect_clip_rect": scene}
+		"spell_casts": _upcoming_casts(), "effect_clip_rect": scene, "encounter_id": encounter.id,
+		"enemy_cast_point": enemy_cast_point,
+		"shields": Shield.visible_shields(feedback.numbers) if shield_effects_enabled and run != null and run.class_id == "mage" else []}
 
 func get_art_report() -> Dictionary:
 	var layout := get_art_layout()
@@ -223,7 +244,7 @@ func _draw() -> void:
 	draw_rect(Rect2(1, layout.ground_y, size.x - 2, 8), Color("333748") if run.class_id == "mage" else Color("474036"))
 	draw_line(Vector2(1, layout.ground_y), Vector2(size.x - 1, layout.ground_y), Color("9e95af") if run.class_id == "mage" else Color("b2a184"), 1)
 	_shadow(layout.ground_anchor, 39, tint, feedback.opacity("hero"))
-	_shadow(layout.enemy_anchor, 35, tint, feedback.opacity("enemy"))
+	_shadow(Vector2(layout.enemy_anchor.x, layout.ground_y), 35, tint, feedback.opacity("enemy"))
 	var hero: Dictionary = Art.get_asset(layout.hero_id)
 	if layout.animated:
 		hero = Motion.get_asset(layout.motion_clip)
@@ -242,7 +263,7 @@ func _draw() -> void:
 	var enemy_alpha: float = feedback.opacity("enemy")
 	enemy_sprite.visible = not layout.enemy_placeholder
 	if not layout.enemy_placeholder:
-		var enemy_art := MageArt.enemy()
+		var enemy_art := MageArt.enemy(str(layout.encounter_id))
 		enemy_sprite.texture = enemy_art.texture
 		enemy_sprite.region_rect = layout.enemy_source_rect
 		enemy_sprite.position = layout.enemy_rect.position
@@ -259,8 +280,8 @@ func _draw() -> void:
 	_draw_hud(layout, tint)
 	var footer_name := "月光观测庭" if run.class_id == "mage" else "余烬圣堂"
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
-	draw_string(font, Vector2(14, size.y - 6), footer_name + " · 动作样板", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
-	var note := "微光 / 焰爆 / 潮汐 · 元素编织" if run.class_id == "mage" else "命中 / 受击 / 淡出反馈 · 专用姿势待制作"
+	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素试炼" if run.class_id == "mage" else " · 动作样板"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
+	var note := "七种法术 · 六种元素编织" if run.class_id == "mage" else "命中 / 受击 / 淡出反馈 · 专用姿势待制作"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
@@ -312,11 +333,12 @@ func _draw_hud(layout: Dictionary, tint: Color) -> void:
 	var hp_value: int = battle.hp if battle.phase != "idle" else run.hp
 	var hp_max: int = battle.max_hp if battle.phase != "idle" else run.max_hp
 	_bar(layout.health_rects[0], hp_value, hp_max, tint)
-	var enemy_hp: int = battle.enemy_hp if battle.phase != "idle" else 140
-	var enemy_max: int = battle.enemy_max_hp if battle.phase != "idle" else 140
+	var encounter := _encounter()
+	var enemy_hp: int = battle.enemy_hp if battle.phase != "idle" else int(encounter.hp)
+	var enemy_max: int = battle.enemy_max_hp if battle.phase != "idle" else int(encounter.hp)
 	_bar(layout.health_rects[1], enemy_hp, enemy_max, Color("d3858b"))
 	draw_string(font, Vector2(16, 44), "%s  %d / %d" % ["月庭法师" if run.class_id == "mage" else "圣堂骑士", hp_value, hp_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, tint)
-	draw_string(font, Vector2(size.x * 0.70 - 16, 44), "%s  %d / %d" % ["月庭巡卫 · 训练" if run.class_id == "mage" else "训练守卫（占位）", enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("d9a2a7"))
+	draw_string(font, Vector2(size.x * 0.70 - 16, 44), "%s  %d / %d" % [str(encounter.name) if run.class_id == "mage" else "训练守卫（占位）", enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("d9a2a7"))
 	var center_text := "准备完成后自动执行"
 	if battle.phase == "battle":
 		center_text = "已暂停" if battle.paused else "自动执行  %.1f 秒" % battle.battle_time
@@ -351,6 +373,7 @@ func _draw_ground_effects() -> void:
 	var layout := get_art_layout()
 	ground_effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	MageEffects.draw_ground(ground_effects_layer, layout.spell_casts, layout.spell_effects, layout.ground_anchor, layout.enemy_anchor)
+	Shield.draw_back(ground_effects_layer, layout.shields, layout.hero_rect)
 
 func _draw_feedback() -> void:
 	if run == null or battle == null:
@@ -359,12 +382,13 @@ func _draw_feedback() -> void:
 	effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	if run.class_id == "mage":
 		for cast: Dictionary in layout.spell_casts:
-			var from: Vector2 = layout.enemy_anchor - Vector2(0, 100) if cast.target == "hero" else layout.hero_cast_point
-			var to: Vector2 = layout.ground_anchor - Vector2(0, 110) if cast.target == "hero" else layout.enemy_anchor - Vector2(0, 100)
+			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else layout.hero_cast_point
+			var to: Vector2 = _incoming_point(layout) if cast.target == "hero" else layout.enemy_cast_point
 			MageEffects.draw_cast(effects_layer, cast, from, to)
 		for effect: Dictionary in layout.spell_effects:
-			var hero_point: Vector2 = layout.ground_anchor - Vector2(0, 110) if effect.target == "hero" else layout.hero_cast_point
-			MageEffects.draw_effect(effects_layer, effect, hero_point, layout.enemy_anchor - Vector2(0, 100))
+			var hero_point: Vector2 = _incoming_point(layout) if effect.target == "hero" else layout.hero_cast_point
+			MageEffects.draw_effect(effects_layer, effect, hero_point, layout.enemy_cast_point)
+		Shield.draw_front(effects_layer, layout.shields, layout.hero_rect)
 	var slots := {"hero": 0, "enemy": 0}
 	for index in range(feedback.numbers.size() - 1, -1, -1):
 		var number: Dictionary = feedback.numbers[index]
@@ -379,7 +403,7 @@ func _draw_feedback() -> void:
 		if int(number.hits) > 1:
 			text += " · %d段" % int(number.hits)
 		if int(number.armor) > 0:
-			text += "  护甲抵挡%d" % int(number.armor)
+			text += "  %s抵挡%d" % ["法盾" if run.class_id == "mage" else "护甲", int(number.armor)]
 		var point := origin + Vector2(0, -progress * 30 - slot * 24)
 		point.y = maxf(84, point.y)
 		var color := Color("ffb8b0") if target == "hero" else Color("ffe1a0") if number.kind == "greatblade" else Color("b9e7ff")

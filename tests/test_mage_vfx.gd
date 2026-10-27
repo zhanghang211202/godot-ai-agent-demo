@@ -126,7 +126,7 @@ func _run() -> void:
 			await _gpu_readback("impact")
 	check(paused_once and flame_readback, "Native test visits flight and actual flame impact")
 	check(ui.battle.get_summary() == reference.get_summary() and ui.battle.battle_time == 8.6, "Smooth VFX, pause and 2x leave every combat summary field identical")
-	for kind in Effects.COLORS:
+	for kind in ["spark", "flame_glyph", "tide_lances", "enemy"]:
 		check(observed.has(kind + ":gather") and observed.has(kind + ":flight") and observed.has(kind + ":impact") and observed.has(kind + ":residue"), kind + " traverses gather, flight, true impact and residue in actual battle")
 	check(ui.arena.get_art_layout().spell_casts.is_empty(), "Battle end cancels all predicted flights without resolving another hit")
 	ui.arena._process(2)

@@ -1,5 +1,7 @@
 # 法师特效第二版：让玩家看到一次施法的过程
 
+本页保留该版本的记录；此后新增的法盾、敌人和魔法见[法师扩展](iteration-mage-expansion.md)。
+
 2026-10-27。前一版为`89ee0b9`，入口仍是`npm run game:mage`。用户反馈“特效还是很简陋”，本轮集中改善三种法术和巡卫攻击的视觉过程，没有扩展C2或骑士。
 
 ![实际Godot战斗区域，固定24FPS录制后裁取原尺寸；无声6秒](devlog/screenshots/mage-vfx-v2/mage-vfx.gif)

@@ -1,0 +1,332 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "mode": "built-in imagegen",
+  "classification": "Dedicated runtime candidate enemy and item atlases; not concept sheet crops. Original alpha and RGB preserved.",
+  "files": [
+    {
+      "file": "enemies/mirror-moth.png",
+      "bytes": 1762272,
+      "sha256": "ab4c396dc72e3859d9b1f9d49e136fbe8f3fd7d2a4963ab00493ba0628394747",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "requested_dimensions": [
+        1536,
+        1536
+      ],
+      "alpha": {
+        "transparent": 861158,
+        "partial": 711204,
+        "kept_ge_128": 499488,
+        "opaque": 154
+      },
+      "lower_row_split": 704,
+      "kept_pixels_on_split": 0,
+      "frames": [
+        {
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "source_rect": [
+            73,
+            48,
+            531,
+            560
+          ],
+          "pivot": [
+            338,
+            608
+          ],
+          "cast_point": [
+            245,
+            388
+          ]
+        },
+        {
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ],
+          "source_rect": [
+            673,
+            81,
+            543,
+            522
+          ],
+          "pivot": [
+            944,
+            603
+          ],
+          "cast_point": [
+            846,
+            409
+          ]
+        },
+        {
+          "region": [
+            0,
+            627,
+            704,
+            627
+          ],
+          "source_rect": [
+            49,
+            659,
+            618,
+            530
+          ],
+          "pivot": [
+            358,
+            1189
+          ],
+          "cast_point": [
+            257,
+            1008
+          ]
+        },
+        {
+          "region": [
+            704,
+            627,
+            550,
+            627
+          ],
+          "source_rect": [
+            807,
+            666,
+            399,
+            535
+          ],
+          "pivot": [
+            1006,
+            1201
+          ],
+          "cast_point": [
+            993,
+            1012
+          ]
+        }
+      ]
+    },
+    {
+      "file": "enemies/thorn-golem.png",
+      "bytes": 1804875,
+      "sha256": "e8f4d9219792126f7e35f0b641d7a9d1d1d7c75dc87682348d5be27cb1f9b4ae",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "requested_dimensions": [
+        1536,
+        1536
+      ],
+      "alpha": {
+        "transparent": 806294,
+        "partial": 766098,
+        "kept_ge_128": 616738,
+        "opaque": 124
+      },
+      "lower_row_split": 672,
+      "kept_pixels_on_split": 0,
+      "frames": [
+        {
+          "region": [
+            0,
+            0,
+            627,
+            627
+          ],
+          "source_rect": [
+            86,
+            109,
+            507,
+            486
+          ],
+          "pivot": [
+            339,
+            595
+          ],
+          "cast_point": [
+            299,
+            307
+          ]
+        },
+        {
+          "region": [
+            627,
+            0,
+            627,
+            627
+          ],
+          "source_rect": [
+            698,
+            16,
+            475,
+            580
+          ],
+          "pivot": [
+            935,
+            596
+          ],
+          "cast_point": [
+            887,
+            306
+          ]
+        },
+        {
+          "region": [
+            0,
+            627,
+            672,
+            627
+          ],
+          "source_rect": [
+            43,
+            759,
+            618,
+            433
+          ],
+          "pivot": [
+            352,
+            1192
+          ],
+          "cast_point": [
+            271,
+            951
+          ]
+        },
+        {
+          "region": [
+            672,
+            627,
+            582,
+            627
+          ],
+          "source_rect": [
+            684,
+            705,
+            531,
+            492
+          ],
+          "pivot": [
+            949,
+            1197
+          ],
+          "cast_point": [
+            1020,
+            947
+          ]
+        }
+      ]
+    },
+    {
+      "file": "items/spell-items.png",
+      "bytes": 2158025,
+      "sha256": "ef627910191d4e3a3c2945cf597402336f81fd18dd9662490e71018e54817098",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "requested_dimensions": [
+        1536,
+        1536
+      ],
+      "alpha": {
+        "transparent": 529407,
+        "partial": 1043054,
+        "kept_ge_128": 840831,
+        "opaque": 55
+      },
+      "lower_row_split": 627,
+      "kept_pixels_on_split": 0,
+      "frames": [
+        {
+          "region": [
+            0,
+            0,
+            627,
+            603
+          ],
+          "source_rect": [
+            41,
+            46,
+            561,
+            555
+          ],
+          "pivot": [
+            321,
+            601
+          ]
+        },
+        {
+          "region": [
+            627,
+            0,
+            627,
+            600
+          ],
+          "source_rect": [
+            668,
+            28,
+            548,
+            553
+          ],
+          "pivot": [
+            942,
+            581
+          ]
+        },
+        {
+          "region": [
+            0,
+            603,
+            627,
+            651
+          ],
+          "source_rect": [
+            37,
+            605,
+            573,
+            599
+          ],
+          "pivot": [
+            323,
+            1204
+          ]
+        },
+        {
+          "region": [
+            627,
+            600,
+            627,
+            654
+          ],
+          "source_rect": [
+            644,
+            620,
+            594,
+            601
+          ],
+          "pivot": [
+            941,
+            1221
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Delivered 1254 square instead of requested 1536 square.",
+    "Generated RGB has many colors and partial alpha; controlled logical pixel density and palette have not passed final production approval.",
+    "Enemy uses common source-fit scale, alpha>=128 cutout, bounding-box-bottom-center anchors, and manually placed chest/core points. Moth has a 28px runtime hover offset.",
+    "Moth windup frame includes generated crescent gathering light; it is not a separately emitted damaging projectile.",
+    "No user-private reference images were inputs or public files."
+  ]
+}

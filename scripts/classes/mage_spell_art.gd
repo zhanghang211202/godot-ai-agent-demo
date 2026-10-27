@@ -6,7 +6,9 @@ const PALETTES := {
 	"flame": {"o": "7b2545", "r": "d54438", "a": "fa7134", "y": "ffc45a", "w": "fff0b2"},
 	"comet": {"o": "503782", "r": "8056c2", "a": "b78aff", "y": "dfc4ff", "w": "fff4ff"},
 	"lance": {"o": "245a99", "r": "258bc4", "a": "63d4eb", "y": "b5f8fa", "w": "f3ffff"},
-	"shard": {"o": "245a99", "r": "258bc4", "a": "63d4eb", "y": "b5f8fa", "w": "f3ffff"}
+	"shard": {"o": "245a99", "r": "258bc4", "a": "63d4eb", "y": "b5f8fa", "w": "f3ffff"},
+	"crescent": {"o": "24544b", "r": "318a70", "a": "69b897", "y": "b1efd0", "w": "f2fff2"},
+	"steam": {"o": "526078", "r": "8896a8", "a": "bbc9d1", "y": "e0e9e5", "w": "fff4d7"}
 }
 const MASKS := {
 	"flame": [
@@ -33,7 +35,9 @@ const MASKS := {
 		"ooorrraaaaaaaaarraaaayyyywwwwwwya....", "......oooooo..........aayywwwya.....",
 		".........................aaywa......", "............................a......."
 	],
-	"shard": ["....o...", "...ora..", "..orya..", "..rayya.", ".oraywa.", ".oraywa.", ".orayya.", "..raya..", "..ora...", "...o...."]
+	"shard": ["....o...", "...ora..", "..orya..", "..rayya.", ".oraywa.", ".oraywa.", ".orayya.", "..raya..", "..ora...", "...o...."],
+	"crescent": [".......oooooo...", "....orrraaywwa..", "..orraaywwwya...", ".orraaywwya.....", "orraaywwya......", "oraaywwya.......", "oraaywwa........", "oraaywwa........", "oraaywwya.......", "orraaywwya......", ".orraaywwya.....", "..orraaywwwya...", "....orrraaywwa..", ".......oooooo..."],
+	"steam": ["......oooo.........", "....orrraaooo......", "...oraayywwaaro....", ".ooraaywwwwwwyaro..", "oraywwwwwwwwwwyaro.", "raywwwwwwwwwwwwyaro", "raywwwwwwwwwwwwyaro", ".raywwwwwwwwwwyaro.", "..raayyyyyyyyaaro..", "....rrraaaaarrro...", "......oooooo......."]
 }
 static var _textures: Dictionary = {}
 
