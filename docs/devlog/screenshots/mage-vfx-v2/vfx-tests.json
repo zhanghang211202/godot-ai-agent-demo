@@ -1,0 +1,107 @@
+{
+	"checks": 45,
+	"failures": 0,
+	"gpu_samples": [
+		{
+			"changed_inside": 634,
+			"changed_outside": 0,
+			"clip": [
+				15,
+				152,
+				1410,
+				261
+			],
+			"phase": "gather"
+		},
+		{
+			"changed_inside": 4401,
+			"changed_outside": 0,
+			"clip": [
+				15,
+				152,
+				1410,
+				261
+			],
+			"phase": "flight"
+		},
+		{
+			"changed_inside": 8924,
+			"changed_outside": 0,
+			"clip": [
+				15,
+				152,
+				1410,
+				261
+			],
+			"phase": "impact"
+		}
+	],
+	"observed": [
+		"spark:gather",
+		"spark:flight",
+		"tide_lances:gather",
+		"spark:impact",
+		"spark:residue",
+		"tide_lances:flight",
+		"tide_lances:impact",
+		"tide_lances:residue",
+		"flame_glyph:gather",
+		"enemy:gather",
+		"flame_glyph:flight",
+		"enemy:flight",
+		"flame_glyph:impact",
+		"flame_glyph:residue",
+		"enemy:impact",
+		"enemy:residue"
+	],
+	"renderer": "NVIDIA GeForce RTX 3070 Laptop GPU",
+	"summary": {
+		"armor_mitigated": 8,
+		"by_source": [
+			{
+				"activations": 3,
+				"damage": 60,
+				"hits": 3,
+				"kind": "flame_glyph",
+				"name": "焰爆法印",
+				"raw_damage": 60,
+				"uid": 1
+			},
+			{
+				"activations": 6,
+				"damage": 30,
+				"hits": 6,
+				"kind": "spark",
+				"name": "微光术式",
+				"raw_damage": 30,
+				"uid": 2
+			},
+			{
+				"activations": 4,
+				"damage": 50,
+				"hits": 10,
+				"kind": "tide_lances",
+				"name": "潮汐连枪",
+				"raw_damage": 50,
+				"uid": 6
+			}
+		],
+		"class_id": "mage",
+		"damage_dealt": 140,
+		"damage_taken": 24,
+		"duration": 8.6,
+		"enemy_attacks": 4,
+		"enemy_hp": 0,
+		"enemy_max_hp": 140,
+		"event_count": 37,
+		"hp": 60,
+		"initial_hp": 84,
+		"max_hp": 84,
+		"overkill_damage_dealt": 0,
+		"overkill_damage_taken": 0,
+		"raw_damage_dealt": 140,
+		"raw_damage_taken": 32,
+		"result": "won",
+		"rules_version": 1
+	}
+}

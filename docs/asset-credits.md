@@ -31,6 +31,8 @@ Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许
 
 ## 法师一战 · 2026-10-27
 
+后续特效第二版的`mage_spell_art.gd`由本项目代码定义四种五色pixel mask与火舌三变化，`mage_effects.gd`绘制聚能/轨迹/命中/余韵，没有新增外部素材或imagegen输出。运行纹理采用最近邻整数放大并缓存。实际Movie Maker帧只经裁剪和GIF量化，转换参数见[证据清单](devlog/screenshots/mage-vfx-v2/manifest.json)；不把代码绘制截图称为生成概念。
+
 `assets/art/mage-trial-v1/`的巡卫四姿势图集和八格道具图集使用内置**imagegen**生成，是专为运行绘制的两个图集，未裁切旧概念或用户图鉴。原PNG保留，[逐字提示](../assets/art/mage-trial-v1/prompts.json)和[实际尺寸、alpha、取源区域与SHA-256](../assets/art/mage-trial-v1/manifest.json)一并保存。三法术和巡卫星辉效果由`mage_effects.gd`代码绘制，不是外部游戏素材或图生视频。主角、月庭背景和字体沿用上面已登记来源，当前仅做法师，新增骑士工作后置。
 
 ## 第三方编辑器工具

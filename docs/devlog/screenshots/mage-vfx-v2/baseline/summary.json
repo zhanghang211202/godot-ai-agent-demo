@@ -1,0 +1,2952 @@
+{
+  "type": "derived_runtime_capture_report",
+  "source_report_sha256": "68458372e06dee82563d8c47e26218c5f742f1f1fe56142763fd92619010d3f4",
+  "note": "Selected fields and published feedback samples from a real native capture fixture. The full source report and other transient screenshots remain project-local. This is not a complete original report.",
+  "class_id": "mage",
+  "variant": "built",
+  "rules_version": 1,
+  "viewport": [
+    1440,
+    960
+  ],
+  "persistence_enabled": false,
+  "actions": [
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "result": {
+        "cost": 0,
+        "event": "merge",
+        "kind": "flame_glyph",
+        "message": "合成完成：焰爆法印",
+        "ok": true,
+        "source_id": "observatory_fire",
+        "uid": 1
+      },
+      "source_index": 0
+    },
+    {
+      "cell": [
+        3,
+        2
+      ],
+      "result": {
+        "cost": 0,
+        "event": "acquire",
+        "kind": "water_mote",
+        "message": "已放置：水元素",
+        "ok": true,
+        "source_id": "observatory_water",
+        "uid": 6
+      },
+      "source_index": 1
+    },
+    {
+      "cell": [
+        3,
+        2
+      ],
+      "result": {
+        "cost": 0,
+        "event": "merge",
+        "kind": "tide_lances",
+        "message": "合成完成：潮汐连枪",
+        "ok": true,
+        "source_id": "observatory_wind",
+        "uid": 6
+      },
+      "source_index": 2
+    }
+  ],
+  "remaining_sources": [
+    {
+      "cost": 0,
+      "id": "observatory_fire",
+      "kind": "fire_mote",
+      "remaining": 1
+    },
+    {
+      "cost": 0,
+      "id": "observatory_water",
+      "kind": "water_mote",
+      "remaining": 1
+    },
+    {
+      "cost": 0,
+      "id": "observatory_wind",
+      "kind": "wind_mote",
+      "remaining": 1
+    }
+  ],
+  "gold_after_acquisition": 0,
+  "summary": {
+    "armor_mitigated": 8,
+    "by_source": [
+      {
+        "activations": 3,
+        "damage": 60,
+        "hits": 3,
+        "kind": "flame_glyph",
+        "name": "焰爆法印",
+        "raw_damage": 60,
+        "uid": 1
+      },
+      {
+        "activations": 6,
+        "damage": 30,
+        "hits": 6,
+        "kind": "spark",
+        "name": "微光术式",
+        "raw_damage": 30,
+        "uid": 2
+      },
+      {
+        "activations": 4,
+        "damage": 50,
+        "hits": 10,
+        "kind": "tide_lances",
+        "name": "潮汐连枪",
+        "raw_damage": 50,
+        "uid": 6
+      }
+    ],
+    "class_id": "mage",
+    "damage_dealt": 140,
+    "damage_taken": 24,
+    "duration": 8.6,
+    "enemy_attacks": 4,
+    "enemy_hp": 0,
+    "enemy_max_hp": 140,
+    "event_count": 37,
+    "hp": 60,
+    "initial_hp": 84,
+    "max_hp": 84,
+    "overkill_damage_dealt": 0,
+    "overkill_damage_taken": 0,
+    "raw_damage_dealt": 140,
+    "raw_damage_taken": 32,
+    "result": "won",
+    "rules_version": 1
+  },
+  "visuals": {
+    "alpha_render_mode": "cutout >=128, opaque interior",
+    "alpha_threshold": 128,
+    "animated": true,
+    "assets_ready": true,
+    "background_id": "moon-court",
+    "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+    "background_source_rect": [
+      0,
+      321.948944091797,
+      2172,
+      402.051055908203
+    ],
+    "background_source_size": [
+      2172,
+      724
+    ],
+    "class_id": "mage",
+    "effect_clip_rect": [
+      1,
+      61,
+      1410,
+      261
+    ],
+    "enemy_anchor": [
+      1073,
+      321
+    ],
+    "enemy_frame": 3,
+    "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+    "enemy_placeholder": false,
+    "enemy_rect": [
+      994.240478515625,
+      137.012664794922,
+      154.291137695313,
+      183.987335205078
+    ],
+    "enemy_scale": 0.322784810126582,
+    "enemy_source_rect": [
+      629,
+      755,
+      478,
+      570
+    ],
+    "feedback": {
+      "active": false,
+      "enemy_exit_elapsed": 0.7,
+      "enemy_hit_remaining": 0,
+      "enemy_opacity": 0,
+      "hero_exit_elapsed": -1,
+      "hero_hit_remaining": 0,
+      "hero_opacity": 1,
+      "numbers": [],
+      "outcome": "won"
+    },
+    "ground_anchor": [
+      367,
+      321
+    ],
+    "ground_y": 321,
+    "health_rects": [
+      [
+        16,
+        12,
+        423.600006103516,
+        8
+      ],
+      [
+        972.400024414063,
+        12,
+        423.600006103516,
+        8
+      ]
+    ],
+    "hero_cast_point": [
+      431.332763671875,
+      93.8388214111328
+    ],
+    "hero_id": "mage-idle",
+    "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+    "hero_rect": [
+      249.426345825195,
+      65,
+      203.646453857422,
+      256
+    ],
+    "hero_visible": true,
+    "missing_assets": [],
+    "motion_clip": "mage-cast",
+    "motion_frame": 0,
+    "motion_state": "idle",
+    "phase_rect": [
+      465.959991455078,
+      8,
+      480.079986572266,
+      43
+    ],
+    "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+    "scene_rect": [
+      1,
+      61,
+      1410,
+      261
+    ],
+    "source_rect": [
+      42,
+      70,
+      459,
+      577
+    ],
+    "source_scale": [
+      0.443674176931381,
+      0.443674176931381
+    ],
+    "source_scale_is_integer": false,
+    "source_size": [
+      1122,
+      1402
+    ],
+    "spell_casts": [],
+    "spell_effects": [],
+    "stage_rect": [
+      0,
+      0,
+      1412,
+      350
+    ]
+  },
+  "feedback_samples": [
+    {
+      "battle_time": 0,
+      "file": "mage-vfx-gather-spark.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 0,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.886108398438,
+          117,
+          149.126586914063,
+          204
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          88,
+          46,
+          462,
+          632
+        ],
+        "feedback": {
+          "active": false,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.220092773438,
+          102.268630981445
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          240.109191894531,
+          70.7677612304688,
+          210.301559448242,
+          250.232238769531
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 1,
+        "motion_state": "windup",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          593,
+          84,
+          474,
+          564
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "spark",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.440104166666667,
+            "remaining": 0.358333333333333,
+            "source_uid": 2,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 0.15,
+      "file": "mage-vfx-gather-tide_lances.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 0,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.886108398438,
+          117,
+          149.126586914063,
+          204
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          88,
+          46,
+          462,
+          632
+        ],
+        "feedback": {
+          "active": false,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.220092773438,
+          102.268630981445
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          240.109191894531,
+          70.7677612304688,
+          210.301559448242,
+          250.232238769531
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 1,
+        "motion_state": "windup",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          593,
+          84,
+          474,
+          564
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "spark",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.635416666666667,
+            "remaining": 0.233333333333333,
+            "source_uid": 2,
+            "target": "enemy"
+          },
+          {
+            "kind": "tide_lances",
+            "phase": "gather",
+            "planned_hits": 3,
+            "progress": 0.0104166666666665,
+            "remaining": 0.633333333333333,
+            "source_uid": 6,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 0.25,
+      "file": "mage-vfx-flight-spark.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 0,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.886108398438,
+          117,
+          149.126586914063,
+          204
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          88,
+          46,
+          462,
+          632
+        ],
+        "feedback": {
+          "active": false,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.220092773438,
+          102.268630981445
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          240.109191894531,
+          70.7677612304688,
+          210.301559448242,
+          250.232238769531
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 1,
+        "motion_state": "windup",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          593,
+          84,
+          474,
+          564
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "spark",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.830729166666667,
+            "remaining": 0.108333333333333,
+            "source_uid": 2,
+            "target": "enemy"
+          },
+          {
+            "kind": "tide_lances",
+            "phase": "gather",
+            "planned_hits": 3,
+            "progress": 0.205729166666667,
+            "remaining": 0.508333333333333,
+            "source_uid": 6,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 0.45,
+      "file": "mage-vfx-impact-spark.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.176666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.0833333333333333,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          441.537261962891,
+          98.71923828125
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          234.341415405273,
+          67.2183685302734,
+          228.935882568359,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 2,
+        "motion_state": "impact",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          41,
+          739,
+          516,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "tide_lances",
+            "phase": "gather",
+            "planned_hits": 3,
+            "progress": 0.466145833333333,
+            "remaining": 0.341666666666667,
+            "source_uid": 6,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.0833333333333333,
+            "hits": 1,
+            "kind": "spark",
+            "phase": "impact",
+            "progress": 0.173611111111111,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 0.55,
+      "file": "mage-vfx-residue-spark.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.0516666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.208333333333333,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "tide_lances",
+            "phase": "flight",
+            "planned_hits": 3,
+            "progress": 0.661458333333333,
+            "remaining": 0.216666666666667,
+            "source_uid": 6,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.208333333333333,
+            "hits": 1,
+            "kind": "spark",
+            "phase": "residue",
+            "progress": 0.434027777777778,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 0.65,
+      "file": "mage-vfx-flight-tide_lances.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 0,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.886108398438,
+          117,
+          149.126586914063,
+          204
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          88,
+          46,
+          462,
+          632
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.291666666666667,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "tide_lances",
+            "phase": "flight",
+            "planned_hits": 3,
+            "progress": 0.791666666666667,
+            "remaining": 0.133333333333333,
+            "source_uid": 6,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.291666666666667,
+            "hits": 1,
+            "kind": "spark",
+            "phase": "residue",
+            "progress": 0.607638888888889,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 0.85,
+      "file": "mage-vfx-impact-tide_lances.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.176666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.5,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            },
+            {
+              "age": 0.0833333333333333,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          441.537261962891,
+          98.71923828125
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          234.341415405273,
+          67.2183685302734,
+          228.935882568359,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 2,
+        "motion_state": "impact",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          41,
+          739,
+          516,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [],
+        "spell_effects": [
+          {
+            "age": 0.0833333333333333,
+            "hits": 3,
+            "kind": "tide_lances",
+            "phase": "impact",
+            "progress": 0.130208333333333,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1,
+      "file": "mage-vfx-residue-tide_lances.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.0516666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.625,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            },
+            {
+              "age": 0.208333333333333,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "flame_glyph",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.0624999999999999,
+            "remaining": 0.6,
+            "source_uid": 1,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.208333333333333,
+            "hits": 3,
+            "kind": "tide_lances",
+            "phase": "residue",
+            "progress": 0.325520833333333,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1,
+      "file": "mage-vfx-gather-flame_glyph.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.0516666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.625,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            },
+            {
+              "age": 0.208333333333333,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "flame_glyph",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.0624999999999999,
+            "remaining": 0.6,
+            "source_uid": 1,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.208333333333333,
+            "hits": 3,
+            "kind": "tide_lances",
+            "phase": "residue",
+            "progress": 0.325520833333333,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1.15,
+      "file": "mage-vfx-gather-enemy.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 0,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.886108398438,
+          117,
+          149.126586914063,
+          204
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          88,
+          46,
+          462,
+          632
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.791666666666666,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:0.4",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            },
+            {
+              "age": 0.375,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "flame_glyph",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.322916666666667,
+            "remaining": 0.433333333333333,
+            "source_uid": 1,
+            "target": "enemy"
+          },
+          {
+            "kind": "enemy",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.0104166666666665,
+            "remaining": 0.633333333333333,
+            "source_uid": 0,
+            "target": "hero"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.375,
+            "hits": 3,
+            "kind": "tide_lances",
+            "phase": "residue",
+            "progress": 0.5859375,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1.45,
+      "file": "mage-vfx-flight-flame_glyph.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 0,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.886108398438,
+          117,
+          149.126586914063,
+          204
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          88,
+          46,
+          462,
+          632
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.666666666666667,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.220092773438,
+          102.268630981445
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          240.109191894531,
+          70.7677612304688,
+          210.301559448242,
+          250.232238769531
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 1,
+        "motion_state": "windup",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          593,
+          84,
+          474,
+          564
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "flame_glyph",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.778645833333333,
+            "remaining": 0.141666666666667,
+            "source_uid": 1,
+            "target": "enemy"
+          },
+          {
+            "kind": "enemy",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.466145833333333,
+            "remaining": 0.341666666666667,
+            "source_uid": 0,
+            "target": "hero"
+          },
+          {
+            "kind": "spark",
+            "phase": "gather",
+            "planned_hits": 1,
+            "progress": 0.309895833333333,
+            "remaining": 0.441666666666667,
+            "source_uid": 2,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1.65,
+      "file": "mage-vfx-impact-flame_glyph.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.176666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.875,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            },
+            {
+              "age": 0.0833333333333333,
+              "amount": 20,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:1:1.6",
+              "kind": "flame_glyph",
+              "raw": 20,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          441.537261962891,
+          98.71923828125
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          234.341415405273,
+          67.2183685302734,
+          228.935882568359,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 2,
+        "motion_state": "impact",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          41,
+          739,
+          516,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "enemy",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.791666666666667,
+            "remaining": 0.133333333333333,
+            "source_uid": 0,
+            "target": "hero"
+          },
+          {
+            "kind": "spark",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.635416666666667,
+            "remaining": 0.233333333333333,
+            "source_uid": 2,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.0833333333333333,
+            "hits": 1,
+            "kind": "flame_glyph",
+            "phase": "impact",
+            "progress": 0.112612612612613,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1.65,
+      "file": "mage-vfx-flight-enemy.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.176666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.875,
+              "amount": 15,
+              "armor": 0,
+              "hits": 3,
+              "key": "enemy:6:0.8",
+              "kind": "tide_lances",
+              "raw": 15,
+              "target": "enemy"
+            },
+            {
+              "age": 0.0833333333333333,
+              "amount": 20,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:1:1.6",
+              "kind": "flame_glyph",
+              "raw": 20,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          441.537261962891,
+          98.71923828125
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          234.341415405273,
+          67.2183685302734,
+          228.935882568359,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 2,
+        "motion_state": "impact",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          41,
+          739,
+          516,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "enemy",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.791666666666667,
+            "remaining": 0.133333333333333,
+            "source_uid": 0,
+            "target": "hero"
+          },
+          {
+            "kind": "spark",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.635416666666667,
+            "remaining": 0.233333333333333,
+            "source_uid": 2,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.0833333333333333,
+            "hits": 1,
+            "kind": "flame_glyph",
+            "phase": "impact",
+            "progress": 0.112612612612613,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1.75,
+      "file": "mage-vfx-residue-flame_glyph.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          994.240478515625,
+          137.012664794922,
+          154.291137695313,
+          183.987335205078
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          629,
+          755,
+          478,
+          570
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.0516666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.208333333333333,
+              "amount": 20,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:1:1.6",
+              "kind": "flame_glyph",
+              "raw": 20,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "enemy",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.986979166666667,
+            "remaining": 0.00833333333333334,
+            "source_uid": 0,
+            "target": "hero"
+          },
+          {
+            "kind": "spark",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.830729166666667,
+            "remaining": 0.108333333333333,
+            "source_uid": 2,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.208333333333333,
+            "hits": 1,
+            "kind": "flame_glyph",
+            "phase": "residue",
+            "progress": 0.281531531531531,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 1.85,
+      "file": "mage-vfx-impact-enemy.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 2,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          952.278503417969,
+          135.075942993164,
+          195.60758972168,
+          185.924057006836
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          18,
+          749,
+          606,
+          576
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0.176666666666667,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.291666666666667,
+              "amount": 20,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:1:1.6",
+              "kind": "flame_glyph",
+              "raw": 20,
+              "target": "enemy"
+            },
+            {
+              "age": 0.0833333333333333,
+              "amount": 6,
+              "armor": 2,
+              "hits": 1,
+              "key": "hero:0:1.8",
+              "kind": "enemy",
+              "raw": 8,
+              "target": "hero"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.663787841797,
+          97.3882141113281
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          245.43327331543,
+          67.2183685302734,
+          204.977462768555,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 3,
+        "motion_state": "recover",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          606,
+          744,
+          462,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "spark",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.9609375,
+            "remaining": 0.025,
+            "source_uid": 2,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.0833333333333333,
+            "hits": 1,
+            "kind": "enemy",
+            "phase": "impact",
+            "progress": 0.173611111111111,
+            "target": "hero"
+          },
+          {
+            "age": 0.291666666666667,
+            "hits": 1,
+            "kind": "flame_glyph",
+            "phase": "residue",
+            "progress": 0.394144144144144,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 2,
+      "file": "mage-vfx-residue-enemy.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "enemy_anchor": [
+          1073,
+          321
+        ],
+        "enemy_frame": 2,
+        "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          952.278503417969,
+          135.075942993164,
+          195.60758972168,
+          185.924057006836
+        ],
+        "enemy_scale": 0.322784810126582,
+        "enemy_source_rect": [
+          18,
+          749,
+          606,
+          576
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.135,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0.0516666666666667,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.416666666666667,
+              "amount": 20,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:1:1.6",
+              "kind": "flame_glyph",
+              "raw": 20,
+              "target": "enemy"
+            },
+            {
+              "age": 0.208333333333333,
+              "amount": 6,
+              "armor": 2,
+              "hits": 1,
+              "key": "hero:0:1.8",
+              "kind": "enemy",
+              "raw": 8,
+              "target": "hero"
+            },
+            {
+              "age": 0.125,
+              "amount": 5,
+              "armor": 0,
+              "hits": 1,
+              "key": "enemy:2:1.9",
+              "kind": "spark",
+              "raw": 5,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          441.537261962891,
+          98.71923828125
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          234.341415405273,
+          67.2183685302734,
+          228.935882568359,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 2,
+        "motion_state": "impact",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "source_rect": [
+          41,
+          739,
+          516,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [],
+        "spell_effects": [
+          {
+            "age": 0.125,
+            "hits": 1,
+            "kind": "spark",
+            "phase": "impact",
+            "progress": 0.260416666666667,
+            "target": "enemy"
+          },
+          {
+            "age": 0.208333333333333,
+            "hits": 1,
+            "kind": "enemy",
+            "phase": "residue",
+            "progress": 0.434027777777778,
+            "target": "hero"
+          },
+          {
+            "age": 0.416666666666667,
+            "hits": 1,
+            "kind": "flame_glyph",
+            "phase": "residue",
+            "progress": 0.563063063063063,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    }
+  ]
+}

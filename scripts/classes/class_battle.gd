@@ -119,7 +119,7 @@ func get_presentation_timing() -> Dictionary:
 		var period: int = int(action.warmup_steps) if initial and int(action.warmup_steps) > 0 else int(action.interval_steps)
 		var remaining := maxf(0, float(int(action.next_step) - _step_index) * STEP)
 		sources[int(action.uid)] = {"remaining": remaining, "progress": clampf(1.0 - remaining / (maxi(1, period) * STEP), 0, 1), "charging": bool(action.charged)}
-	return {"sources": sources, "enemy_remaining": maxf(0, float(_enemy_next_step - _step_index) * STEP)}
+	return {"sources": sources, "enemy_remaining": maxf(0, float(_enemy_next_step - _step_index) * STEP), "substep": _accumulator}
 
 func _step(events: Array[Dictionary]) -> void:
 	for action: Dictionary in _actions:

@@ -13,7 +13,8 @@ var actor_sprite: Sprite2D
 var actor_material: ShaderMaterial
 var enemy_sprite: Sprite2D
 var enemy_material: ShaderMaterial
-var effects_layer: Node2D
+var effects_layer: Control
+var ground_effects_layer: Control
 var playback_speed := 1.0
 var run: RefCounted
 var battle: RefCounted
@@ -26,6 +27,12 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	resized.connect(queue_redraw)
+	ground_effects_layer = Control.new()
+	ground_effects_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ground_effects_layer.clip_contents = true
+	ground_effects_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	ground_effects_layer.draw.connect(_draw_ground_effects)
+	add_child(ground_effects_layer)
 	actor_sprite = Sprite2D.new()
 	actor_sprite.centered = false
 	actor_sprite.region_enabled = true
@@ -42,7 +49,10 @@ func _ready() -> void:
 	enemy_material.shader = actor_material.shader
 	enemy_sprite.material = enemy_material
 	add_child(enemy_sprite)
-	effects_layer = Node2D.new()
+	effects_layer = Control.new()
+	effects_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	effects_layer.clip_contents = true
+	effects_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	effects_layer.draw.connect(_draw_feedback)
 	add_child(effects_layer)
 
@@ -73,6 +83,11 @@ func _process(delta: float) -> void:
 		return
 	if flash > 0 or has_pending_presentation() or (battle != null and battle.phase == "battle"):
 		motion.advance(delta * playback_speed)
+		if motion.state == "idle":
+			for cast: Dictionary in _upcoming_casts():
+				if cast.target == "enemy":
+					motion.prepare_mage_cast(int(cast.source_uid))
+					break
 		feedback.advance(delta * playback_speed)
 		flash = maxf(0.0, flash - delta * playback_speed)
 		queue_redraw()
@@ -85,6 +100,11 @@ func _active_actions() -> Array:
 		var snapshot: Dictionary = battle.get("_config")
 		return snapshot.get("actions", [])
 	return run.get_combat_config().get("actions", [])
+
+func _upcoming_casts() -> Array[Dictionary]:
+	if run == null or run.class_id != "mage" or battle == null or battle.phase != "battle":
+		return []
+	return MageEffects.visible_casts(_active_actions(), battle.get_presentation_timing())
 
 func _hero_id() -> String:
 	if run == null:
@@ -171,7 +191,8 @@ func get_art_layout() -> Dictionary:
 		"enemy_path": enemy_art.get("path", ""), "enemy_source_rect": enemy_source, "enemy_scale": enemy_factor, "enemy_frame": enemy_index, "enemy_anchor": enemy_anchor,
 		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index,
 		"alpha_render_mode": "cutout >=128, opaque interior" if pixel_cutout_enabled else "original alpha comparison",
-		"feedback": feedback.report(), "spell_effects": MageEffects.visible_effects(feedback.numbers) if run != null and run.class_id == "mage" else []}
+		"feedback": feedback.report(), "spell_effects": MageEffects.visible_effects(feedback.numbers) if run != null and run.class_id == "mage" else [],
+		"spell_casts": _upcoming_casts(), "effect_clip_rect": scene}
 
 func get_art_report() -> Dictionary:
 	var layout := get_art_layout()
@@ -243,7 +264,10 @@ func _draw() -> void:
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
-	effects_layer.queue_redraw()
+	for layer: Control in [ground_effects_layer, effects_layer]:
+		layer.position = layout.scene_rect.position
+		layer.size = layout.scene_rect.size
+		layer.queue_redraw()
 
 func _draw_background(layout: Dictionary) -> void:
 	var background: Dictionary = Art.get_asset(layout.background_id)
@@ -321,11 +345,23 @@ func _shadow(position: Vector2, radius: float, tint: Color, opacity := 1.0) -> v
 	draw_set_transform(Vector2.ZERO)
 	draw_line(position - Vector2(radius * 0.65, 0), position + Vector2(radius * 0.65, 0), Color(tint.darkened(0.65), opacity), 1)
 
+func _draw_ground_effects() -> void:
+	if run == null or run.class_id != "mage" or battle == null:
+		return
+	var layout := get_art_layout()
+	ground_effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
+	MageEffects.draw_ground(ground_effects_layer, layout.spell_casts, layout.spell_effects, layout.ground_anchor, layout.enemy_anchor)
+
 func _draw_feedback() -> void:
 	if run == null or battle == null:
 		return
 	var layout := get_art_layout()
+	effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	if run.class_id == "mage":
+		for cast: Dictionary in layout.spell_casts:
+			var from: Vector2 = layout.enemy_anchor - Vector2(0, 100) if cast.target == "hero" else layout.hero_cast_point
+			var to: Vector2 = layout.ground_anchor - Vector2(0, 110) if cast.target == "hero" else layout.enemy_anchor - Vector2(0, 100)
+			MageEffects.draw_cast(effects_layer, cast, from, to)
 		for effect: Dictionary in layout.spell_effects:
 			var hero_point: Vector2 = layout.ground_anchor - Vector2(0, 110) if effect.target == "hero" else layout.hero_cast_point
 			MageEffects.draw_effect(effects_layer, effect, hero_point, layout.enemy_anchor - Vector2(0, 100))
@@ -352,7 +388,7 @@ func _draw_feedback() -> void:
 		point.x = clampf(point.x, 8 + width / 2, size.x - 8 - width / 2)
 		effects_layer.draw_string(font, point - Vector2(width / 2, 0) + Vector2(1, 2), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color(0.03, 0.025, 0.04, color.a))
 		effects_layer.draw_string(font, point - Vector2(width / 2, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20, color)
-	if feedback.enemy_hit > 0:
+	if feedback.enemy_hit > 0 and run.class_id != "mage":
 		var center: Vector2 = layout.enemy_rect.get_center()
 		var radius: float = 10 + (1.0 - feedback.enemy_hit / Feedback.HIT_TIME) * 20
 		effects_layer.draw_arc(center, radius, 0, TAU, 12, Color(1.0, 0.87, 0.65, feedback.enemy_hit / Feedback.HIT_TIME), 2, false)

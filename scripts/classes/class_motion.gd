@@ -30,6 +30,16 @@ func reset() -> void:
 	source_uid = -1
 	last_activation = ""
 
+func prepare_mage_cast(uid: int) -> void:
+	# Visual cue from the read-only upcoming activation, not a combat charge.
+	# Never interrupt an actual impact/recovery to play another source's cue.
+	if state != "idle":
+		return
+	clip = "mage-cast"
+	state = "windup"
+	elapsed = 0.0
+	source_uid = uid
+
 func show_event(event: Dictionary) -> void:
 	var type := str(event.get("type", ""))
 	if type not in ["charge", "spell", "spell_burst", "spell_multi", "attack", "heavy_charge"]:
