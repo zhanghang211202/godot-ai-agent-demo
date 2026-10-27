@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "mode": "built-in image_gen",
+  "prompts": "prompts.json",
+  "classification": "New dedicated enemy animation atlas and inventory icon atlas integrated into the mage-only one-battle slice. Not old concept slices.",
+  "limitations": [
+    "Requested enemy canvas1280x1600 and icons1536x768 were not returned; actual source sizes are recorded.",
+    "Enemy lower-row boundary uses x624 to retain the extended attacking forearm. Icons use 443x443 source regions with 2 right-edge and 1 bottom-edge transparent remainder pixels.",
+    "Original PNGs retain partial alpha and RGB fringe; no controlled logical sprite grid or restricted production palette is claimed. Runtime actor cutout uses the existing shader; source PNGs are unchanged.",
+    "Enemy has idle/anticipation/attack/stagger poses and fade exit; no dedicated death-pose sequence. Stats and enemy behavior remain the existing fixed training rules."
+  ],
+  "files": [
+    {
+      "file": "enemies/moon-sentinel.png",
+      "source_size": [
+        1122,
+        1402
+      ],
+      "bytes": 1689225,
+      "sha256": "379cf8cc6ad201b5e987cb2f40c9dd523f8bf1b138bd0ef85cadbe67d33e586d",
+      "transparent_pixels": 788166,
+      "partial_pixels": 784575,
+      "opaque_pixels": 303,
+      "frames": [
+        {
+          "index": 0,
+          "region": [
+            0,
+            0,
+            561,
+            701
+          ],
+          "alpha_ge_128_bounds": [
+            88,
+            46,
+            462,
+            632
+          ]
+        },
+        {
+          "index": 1,
+          "region": [
+            561,
+            0,
+            561,
+            701
+          ],
+          "alpha_ge_128_bounds": [
+            629,
+            87,
+            446,
+            591
+          ]
+        },
+        {
+          "index": 2,
+          "region": [
+            0,
+            701,
+            624,
+            701
+          ],
+          "alpha_ge_128_bounds": [
+            18,
+            749,
+            606,
+            576
+          ]
+        },
+        {
+          "index": 3,
+          "region": [
+            624,
+            701,
+            498,
+            701
+          ],
+          "alpha_ge_128_bounds": [
+            629,
+            755,
+            478,
+            570
+          ]
+        }
+      ]
+    },
+    {
+      "file": "items/mage-items.png",
+      "source_size": [
+        1774,
+        887
+      ],
+      "bytes": 1055782,
+      "sha256": "f2cb83d3de50aff2c14015b288479cfd01ffac0f506ffdcbd4d2094e5509de12",
+      "transparent_pixels": 1044595,
+      "partial_pixels": 528579,
+      "opaque_pixels": 364,
+      "frames": [
+        {
+          "index": 0,
+          "region": [
+            0,
+            0,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            118,
+            47,
+            239,
+            360
+          ]
+        },
+        {
+          "index": 1,
+          "region": [
+            443,
+            0,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            566,
+            35,
+            207,
+            372
+          ]
+        },
+        {
+          "index": 2,
+          "region": [
+            886,
+            0,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            1000,
+            77,
+            215,
+            314
+          ]
+        },
+        {
+          "index": 3,
+          "region": [
+            1329,
+            0,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            1446,
+            52,
+            210,
+            355
+          ]
+        },
+        {
+          "index": 4,
+          "region": [
+            0,
+            443,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            71,
+            489,
+            317,
+            320
+          ]
+        },
+        {
+          "index": 5,
+          "region": [
+            443,
+            443,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            510,
+            456,
+            312,
+            380
+          ]
+        },
+        {
+          "index": 6,
+          "region": [
+            886,
+            443,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            970,
+            480,
+            277,
+            341
+          ]
+        },
+        {
+          "index": 7,
+          "region": [
+            1329,
+            443,
+            443,
+            443
+          ],
+          "alpha_ge_128_bounds": [
+            1349,
+            546,
+            392,
+            221
+          ]
+        }
+      ]
+    }
+  ]
+}

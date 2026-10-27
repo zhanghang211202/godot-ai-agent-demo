@@ -1,5 +1,7 @@
 # 多职业背包构筑 RPG 文档入口（新标题待定）
 
+**当前先做法师，骑士与C2后置。** 运行`npm run game:mage`游玩法师一战首版：巡卫敌人、八种现有物件图标、三类法术效果、编织预览和实际冷却。[当前计划](mage-first-plan.md) · [实际交付](iteration-mage-trial.md)。下方双职业记录为此前阶段与长期设计。
+
 2026-10-27：`npm run game:classes` 已增加[战斗反馈样板](iteration-c1-feedback.md)：命中/多段/护甲数字、受击闪色与轻晃、胜负淡出、角色alpha过滤。受控源像素和专用受击/退场姿势尚未完成，下述四帧动作是此前阶段记录。
 
 默认 `npm run game` 为 **v0.3森林美术样板（M1-A/B）**。运行 `npm run game:classes` 可玩[C0规则](iteration-c0-rules.md)上的[C1四帧动作样板](iteration-c1-motion.md)：MA施法、KA长剑／重刃，实际事件、暂停与倍速同步，两套背景、地面与真实一战。受击／退场、专用敌人／物件和完整六路线仍待完成；旧森林与存档保持兼容。
@@ -10,6 +12,8 @@
 
 | 文档 | 用途 |
 | --- | --- |
+| [法师优先计划](mage-first-plan.md) | 当前范围、生产顺序与后置内容 |
+| [法师一战首版](iteration-mage-trial.md) | 专用入口、敌人/道具/特效、布局对照、预览与验证 |
 | [C1战斗反馈实际交付](iteration-c1-feedback.md) | 受击/淡出与伤害数字、GPU透明度检查、合法胜负fixture与源图限制 |
 | [C1四帧动作实际交付](iteration-c1-motion.md) | 三组动作、事件时序、暂停倍速、实际GIF与源图限制 |
 | [C1静态美术实际交付](iteration-c1-static-art.md) | 三姿态、两背景、武器对应、实机截图、检查与待修画面问题 |
@@ -31,6 +35,7 @@
 ## 开发过程与博客素材
 
 - [日语开发日志和版本截图](devlog/README.ja.md)
+- [魔法使い一人へ絞った一戦（日语）](devlog/2026-10-27-mage-trial.ja.md)
 - [実際の命中を読める画面へ（日语）](devlog/2026-10-27-c1-feedback.ja.md)
 - [施法・長剣・重刃の四コマを実戦へ（日语）](devlog/2026-10-26-c1-motion.ja.md)
 - [双职业静态美术接入与修正（日语）](devlog/2026-10-26-c1-static-art.ja.md)

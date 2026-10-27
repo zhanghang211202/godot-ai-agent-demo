@@ -1,12 +1,24 @@
-# 星火旅囊 · Emberpack
+# 月庭法师试炼（开发样板，正式标题待定）
 
-一个可玩的 Godot 像素背包合成 RPG Demo。参考《靠装勇者》的构筑循环，使用原创世界、美术和界面。当前为 **0.3 美术样板**，沿用 v0.2 的 12 装备、5 配方、7 祝福与五战规则。
+当前集中开发**法师、敌人、特效、道具与元素编织玩法**，骑士和C2后置。法师一战首版已接入月庭巡卫四姿势、八种现有物件图标、微光/焰爆/潮汐效果、非消耗编织预览、方向协同数值与实际冷却/来源高亮。
+
+```powershell
+npm run game:mage
+```
+
+![实际Godot法师一战：正常有限元素取得、编织和对抗巡卫，固定16FPS录制并缩小；无声六秒](docs/devlog/screenshots/mage-trial-v1/mage-battle.gif)
+
+玩法：火元素叠到微光术式编织焰爆；水与风叠放成潮汐连枪。把聚能晶核移到潮汐左侧，可让三段都受支援。预览显示真实产物占格、伤害与协同，确认前不扣元素。R旋转，空格开战，结算后恢复战前调整。同资源固定配置对照：晶核支援焰爆8.60秒获胜，向下挪一格支援潮汐7.60秒获胜；这只是当前固定敌人的对照，不是一般平衡结论。
+
+法师入口使用独立`user://mage-trial-run.json`，沿用已验证的准备检查点格式。[操作、范围与限制](docs/iteration-mage-trial.md) · [当前计划](docs/mage-first-plan.md) · [日语记录](docs/devlog/2026-10-27-mage-trial.ja.md)。这是固定一战的可玩首版，尚未加入新配方、敌人机制、五战或新流派。
+
+下文保留旧森林与双职业实验资料。`npm run game`仍启动v0.3森林样板，`npm run game:classes`保留原职业实验入口；旧12装备/5配方/7祝福/5战与存档兼容。
 
 **2026-10-27：四帧动作之上新增战斗反馈。** 实际命中数字、三段法术合并提示、护甲抵挡、受击闪色/轻晃、胜负淡出已接入，暂停与1×／2×同步。独立角色Shader过滤低透明杂边，原PNG不改；源像素密度、人体/武器一致性和专用受击/退场姿势仍待整理。[本轮反馈与检查](docs/iteration-c1-feedback.md)；[此前四帧动作](docs/iteration-c1-motion.md)及[静态接入](docs/iteration-c1-static-art.md)保留。
 
-![实际Godot法师fixture：有限资源编织、真实命中提示、训练木靶淡出；无声六秒](docs/devlog/screenshots/c1-feedback-v1/mage-feedback.gif)
+[此前法师木靶反馈片段](docs/devlog/screenshots/c1-feedback-v1/mage-feedback.gif)
 
-![实际Godot重刃fixture：命中、受击与胜利淡出；木靶和文字物件仍占位，无声六秒](docs/devlog/screenshots/c1-feedback-v1/heavy-feedback.gif)
+[此前骑士反馈片段（新增骑士工作已后置）](docs/devlog/screenshots/c1-feedback-v1/heavy-feedback.gif)
 
 **2026-10-24：可玩的 C0 双职业规则实验。** 运行：
 
