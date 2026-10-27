@@ -15,7 +15,7 @@ var source_uid := -1
 var last_activation := ""
 
 static func clip_for_kind(kind: String) -> String:
-	if kind in ["spark", "flame_glyph", "tide_lances"]:
+	if kind in ["spark", "flame_glyph", "tide_lances", "frost_bolt", "gale_blades", "steam_burst", "ember_tornado"]:
 		return "mage-cast"
 	if kind == "iron_blade":
 		return "knight-sword"

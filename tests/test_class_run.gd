@@ -79,7 +79,7 @@ func _test_spell_recipes() -> void:
 	var run: RefCounted = _new()
 	check(run.get_merge_result({"kind": "fire_mote"}, {"kind": "spark"}) == "flame_glyph", "Fire and basic structure form burst spell")
 	check(run.get_merge_result({"kind": "spark"}, {"kind": "fire_mote"}) == "flame_glyph", "Recipe direction is symmetric")
-	check(run.get_merge_result({"kind": "fire_mote"}, {"kind": "water_mote"}).is_empty(), "Unlisted combination creates no free output")
+	check(run.get_merge_result({"kind": "fire_mote"}, {"kind": "fire_mote"}).is_empty(), "Unlisted same-element combination creates no free output")
 	check(run.acquire(0, Vector2i.ZERO)["event"] == "merge", "Element source may weave directly onto starter spell")
 	check(run.item_by_uid(1)["kind"] == "flame_glyph" and run.items.size() == 4, "Direct weave replaces target and consumes source exactly once")
 	check(run._next_uid == 6 and run.sources[0]["remaining"] == 1, "Direct weave records acquisition even when retaining target UID")

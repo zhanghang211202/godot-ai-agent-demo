@@ -6,8 +6,12 @@ const Art = preload("res://scripts/classes/mage_spell_art.gd")
 const LIFE := 0.74
 const WINDUP := 0.64
 const FLIGHT := 0.24
-const COLORS := {"spark": Color("bc9cff"), "flame_glyph": Color("ff964e"), "tide_lances": Color("70d9fa"), "enemy": Color("81e2ff")}
-const DURATIONS := {"spark": 0.48, "flame_glyph": LIFE, "tide_lances": 0.64, "enemy": 0.48}
+const COLORS := {"spark": Color("bc9cff"), "flame_glyph": Color("ff964e"), "tide_lances": Color("70d9fa"), "enemy": Color("81e2ff"),
+	"frost_bolt": Color("b9eaff"), "gale_blades": Color("a4e9c2"), "steam_burst": Color("e7dcca"), "ember_tornado": Color("ffb061"),
+	"moth_bolt": Color("c5acff"), "thorn_crash": Color("9bdb95")}
+const ENEMY_KINDS := ["enemy", "moth_bolt", "thorn_crash"]
+const DURATIONS := {"spark": 0.48, "flame_glyph": LIFE, "tide_lances": 0.64, "enemy": 0.48,
+	"frost_bolt": 0.62, "gale_blades": 0.68, "steam_burst": 0.78, "ember_tornado": 0.82, "moth_bolt": 0.52, "thorn_crash": 0.70}
 const MAX_EFFECTS := 8
 const MAX_CASTS := 6
 
@@ -31,7 +35,7 @@ static func visible_casts(actions: Array, timing: Dictionary) -> Array[Dictionar
 	for action: Dictionary in actions:
 		var kind := str(action.get("kind", ""))
 		var uid := int(action.get("uid", -1))
-		if kind == "enemy" or not COLORS.has(kind) or not timing.get("sources", {}).has(uid):
+		if kind in ENEMY_KINDS or not COLORS.has(kind) or not timing.get("sources", {}).has(uid):
 			continue
 		var remaining := float(timing.sources[uid].remaining) - float(timing.get("substep", 0.0))
 		if remaining <= 0 or remaining > WINDUP:
@@ -40,9 +44,10 @@ static func visible_casts(actions: Array, timing: Dictionary) -> Array[Dictionar
 			"progress": 1.0 - remaining / WINDUP, "phase": "flight" if remaining <= FLIGHT else "gather",
 			"planned_hits": int(action.get("hits", 1))})
 	var incoming := float(timing.get("enemy_remaining", 999)) - float(timing.get("substep", 0.0))
-	if incoming > 0 and incoming <= WINDUP:
-		casts.append({"kind": "enemy", "target": "hero", "source_uid": 0, "remaining": incoming,
-			"progress": 1.0 - incoming / WINDUP, "phase": "flight" if incoming <= FLIGHT else "gather", "planned_hits": 1})
+	var enemy_windup := float(timing.get("enemy_windup", WINDUP))
+	if incoming > 0 and incoming <= enemy_windup:
+		casts.append({"kind": str(timing.get("enemy_kind", "enemy")), "target": "hero", "source_uid": 0, "remaining": incoming,
+			"progress": 1.0 - incoming / enemy_windup, "phase": "flight" if incoming <= FLIGHT else "gather", "planned_hits": int(timing.get("enemy_hits", 1))})
 	# Keep imminent attacks when many legal sources charge together.
 	casts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.remaining < b.remaining)
 	if casts.size() > MAX_CASTS:
@@ -75,7 +80,7 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 	if remaining > FLIGHT:
 		return
 	var flight := clampf(1.0 - remaining / FLIGHT, 0, 1)
-	var count := clampi(int(cast.planned_hits), 1, 3) if kind == "tide_lances" else 1
+	var count := clampi(int(cast.planned_hits), 1, 3) if kind in ["tide_lances", "gale_blades", "moth_bolt"] else 1
 	for index in range(count):
 		var offset := (index - (count - 1) * 0.5) * 22
 		var tip := trajectory(from, to + Vector2(0, offset), flight, kind, index)
@@ -87,6 +92,26 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 		elif kind == "spark":
 			pixel_sprite(canvas, "comet", tip - Vector2(22, 0), 2, 1.0)
 			star(canvas, tip, 10, Color("fff3ff"))
+		elif kind == "frost_bolt":
+			pixel_sprite(canvas, "lance", tip - Vector2(34, 0), 3, 1.0)
+			seal(canvas, tip, Vector2(15, 10), flight, Color(color, 0.8), 6)
+		elif kind == "gale_blades":
+			pixel_sprite(canvas, "crescent", tip, 2, 1.0)
+			canvas.draw_polyline(arc_points(tip, Vector2(30, 16), flight * 4 + index, 4.5, 14), Color(color, 0.8), 2, false)
+		elif kind == "steam_burst":
+			pixel_sprite(canvas, "steam", tip, 2, 1.0)
+			star(canvas, tip, 8, Color("ffe2a2"))
+		elif kind == "ember_tornado":
+			vortex(canvas, tip, flight, 1.0, 4)
+		elif kind == "moth_bolt":
+			diamond(canvas, tip, 12, Color("7453b0"))
+			seal(canvas, tip, Vector2.ONE * 10, progress, Color("dfd4ff"), 8)
+			star(canvas, tip, 6, Color("fff4ff"))
+		elif kind == "thorn_crash":
+			for spike in range(3):
+				var at := tip + Vector2((spike - 1) * 13, (spike % 2) * 10)
+				diamond(canvas, at, 12, Color("35634a"))
+				diamond(canvas, at, 7, color)
 		else:
 			diamond(canvas, tip, 12, Color("245a99"))
 			diamond(canvas, tip, 8, color)
@@ -125,7 +150,9 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, hero: Vector2, e
 	if progress < 0.24:
 		var sign_x := -1 if effect.target == "hero" else 1
 		canvas.draw_line(snap(at - Vector2(sign_x * 90, 0)), snap(at), Color(color, (1.0 - progress / 0.24) * 0.6), 3, false)
-	if kind == "flame_glyph":
+	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "moth_bolt", "thorn_crash"]:
+		expansion_impact(canvas, effect, at)
+	elif kind == "flame_glyph":
 		flame_impact(canvas, at, progress)
 	elif kind == "tide_lances":
 		# Impacts use the emitted segments, including a lethal one-hit truncation.
@@ -179,6 +206,60 @@ static func flame_impact(canvas: CanvasItem, at: Vector2, progress: float) -> vo
 			var point := at + Vector2((index - 2.5) * 17, -progress * 76 + (index % 3) * 12)
 			diamond(canvas, point, 5, Color("644b70", fade * 0.5))
 			diamond(canvas, point - Vector2(0, 4), 2, Color("ffc86a", fade))
+
+static func expansion_impact(canvas: CanvasItem, effect: Dictionary, at: Vector2) -> void:
+	var kind: String = effect.kind
+	var progress := float(effect.progress)
+	var fade := 1.0 - progress
+	var color: Color = COLORS[kind]
+	var hits := clampi(int(effect.hits), 1, 4)
+	if kind == "frost_bolt":
+		pixel_sprite(canvas, "lance", at - Vector2(18, 0), 3, maxf(0, 1 - progress * 4))
+		seal(canvas, at, Vector2.ONE * (16 + progress * 42), PI / 6, Color(color, fade), 6)
+		for index in range(10):
+			pixel_sprite(canvas, "shard", at + Vector2.from_angle(index * TAU / 10) * (8 + progress * 62) + Vector2(0, progress * progress * 28), 1, fade)
+	elif kind == "gale_blades":
+		for hit in range(hits):
+			var angle := progress * 5 + hit * PI
+			canvas.draw_polyline(arc_points(at, Vector2(16 + progress * 48, 37 + progress * 18), angle, 4.2, 22), Color(color, fade), 4, false)
+			pixel_sprite(canvas, "crescent", at + Vector2.from_angle(angle) * (15 + progress * 40), 2, fade)
+	elif kind == "steam_burst":
+		for index in range(5):
+			var angle := index * TAU / 5
+			var point := at + Vector2.from_angle(angle) * (10 + progress * 42) - Vector2(0, progress * 34)
+			pixel_sprite(canvas, "steam", point, 2 if progress < 0.35 else 3, fade * 0.85)
+		seal(canvas, at, Vector2(22 + progress * 64, 15 + progress * 50), progress, Color("f6d5a0", fade), 12)
+		star(canvas, at, maxf(2, 28 * (1.0 - progress * 3)), Color("fff2cd", fade))
+	elif kind == "ember_tornado":
+		vortex(canvas, at, progress, fade, hits)
+	elif kind == "moth_bolt":
+		for hit in range(hits):
+			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)
+			seal(canvas, point, Vector2.ONE * (11 + progress * 38), progress * 1.2, Color(color, fade), 8)
+			star(canvas, point, 20 * fade, Color("eee4ff", fade))
+	else:
+		for index in range(7):
+			var point := at + Vector2((index - 3) * (8 + progress * 9), progress * progress * 45 - (index % 3) * 8)
+			diamond(canvas, point, 11 * fade + 3, Color("385744", fade))
+			diamond(canvas, point - Vector2(0, 3), 6 * fade + 2, Color(color, fade))
+		seal(canvas, at, Vector2(18 + progress * 62, 10 + progress * 33), 0, Color(color, fade), 10)
+
+static func vortex(canvas: CanvasItem, at: Vector2, progress: float, alpha: float, bands: int) -> void:
+	for band in range(clampi(bands, 1, 4)):
+		var radius := Vector2(21 + band * 9, 8 + band * 3)
+		var center := at + Vector2(0, 24 - band * 18)
+		var angle := progress * 8 + band * 1.5
+		canvas.draw_polyline(arc_points(center, radius, angle, 5.4, 20), Color("568e79", alpha), 6, false)
+		canvas.draw_polyline(arc_points(center - Vector2(0, 3), radius, angle + 0.5, 4.5, 20), Color("ffd08a", alpha), 3, false)
+		var flame := center + Vector2(cos(angle), sin(angle)) * radius
+		pixel_sprite(canvas, "flame", flame, 1, alpha, int(progress * 20) + band)
+
+static func arc_points(center: Vector2, radius: Vector2, angle: float, span: float, segments: int) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for index in range(segments + 1):
+		var phase := angle + span * float(index) / segments
+		points.append(snap(center + Vector2(cos(phase), sin(phase)) * radius))
+	return points
 
 static func seal(canvas: CanvasItem, point: Vector2, radius: Vector2, rotation: float, color: Color, segments: int) -> void:
 	var points := PackedVector2Array()

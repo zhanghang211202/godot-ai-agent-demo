@@ -1,0 +1,629 @@
+{
+  "type": "derived_runtime_capture_report",
+  "source_report_sha256": "6fc6bc69e68a7100838e3c016d22e78924db80935c3184bed4cef99df844a1eb",
+  "note": "Selected fields and published feedback samples from an actual native fixture; not the complete original report.",
+  "class_id": "mage",
+  "variant": "built",
+  "build": "steam_tornado",
+  "encounter_id": "thorn_golem",
+  "ward_equipped": true,
+  "rules_version": 1,
+  "viewport": [
+    1920,
+    1080
+  ],
+  "persistence_enabled": false,
+  "actions": [
+    {
+      "operation": "discard",
+      "result": {
+        "event": "discard",
+        "message": "已舍弃；不会退款或返还元素。",
+        "ok": true
+      },
+      "uid": 1
+    },
+    {
+      "operation": "discard",
+      "result": {
+        "event": "discard",
+        "message": "已舍弃；不会退款或返还元素。",
+        "ok": true
+      },
+      "uid": 2
+    },
+    {
+      "cell": [
+        3,
+        1
+      ],
+      "result": {
+        "cost": 0,
+        "event": "acquire",
+        "kind": "fire_mote",
+        "message": "已放置：火元素",
+        "ok": true,
+        "source_id": "observatory_fire",
+        "uid": 5
+      },
+      "source_index": 0
+    },
+    {
+      "cell": [
+        3,
+        1
+      ],
+      "result": {
+        "cost": 0,
+        "event": "merge",
+        "kind": "steam_burst",
+        "message": "合成完成：蒸汽爆破",
+        "ok": true,
+        "source_id": "observatory_water",
+        "uid": 5
+      },
+      "source_index": 1
+    },
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "result": {
+        "cost": 0,
+        "event": "acquire",
+        "kind": "fire_mote",
+        "message": "已放置：火元素",
+        "ok": true,
+        "source_id": "observatory_fire",
+        "uid": 7
+      },
+      "source_index": 0
+    },
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "result": {
+        "cost": 0,
+        "event": "merge",
+        "kind": "ember_tornado",
+        "message": "合成完成：焰风涡旋",
+        "ok": true,
+        "source_id": "observatory_wind",
+        "uid": 7
+      },
+      "source_index": 2
+    }
+  ],
+  "remaining_sources": [
+    {
+      "cost": 0,
+      "id": "observatory_fire",
+      "kind": "fire_mote",
+      "remaining": 0
+    },
+    {
+      "cost": 0,
+      "id": "observatory_water",
+      "kind": "water_mote",
+      "remaining": 1
+    },
+    {
+      "cost": 0,
+      "id": "observatory_wind",
+      "kind": "wind_mote",
+      "remaining": 1
+    }
+  ],
+  "gold_after_acquisition": 0,
+  "summary": {
+    "armor_mitigated": 6,
+    "by_source": [
+      {
+        "activations": 4,
+        "damage": 92,
+        "hits": 4,
+        "kind": "steam_burst",
+        "name": "蒸汽爆破",
+        "raw_damage": 96,
+        "uid": 5
+      },
+      {
+        "activations": 4,
+        "damage": 128,
+        "hits": 16,
+        "kind": "ember_tornado",
+        "name": "焰风涡旋",
+        "raw_damage": 128,
+        "uid": 7
+      }
+    ],
+    "class_id": "mage",
+    "damage_dealt": 220,
+    "damage_taken": 48,
+    "duration": 12.1,
+    "enemy_attacks": 3,
+    "enemy_hp": 0,
+    "enemy_max_hp": 220,
+    "event_count": 33,
+    "hp": 36,
+    "initial_hp": 84,
+    "max_hp": 84,
+    "overkill_damage_dealt": 4,
+    "overkill_damage_taken": 0,
+    "raw_damage_dealt": 224,
+    "raw_damage_taken": 54,
+    "result": "won",
+    "rules_version": 1
+  },
+  "visuals": {
+    "alpha_render_mode": "cutout >=128, opaque interior",
+    "alpha_threshold": 128,
+    "animated": true,
+    "assets_ready": true,
+    "background_id": "moon-court",
+    "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+    "background_source_rect": [
+      0,
+      424.057159423828,
+      2172,
+      299.942840576172
+    ],
+    "background_source_size": [
+      2172,
+      724
+    ],
+    "class_id": "mage",
+    "effect_clip_rect": [
+      1,
+      61,
+      1890,
+      261
+    ],
+    "encounter_id": "thorn_golem",
+    "enemy_anchor": [
+      1438,
+      321
+    ],
+    "enemy_cast_point": [
+      1464.68615722656,
+      227.034484863281
+    ],
+    "enemy_frame": 3,
+    "enemy_path": "res://assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+    "enemy_placeholder": false,
+    "enemy_rect": [
+      1338.39660644531,
+      136.075866699219,
+      199.582748413086,
+      184.924133300781
+    ],
+    "enemy_scale": 0.375862068965517,
+    "enemy_source_rect": [
+      684,
+      705,
+      531,
+      492
+    ],
+    "feedback": {
+      "active": false,
+      "enemy_exit_elapsed": 0.7,
+      "enemy_hit_remaining": 0,
+      "enemy_opacity": 0,
+      "hero_exit_elapsed": -1,
+      "hero_hit_remaining": 0,
+      "hero_opacity": 1,
+      "numbers": [],
+      "outcome": "won"
+    },
+    "ground_anchor": [
+      492,
+      321
+    ],
+    "ground_y": 321,
+    "health_rects": [
+      [
+        16,
+        12,
+        567.599975585938,
+        8
+      ],
+      [
+        1308.40002441406,
+        12,
+        567.599975585938,
+        8
+      ]
+    ],
+    "hero_cast_point": [
+      556.332763671875,
+      93.8388214111328
+    ],
+    "hero_id": "mage-idle",
+    "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+    "hero_rect": [
+      374.426330566406,
+      65,
+      203.646453857422,
+      256
+    ],
+    "hero_visible": true,
+    "missing_assets": [],
+    "motion_clip": "mage-cast",
+    "motion_frame": 0,
+    "motion_state": "idle",
+    "phase_rect": [
+      624.359985351563,
+      8,
+      643.280029296875,
+      43
+    ],
+    "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+    "scene_rect": [
+      1,
+      61,
+      1890,
+      261
+    ],
+    "shields": [],
+    "source_rect": [
+      42,
+      70,
+      459,
+      577
+    ],
+    "source_scale": [
+      0.443674176931381,
+      0.443674176931381
+    ],
+    "source_scale_is_integer": false,
+    "source_size": [
+      1122,
+      1402
+    ],
+    "spell_casts": [],
+    "spell_effects": [],
+    "stage_rect": [
+      0,
+      0,
+      1892,
+      350
+    ]
+  },
+  "feedback_samples": [
+    {
+      "battle_time": 1.25,
+      "file": "mage-vfx-impact-ember_tornado.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          424.057159423828,
+          2172,
+          299.942840576172
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1890,
+          261
+        ],
+        "encounter_id": "thorn_golem",
+        "enemy_anchor": [
+          1438,
+          321
+        ],
+        "enemy_cast_point": [
+          1464.68615722656,
+          227.034484863281
+        ],
+        "enemy_frame": 3,
+        "enemy_path": "res://assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          1338.39660644531,
+          136.075866699219,
+          199.582748413086,
+          184.924133300781
+        ],
+        "enemy_scale": 0.375862068965517,
+        "enemy_source_rect": [
+          684,
+          705,
+          531,
+          492
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0.176666666666667,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.0833333333333333,
+              "amount": 32,
+              "armor": 0,
+              "hits": 4,
+              "key": "enemy:7:1.2",
+              "kind": "ember_tornado",
+              "raw": 32,
+              "target": "enemy"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          492,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            567.599975585938,
+            8
+          ],
+          [
+            1308.40002441406,
+            12,
+            567.599975585938,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          566.537231445313,
+          98.71923828125
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          359.341430664063,
+          67.2183685302734,
+          228.935882568359,
+          253.781631469727
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 2,
+        "motion_state": "impact",
+        "phase_rect": [
+          624.359985351563,
+          8,
+          643.280029296875,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1890,
+          261
+        ],
+        "shields": [],
+        "source_rect": [
+          41,
+          739,
+          516,
+          572
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [],
+        "spell_effects": [
+          {
+            "age": 0.0833333333333333,
+            "hits": 4,
+            "kind": "ember_tornado",
+            "phase": "impact",
+            "progress": 0.101626016260163,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1892,
+          350
+        ]
+      }
+    },
+    {
+      "battle_time": 3.4,
+      "file": "mage-ward-hit.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          424.057159423828,
+          2172,
+          299.942840576172
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1890,
+          261
+        ],
+        "encounter_id": "thorn_golem",
+        "enemy_anchor": [
+          1438,
+          321
+        ],
+        "enemy_cast_point": [
+          1407.55517578125,
+          230.417236328125
+        ],
+        "enemy_frame": 2,
+        "enemy_path": "res://assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          1321.85864257813,
+          158.251724243164,
+          232.282760620117,
+          162.748275756836
+        ],
+        "enemy_scale": 0.375862068965517,
+        "enemy_source_rect": [
+          43,
+          759,
+          618,
+          433
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0.218333333333333,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.0416666666666667,
+              "amount": 16,
+              "armor": 2,
+              "hits": 1,
+              "key": "hero:0:3.4",
+              "kind": "thorn_crash",
+              "raw": 18,
+              "target": "hero"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          492,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            567.599975585938,
+            8
+          ],
+          [
+            1308.40002441406,
+            12,
+            567.599975585938,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          557.220092773438,
+          102.268630981445
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          365.109191894531,
+          70.7677612304688,
+          210.301559448242,
+          250.232238769531
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 1,
+        "motion_state": "windup",
+        "phase_rect": [
+          624.359985351563,
+          8,
+          643.280029296875,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1890,
+          261
+        ],
+        "shields": [
+          {
+            "absorbed": 2,
+            "hits": 1,
+            "progress": 0.0905797101449275
+          }
+        ],
+        "source_rect": [
+          593,
+          84,
+          474,
+          564
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "ember_tornado",
+            "phase": "gather",
+            "planned_hits": 4,
+            "progress": 0.0885416666666664,
+            "remaining": 0.583333333333333,
+            "source_uid": 7,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.0416666666666667,
+            "hits": 1,
+            "kind": "thorn_crash",
+            "phase": "impact",
+            "progress": 0.0595238095238095,
+            "target": "hero"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1892,
+          350
+        ]
+      }
+    }
+  ]
+}

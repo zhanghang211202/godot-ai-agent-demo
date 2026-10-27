@@ -3,6 +3,7 @@ extends RefCounted
 ## Time is quantized upward to 50 ms. Hero actions resolve in input order,
 ## before an enemy attack on the same step. The first lethal hit ends the battle.
 
+const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const STEP := 0.05
 const TIME_LIMIT := 90.0
 const MAX_STEPS := 1800
@@ -36,12 +37,19 @@ var _enemy_next_step: int = ENEMY_INTERVAL_STEPS
 var _accumulator: float = 0.0
 var _result: String = "idle"
 var _armor: int = 0
+var encounter_id := "sentinel"
+var _enemy_definition: Dictionary = Encounters.definition("sentinel")
 
-func start(config: Dictionary) -> Dictionary:
+func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dictionary:
 	# Validate and copy before modifying any running battle, including its timers.
 	var error := _validate(config)
 	if not error.is_empty():
 		return {"ok": false, "message": error}
+	var enemy := Encounters.definition(selected_encounter)
+	if enemy.is_empty() or (config.class_id != "mage" and selected_encounter != "sentinel"):
+		return {"ok": false, "message": "当前职业不能挑战这个敌人。"}
+	encounter_id = selected_encounter
+	_enemy_definition = enemy
 	_config = config.duplicate(true)
 	_actions.clear()
 	_by_source.clear()
@@ -49,7 +57,7 @@ func start(config: Dictionary) -> Dictionary:
 	_initial_events.clear()
 	_event_id = 0
 	_step_index = 0
-	_enemy_next_step = ENEMY_INTERVAL_STEPS
+	_enemy_next_step = _steps(float(enemy.interval))
 	_accumulator = 0.0
 	battle_time = 0.0
 	battle_duration = 0.0
@@ -59,9 +67,9 @@ func start(config: Dictionary) -> Dictionary:
 	hp = int(_config["hp"])
 	max_hp = int(_config["max_hp"])
 	_armor = int(_config["armor"])
-	enemy_hp = ENEMY_HP
-	enemy_max_hp = ENEMY_HP
-	enemy_name = ENEMY_NAME
+	enemy_hp = int(enemy.hp)
+	enemy_max_hp = int(enemy.hp)
+	enemy_name = ENEMY_NAME if selected_encounter == "sentinel" else str(enemy.name)
 	_stats = ZERO_STATS.duplicate(true)
 	for source: Dictionary in _config["actions"]:
 		var action: Dictionary = source.duplicate(true)
@@ -119,7 +127,11 @@ func get_presentation_timing() -> Dictionary:
 		var period: int = int(action.warmup_steps) if initial and int(action.warmup_steps) > 0 else int(action.interval_steps)
 		var remaining := maxf(0, float(int(action.next_step) - _step_index) * STEP)
 		sources[int(action.uid)] = {"remaining": remaining, "progress": clampf(1.0 - remaining / (maxi(1, period) * STEP), 0, 1), "charging": bool(action.charged)}
-	return {"sources": sources, "enemy_remaining": maxf(0, float(_enemy_next_step - _step_index) * STEP), "substep": _accumulator}
+	return {"sources": sources, "enemy_remaining": maxf(0, float(_enemy_next_step - _step_index) * STEP), "substep": _accumulator,
+		"enemy_kind": _enemy_definition.effect, "enemy_windup": _enemy_definition.windup, "enemy_hits": _enemy_definition.hits}
+
+func get_encounter() -> Dictionary:
+	return _enemy_definition.duplicate(true)
 
 func _step(events: Array[Dictionary]) -> void:
 	for action: Dictionary in _actions:
@@ -154,23 +166,28 @@ func _step(events: Array[Dictionary]) -> void:
 			action["charged"] = true
 			events.append(_event("charge", action, 0, "enemy"))
 	if _step_index >= _enemy_next_step:
-		_enemy_next_step += ENEMY_INTERVAL_STEPS
-		var mitigated := mini(_armor, ENEMY_ATTACK - 1)
-		var after_armor := ENEMY_ATTACK - mitigated
-		var effective := mini(hp, after_armor)
-		hp -= effective
-		_stats["raw_damage_taken"] += ENEMY_ATTACK
-		_stats["damage_taken"] += effective
-		_stats["armor_mitigated"] += mitigated
-		_stats["overkill_damage_taken"] += after_armor - effective
-		_stats["enemy_attacks"] += 1
-		var event := _event("enemy_attack", {}, effective, "hero")
-		event["raw_amount"] = ENEMY_ATTACK
-		event["armor_mitigated"] = mitigated
-		events.append(event)
-		if hp <= 0:
-			_finish("lost", events)
-			return
+		_enemy_next_step += _steps(float(_enemy_definition.interval))
+		for hit in range(1, int(_enemy_definition.hits) + 1):
+			var raw := int(_enemy_definition.damage)
+			var mitigated := mini(_armor, raw - 1)
+			var after_armor := raw - mitigated
+			var effective := mini(hp, after_armor)
+			hp -= effective
+			_stats["raw_damage_taken"] += raw
+			_stats["damage_taken"] += effective
+			_stats["armor_mitigated"] += mitigated
+			_stats["overkill_damage_taken"] += after_armor - effective
+			_stats["enemy_attacks"] += 1
+			var source: Dictionary = {} if encounter_id == "sentinel" else {"kind": _enemy_definition.effect}
+			var event := _event("enemy_attack", source, effective, "hero")
+			event["raw_amount"] = raw
+			event["armor_mitigated"] = mitigated
+			if encounter_id != "sentinel":
+				event["hit_index"] = hit
+			events.append(event)
+			if hp <= 0:
+				_finish("lost", events)
+				return
 	if _step_index >= MAX_STEPS:
 		_finish("timeout", events)
 

@@ -1,0 +1,15 @@
+{
+  "profile": "approved-golem",
+  "frames": 144,
+  "seconds": 6,
+  "dimensions": [
+    1056,
+    262
+  ],
+  "bytes": 2212480,
+  "source_start": 72,
+  "source_end_exclusive": 216,
+  "composited_pixels_verified": 39840768,
+  "changed_pixels": 2712943,
+  "errors": []
+}

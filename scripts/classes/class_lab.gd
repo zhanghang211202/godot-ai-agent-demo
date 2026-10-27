@@ -8,6 +8,7 @@ const Save = preload("res://scripts/classes/class_save.gd")
 const GridView = preload("res://scripts/classes/class_grid.gd")
 const ArenaView = preload("res://scripts/classes/class_arena.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
+const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 
 @export var mage_focus := false
 
@@ -38,6 +39,8 @@ var preview_label: Label
 var detail_icon: TextureRect
 var details_scroll: ScrollContainer
 var speed := 1.0
+var encounter_id := "sentinel"
+var encounter_selector: OptionButton
 var persistence_enabled := true
 @export var checkpoint_path := Save.DEFAULT_PATH
 var _capture_directory := ""
@@ -48,6 +51,8 @@ var _capture_prepare_only := false
 var _capture_sword := false
 var _capture_loss := false
 var _capture_tide_focus := false
+var _capture_build := "baseline"
+var _capture_no_ward := false
 var _original_alpha_comparison := false
 var _ready_frames := 0
 var _last_phase := "idle"
@@ -71,6 +76,14 @@ func _ready() -> void:
 			_capture_loss = true
 		elif argument == "--capture-tide-focus":
 			_capture_tide_focus = true
+		elif argument == "--capture-no-ward":
+			_capture_no_ward = true
+		elif argument.begins_with("--capture-build="):
+			_capture_build = argument.trim_prefix("--capture-build=")
+		elif argument.begins_with("--encounter="):
+			var selected := argument.trim_prefix("--encounter=")
+			if selected in Encounters.IDS:
+				encounter_id = selected
 		elif argument == "--compare-original-alpha":
 			_original_alpha_comparison = true
 	_build_interface()
@@ -108,6 +121,13 @@ func _build_interface() -> void:
 	var heading := _label("月庭法师试炼" if mage_focus else "职业构筑试炼", 25)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
+	if mage_focus:
+		encounter_selector = OptionButton.new()
+		encounter_selector.custom_minimum_size = Vector2(205, 42)
+		for id in Encounters.IDS:
+			encounter_selector.add_item(str(Encounters.definition(id).name))
+		encounter_selector.item_selected.connect(func(index: int): _select_encounter(Encounters.IDS[index]))
+		header.add_child(encounter_selector)
 	for id in Catalog.CLASS_IDS:
 		if mage_focus and id != "mage":
 			continue
@@ -116,7 +136,7 @@ func _build_interface() -> void:
 			b.text = "重新开始法师试炼"
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("吸收元素 → 编织法术 → 连接晶核 → 挑战月庭巡卫" if mage_focus else "C1 战斗反馈样板 · 命中数字 / 护甲 / 受击 / 淡出 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
+	var notice := _label("吸收元素 → 六种编织配方 → 连接晶核 / 保留法盾 → 选择敌人" if mage_focus else "C1 战斗反馈样板 · 命中数字 / 护甲 / 受击 / 淡出 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
@@ -293,6 +313,15 @@ func _select_source(index: int) -> void:
 	_sync()
 	grid.update_preview()
 
+func _select_encounter(id: String) -> void:
+	if not mage_focus or run.phase != "prepare" or id not in Encounters.IDS:
+		return
+	encounter_id = id
+	arena.encounter_id = id
+	arena.reset_presentation()
+	_notice(str(Encounters.definition(id).hint))
+	_sync()
+
 func _source_drag(index: int, _at: Vector2) -> Variant:
 	if run.phase != "prepare" or int(run.sources[index].remaining) <= 0:
 		return null
@@ -402,7 +431,7 @@ func _start_battle() -> void:
 	var config: Dictionary = run.get_combat_config()
 	# Validate a separate engine before persisting or changing the preparation state.
 	var candidate = BattleRules.new()
-	var result: Dictionary = candidate.start(config)
+	var result: Dictionary = candidate.start(config, encounter_id if mage_focus else "sentinel")
 	if not result.ok:
 		_notice(str(result.message))
 		return
@@ -453,6 +482,11 @@ func _notice(message: String) -> void:
 
 func _sync() -> void:
 	arena.playback_speed = speed
+	arena.encounter_id = encounter_id if mage_focus else "sentinel"
+	if encounter_selector != null:
+		encounter_selector.select(Encounters.IDS.find(encounter_id))
+		encounter_selector.disabled = run.phase != "prepare"
+		encounter_selector.tooltip_text = str(Encounters.definition(encounter_id).hint)
 	grid.battle = battle
 	grid.playback_speed = speed
 	var info: Dictionary = Catalog.class_info(run.class_id)
@@ -483,7 +517,9 @@ func _sync() -> void:
 	else:
 		var config: Dictionary = run.get_combat_config()
 		if run.class_id == "mage":
-			var lines: PackedStringArray = ["巡卫140生命 · 8伤害 / 1.8秒\n护甲%d → 每次承伤%d" % [int(config.armor), 8 - mini(int(config.armor), 7)], "当前法术"]
+			var enemy: Dictionary = Encounters.definition(encounter_id if mage_focus else "sentinel")
+			var incoming := int(enemy.damage) - mini(int(config.armor), int(enemy.damage) - 1)
+			var lines: PackedStringArray = ["%s%d生命 · %d×%d伤害 / %.1f秒\n法盾减伤%d → 每段承伤%d" % [enemy.name, enemy.hp, enemy.damage, enemy.hits, enemy.interval, int(config.armor), incoming], str(enemy.hint), "当前法术"]
 			for action: Dictionary in config.actions:
 				lines.append("%s：%d × %d段 / %.1f秒\n首次%.1f秒 · 协同+%d/段" % [action.name, action.damage, action.hits, action.interval, action.warmup, action.support_bonus])
 			detail_label.text = "\n".join(lines)
@@ -545,7 +581,7 @@ func _show_summary() -> void:
 	for source in summary.by_source:
 		lines.append("%s：%d 伤害 / %d 次激活 / %d 段" % [source.name, int(source.damage), int(source.activations), int(source.hits)])
 	summary_label.text = "\n".join(lines)
-	_notice("训练结束。可恢复同一战前配置做对照；这里没有五战奖励或完整三流派。")
+	_notice("挑战结束。恢复战前可调整法术和目标，再次挑战。" if mage_focus else "训练结束。可恢复同一战前配置做对照；这里没有五战奖励或完整三流派。")
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
@@ -579,7 +615,7 @@ func _capture_sequence() -> void:
 		if _auto_quit:
 			get_tree().quit()
 		return
-	if mage_focus and not _capture_loss:
+	if mage_focus and not _capture_loss and _capture_build == "baseline":
 		_select_source(0)
 		grid.hover_cell = Vector2i.ZERO
 		grid.update_preview()
@@ -593,11 +629,31 @@ func _capture_sequence() -> void:
 			push_error("The legal loss fixture requires --class=mage")
 			get_tree().quit(1)
 			return
-	elif run.class_id == "mage":
+	elif run.class_id == "mage" and _capture_build == "frost_gale":
+		fixture_actions.assign([{"source": 1, "cell": Vector2i(0, 0)}, {"source": 2, "cell": Vector2i(0, 2)}])
+	elif run.class_id == "mage" and _capture_build == "steam_tornado":
+		fixture_actions.assign([{"source": 0, "cell": Vector2i(3, 1)}, {"source": 1, "cell": Vector2i(3, 1)}, {"source": 0, "cell": Vector2i(0, 0)}, {"source": 2, "cell": Vector2i(0, 0)}])
+	elif run.class_id == "mage" and _capture_build == "baseline":
 		fixture_actions.assign([{"source": 0, "cell": Vector2i(0, 0)}, {"source": 1, "cell": Vector2i(3, 2)}, {"source": 2, "cell": Vector2i(3, 2)}])
+	elif run.class_id == "mage":
+		push_error("Unknown mage capture build: " + _capture_build)
+		get_tree().quit(1)
+		return
 	elif not _capture_sword:
 		fixture_actions.assign([{"source": 1, "cell": Vector2i(0, 0)}, {"source": 1, "cell": Vector2i(2, 1)}])
 	var recorded_actions: Array[Dictionary] = []
+	var discards: Array[int] = []
+	if _capture_build == "steam_tornado" and not _capture_loss:
+		discards.assign([1, 2])
+	if _capture_no_ward:
+		discards.append(4)
+	for uid: int in discards:
+		var discarded: Dictionary = run.discard(uid)
+		if not discarded.ok:
+			push_error("Capture discard failed")
+			get_tree().quit(1)
+			return
+		recorded_actions.append({"operation": "discard", "uid": uid, "result": discarded})
 	if _capture_loss:
 		var uid: int = run.item_at(Vector2i.ZERO).uid
 		var discarded: Dictionary = run.discard(uid)
@@ -663,7 +719,7 @@ func _capture_sequence() -> void:
 		push_error("Cannot write runtime fixture report")
 		get_tree().quit(1)
 		return
-	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "loss" if _capture_loss else "tide-focus" if _capture_tide_focus else "sword" if _capture_sword else "built", "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples, "feedback_samples": feedback_samples}, "\t", true))
+	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "loss" if _capture_loss else "tide-focus" if _capture_tide_focus else "sword" if _capture_sword else "built", "build": _capture_build, "encounter_id": battle.encounter_id, "ward_equipped": not _capture_no_ward, "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples, "feedback_samples": feedback_samples}, "\t", true))
 	report.close()
 	if _auto_quit:
 		get_tree().quit()
@@ -672,6 +728,8 @@ func _capture_feedback(captured: Array[String], samples: Array[Dictionary]) -> b
 	var feedback = arena.feedback
 	var stages: Array[String] = []
 	if run.class_id == "mage":
+		if not arena.get_art_layout().shields.is_empty():
+			stages.append("ward-hit")
 		for effect: Dictionary in arena.get_art_layout().spell_effects:
 			stages.append("effect-" + str(effect.kind))
 			if float(effect.age) >= 0.06:

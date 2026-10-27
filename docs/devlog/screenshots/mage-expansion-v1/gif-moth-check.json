@@ -1,0 +1,15 @@
+{
+  "profile": "approved-moth",
+  "frames": 144,
+  "seconds": 6,
+  "dimensions": [
+    1056,
+    262
+  ],
+  "bytes": 2715081,
+  "source_start": 18,
+  "source_end_exclusive": 162,
+  "composited_pixels_verified": 39840768,
+  "changed_pixels": 3292672,
+  "errors": []
+}

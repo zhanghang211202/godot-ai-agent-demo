@@ -1,0 +1,442 @@
+{
+  "type": "derived_runtime_capture_report",
+  "source_report_sha256": "41d508233aa04173fa03c93df9e74ce1af2a27f21bb320e759befa332f315927",
+  "note": "Selected fields and published feedback samples from an actual native fixture; not the complete original report.",
+  "class_id": "mage",
+  "variant": "built",
+  "build": "frost_gale",
+  "encounter_id": "mirror_moth",
+  "ward_equipped": false,
+  "rules_version": 1,
+  "viewport": [
+    1440,
+    960
+  ],
+  "persistence_enabled": false,
+  "actions": [
+    {
+      "operation": "discard",
+      "result": {
+        "event": "discard",
+        "message": "已舍弃；不会退款或返还元素。",
+        "ok": true
+      },
+      "uid": 4
+    },
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "result": {
+        "cost": 0,
+        "event": "merge",
+        "kind": "frost_bolt",
+        "message": "合成完成：霜晶冰矢",
+        "ok": true,
+        "source_id": "observatory_water",
+        "uid": 1
+      },
+      "source_index": 1
+    },
+    {
+      "cell": [
+        0,
+        2
+      ],
+      "result": {
+        "cost": 0,
+        "event": "merge",
+        "kind": "gale_blades",
+        "message": "合成完成：回旋风刃",
+        "ok": true,
+        "source_id": "observatory_wind",
+        "uid": 2
+      },
+      "source_index": 2
+    }
+  ],
+  "remaining_sources": [
+    {
+      "cost": 0,
+      "id": "observatory_fire",
+      "kind": "fire_mote",
+      "remaining": 2
+    },
+    {
+      "cost": 0,
+      "id": "observatory_water",
+      "kind": "water_mote",
+      "remaining": 1
+    },
+    {
+      "cost": 0,
+      "id": "observatory_wind",
+      "kind": "wind_mote",
+      "remaining": 1
+    }
+  ],
+  "gold_after_acquisition": 0,
+  "summary": {
+    "armor_mitigated": 0,
+    "by_source": [
+      {
+        "activations": 6,
+        "damage": 52,
+        "hits": 6,
+        "kind": "frost_bolt",
+        "name": "霜晶冰矢",
+        "raw_damage": 54,
+        "uid": 1
+      },
+      {
+        "activations": 7,
+        "damage": 56,
+        "hits": 14,
+        "kind": "gale_blades",
+        "name": "回旋风刃",
+        "raw_damage": 56,
+        "uid": 2
+      }
+    ],
+    "class_id": "mage",
+    "damage_dealt": 108,
+    "damage_taken": 48,
+    "duration": 9.5,
+    "enemy_attacks": 8,
+    "enemy_hp": 0,
+    "enemy_max_hp": 108,
+    "event_count": 42,
+    "hp": 36,
+    "initial_hp": 84,
+    "max_hp": 84,
+    "overkill_damage_dealt": 2,
+    "overkill_damage_taken": 0,
+    "raw_damage_dealt": 110,
+    "raw_damage_taken": 48,
+    "result": "won",
+    "rules_version": 1
+  },
+  "visuals": {
+    "alpha_render_mode": "cutout >=128, opaque interior",
+    "alpha_threshold": 128,
+    "animated": true,
+    "assets_ready": true,
+    "background_id": "moon-court",
+    "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+    "background_source_rect": [
+      0,
+      321.948944091797,
+      2172,
+      402.051055908203
+    ],
+    "background_source_size": [
+      2172,
+      724
+    ],
+    "class_id": "mage",
+    "effect_clip_rect": [
+      1,
+      61,
+      1410,
+      261
+    ],
+    "encounter_id": "mirror_moth",
+    "enemy_anchor": [
+      1073,
+      293
+    ],
+    "enemy_cast_point": [
+      1069.37854003906,
+      240.350006103516
+    ],
+    "enemy_frame": 3,
+    "enemy_path": "res://assets/art/mage-expansion-v1/enemies/mirror-moth.png",
+    "enemy_placeholder": false,
+    "enemy_rect": [
+      1017.56427001953,
+      143.964279174805,
+      111.150001525879,
+      149.035720825195
+    ],
+    "enemy_scale": 0.278571428571429,
+    "enemy_source_rect": [
+      807,
+      666,
+      399,
+      535
+    ],
+    "feedback": {
+      "active": false,
+      "enemy_exit_elapsed": 0.7,
+      "enemy_hit_remaining": 0,
+      "enemy_opacity": 0,
+      "hero_exit_elapsed": -1,
+      "hero_hit_remaining": 0,
+      "hero_opacity": 1,
+      "numbers": [],
+      "outcome": "won"
+    },
+    "ground_anchor": [
+      367,
+      321
+    ],
+    "ground_y": 321,
+    "health_rects": [
+      [
+        16,
+        12,
+        423.600006103516,
+        8
+      ],
+      [
+        972.400024414063,
+        12,
+        423.600006103516,
+        8
+      ]
+    ],
+    "hero_cast_point": [
+      431.332763671875,
+      93.8388214111328
+    ],
+    "hero_id": "mage-idle",
+    "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+    "hero_rect": [
+      249.426345825195,
+      65,
+      203.646453857422,
+      256
+    ],
+    "hero_visible": true,
+    "missing_assets": [],
+    "motion_clip": "mage-cast",
+    "motion_frame": 0,
+    "motion_state": "idle",
+    "phase_rect": [
+      465.959991455078,
+      8,
+      480.079986572266,
+      43
+    ],
+    "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+    "scene_rect": [
+      1,
+      61,
+      1410,
+      261
+    ],
+    "shields": [],
+    "source_rect": [
+      42,
+      70,
+      459,
+      577
+    ],
+    "source_scale": [
+      0.443674176931381,
+      0.443674176931381
+    ],
+    "source_scale_is_integer": false,
+    "source_size": [
+      1122,
+      1402
+    ],
+    "spell_casts": [],
+    "spell_effects": [],
+    "stage_rect": [
+      0,
+      0,
+      1412,
+      350
+    ]
+  },
+  "feedback_samples": [
+    {
+      "battle_time": 2.1,
+      "file": "mage-hero-hit.png",
+      "visuals": {
+        "alpha_render_mode": "cutout >=128, opaque interior",
+        "alpha_threshold": 128,
+        "animated": true,
+        "assets_ready": true,
+        "background_id": "moon-court",
+        "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+        "background_source_rect": [
+          0,
+          321.948944091797,
+          2172,
+          402.051055908203
+        ],
+        "background_source_size": [
+          2172,
+          724
+        ],
+        "class_id": "mage",
+        "effect_clip_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "encounter_id": "mirror_moth",
+        "enemy_anchor": [
+          1073,
+          293
+        ],
+        "enemy_cast_point": [
+          1044.8642578125,
+          242.578567504883
+        ],
+        "enemy_frame": 2,
+        "enemy_path": "res://assets/art/mage-expansion-v1/enemies/mirror-moth.png",
+        "enemy_placeholder": false,
+        "enemy_rect": [
+          986.921447753906,
+          145.357147216797,
+          172.157135009766,
+          147.642852783203
+        ],
+        "enemy_scale": 0.278571428571429,
+        "enemy_source_rect": [
+          49,
+          659,
+          618,
+          530
+        ],
+        "feedback": {
+          "active": true,
+          "enemy_exit_elapsed": -1,
+          "enemy_hit_remaining": 0,
+          "enemy_opacity": 1,
+          "hero_exit_elapsed": -1,
+          "hero_hit_remaining": 0.218333333333333,
+          "hero_opacity": 1,
+          "numbers": [
+            {
+              "age": 0.458333333333333,
+              "amount": 8,
+              "armor": 0,
+              "hits": 2,
+              "key": "enemy:2:1.7",
+              "kind": "gale_blades",
+              "raw": 8,
+              "target": "enemy"
+            },
+            {
+              "age": 0.0416666666666667,
+              "amount": 12,
+              "armor": 0,
+              "hits": 2,
+              "key": "hero:0:2.1",
+              "kind": "moth_bolt",
+              "raw": 12,
+              "target": "hero"
+            }
+          ],
+          "outcome": ""
+        },
+        "ground_anchor": [
+          367,
+          321
+        ],
+        "ground_y": 321,
+        "health_rects": [
+          [
+            16,
+            12,
+            423.600006103516,
+            8
+          ],
+          [
+            972.400024414063,
+            12,
+            423.600006103516,
+            8
+          ]
+        ],
+        "hero_cast_point": [
+          432.220092773438,
+          102.268630981445
+        ],
+        "hero_id": "mage-idle",
+        "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+        "hero_rect": [
+          240.109191894531,
+          70.7677612304688,
+          210.301559448242,
+          250.232238769531
+        ],
+        "hero_visible": true,
+        "missing_assets": [],
+        "motion_clip": "mage-cast",
+        "motion_frame": 1,
+        "motion_state": "windup",
+        "phase_rect": [
+          465.959991455078,
+          8,
+          480.079986572266,
+          43
+        ],
+        "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+        "scene_rect": [
+          1,
+          61,
+          1410,
+          261
+        ],
+        "shields": [],
+        "source_rect": [
+          593,
+          84,
+          474,
+          564
+        ],
+        "source_scale": [
+          0.443674176931381,
+          0.443674176931381
+        ],
+        "source_scale_is_integer": false,
+        "source_size": [
+          1122,
+          1402
+        ],
+        "spell_casts": [
+          {
+            "kind": "frost_bolt",
+            "phase": "flight",
+            "planned_hits": 1,
+            "progress": 0.7265625,
+            "remaining": 0.175,
+            "source_uid": 1,
+            "target": "enemy"
+          }
+        ],
+        "spell_effects": [
+          {
+            "age": 0.0416666666666667,
+            "hits": 2,
+            "kind": "moth_bolt",
+            "phase": "impact",
+            "progress": 0.0801282051282051,
+            "target": "hero"
+          },
+          {
+            "age": 0.458333333333333,
+            "hits": 2,
+            "kind": "gale_blades",
+            "phase": "residue",
+            "progress": 0.674019607843137,
+            "target": "enemy"
+          }
+        ],
+        "stage_rect": [
+          0,
+          0,
+          1412,
+          350
+        ]
+      }
+    }
+  ]
+}

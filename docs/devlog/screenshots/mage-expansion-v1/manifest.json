@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "classification": "Actual native Godot mage fixtures using finite acquisition/merge/discard APIs, player persistence disabled. These are controlled fixtures, not external playtests.",
+  "runtime": "Windows Godot 4.7.2 .NET / OpenGL compatibility / NVIDIA RTX 3070 Laptop GPU",
+  "movies": [
+    {
+      "file": "moth.gif",
+      "source_dimensions": [
+        1440,
+        960
+      ],
+      "source_fps": 24,
+      "source_frames": 263,
+      "start": 18,
+      "end_exclusive": 162,
+      "frames": 144,
+      "seconds": 6,
+      "crop": [
+        208,
+        152,
+        1056,
+        262
+      ],
+      "scale": 1,
+      "audio": false
+    },
+    {
+      "file": "golem.gif",
+      "source_dimensions": [
+        1440,
+        960
+      ],
+      "source_fps": 24,
+      "source_frames": 326,
+      "start": 72,
+      "end_exclusive": 216,
+      "frames": 144,
+      "seconds": 6,
+      "crop": [
+        208,
+        152,
+        1056,
+        262
+      ],
+      "scale": 1,
+      "audio": false
+    }
+  ],
+  "conversion": "Actual Movie Maker frames cropped at original size, per-frame 255-color GIF quantization and transparent unchanged-pixel deltas. Both 144-frame composites independently decoded and compared to quantized native frames (39,840,768 pixels each). GIFs omit HUD and board, and fixed recording FPS is not a gameplay performance measurement.",
+  "profiles": {
+    "moth": "1440x960 frost+gale finite build, with ward, versus mirror moth; selected native frames and derived report.",
+    "golem": "1440x960 steam+vortex finite build after two legal starter discards, with ward, versus thorn golem; selected native frames and derived report.",
+    "small": "1280x800 moth fixture, selected frames and derived report.",
+    "large": "1920x1080 golem fixture, selected frames and derived report.",
+    "no_ward": "Same moth build with normal discard of UID4 ward; no shield effect, selected frames and derived report.",
+    "before_icon_region_fix": "Intermediate moth preparation with equal-half icon crop; lower-row pixels could enter the upper icons, not current UI.",
+    "tests": "Complete actual GPU and rule test report; player save fingerprints checked. Separate synthetic lethal fixture is not gameplay footage.",
+    "gif_checks": "Independent decompression and pixel-composition checks for the two GIFs."
+  },
+  "files": [
+    {
+      "file": "1280x800/mage-vfx-impact-frost_bolt.png",
+      "bytes": 630731,
+      "sha256": "ac30b0235d3c307020ae5c643f8e9251f2fc711c22cb3071339cf443e5d19150",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/mage-ward-hit.png",
+      "bytes": 629555,
+      "sha256": "36a62b008b7337c2e320fa60f40e7c742795d284a83f9238df1be07d9a2585b7",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/summary.json",
+      "bytes": 14119,
+      "sha256": "663f34bb30d931d1cebae7058c8ab7549eecfee334697c5f484a7a766e6f98f8"
+    },
+    {
+      "file": "1920x1080/mage-vfx-impact-ember_tornado.png",
+      "bytes": 1195130,
+      "sha256": "929966c4dbbbb0d3eaae81a6ef7290fa146b5ba383c861d88a677de82861cc08",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080/mage-ward-hit.png",
+      "bytes": 1190008,
+      "sha256": "82d092b249c1b439c3f944c7f9c14437737de22c17a2d2359981765e275c1ba5",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "1920x1080/summary.json",
+      "bytes": 14208,
+      "sha256": "1d75c20e0fd554bfed83346dbd9cd4f3e421c5ea0ac30c55b282c913717e690b"
+    },
+    {
+      "file": "before-icon-region-fix.png",
+      "bytes": 918035,
+      "sha256": "be132dc4816af61ff658464988be3b93ed7a486334c42ae65e34bec316848fdd",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "expansion-tests.json",
+      "bytes": 28054,
+      "sha256": "117d99388aadd00d4cb7f56b36de90c737da65f41ef0c455de979ac5d79567e7"
+    },
+    {
+      "file": "gif-golem-check.json",
+      "bytes": 268,
+      "sha256": "daeaa7d3442abaa6cec3fd02a0c776dfe3a72016171fc3a9606d4147a721220d"
+    },
+    {
+      "file": "gif-moth-check.json",
+      "bytes": 267,
+      "sha256": "ab919f6aabc5dd336ff791e87a9ee0e3b7d9eec34bc69d2992cf933f9c4db231"
+    },
+    {
+      "file": "golem/mage-built.png",
+      "bytes": 966803,
+      "sha256": "638248ad0cafa0b4e2c505fa399422c93433275564f82477a6769f0e67069a1c",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-enemy-windup.png",
+      "bytes": 965563,
+      "sha256": "cf933335a886e2dd2d904ae18424ae3d76a72d94c84063737aa7618eb3a6cd1f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-result.png",
+      "bytes": 926946,
+      "sha256": "3275561f4a565b286c8814072af704467dfc442e7e95bb4866377bec0b3daefd",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-vfx-flight-ember_tornado.png",
+      "bytes": 960401,
+      "sha256": "1249b8280db1d9a4bc8fe94d78cd92a496dcef7d446e36a35dbeac3e24171b3d",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-vfx-flight-steam_burst.png",
+      "bytes": 965757,
+      "sha256": "934ae7d8568f4873b09551dee8abc7986d159b7d9daf1026f08c54baf69d83a6",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-vfx-flight-thorn_crash.png",
+      "bytes": 965447,
+      "sha256": "bc197c3874ae92783cac0cd185df6acceaae5c795908f42790b9bbd1ccad3588",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-vfx-impact-ember_tornado.png",
+      "bytes": 955545,
+      "sha256": "bb1313856d90066c7982078b56dab7acad186ecebde05a525c95af1c2307c37a",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-vfx-impact-steam_burst.png",
+      "bytes": 956119,
+      "sha256": "80abffb9bdb0fd76a706d0a21077e814ffdb7a902df51fee21c35c946a602c06",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-vfx-impact-thorn_crash.png",
+      "bytes": 957904,
+      "sha256": "1ce13bc32032d0ad7a6b7619926c868cede58db2b2797849b4b123530db2b2ed",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/mage-ward-hit.png",
+      "bytes": 952986,
+      "sha256": "7551baf1453c56800622d83bb3aae190ddd0d08eac45407d2998e0bb0fc23d92",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem/summary.json",
+      "bytes": 38113,
+      "sha256": "736debae9c789467760c58b0b969b60b18baa3eaa27a068f9157b4a053214ae4"
+    },
+    {
+      "file": "golem.gif",
+      "bytes": 2212480,
+      "sha256": "a6b1dd08c2382bed312571a9a2bcfd3ac7b384044d10298fd72e95398b5833e2"
+    },
+    {
+      "file": "moth/mage-built.png",
+      "bytes": 916980,
+      "sha256": "178fac8ad150bd6d9eadf0a423ec37859bf0e8d613a890545928b63c65a31851",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-enemy-windup.png",
+      "bytes": 917203,
+      "sha256": "585903230f8051ce4d3e0ac387449a16c4cb6ff7144a2bc817b7d2f2d541e961",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-result.png",
+      "bytes": 891808,
+      "sha256": "2906ad772a448d3879f843ef7cfc5a07d73ac98ec26e04fd034503b63b755d36",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-vfx-flight-frost_bolt.png",
+      "bytes": 908247,
+      "sha256": "5c0f6f2732d77ae2dbe2735688266f692a002df1c60b68cbd8ea070c54ef1dce",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-vfx-flight-gale_blades.png",
+      "bytes": 917801,
+      "sha256": "e1836f1da482572202581d9a0bce000bb24353a466d9624b4adca85e29716f16",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-vfx-flight-moth_bolt.png",
+      "bytes": 919658,
+      "sha256": "200e882a17f69ca59e99ab02beced8895a5cf7e9c7627c9a04bd3ed52849fbe4",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-vfx-impact-frost_bolt.png",
+      "bytes": 911592,
+      "sha256": "14d302026cd4583624e67e6eeacbd8923843d7f5a5b4153897b86be6c92ad975",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-vfx-impact-gale_blades.png",
+      "bytes": 908247,
+      "sha256": "5c0f6f2732d77ae2dbe2735688266f692a002df1c60b68cbd8ea070c54ef1dce",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-vfx-impact-moth_bolt.png",
+      "bytes": 908378,
+      "sha256": "5f6bec91cc9da866601dc3d2214bb27092ed792f0c547e5a2dd075e222f4c437",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/mage-ward-hit.png",
+      "bytes": 902629,
+      "sha256": "0e5c363d8632b4cbf38bbb0919a6e81d374876d800d0cbdc17ca50102f1ee333",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth/summary.json",
+      "bytes": 39121,
+      "sha256": "241715c21aff99d45db7a17d9b7dbc9ad7f19bbedf652051d4c016233cd43c7f"
+    },
+    {
+      "file": "moth.gif",
+      "bytes": 2715081,
+      "sha256": "386d33ea096fc084085e6c562635672050d5a0194ec7d54a7fdeedbaa80251f3"
+    },
+    {
+      "file": "no-ward/mage-built.png",
+      "bytes": 912328,
+      "sha256": "0073ee41fe613cf16efc1e7e25208195db7ce64f3f8c969205ec92968f0c6478",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "no-ward/mage-hero-hit.png",
+      "bytes": 892743,
+      "sha256": "d747e453e2a65ef7f79876070ac426bd3efff20c04465bcd11d07ed36ec02332",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "no-ward/summary.json",
+      "bytes": 9868,
+      "sha256": "5952850af5a0b9e9cf56c17e013cd6621bc1b1880a7c2270df04497478aefad4"
+    }
+  ]
+}

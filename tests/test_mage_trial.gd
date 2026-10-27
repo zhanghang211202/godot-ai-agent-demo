@@ -62,7 +62,7 @@ func _run() -> void:
 	for action in [[0, Vector2i.ZERO], [1, Vector2i(3, 2)], [2, Vector2i(3, 2)]]:
 		check(ui.run.acquire(action[0], action[1]).ok, "Runtime fixture uses legal finite element acquisition")
 	ui._sync()
-	check(ui.detail_label.text.contains("协同+2/段") and ui.detail_label.text.contains("每次承伤6"), "Preparation explains actual synergy and incoming damage")
+	check(ui.detail_label.text.contains("协同+2/段") and ui.detail_label.text.contains("每段承伤6"), "Preparation explains actual synergy and per-hit incoming damage")
 	await _geometry()
 	_live_battle()
 	_compare_layouts()

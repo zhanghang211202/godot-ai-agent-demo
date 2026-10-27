@@ -2,6 +2,8 @@
 
 **当前先做法师，骑士与C2后置。** 运行`npm run game:mage`游玩法师一战首版：巡卫敌人、八种现有物件图标、三类法术效果、编织预览和实际冷却。[当前计划](mage-first-plan.md) · [实际交付](iteration-mage-trial.md)。下方双职业记录为此前阶段与长期设计。
 
+最新[法师扩展](iteration-mage-expansion.md)接入受击法盾、镜翼灵蛾和荆棘石像，以及四种新魔法；现在共有三个可选对手和六种元素配方。[日语记录](devlog/2026-10-27-mage-expansion.ja.md)。
+
 最新[法师特效第二版](iteration-mage-vfx.md)已接入聚能、曲线飞行、分层命中、残留与专用小像素图样；保持同一战斗结果，相关1350项检查通过。[日语记录](devlog/2026-10-27-mage-vfx.ja.md)。
 
 2026-10-27：`npm run game:classes` 已增加[战斗反馈样板](iteration-c1-feedback.md)：命中/多段/护甲数字、受击闪色与轻晃、胜负淡出、角色alpha过滤。受控源像素和专用受击/退场姿势尚未完成，下述四帧动作是此前阶段记录。
@@ -15,6 +17,7 @@
 | 文档 | 用途 |
 | --- | --- |
 | [法师优先计划](mage-first-plan.md) | 当前范围、生产顺序与后置内容 |
+| [法师法盾与内容扩展](iteration-mage-expansion.md) | 法盾受击、两种敌人、四种新魔法、存档与实机对照 |
 | [法师一战首版](iteration-mage-trial.md) | 专用入口、敌人/道具/特效、布局对照、预览与验证 |
 | [法师特效第二版](iteration-mage-vfx.md) | 三法术与敌方攻击的四阶段、实际时序、分层与GPU边界验证 |
 | [C1战斗反馈实际交付](iteration-c1-feedback.md) | 受击/淡出与伤害数字、GPU透明度检查、合法胜负fixture与源图限制 |

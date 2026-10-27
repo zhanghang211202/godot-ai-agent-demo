@@ -9,14 +9,19 @@ const { PNG } = mediaRequire('pngjs');
 const { GIFEncoder, quantize, applyPalette } = mediaRequire('gifenc');
 const [inputDirectory, outputFile, ...options] = process.argv.slice(2);
 if (!inputDirectory || !outputFile) {
-  console.error('Usage: node scripts/capture-demo-gif.cjs <movie-frame-directory> <output.gif> [--fps=16 --step=2 --scale=2 --start=0 --frames=all --crop=x,y,width,height]');
+  console.error('Usage: node scripts/capture-demo-gif.cjs <movie-frame-directory> <output.gif> [--fps=16 --step=2 --scale=2 --start=0 --frames=all --crop=x,y,width,height --delta]');
   process.exit(1);
 }
 const inputs = fs.readdirSync(inputDirectory).filter((name) => /^frame\d+\.png$/.test(name)).sort();
 if (!inputs.length) throw new Error('No Godot frame PNGs found');
 const settings = { fps: 16, step: 2, scale: 2, start: 0, frames: inputs.length };
 let crop = null;
+let deltaFrames = false;
 for (const option of options) {
+  if (option === '--delta') {
+    deltaFrames = true;
+    continue;
+  }
   const rectangle = /^--crop=(\d+),(\d+),(\d+),(\d+)$/.exec(option);
   if (rectangle) {
     crop = rectangle.slice(1).map(Number);
@@ -33,6 +38,7 @@ const gif = GIFEncoder();
 let frameCount = 0;
 let outputWidth = 0;
 let outputHeight = 0;
+let previousPixels = null;
 for (let index = settings.start; index < end; index += settings.step) {
   const frame = PNG.sync.read(fs.readFileSync(path.join(inputDirectory, inputs[index])));
   const [left, top, cropWidth, cropHeight] = crop ?? [0, 0, frame.width, frame.height];
@@ -51,15 +57,27 @@ for (let index = settings.start; index < end; index += settings.step) {
       pixels.set(frame.data.subarray(source, source + 4), target);
     }
   }
-  const palette = quantize(pixels, 256);
+  const palette = quantize(pixels, deltaFrames ? 255 : 256);
   const indexed = applyPalette(pixels, palette);
+  if (deltaFrames) {
+    // Transparent index 255 preserves the previous composited canvas. Reserve
+    // it even when the quantizer returned fewer colors; never erase an actor.
+    while (palette.length < 256) palette.push([0, 0, 0]);
+    if (previousPixels) {
+      for (let pixel = 0; pixel < indexed.length; pixel++) {
+        const byte = pixel * 4;
+        if (pixels[byte] === previousPixels[byte] && pixels[byte + 1] === previousPixels[byte + 1] && pixels[byte + 2] === previousPixels[byte + 2] && pixels[byte + 3] === previousPixels[byte + 3]) indexed[pixel] = 255;
+      }
+    }
+    previousPixels = pixels;
+  }
   // Distribute rounding over time; GIF delays have 10ms resolution.
   const tick = 100 * settings.step / settings.fps;
   const delay = (Math.round((frameCount + 1) * tick) - Math.round(frameCount * tick)) * 10;
-  gif.writeFrame(indexed, width, height, { palette, delay, repeat: 0 });
+  gif.writeFrame(indexed, width, height, { palette, delay, repeat: 0, ...(deltaFrames ? { transparent: frameCount > 0, transparentIndex: 255, dispose: 1 } : {}) });
   frameCount++;
 }
 gif.finish();
 fs.mkdirSync(path.dirname(path.resolve(outputFile)), { recursive: true });
 fs.writeFileSync(outputFile, gif.bytes(), { flag: 'wx' });
-console.log(JSON.stringify({ outputFile, sourceFrames: inputs.length, sourceStart: settings.start, sourceEndExclusive: end, sourceFps: settings.fps, frameStep: settings.step, crop, scale: settings.scale, frames: frameCount, width: outputWidth, height: outputHeight, bytes: fs.statSync(outputFile).size, audio: false }));
+console.log(JSON.stringify({ outputFile, sourceFrames: inputs.length, sourceStart: settings.start, sourceEndExclusive: end, sourceFps: settings.fps, frameStep: settings.step, crop, scale: settings.scale, deltaFrames, frames: frameCount, width: outputWidth, height: outputHeight, bytes: fs.statSync(outputFile).size, audio: false }));

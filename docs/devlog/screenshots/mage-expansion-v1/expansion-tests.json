@@ -1,0 +1,1449 @@
+{
+	"checks": 142,
+	"failures": 0,
+	"layouts": [
+		{
+			"encounter_id": "sentinel",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"encounter_id": "sentinel",
+				"enemy_anchor": [
+					952.0,
+					251.0
+				],
+				"enemy_cast_point": [
+					952.0,
+					151.0
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					881.161376953125,
+					66.0,
+					135.237335205078,
+					185.0
+				],
+				"enemy_scale": 0.292721518987342,
+				"enemy_source_rect": [
+					88.0,
+					46.0,
+					462.0,
+					632.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					373.244354248047,
+					84.1785125732422
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					239.656845092773,
+					63.0,
+					149.552856445313,
+					188.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"encounter_id": "sentinel",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"encounter_id": "sentinel",
+				"enemy_anchor": [
+					1073.0,
+					321.0
+				],
+				"enemy_cast_point": [
+					1073.0,
+					221.0
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					994.886108398438,
+					117.0,
+					149.126586914063,
+					204.0
+				],
+				"enemy_scale": 0.322784810126582,
+				"enemy_source_rect": [
+					88.0,
+					46.0,
+					462.0,
+					632.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					431.332763671875,
+					93.8388214111328
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					249.426345825195,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"encounter_id": "sentinel",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"encounter_id": "sentinel",
+				"enemy_anchor": [
+					1438.0,
+					321.0
+				],
+				"enemy_cast_point": [
+					1438.0,
+					221.0
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					1359.88610839844,
+					117.0,
+					149.126586914063,
+					204.0
+				],
+				"enemy_scale": 0.322784810126582,
+				"enemy_source_rect": [
+					88.0,
+					46.0,
+					462.0,
+					632.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					556.332763671875,
+					93.8388214111328
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					374.426330566406,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"encounter_id": "mirror_moth",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"encounter_id": "mirror_moth",
+				"enemy_anchor": [
+					952.0,
+					223.0
+				],
+				"enemy_cast_point": [
+					926.092834472656,
+					161.714294433594
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-expansion-v1/enemies/mirror-moth.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					878.178588867188,
+					67.0,
+					147.921432495117,
+					156.0
+				],
+				"enemy_scale": 0.278571428571429,
+				"enemy_source_rect": [
+					73.0,
+					48.0,
+					531.0,
+					560.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					373.244354248047,
+					84.1785125732422
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					239.656845092773,
+					63.0,
+					149.552856445313,
+					188.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"encounter_id": "mirror_moth",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"encounter_id": "mirror_moth",
+				"enemy_anchor": [
+					1073.0,
+					293.0
+				],
+				"enemy_cast_point": [
+					1047.09289550781,
+					231.714294433594
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-expansion-v1/enemies/mirror-moth.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					999.178588867188,
+					137.0,
+					147.921432495117,
+					156.0
+				],
+				"enemy_scale": 0.278571428571429,
+				"enemy_source_rect": [
+					73.0,
+					48.0,
+					531.0,
+					560.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					431.332763671875,
+					93.8388214111328
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					249.426345825195,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"encounter_id": "mirror_moth",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"encounter_id": "mirror_moth",
+				"enemy_anchor": [
+					1438.0,
+					293.0
+				],
+				"enemy_cast_point": [
+					1412.09289550781,
+					231.714294433594
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-expansion-v1/enemies/mirror-moth.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					1364.17858886719,
+					137.0,
+					147.921432495117,
+					156.0
+				],
+				"enemy_scale": 0.278571428571429,
+				"enemy_source_rect": [
+					73.0,
+					48.0,
+					531.0,
+					560.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					556.332763671875,
+					93.8388214111328
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					374.426330566406,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		},
+		{
+			"encounter_id": "thorn_golem",
+			"viewport": [
+				1280,
+				800
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					392.118408203125,
+					2172.0,
+					331.881591796875
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"encounter_id": "thorn_golem",
+				"enemy_anchor": [
+					952.0,
+					251.0
+				],
+				"enemy_cast_point": [
+					939.241394042969,
+					159.137939453125
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					871.301696777344,
+					95.9827575683594,
+					161.715515136719,
+					155.017242431641
+				],
+				"enemy_scale": 0.318965517241379,
+				"enemy_source_rect": [
+					86.0,
+					109.0,
+					507.0,
+					486.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					326.0,
+					251.0
+				],
+				"ground_y": 251.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						375.600006103516,
+						8.0
+					],
+					[
+						860.400024414063,
+						12.0,
+						375.600006103516,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					373.244354248047,
+					84.1785125732422
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					239.656845092773,
+					63.0,
+					149.552856445313,
+					188.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					413.160003662109,
+					8.0,
+					425.679992675781,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1250.0,
+					191.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.325823217630386,
+					0.325823217630386
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1252.0,
+					280.0
+				]
+			}
+		},
+		{
+			"encounter_id": "thorn_golem",
+			"viewport": [
+				1440,
+				960
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					321.948944091797,
+					2172.0,
+					402.051055908203
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"encounter_id": "thorn_golem",
+				"enemy_anchor": [
+					1073.0,
+					321.0
+				],
+				"enemy_cast_point": [
+					1057.96557617188,
+					212.751724243164
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					977.906921386719,
+					138.331039428711,
+					190.562072753906,
+					182.668960571289
+				],
+				"enemy_scale": 0.375862068965517,
+				"enemy_source_rect": [
+					86.0,
+					109.0,
+					507.0,
+					486.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					367.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						423.600006103516,
+						8.0
+					],
+					[
+						972.400024414063,
+						12.0,
+						423.600006103516,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					431.332763671875,
+					93.8388214111328
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					249.426345825195,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					465.959991455078,
+					8.0,
+					480.079986572266,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1410.0,
+					261.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1412.0,
+					350.0
+				]
+			}
+		},
+		{
+			"encounter_id": "thorn_golem",
+			"viewport": [
+				1920,
+				1080
+			],
+			"visuals": {
+				"alpha_render_mode": "cutout >=128, opaque interior",
+				"alpha_threshold": 128,
+				"animated": true,
+				"assets_ready": true,
+				"background_id": "moon-court",
+				"background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+				"background_source_rect": [
+					0.0,
+					424.057159423828,
+					2172.0,
+					299.942840576172
+				],
+				"background_source_size": [
+					2172,
+					724
+				],
+				"class_id": "mage",
+				"effect_clip_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"encounter_id": "thorn_golem",
+				"enemy_anchor": [
+					1438.0,
+					321.0
+				],
+				"enemy_cast_point": [
+					1422.96557617188,
+					212.751724243164
+				],
+				"enemy_frame": 0,
+				"enemy_path": "res://assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+				"enemy_placeholder": false,
+				"enemy_rect": [
+					1342.90686035156,
+					138.331039428711,
+					190.562072753906,
+					182.668960571289
+				],
+				"enemy_scale": 0.375862068965517,
+				"enemy_source_rect": [
+					86.0,
+					109.0,
+					507.0,
+					486.0
+				],
+				"feedback": {
+					"active": false,
+					"enemy_exit_elapsed": -1.0,
+					"enemy_hit_remaining": 0.0,
+					"enemy_opacity": 1.0,
+					"hero_exit_elapsed": -1.0,
+					"hero_hit_remaining": 0.0,
+					"hero_opacity": 1.0,
+					"numbers": [],
+					"outcome": ""
+				},
+				"ground_anchor": [
+					492.0,
+					321.0
+				],
+				"ground_y": 321.0,
+				"health_rects": [
+					[
+						16.0,
+						12.0,
+						567.599975585938,
+						8.0
+					],
+					[
+						1308.40002441406,
+						12.0,
+						567.599975585938,
+						8.0
+					]
+				],
+				"hero_cast_point": [
+					556.332763671875,
+					93.8388214111328
+				],
+				"hero_id": "mage-idle",
+				"hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+				"hero_rect": [
+					374.426330566406,
+					65.0,
+					203.646453857422,
+					256.0
+				],
+				"hero_visible": true,
+				"missing_assets": [],
+				"motion_clip": "mage-cast",
+				"motion_frame": 0,
+				"motion_state": "idle",
+				"phase_rect": [
+					624.359985351563,
+					8.0,
+					643.280029296875,
+					43.0
+				],
+				"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+				"scene_rect": [
+					1.0,
+					61.0,
+					1890.0,
+					261.0
+				],
+				"shields": [],
+				"source_rect": [
+					42.0,
+					70.0,
+					459.0,
+					577.0
+				],
+				"source_scale": [
+					0.443674176931381,
+					0.443674176931381
+				],
+				"source_scale_is_integer": false,
+				"source_size": [
+					1122,
+					1402
+				],
+				"spell_casts": [],
+				"spell_effects": [],
+				"stage_rect": [
+					0.0,
+					0.0,
+					1892.0,
+					350.0
+				]
+			}
+		}
+	],
+	"renderer": "NVIDIA GeForce RTX 3070 Laptop GPU",
+	"results": [
+		{
+			"build": "baseline",
+			"encounter_id": "sentinel",
+			"observed_spells": [
+				"spark",
+				"tide_lances",
+				"flame_glyph"
+			],
+			"summary": {
+				"armor_mitigated": 8,
+				"by_source": [
+					{
+						"activations": 3,
+						"damage": 60,
+						"hits": 3,
+						"kind": "flame_glyph",
+						"name": "焰爆法印",
+						"raw_damage": 60,
+						"uid": 1
+					},
+					{
+						"activations": 6,
+						"damage": 30,
+						"hits": 6,
+						"kind": "spark",
+						"name": "微光术式",
+						"raw_damage": 30,
+						"uid": 2
+					},
+					{
+						"activations": 4,
+						"damage": 50,
+						"hits": 10,
+						"kind": "tide_lances",
+						"name": "潮汐连枪",
+						"raw_damage": 50,
+						"uid": 6
+					}
+				],
+				"class_id": "mage",
+				"damage_dealt": 140,
+				"damage_taken": 24,
+				"duration": 8.6,
+				"enemy_attacks": 4,
+				"enemy_hp": 0,
+				"enemy_max_hp": 140,
+				"event_count": 37,
+				"hp": 60,
+				"initial_hp": 84,
+				"max_hp": 84,
+				"overkill_damage_dealt": 0,
+				"overkill_damage_taken": 0,
+				"raw_damage_dealt": 140,
+				"raw_damage_taken": 32,
+				"result": "won",
+				"rules_version": 1
+			}
+		},
+		{
+			"build": "frost_gale",
+			"encounter_id": "mirror_moth",
+			"observed_spells": [
+				"gale_blades",
+				"frost_bolt"
+			],
+			"summary": {
+				"armor_mitigated": 16,
+				"by_source": [
+					{
+						"activations": 6,
+						"damage": 52,
+						"hits": 6,
+						"kind": "frost_bolt",
+						"name": "霜晶冰矢",
+						"raw_damage": 54,
+						"uid": 1
+					},
+					{
+						"activations": 7,
+						"damage": 56,
+						"hits": 14,
+						"kind": "gale_blades",
+						"name": "回旋风刃",
+						"raw_damage": 56,
+						"uid": 2
+					}
+				],
+				"class_id": "mage",
+				"damage_dealt": 108,
+				"damage_taken": 32,
+				"duration": 9.5,
+				"enemy_attacks": 8,
+				"enemy_hp": 0,
+				"enemy_max_hp": 108,
+				"event_count": 42,
+				"hp": 52,
+				"initial_hp": 84,
+				"max_hp": 84,
+				"overkill_damage_dealt": 2,
+				"overkill_damage_taken": 0,
+				"raw_damage_dealt": 110,
+				"raw_damage_taken": 48,
+				"result": "won",
+				"rules_version": 1
+			}
+		},
+		{
+			"build": "steam_tornado",
+			"encounter_id": "thorn_golem",
+			"observed_spells": [
+				"ember_tornado",
+				"steam_burst"
+			],
+			"summary": {
+				"armor_mitigated": 6,
+				"by_source": [
+					{
+						"activations": 4,
+						"damage": 92,
+						"hits": 4,
+						"kind": "steam_burst",
+						"name": "蒸汽爆破",
+						"raw_damage": 96,
+						"uid": 5
+					},
+					{
+						"activations": 4,
+						"damage": 128,
+						"hits": 16,
+						"kind": "ember_tornado",
+						"name": "焰风涡旋",
+						"raw_damage": 128,
+						"uid": 7
+					}
+				],
+				"class_id": "mage",
+				"damage_dealt": 220,
+				"damage_taken": 48,
+				"duration": 12.1,
+				"enemy_attacks": 3,
+				"enemy_hp": 0,
+				"enemy_max_hp": 220,
+				"event_count": 33,
+				"hp": 36,
+				"initial_hp": 84,
+				"max_hp": 84,
+				"overkill_damage_dealt": 4,
+				"overkill_damage_taken": 0,
+				"raw_damage_dealt": 224,
+				"raw_damage_taken": 54,
+				"result": "won",
+				"rules_version": 1
+			}
+		}
+	],
+	"shield_gpu": [
+		{
+			"changed_inside": 9618,
+			"changed_outside": 0,
+			"encounter_id": "sentinel"
+		},
+		{
+			"changed_inside": 10084,
+			"changed_outside": 0,
+			"encounter_id": "mirror_moth"
+		},
+		{
+			"changed_inside": 9976,
+			"changed_outside": 0,
+			"encounter_id": "thorn_golem"
+		}
+	]
+}

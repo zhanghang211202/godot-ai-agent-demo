@@ -1,6 +1,6 @@
 # Development notes
 
-- Current priority (user decision, 2026-10-27): focus on the mage only, its enemy, spell effects, items and the playable element-weaving loop. Defer C2 and new knight work; keep existing knight/legacy content compatible. Do not block the mage slice on six-build/five-battle production or repeated protagonist cleanup experiments.
+- Current priority (user decision, 2026-10-27): focus on the mage, its enemies, spell effects, items and the playable element-weaving loop. The user requested a visible magical ward when mitigation occurs, additional enemies, and more magic. Defer C2 and new knight work; keep existing knight/legacy content compatible. Do not block the mage slice on six-build/five-battle production or repeated protagonist cleanup experiments.
 
 - Continue the native Godot game in this repository. Keep npm dependencies, the .NET SDK, and their caches project-local; use `scripts/godot.mjs` for the current editor path and environment.
 - Record each completed development milestone in **Japanese** under `docs/devlog/`. Include concrete changes, decisions, observed bugs and fixes, exact verification results, and limitations useful for a later blog post.
