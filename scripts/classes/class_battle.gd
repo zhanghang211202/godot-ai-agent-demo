@@ -111,6 +111,16 @@ func get_summary() -> Dictionary:
 		"by_source": sources, "event_count": _event_id}, true)
 	return result
 
+func get_presentation_timing() -> Dictionary:
+	# Read-only UI query. It never schedules or resolves an attack.
+	var sources: Dictionary = {}
+	for action: Dictionary in _actions:
+		var initial: bool = int(_by_source[int(action.uid)].activations) == 0
+		var period: int = int(action.warmup_steps) if initial and int(action.warmup_steps) > 0 else int(action.interval_steps)
+		var remaining := maxf(0, float(int(action.next_step) - _step_index) * STEP)
+		sources[int(action.uid)] = {"remaining": remaining, "progress": clampf(1.0 - remaining / (maxi(1, period) * STEP), 0, 1), "charging": bool(action.charged)}
+	return {"sources": sources, "enemy_remaining": maxf(0, float(_enemy_next_step - _step_index) * STEP)}
+
 func _step(events: Array[Dictionary]) -> void:
 	for action: Dictionary in _actions:
 		if action["warmup_steps"] > 0 and not action["charged"] and _step_index >= action["charge_step"]:

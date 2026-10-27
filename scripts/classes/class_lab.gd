@@ -7,6 +7,9 @@ const BattleRules = preload("res://scripts/classes/class_battle.gd")
 const Save = preload("res://scripts/classes/class_save.gd")
 const GridView = preload("res://scripts/classes/class_grid.gd")
 const ArenaView = preload("res://scripts/classes/class_arena.gd")
+const MageArt = preload("res://scripts/classes/mage_art.gd")
+
+@export var mage_focus := false
 
 var run = RunRules.new()
 var battle = BattleRules.new()
@@ -31,9 +34,12 @@ var discard_button: Button
 var rotate_button: Button
 var replay_button: Button
 var summary_label: Label
+var preview_label: Label
+var detail_icon: TextureRect
+var details_scroll: ScrollContainer
 var speed := 1.0
 var persistence_enabled := true
-var checkpoint_path := Save.DEFAULT_PATH
+@export var checkpoint_path := Save.DEFAULT_PATH
 var _capture_directory := ""
 var _capture_class := "mage"
 var _capture_done := false
@@ -41,6 +47,7 @@ var _auto_quit := false
 var _capture_prepare_only := false
 var _capture_sword := false
 var _capture_loss := false
+var _capture_tide_focus := false
 var _original_alpha_comparison := false
 var _ready_frames := 0
 var _last_phase := "idle"
@@ -62,12 +69,14 @@ func _ready() -> void:
 			_capture_sword = true
 		elif argument == "--capture-loss":
 			_capture_loss = true
+		elif argument == "--capture-tide-focus":
+			_capture_tide_focus = true
 		elif argument == "--compare-original-alpha":
 			_original_alpha_comparison = true
 	_build_interface()
 	resized.connect(_resize_layout)
 	_resize_layout()
-	_new_class(_capture_class if _capture_class in Catalog.CLASS_IDS else "mage")
+	_new_class("mage" if mage_focus else _capture_class if _capture_class in Catalog.CLASS_IDS else "mage")
 
 func _build_interface() -> void:
 	var ui_theme := Theme.new()
@@ -96,14 +105,18 @@ func _build_interface() -> void:
 	margin.add_child(root)
 	var header := HBoxContainer.new()
 	root.add_child(header)
-	var heading := _label("职业构筑试炼", 25)
+	var heading := _label("月庭法师试炼" if mage_focus else "职业构筑试炼", 25)
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
 	for id in Catalog.CLASS_IDS:
+		if mage_focus and id != "mage":
+			continue
 		var b := _button("新法师实验" if id == "mage" else "新 H 骑士实验", func(): _new_class(id))
+		if mage_focus:
+			b.text = "重新开始法师试炼"
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("C1 战斗反馈样板 · 命中数字 / 护甲 / 受击 / 淡出 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
+	var notice := _label("吸收元素 → 编织法术 → 连接晶核 → 挑战月庭巡卫" if mage_focus else "C1 战斗反馈样板 · 命中数字 / 护甲 / 受击 / 淡出 · 有限资源与固定训练敌人", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
@@ -122,6 +135,7 @@ func _build_interface() -> void:
 	grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	grid.cell_selected.connect(_on_cell_selected)
 	grid.drop_requested.connect(_on_drop)
+	grid.preview_changed.connect(_show_placement_preview)
 	inventory.add_child(grid)
 	inventory.add_child(_label("点击 / 拖放 · R 旋转 · 右键取消", 14, Color("a7b4c5")))
 	inventory.add_child(_label("青色可放 · 红色无效 · 金色尝试组合", 14, Color("a7b4c5")))
@@ -151,7 +165,7 @@ func _build_interface() -> void:
 	var details := _panel(body, 285, 0.9)
 	phase_label = _label("", 20)
 	details.add_child(phase_label)
-	var details_scroll := ScrollContainer.new()
+	details_scroll = ScrollContainer.new()
 	details_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	details_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	details.add_child(details_scroll)
@@ -159,6 +173,16 @@ func _build_interface() -> void:
 	details_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details_content.add_theme_constant_override("separation", 14)
 	details_scroll.add_child(details_content)
+	preview_label = _label("", 15, Color("e8c891"))
+	preview_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	preview_label.visible = false
+	details_content.add_child(preview_label)
+	detail_icon = TextureRect.new()
+	detail_icon.custom_minimum_size = Vector2(52, 52)
+	detail_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	detail_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	detail_icon.visible = false
+	details_content.add_child(detail_icon)
 	detail_label = _label("", 17)
 	detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details_content.add_child(detail_label)
@@ -237,6 +261,9 @@ func _style(fill: Color, edge: Color) -> StyleBoxFlat:
 	return box
 
 func _new_class(id: String) -> void:
+	if mage_focus and id != "mage":
+		_notice("当前为法师试炼。")
+		return
 	if run.phase == "battle":
 		_notice("训练中不能切换职业，请先完成这一战或恢复战前。")
 		return
@@ -249,9 +276,11 @@ func _new_class(id: String) -> void:
 	arena.battle = battle
 	arena.reset_presentation()
 	_clear_selection()
-	summary_label.text = "本实验只验证一战，不是六流派完整 Demo。\n有限来源不会刷新；丢弃不返还素材或金币。"
+	summary_label.text = "先尝试火 + 微光，再试水 + 风。\n晶核左右连接术式：每段+2，R旋转改为上下。\n一战后可恢复同一配置调整；元素有限，丢弃不返还。" if mage_focus else "本实验只验证一战，不是六流派完整 Demo。\n有限来源不会刷新；丢弃不返还素材或金币。"
+	grid.active_sources.clear()
 	_notice("法师：先点火元素，再点微光术式编织焰爆；水与风可组合三段法术。" if id == "mage" else "骑士：购入蓄势徽记并叠到长剑上，锻造六格重刃；保留徽记也可连接强化。")
 	_sync()
+	grid.update_preview()
 
 func _select_source(index: int) -> void:
 	if run.phase != "prepare":
@@ -262,6 +291,7 @@ func _select_source(index: int) -> void:
 	var definition: Dictionary = run.get_definition(run.sources[index].kind)
 	_notice("已选择%s：点击空格摆放，或点击兼容材料尝试配方。R 旋转。" % definition.name)
 	_sync()
+	grid.update_preview()
 
 func _source_drag(index: int, _at: Vector2) -> Variant:
 	if run.phase != "prepare" or int(run.sources[index].remaining) <= 0:
@@ -281,6 +311,7 @@ func _on_cell_selected(cell: Vector2i) -> void:
 		held = {"origin": "bag", "uid": item.uid, "rotated": item.rotated}
 	grid.held = held
 	_sync()
+	grid.update_preview()
 
 func _on_drop(data: Dictionary, cell: Vector2i) -> void:
 	var result: Dictionary
@@ -308,6 +339,7 @@ func _rotate() -> void:
 		grid.held = held
 		_notice("待放物件已旋转；点击格位确认。")
 		grid.queue_redraw()
+		grid.update_preview()
 
 func _discard() -> void:
 	if selected_uid < 0:
@@ -324,6 +356,9 @@ func _clear_selection() -> void:
 	if grid != null:
 		grid.held = {}
 		grid.selected_uid = -1
+		if run.phase != "battle":
+			grid.active_sources.clear()
+		grid.update_preview()
 
 func _save() -> bool:
 	if not persistence_enabled:
@@ -337,6 +372,11 @@ func _load() -> void:
 	if not persistence_enabled:
 		_notice("当前为隔离验证/截图模式，不读取玩家存档。")
 		return
+	if mage_focus:
+		var info: Dictionary = Save.inspect_save(checkpoint_path)
+		if not info.ok or str(info.get("class_id", "")) != "mage":
+			_notice(str(info.message) if not info.ok else "该检查点不是法师配置，当前整备未改变。")
+			return
 	var result: Dictionary = Save.load_run(run, checkpoint_path)
 	_notice(str(result.message))
 	if result.ok:
@@ -413,12 +453,18 @@ func _notice(message: String) -> void:
 
 func _sync() -> void:
 	arena.playback_speed = speed
+	grid.battle = battle
+	grid.playback_speed = speed
 	var info: Dictionary = Catalog.class_info(run.class_id)
 	carrier_label.text = str(info.carrier) + "   6 × 4"
 	resources_label.text = "吸收元素 · 免费 / 有限" if run.class_id == "mage" else "武装补给 · %d 金币" % run.gold
 	for i in range(source_buttons.size()):
 		var source: Dictionary = run.sources[i]
 		var definition: Dictionary = run.get_definition(source.kind)
+		var art := MageArt.icon(str(source.kind))
+		source_buttons[i].icon = art.get("atlas", null)
+		source_buttons[i].expand_icon = true
+		source_buttons[i].add_theme_constant_override("icon_max_width", 36)
 		source_buttons[i].text = "%s\n%s · 剩余 %d" % [definition.name, "吸收" if int(source.cost) == 0 else "%d 金币" % int(source.cost), int(source.remaining)]
 		source_buttons[i].disabled = run.phase != "prepare" or int(source.remaining) <= 0 or run.gold < int(source.cost)
 		source_buttons[i].tooltip_text = str(definition.description)
@@ -428,12 +474,21 @@ func _sync() -> void:
 	recipe_label.text = "\n\n".join(recipes) + "\n\n产物锚在被叠放物件的位置。空间不足不扣材料或金币。"
 	phase_label.text = "准备 · 可调整" if run.phase == "prepare" else "战斗 · 准备操作锁定" if run.phase == "battle" else "训练结束 · 一战复盘"
 	var item: Dictionary = run.item_by_uid(selected_uid)
+	var selected_art := MageArt.icon(str(item.get("kind", "")))
+	detail_icon.visible = not selected_art.is_empty()
+	detail_icon.texture = selected_art.get("atlas", null)
 	if not item.is_empty():
 		var definition: Dictionary = run.get_definition(item.kind)
 		detail_label.text = "%s\n\n%s\n\n实际占格：%d × %d\n方向支援：+%d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y, run.get_adjacency_bonus(item)]
 	else:
 		var config: Dictionary = run.get_combat_config()
-		detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 四帧施法/攻击与受击/淡出反馈已接入；专用受击、退场姿势和其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "元素编织的两种法术行为" if run.class_id == "mage" else "重刃的锻造与蓄势", info.background]
+		if run.class_id == "mage":
+			var lines: PackedStringArray = ["巡卫140生命 · 8伤害 / 1.8秒\n护甲%d → 每次承伤%d" % [int(config.armor), 8 - mini(int(config.armor), 7)], "当前法术"]
+			for action: Dictionary in config.actions:
+				lines.append("%s：%d × %d段 / %.1f秒\n首次%.1f秒 · 协同+%d/段" % [action.name, action.damage, action.hits, action.interval, action.warmup, action.support_bonus])
+			detail_label.text = "\n".join(lines)
+		else:
+			detail_label.text = "%s\n%s\n\n护甲 %d · 攻击来源 %d\n\n本次仅实现%s。\n\n%s · 四帧施法/攻击与受击/淡出反馈已接入；专用受击、退场姿势和其他流派待制作。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "重刃的锻造与蓄势", info.background]
 	grid.selected_uid = selected_uid
 	grid.queue_redraw()
 	arena.queue_redraw()
@@ -448,12 +503,14 @@ func _sync() -> void:
 	replay_button.disabled = _before_battle.is_empty()
 	for id in class_buttons:
 		class_buttons[id].disabled = run.phase == "battle"
+	grid.update_preview()
 
 func _process(delta: float) -> void:
 	if battle.phase == "battle":
 		var events: Array[Dictionary] = battle.tick(delta * speed)
 		for event in events:
 			arena.show_event(event)
+			grid.show_event(event)
 		arena.queue_redraw()
 		if battle.phase in ["won", "lost"] and _last_phase == "battle":
 			_last_phase = battle.phase
@@ -464,6 +521,23 @@ func _process(delta: float) -> void:
 	if not _capture_directory.is_empty() and not _capture_done and _ready_frames > 10:
 		_capture_done = true
 		_capture_sequence.call_deferred()
+
+func _show_placement_preview(preview: Dictionary) -> void:
+	if preview_label == null:
+		return
+	preview_label.visible = not preview.is_empty()
+	if preview.is_empty():
+		return
+	details_scroll.scroll_vertical = 0
+	if not bool(preview.get("ok", false)):
+		preview_label.text = "无法放置：" + str(preview.get("message", ""))
+		return
+	var item: Dictionary = preview.item
+	var definition: Dictionary = run.get_definition(str(item.kind))
+	preview_label.text = "%s预览：%s\n占格%d×%d · 确认前不扣元素" % ["编织" if str(preview.event) == "merge" else "放置", definition.name, preview.size.x, preview.size.y]
+	for action: Dictionary in preview.combat.actions:
+		if int(action.uid) == int(item.uid):
+			preview_label.text += "\n%d × %d段 / %.1f秒 · 协同+%d/段" % [action.damage, action.hits, action.interval, action.support_bonus]
 
 func _show_summary() -> void:
 	var summary: Dictionary = battle.get_summary()
@@ -505,6 +579,14 @@ func _capture_sequence() -> void:
 		if _auto_quit:
 			get_tree().quit()
 		return
+	if mage_focus and not _capture_loss:
+		_select_source(0)
+		grid.hover_cell = Vector2i.ZERO
+		grid.update_preview()
+		await RenderingServer.frame_post_draw
+		if not _capture_frame("preview-weave"):
+			return
+		_clear_selection()
 	var fixture_actions: Array[Dictionary] = []
 	if _capture_loss:
 		if run.class_id != "mage":
@@ -531,6 +613,13 @@ func _capture_sequence() -> void:
 			get_tree().quit(1)
 			return
 		recorded_actions.append({"source_index": action.source, "cell": [action.cell.x, action.cell.y], "result": result})
+	if _capture_tide_focus and run.class_id == "mage" and not _capture_loss:
+		var moved: Dictionary = run.move(3, Vector2i(2, 2))
+		if not moved.ok:
+			push_error("Tide focus fixture move failed")
+			get_tree().quit(1)
+			return
+		recorded_actions.append({"operation": "move", "uid": 3, "cell": [2, 2], "result": moved})
 	_sync()
 	await RenderingServer.frame_post_draw
 	if not _capture_frame("built"):
@@ -574,7 +663,7 @@ func _capture_sequence() -> void:
 		push_error("Cannot write runtime fixture report")
 		get_tree().quit(1)
 		return
-	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "loss" if _capture_loss else "sword" if _capture_sword else "built", "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples, "feedback_samples": feedback_samples}, "\t", true))
+	report.store_string(JSON.stringify({"type": "runtime_capture_fixture", "class_id": run.class_id, "variant": "loss" if _capture_loss else "tide-focus" if _capture_tide_focus else "sword" if _capture_sword else "built", "rules_version": Catalog.RULES_VERSION, "viewport": [int(size.x), int(size.y)], "persistence_enabled": persistence_enabled, "actions": recorded_actions, "remaining_sources": run.sources, "gold_after_acquisition": run.gold, "summary": battle.get_summary(), "visuals": arena.get_art_report(), "motion_samples": motion_samples, "feedback_samples": feedback_samples}, "\t", true))
 	report.close()
 	if _auto_quit:
 		get_tree().quit()
@@ -582,6 +671,11 @@ func _capture_sequence() -> void:
 func _capture_feedback(captured: Array[String], samples: Array[Dictionary]) -> bool:
 	var feedback = arena.feedback
 	var stages: Array[String] = []
+	if run.class_id == "mage":
+		for effect: Dictionary in arena.get_art_layout().spell_effects:
+			stages.append("effect-" + str(effect.kind))
+		if battle.phase == "battle" and arena.enemy_frame() == 1:
+			stages.append("enemy-windup")
 	if feedback.hero_hit > 0:
 		stages.append("hero-hit")
 	if feedback.enemy_hit > 0:

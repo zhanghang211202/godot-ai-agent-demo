@@ -44,8 +44,11 @@ func _run() -> void:
 				var cell: Rect2 = ui.grid.cell_rect(Vector2i.ZERO)
 				var rect := Rect2(cell.position, Vector2(shape) * cell.size.x).grow(-5)
 				var before := {"items": ui.run.items.duplicate(true), "sources": ui.run.sources.duplicate(true), "gold": ui.run.gold}
-				var label: Dictionary = ui.grid.label_layout(kind, rect, rotated)
-				var readable: bool = not label.lines.is_empty() and int(label.font_size) >= 14
+				var visual: Dictionary = ui.grid.item_layout(kind, rect, rotated)
+				var label: Dictionary = visual.label
+				var icon: Rect2 = visual.icon_rect
+				var readable: bool = (not label.lines.is_empty() and int(label.font_size) >= 14) or (icon.has_area() and icon.size.x >= 10 and icon.size.y >= 10)
+				readable = readable and (not icon.has_area() or rect.encloses(icon))
 				var text_boxes: Array[Rect2] = []
 				for index in range(label.lines.size()):
 					var position: Vector2 = label.baselines[index]
@@ -55,6 +58,7 @@ func _run() -> void:
 					var ink := Rect2(position - Vector2(0, ascent), Vector2(width, ascent + descent))
 					readable = readable and rect.grow(-2).encloses(ink)
 					text_boxes.append(ink)
+					readable = readable and (not icon.has_area() or not ink.intersects(icon))
 				var supports_clear := true
 				for point: Vector2 in label.support_points:
 					var mark := Rect2(point - Vector2.ONE * 2, Vector2.ONE * 4)

@@ -1,0 +1,195 @@
+{
+  "type": "derived_runtime_capture_summary",
+  "note": "Selected fields from the native fixture report; transient samples omitted because only selected screenshots are published for this comparison.",
+  "class_id": "mage",
+  "variant": "loss",
+  "viewport": [
+    1440,
+    960
+  ],
+  "persistence_enabled": false,
+  "actions": [
+    {
+      "operation": "discard",
+      "result": {
+        "event": "discard",
+        "message": "已舍弃；不会退款或返还元素。",
+        "ok": true
+      },
+      "uid": 1
+    }
+  ],
+  "remaining_sources": [
+    {
+      "cost": 0,
+      "id": "observatory_fire",
+      "kind": "fire_mote",
+      "remaining": 2
+    },
+    {
+      "cost": 0,
+      "id": "observatory_water",
+      "kind": "water_mote",
+      "remaining": 2
+    },
+    {
+      "cost": 0,
+      "id": "observatory_wind",
+      "kind": "wind_mote",
+      "remaining": 2
+    }
+  ],
+  "gold_after_acquisition": 0,
+  "summary": {
+    "armor_mitigated": 28,
+    "by_source": [
+      {
+        "activations": 17,
+        "damage": 85,
+        "hits": 17,
+        "kind": "spark",
+        "name": "微光术式",
+        "raw_damage": 85,
+        "uid": 2
+      }
+    ],
+    "class_id": "mage",
+    "damage_dealt": 85,
+    "damage_taken": 84,
+    "duration": 25.2,
+    "enemy_attacks": 14,
+    "enemy_hp": 55,
+    "enemy_max_hp": 140,
+    "event_count": 49,
+    "hp": 0,
+    "initial_hp": 84,
+    "max_hp": 84,
+    "overkill_damage_dealt": 0,
+    "overkill_damage_taken": 0,
+    "raw_damage_dealt": 85,
+    "raw_damage_taken": 112,
+    "result": "lost",
+    "rules_version": 1
+  },
+  "visuals": {
+    "alpha_render_mode": "cutout >=128, opaque interior",
+    "alpha_threshold": 128,
+    "animated": true,
+    "assets_ready": true,
+    "background_id": "moon-court",
+    "background_path": "res://assets/art/c1-static-v1/environments/moon-court.png",
+    "background_source_rect": [
+      0,
+      321.948944091797,
+      2172,
+      402.051055908203
+    ],
+    "background_source_size": [
+      2172,
+      724
+    ],
+    "class_id": "mage",
+    "enemy_anchor": [
+      1073,
+      321
+    ],
+    "enemy_frame": 0,
+    "enemy_path": "res://assets/art/mage-trial-v1/enemies/moon-sentinel.png",
+    "enemy_placeholder": false,
+    "enemy_rect": [
+      994.886108398438,
+      117,
+      149.126586914063,
+      204
+    ],
+    "enemy_scale": 0.322784810126582,
+    "enemy_source_rect": [
+      88,
+      46,
+      462,
+      632
+    ],
+    "feedback": {
+      "active": false,
+      "enemy_exit_elapsed": -1,
+      "enemy_hit_remaining": 0,
+      "enemy_opacity": 1,
+      "hero_exit_elapsed": 0.7,
+      "hero_hit_remaining": 0,
+      "hero_opacity": 0,
+      "numbers": [],
+      "outcome": "lost"
+    },
+    "ground_anchor": [
+      367,
+      321
+    ],
+    "ground_y": 321,
+    "health_rects": [
+      [
+        16,
+        12,
+        423.600006103516,
+        8
+      ],
+      [
+        972.400024414063,
+        12,
+        423.600006103516,
+        8
+      ]
+    ],
+    "hero_cast_point": [
+      431.332763671875,
+      93.8388214111328
+    ],
+    "hero_id": "mage-idle",
+    "hero_path": "res://assets/art/c1-motion-v1/characters/mage-cast.png",
+    "hero_rect": [
+      249.426345825195,
+      65,
+      203.646453857422,
+      256
+    ],
+    "hero_visible": true,
+    "missing_assets": [],
+    "motion_clip": "mage-cast",
+    "motion_frame": 0,
+    "motion_state": "idle",
+    "phase_rect": [
+      465.959991455078,
+      8,
+      480.079986572266,
+      43
+    ],
+    "scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+    "scene_rect": [
+      1,
+      61,
+      1410,
+      261
+    ],
+    "source_rect": [
+      42,
+      70,
+      459,
+      577
+    ],
+    "source_scale": [
+      0.443674176931381,
+      0.443674176931381
+    ],
+    "source_scale_is_integer": false,
+    "source_size": [
+      1122,
+      1402
+    ],
+    "spell_effects": [],
+    "stage_rect": [
+      0,
+      0,
+      1412,
+      350
+    ]
+  }
+}

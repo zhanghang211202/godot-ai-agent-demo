@@ -74,10 +74,10 @@ if (command === 'cli') {
     process.exit(1);
   }
   process.exit(run(editor, [...(command === 'script' ? ['--headless'] : []), '--path', projectRoot, '--script', ...args]));
-} else if (command === 'class-capture') {
+} else if (command === 'class-capture' || command === 'mage-capture') {
   // Foreground process for bounded native render capture; the caller chooses
   // fresh output paths and --auto-quit. Keep the same local tool environment.
-  process.exit(run(editor, ['--path', projectRoot, 'res://scenes/class_lab.tscn', ...args]));
+  process.exit(run(editor, ['--path', projectRoot, command === 'mage-capture' ? 'res://scenes/mage_trial.tscn' : 'res://scenes/class_lab.tscn', ...args]));
 } else if (command === 'test' || command === 'class-test' || command === 'class-art-test') {
   const tests = command === 'test'
     ? ['test_run_state.gd', 'test_save.gd', 'ui_smoke.gd', 'test_art_v03.gd']
@@ -88,15 +88,15 @@ if (command === 'cli') {
     const status = run(editor, ['--headless', '--path', projectRoot, '--script', `res://tests/${test}`]);
     if (status !== 0) process.exit(status);
   }
-} else if (command === 'play' || command === 'open' || command === 'class-lab' || command === 'art-review') {
+} else if (command === 'play' || command === 'open' || command === 'class-lab' || command === 'mage-lab' || command === 'art-review') {
   if (command === 'open') {
     const buildStatus = run(dotnet, ['build', 'godot-demo.csproj', '--configuration', 'Debug']);
     if (buildStatus !== 0) process.exit(buildStatus);
   }
   const logDirectory = path.join(tools, 'logs');
   mkdirSync(logDirectory, { recursive: true });
-  const logName = command === 'open' ? 'editor.log' : command === 'class-lab' ? 'classes.log' : command === 'art-review' ? 'art-review.log' : 'game.log';
-  const sceneArgs = command === 'class-lab' ? ['res://scenes/class_lab.tscn'] : command === 'art-review' ? ['res://scenes/character_review.tscn'] : [];
+  const logName = command === 'open' ? 'editor.log' : command === 'mage-lab' ? 'mage.log' : command === 'class-lab' ? 'classes.log' : command === 'art-review' ? 'art-review.log' : 'game.log';
+  const sceneArgs = command === 'mage-lab' ? ['res://scenes/mage_trial.tscn'] : command === 'class-lab' ? ['res://scenes/class_lab.tscn'] : command === 'art-review' ? ['res://scenes/character_review.tscn'] : [];
   const child = spawn(editor, [...(command === 'open' ? ['--editor'] : []), '--path', projectRoot, '--log-file', path.join(logDirectory, logName), ...sceneArgs, ...args], {
     cwd: projectRoot,
     env,
@@ -108,7 +108,7 @@ if (command === 'cli') {
     process.exitCode = 1;
   });
   child.unref();
-  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : command === 'class-lab' ? 'Native Godot class rules prototype started.' : command === 'art-review' ? 'Native character concept review started (static appearance study, not combat).' : 'Emberpack started.');
+  console.log(command === 'open' ? `Godot .NET editor started. Local MCP: ${env.GODOT_MCP_HOST}/mcp` : command === 'mage-lab' ? 'Native Moon Court mage trial started.' : command === 'class-lab' ? 'Native Godot class rules prototype started.' : command === 'art-review' ? 'Native character concept review started (static appearance study, not combat).' : 'Emberpack started.');
 } else {
   console.error(`Unknown command: ${command}. Use play, class-lab, class-capture, art-review, test, class-test, class-art-test, script, render-script, open, build, or cli.`);
   process.exit(1);

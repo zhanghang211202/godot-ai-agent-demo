@@ -29,6 +29,10 @@ Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许
 
 2026-10-27反馈样板继续使用`c1-motion-v1`原图，源文件未改。`class_actor.gdshader`仅在运行中进行角色alpha阈值、受击色与淡出；木靶、浮字、命中环与轻晃为项目代码。三次内置imagegen像素整理试验未采用，[试验记录与提示](concepts/2026-10-26-pixel-cleanup/README.ja.md)单独标明非实机、非生产素材。实际游戏截图/GIF与GPU程序纹理的读回记录分开归档于[本轮清单](devlog/screenshots/c1-feedback-v1/manifest.json)。
 
+## 法师一战 · 2026-10-27
+
+`assets/art/mage-trial-v1/`的巡卫四姿势图集和八格道具图集使用内置**imagegen**生成，是专为运行绘制的两个图集，未裁切旧概念或用户图鉴。原PNG保留，[逐字提示](../assets/art/mage-trial-v1/prompts.json)和[实际尺寸、alpha、取源区域与SHA-256](../assets/art/mage-trial-v1/manifest.json)一并保存。三法术和巡卫星辉效果由`mage_effects.gd`代码绘制，不是外部游戏素材或图生视频。主角、月庭背景和字体沿用上面已登记来源，当前仅做法师，新增骑士工作后置。
+
 ## 第三方编辑器工具
 
 `addons/godot_mcp/` 来自 [IvanMurzak/Godot-MCP v0.31.0](https://github.com/IvanMurzak/Godot-MCP/tree/v0.31.0)，采用 Apache-2.0，随附 [完整许可证](../addons/godot_mcp/LICENSE)。其 NuGet 依赖通过工程引用恢复，不包含在本仓库中。

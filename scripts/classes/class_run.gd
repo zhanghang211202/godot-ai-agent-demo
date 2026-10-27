@@ -111,6 +111,31 @@ func move(uid: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 	candidate["rotated"] = rotated
 	return _place_or_merge(candidate, cell, true)
 
+func preview_placement(data: Dictionary, cell: Vector2i) -> Dictionary:
+	# Run the actual transaction on an isolated copy. This includes owned-source
+	# removal, product anchoring, stock/cost validation and directional support.
+	var copy = get_script().new()
+	for field in ["class_id", "gold", "hp", "max_hp", "phase", "seed_value", "_next_uid"]:
+		copy.set(field, get(field))
+	copy.items.assign(items.duplicate(true))
+	copy.sources.assign(sources.duplicate(true))
+	copy.discarded_materials = discarded_materials.duplicate(true)
+	var result: Dictionary
+	if str(data.get("origin", "")) == "source":
+		result = copy.acquire(int(data.get("index", -1)), cell, bool(data.get("rotated", false)))
+	elif str(data.get("origin", "")) == "bag":
+		result = copy.move(int(data.get("uid", -1)), cell, bool(data.get("rotated", false)))
+	else:
+		return _failure("未选择物件。")
+	if not result.ok:
+		return result
+	var item: Dictionary = copy.item_by_uid(int(result.uid))
+	result["item"] = item.duplicate(true)
+	result["size"] = copy.get_item_size(item)
+	result["combat"] = copy.get_combat_config()
+	result["support_bonus"] = copy.get_adjacency_bonus(item)
+	return result
+
 func _place_or_merge(candidate: Dictionary, cell: Vector2i, owned: bool) -> Dictionary:
 	var uid: int = int(candidate["uid"])
 	var target: Dictionary = item_at(cell)

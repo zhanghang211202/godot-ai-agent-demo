@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "classification": "Actual native Godot mage-only slice fixtures, normal finite acquisition/merge/move/discard APIs, player persistence disabled. Generated source atlases are separate under assets/art/mage-trial-v1.",
+  "runtime": "Windows Godot4.7.2.NET OpenGL compatibility / NVIDIA RTX3070 Laptop GPU",
+  "movie": {
+    "file": "mage-battle.gif",
+    "source_fps": 16,
+    "source_frames": 167,
+    "start": 71,
+    "end_exclusive": 167,
+    "frames": 96,
+    "duration_seconds": 6,
+    "dimensions": [
+      720,
+      480
+    ],
+    "scale": 2,
+    "audio": false,
+    "note": "Fixed-rate Movie Maker PNGs converted with integer nearest sampling and GIF palette quantization. Not measured gameplay FPS."
+  },
+  "profiles": {
+    "baseline": "Normal legal fire/water/wind acquisitions, crystal buffs flame; full original runtime report.",
+    "tide_focus": "Same acquisitions, then normal move(uid3,[2,2]) buffs all tide segments; selected-field derived summary.",
+    "loss": "Legal discard of one starting spark, no new acquisition, HP84 unchanged; selected-field derived summary.",
+    "before_focus_icon_fix": "Intermediate real frame before single-cell icon sizing fix; not final current UI."
+  },
+  "files": [
+    {
+      "file": "1280x800/mage-built.png",
+      "bytes": 641836,
+      "sha256": "d84c6828589f4cd1a3f513dae1ff1a864a4f8f944a4842ad1cc636f78025d423",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/mage-effect-tide_lances.png",
+      "bytes": 633071,
+      "sha256": "55ce9cd164d1437b582b8e891e83bcbc22cb11512ab83f8e6691125cbbcf03a7",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "1280x800/mage-preview-weave.png",
+      "bytes": 636255,
+      "sha256": "9480d7b280a15a44a27e4c302c961413c03d2d2d767a0f7889ba9c58c39933ac",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "baseline/mage-battle.png",
+      "bytes": 936988,
+      "sha256": "a1dc3d33bde36b898be924aa216609aabbf0729b8148e17f238425d54cf5b515",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-built.png",
+      "bytes": 939282,
+      "sha256": "19abda326eb592dd6d4c0c2702b92580ec4e8fb9137866daac48594422b47f77",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-effect-enemy.png",
+      "bytes": 921093,
+      "sha256": "04c91626b8ea3c01fdae3b5dec16cf997f1aefe20d47f52cbe784fddf195089b",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-effect-flame_glyph.png",
+      "bytes": 928737,
+      "sha256": "9b4690fe9c1e96f99e60ee8c6fdcfc778da47203505346c080555577d1a7fd5b",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-effect-spark.png",
+      "bytes": 928063,
+      "sha256": "e8c9fead3edb4432cbacecfa2eb0c45b68ff548f1f34b03720c7750ad034b77e",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-effect-tide_lances.png",
+      "bytes": 932173,
+      "sha256": "00e4b95826866e1219f6ab21ebd0e1338a21b7fe27c9bda36857be62b1710cd9",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-enemy-exit.png",
+      "bytes": 930108,
+      "sha256": "ae4d82dc5436202b1f9210e4618b738086553e19f968e48b7a15447007eee742",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-enemy-hit.png",
+      "bytes": 928063,
+      "sha256": "e8c9fead3edb4432cbacecfa2eb0c45b68ff548f1f34b03720c7750ad034b77e",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-enemy-windup.png",
+      "bytes": 937207,
+      "sha256": "3e5fc6aaa0606990a444ef7c80cee8b0ed52de162f640b96f1d28ca3f0f3f8df",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-hero-hit.png",
+      "bytes": 921093,
+      "sha256": "04c91626b8ea3c01fdae3b5dec16cf997f1aefe20d47f52cbe784fddf195089b",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-motion-impact.png",
+      "bytes": 928063,
+      "sha256": "e8c9fead3edb4432cbacecfa2eb0c45b68ff548f1f34b03720c7750ad034b77e",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-motion-recover.png",
+      "bytes": 933420,
+      "sha256": "2753342039f6958386e62e4b3fa84c80973d0a7603e4d572985c01e0e68bb8f5",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-motion-windup.png",
+      "bytes": 939768,
+      "sha256": "ceea9460a41bacd4383b32c7a0abfd06e75c302781ffbe56d27af574cdf179f7",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-multi-hit.png",
+      "bytes": 932173,
+      "sha256": "00e4b95826866e1219f6ab21ebd0e1338a21b7fe27c9bda36857be62b1710cd9",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-prepare.png",
+      "bytes": 930629,
+      "sha256": "5f19729f8baae40759e8320e24633ed38f6ec438648bb701a8d882c9b1dfce9f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-preview-weave.png",
+      "bytes": 923397,
+      "sha256": "064db8e784b7aaf30c0b8427200c345de1d27fe2eaa4d410b1090e04c4edfbbc",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "baseline/mage-report.json",
+      "bytes": 39635,
+      "sha256": "9b1abf693b8614160880466918625864c54806fc98ac2de531528b63bffb6f4b"
+    },
+    {
+      "file": "baseline/mage-result.png",
+      "bytes": 907456,
+      "sha256": "61fc85a6714e6ddc5e35db9ddd7b1125b96a866563986bc386a242687335189e",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "before-focus-icon-fix.png",
+      "bytes": 923590,
+      "sha256": "5ba248f937844850d8e2b4616c7dc8ec9fd613a2326757ca09ca754db643e161",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-built.png",
+      "bytes": 913990,
+      "sha256": "33c248863c3b0f2c8360aedb77f04001f46019c22a34ff84e253c6733e5148e5",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-hero-exit.png",
+      "bytes": 882918,
+      "sha256": "c007adae8c7a69d82adcc64a432943c6d63d01f8bf6df52214d4fe7a00337098",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/mage-result.png",
+      "bytes": 871211,
+      "sha256": "7f41b45db02e2cfea91644377a8f37a6c6dfecee5786eb94568255dbb4a81425",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "loss/summary.json",
+      "bytes": 4000,
+      "sha256": "7124cf708f2bdf7f000c433c75eea17efea426a29735cfb74dcadf49fcc5b595"
+    },
+    {
+      "file": "mage-battle.gif",
+      "bytes": 7710803,
+      "sha256": "2d8299bbe973d9b7a4ac50b5095a340f64b6026f873fac5260d18ad26e73c8dd"
+    },
+    {
+      "file": "mage-prepare-1920x1080.png",
+      "bytes": 1118299,
+      "sha256": "f3cf14f44ec7b32971da3cc820e72cbfde68df317b0f059096b7463664244604",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "mage-tests.json",
+      "bytes": 8997,
+      "sha256": "7eb8893770d9e43aaec9c0b1c91cf85184b9720b94aed0bf382f0600501d0944"
+    },
+    {
+      "file": "tide-focus/mage-built.png",
+      "bytes": 939370,
+      "sha256": "39490227598bd132e2eb8b161eeb2e513c2daca41f8bfc3669944630d7e25ead",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "tide-focus/mage-effect-tide_lances.png",
+      "bytes": 928879,
+      "sha256": "128ede1aba46b620037a3663e38a6a197a9becde002b5fb68a853883f2730d6f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "tide-focus/mage-result.png",
+      "bytes": 907581,
+      "sha256": "8abb7c655f5f7209c6aa43162b8b70fa88ba362e3569a87f13578f4ac42ab97f",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "tide-focus/summary.json",
+      "bytes": 5418,
+      "sha256": "b6cbec02d837a35b290ddd52ddb6a978009387160ef9c81fd5b93a104199cd9b"
+    }
+  ]
+}

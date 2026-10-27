@@ -6,6 +6,7 @@ const FILES := {"mage-cast": "mage-cast.png", "knight-sword": "knight-sword.png"
 # Measured boot-midpoint x anchors in original PNG coordinates. Y is the last
 # alpha>=128 row of each frame. A common scale is used throughout each clip.
 const FOOT_X := {"mage-cast": [307, 879, 340, 880], "knight-sword": [260, 923, 246, 903], "knight-greatblade": [249, 924, 250, 842]}
+const MAGE_CAST_POINTS := [Vector2(452, 135), Vector2(1026, 155), Vector2(508, 810), Vector2(1028, 812)]
 static var _assets: Dictionary = {}
 var clip := ""
 var state := "idle"
@@ -106,7 +107,8 @@ static func get_asset(id: String) -> Dictionary:
 		above = maxf(above, pivot.y - bounds.position.y)
 		left = maxf(left, pivot.x - bounds.position.x)
 		right = maxf(right, bounds.end.x - pivot.x)
-		frames.append({"source_rect": Rect2(bounds), "region": Rect2(regions[index]), "pivot": pivot})
+		frames.append({"source_rect": Rect2(bounds), "region": Rect2(regions[index]), "pivot": pivot,
+			"cast_point": MAGE_CAST_POINTS[index] if id == "mage-cast" else pivot})
 	var result := {"id": id, "path": path, "texture": ImageTexture.create_from_image(image), "size": dimensions,
 		"frames": frames, "height": above, "left": left, "right": right}
 	_assets[id] = result
