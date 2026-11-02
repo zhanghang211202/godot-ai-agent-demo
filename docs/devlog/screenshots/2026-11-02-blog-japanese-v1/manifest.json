@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-02",
+  "classification": "Actual native Godot fixture captures with Japanese UI and player persistence disabled; not human playtesting or historical recordings.",
+  "files": [
+    {
+      "file": "moth-ward.png",
+      "source_fixture": "moth/mage-ward-hit.png",
+      "bytes": 918093,
+      "sha256": "e7096ccc3dca073efd9c021656e66f9fc4381c2a2e850bc201d664f1bbfcbd90",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth-frost-impact.png",
+      "source_fixture": "moth/mage-vfx-impact-frost_bolt.png",
+      "bytes": 931612,
+      "sha256": "e963da28836c6bbdc4ceb883021cc6aa6b8c1d311171226aad307fb8781512bc",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "moth-report.json",
+      "source_fixture": "moth/mage-report.json",
+      "bytes": 88563,
+      "sha256": "4d35437e0b8ff962ee3c5fda8b2605fcd86e72daa0337ca2152d32cf1fb00a55"
+    },
+    {
+      "file": "golem-flame-impact.png",
+      "source_fixture": "golem/mage-vfx-impact-ember_tornado.png",
+      "bytes": 978054,
+      "sha256": "6d2e7e18fefa6df90dd61385b670cf7e33b58e47660105d93996d87a5b30c718",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem-steam-flight.png",
+      "source_fixture": "golem/mage-vfx-flight-steam_burst.png",
+      "bytes": 984983,
+      "sha256": "ee0051839cb3c64f7dadb4d8c0a5fd7f97f18d283b38fa05cdd1e0b57cc241a2",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "golem-report.json",
+      "source_fixture": "golem/mage-report.json",
+      "bytes": 83438,
+      "sha256": "b59e8e578649e83f0f95e5aa6422107cf3c416aef5913af2a29d549b20d471ae"
+    }
+  ]
+}
