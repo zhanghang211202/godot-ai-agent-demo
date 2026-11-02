@@ -14,14 +14,19 @@
 
 ## 二、给本地 Codex 的任务
 
-1. 确认 `project.godot`、Godot 版本和 Git 状态，不覆盖未提交变更。
-2. 梳理入口、角色场景、UI、特效、动画与 2D/3D 素材。
-3. 检查 AnimationPlayer、AnimationTree、AnimatedSprite2D、SpriteFrames、Skeleton2D、Bone2D、Tween、shader 与脚本插值的使用和可复用性。
-4. 选 1–3 个影响观感的动作，区分素材、姿势、插值、切换、节奏和反馈问题。
-5. 比较 A：现有 Sprite2D/Node2D + AnimationPlayer；B：逐帧 + AnimatedSprite2D；C：分层素材 + Skeleton2D/Bone2D。
-6. 核查已安装 MCP、版本、场景树、动画轨道、画面和错误能力，以及来源、兼容与权限风险；不自行安装插件。
-7. 在以下四部分记录实测结果和证据路径，推测须标明。
-8. 只建议一个低风险 PoC，写明文件、方式、验证、验收与回滚；首轮不执行，等待用户批准。
+请在 `D:\WorkSpace\godot-demo` 项目根目录执行以下工作：
+
+1. 确认项目根目录存在 `project.godot`。记录 Godot 版本（从 `config/features`、当前环境可执行文件版本和项目配置中确认；如果无法确认就明确注明）。先检查 `git status`，不要覆盖用户未提交的修改。
+2. 梳理目录结构、入口场景、角色场景、UI、特效、动画素材与相关 GDScript。重点搜索 `.tscn`、`.tres`、`.gd`、`addons/`、`assets/` 以及所有常用的 2D/3D 图像和模型资源。
+3. 找出所有已有的 `AnimationPlayer`、`AnimationTree`、`AnimatedSprite2D`、`SpriteFrames`、`Skeleton2D`、`Bone2D`、Tween / `create_tween()`、shader 动画和脚本插值逻辑。说明每套系统目前控制什么、在哪个场景中使用、能否复用。
+4. 选 1–3 个最影响观感的动作/场景，指出问题是素材不连续、关键姿势不够、插值/缓动不佳、状态切换生硬、时间安排欠妥、视觉反馈不足，还是角色骨骼/分层不适合。
+5. 根据**实际现有资源**，评估以下三条路线：
+   - A：现有 Sprite2D/Node2D + AnimationPlayer，制作 transform、opacity、shader 参数、局部节点的可复用动画。
+   - B：现有逐帧图 + AnimatedSprite2D/SpriteFrames，必要时增加 AnimationPlayer 做辅助特效。
+   - C：需要分层素材/骨骼的角色 + Skeleton2D/Bone2D + AnimationPlayer；仅在资源允许时推荐。
+6. 检查是否已安装 MCP 插件、是否具备兼容的 Godot 版本。只有确定适配与收益后，再推荐一个具体 MCP 方案。优先考察是否可以查看场景树、操作 AnimationPlayer 轨道与关键帧、查看运行画面和报错。记录插件来源、版本要求、可能的网络/执行权限风险，不要自行安装。
+7. 将**实测结果**写入本文件的“项目实况”“问题优先级”“方案判断”“实施步骤”四部分，并给出明确的证据路径（例如 `res://scenes/player.tscn`、脚本、节点）。不要把推测写成已发现的事实。
+8. 只建议一个低风险的 PoC（概念验证），例如挑一个角色的 idle/walk 或一个 UI 弹出动效；写明涉及文件、实现方法、测试方式、验收标准、回滚方式。**首轮不要直接执行 PoC，等待用户批准。**
 
 ## 三、项目实况
 
