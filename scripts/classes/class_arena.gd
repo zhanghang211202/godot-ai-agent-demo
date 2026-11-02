@@ -8,11 +8,13 @@ const MageArt = preload("res://scripts/classes/mage_art.gd")
 const MageEffects = preload("res://scripts/classes/mage_effects.gd")
 const Shield = preload("res://scripts/classes/mage_shield.gd")
 const Encounters = preload("res://scripts/classes/mage_encounters.gd")
+const MageHitMotion = preload("res://scenes/components/mage_hit_motion.tscn")
 var motion = Motion.new()
 var feedback = Feedback.new()
 var pixel_cutout_enabled := true
 var shield_effects_enabled := true
 var actor_sprite: Sprite2D
+var mage_hit_motion: Node2D
 var actor_material: ShaderMaterial
 var enemy_sprite: Sprite2D
 var enemy_material: ShaderMaterial
@@ -37,6 +39,8 @@ func _ready() -> void:
 	ground_effects_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	ground_effects_layer.draw.connect(_draw_ground_effects)
 	add_child(ground_effects_layer)
+	mage_hit_motion = MageHitMotion.instantiate()
+	add_child(mage_hit_motion)
 	actor_sprite = Sprite2D.new()
 	actor_sprite.centered = false
 	actor_sprite.region_enabled = true
@@ -44,7 +48,7 @@ func _ready() -> void:
 	actor_material = ShaderMaterial.new()
 	actor_material.shader = preload("res://scripts/classes/class_actor.gdshader")
 	actor_sprite.material = actor_material
-	add_child(actor_sprite)
+	mage_hit_motion.add_child(actor_sprite)
 	enemy_sprite = Sprite2D.new()
 	enemy_sprite.centered = false
 	enemy_sprite.region_enabled = true
@@ -63,6 +67,8 @@ func _ready() -> void:
 func show_event(event: Dictionary) -> void:
 	motion.show_event(event)
 	feedback.show_event(event)
+	if run != null and run.class_id == "mage" and mage_hit_motion != null:
+		mage_hit_motion.show_hit(event)
 	if str(event.get("type", "")) == "battle_end":
 		motion.finish_battle()
 	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi", "attack", "heavy_charge", "charge"]:
@@ -75,17 +81,20 @@ func reset_presentation() -> void:
 	flash = 0.0
 	motion.reset()
 	feedback.reset()
+	if mage_hit_motion != null:
+		mage_hit_motion.reset_motion()
 	queue_redraw()
 	if effects_layer != null:
 		effects_layer.queue_redraw()
 
 func has_pending_presentation() -> bool:
-	return motion.state != "idle" or feedback.is_active()
+	return motion.state != "idle" or feedback.is_active() or (mage_hit_motion != null and mage_hit_motion.player.is_playing())
 
 func _process(delta: float) -> void:
 	if battle != null and battle.paused:
 		return
 	if flash > 0 or has_pending_presentation() or (battle != null and battle.phase == "battle"):
+		mage_hit_motion.advance_motion(delta, false, playback_speed)
 		motion.advance(delta * playback_speed)
 		if motion.state == "idle":
 			for cast: Dictionary in _upcoming_casts():
@@ -126,10 +135,18 @@ func _hero_id() -> String:
 func _encounter() -> Dictionary:
 	return battle.get_encounter() if battle != null and battle.phase != "idle" else Encounters.definition(encounter_id)
 
+func _mage_recoil() -> Vector2:
+	return mage_hit_motion.position if run != null and run.class_id == "mage" and mage_hit_motion != null else Vector2.ZERO
+
+func _mage_effect_rect(layout: Dictionary) -> Rect2:
+	var rect: Rect2 = layout.hero_rect
+	rect.position += _mage_recoil()
+	return rect
+
 func _incoming_point(layout: Dictionary) -> Vector2:
 	var config: Dictionary = battle.get("_config") if battle != null and battle.phase != "idle" else run.get_combat_config()
 	if run.class_id == "mage" and int(config.get("armor", 0)) > 0:
-		var shape := Shield.geometry(layout.hero_rect)
+		var shape := Shield.geometry(_mage_effect_rect(layout))
 		return Vector2(shape.center) + Vector2(Vector2(shape.radius).x * 0.94, 0)
 	return Vector2(layout.ground_anchor) - Vector2(0, 110)
 
@@ -252,7 +269,9 @@ func _draw() -> void:
 		actor_sprite.visible = true
 		actor_sprite.texture = hero.texture
 		actor_sprite.region_rect = layout.source_rect
-		actor_sprite.position = layout.hero_rect.position + Vector2(roundf(sin(feedback.hero_hit * 90.0) * 3.0) if feedback.hero_hit > 0 else 0.0, 0)
+		# Mage recoil belongs to the AnimationPlayer wrapper, not this layout.
+		var legacy_shake := roundf(sin(feedback.hero_hit * 90.0) * 3.0) if run.class_id != "mage" and feedback.hero_hit > 0 else 0.0
+		actor_sprite.position = layout.hero_rect.position + Vector2(legacy_shake, 0)
 		actor_sprite.scale = layout.source_scale
 		actor_material.set_shader_parameter("cutout_enabled", pixel_cutout_enabled)
 		actor_material.set_shader_parameter("hurt_strength", 0.65 * feedback.hero_hit / Feedback.HIT_TIME)
@@ -372,8 +391,8 @@ func _draw_ground_effects() -> void:
 		return
 	var layout := get_art_layout()
 	ground_effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
-	MageEffects.draw_ground(ground_effects_layer, layout.spell_casts, layout.spell_effects, layout.ground_anchor, layout.enemy_anchor)
-	Shield.draw_back(ground_effects_layer, layout.shields, layout.hero_rect)
+	MageEffects.draw_ground(ground_effects_layer, layout.spell_casts, layout.spell_effects, Vector2(layout.ground_anchor) + _mage_recoil(), layout.enemy_anchor)
+	Shield.draw_back(ground_effects_layer, layout.shields, _mage_effect_rect(layout))
 
 func _draw_feedback() -> void:
 	if run == null or battle == null:
@@ -382,13 +401,13 @@ func _draw_feedback() -> void:
 	effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	if run.class_id == "mage":
 		for cast: Dictionary in layout.spell_casts:
-			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else layout.hero_cast_point
+			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else Vector2(layout.hero_cast_point) + _mage_recoil()
 			var to: Vector2 = _incoming_point(layout) if cast.target == "hero" else layout.enemy_cast_point
 			MageEffects.draw_cast(effects_layer, cast, from, to)
 		for effect: Dictionary in layout.spell_effects:
-			var hero_point: Vector2 = _incoming_point(layout) if effect.target == "hero" else layout.hero_cast_point
+			var hero_point: Vector2 = _incoming_point(layout) if effect.target == "hero" else Vector2(layout.hero_cast_point) + _mage_recoil()
 			MageEffects.draw_effect(effects_layer, effect, hero_point, layout.enemy_cast_point)
-		Shield.draw_front(effects_layer, layout.shields, layout.hero_rect)
+		Shield.draw_front(effects_layer, layout.shields, _mage_effect_rect(layout))
 	var slots := {"hero": 0, "enemy": 0}
 	for index in range(feedback.numbers.size() - 1, -1, -1):
 		var number: Dictionary = feedback.numbers[index]

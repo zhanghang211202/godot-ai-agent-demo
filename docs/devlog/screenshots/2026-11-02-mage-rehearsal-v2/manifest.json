@@ -1,0 +1,107 @@
+{
+  "date": "2026-11-02",
+  "type": "native-godot-test-fixtures",
+  "description": "Rehearsal UI and manually stepped animation during a real combat event; no player persistence, no human playtest.",
+  "hit_animation": {
+    "crop": [
+      208,
+      152,
+      1056,
+      262
+    ],
+    "visual_times_seconds": [
+      0,
+      0.05,
+      0.1,
+      0.15,
+      0.23
+    ],
+    "gif_delays_ms": [
+      350,
+      50,
+      50,
+      80,
+      450
+    ],
+    "note": "Endpoint holds are extended; fixture manually advances presentation while combat simulation remains at the hit event. Not real-time footage."
+  },
+  "files": [
+    {
+      "file": "hit-frame-0.png",
+      "bytes": 921090,
+      "sha256": "35780e9f4f406d812c9bb9443308713d573382debc955caaa3d80b1db03ea635",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "hit-frame-1.png",
+      "bytes": 928965,
+      "sha256": "efbf89f40e12100c2a4494f1409bfba59624a2d825b828796759ab10a55ad774",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "hit-frame-2.png",
+      "bytes": 934955,
+      "sha256": "33dd2e94968b51cc79eae9974b3b3551224d58b46e2d5fbab4968b14482705ae",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "hit-frame-3.png",
+      "bytes": 940142,
+      "sha256": "35881c2f7851534810de23a94327370ca59ce31062914f0ca79afafa90340adf",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "hit-frame-4.png",
+      "bytes": 947033,
+      "sha256": "42ab83614105efdcdc2d7b9e0046c44a2429745af57e01fe19ff85f1bb70cd06",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "hit-sequence.gif",
+      "bytes": 673007,
+      "sha256": "07bdc6e06f9958326c4ef812c961f3c0c1457a169a01161f26491b593bea4a6d"
+    },
+    {
+      "file": "rehearsal.png",
+      "bytes": 955144,
+      "sha256": "4c980a5130751c01c0ce241bf90f26800926b623f3185a350d5f81aaa5814290",
+      "dimensions": [
+        1440,
+        960
+      ]
+    },
+    {
+      "file": "rehearsal-1280.png",
+      "bytes": 661202,
+      "sha256": "7b965373e0ab79aabdf8aa981bb776772551c4e1557f9805430cdad4cdc9966c",
+      "dimensions": [
+        1280,
+        800
+      ]
+    },
+    {
+      "file": "rehearsal-1920.png",
+      "bytes": 1167831,
+      "sha256": "36ffcee479a65cff0dc03473c1129665d096ab014c22bf4b477acc557e95dfe9",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

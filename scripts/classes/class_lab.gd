@@ -10,6 +10,7 @@ const ArenaView = preload("res://scripts/classes/class_arena.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
 const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const RecipeGuide = preload("res://scripts/classes/mage_recipe_guide.gd")
+const Rehearsal = preload("res://scripts/classes/mage_rehearsal.gd")
 
 @export var mage_focus := false
 
@@ -35,10 +36,13 @@ var load_button: Button
 var discard_button: Button
 var rotate_button: Button
 var replay_button: Button
+var rehearsal_button: Button
 var summary_label: Label
 var preview_label: Label
 var detail_icon: TextureRect
 var details_scroll: ScrollContainer
+var details_content: VBoxContainer
+var _rehearsal_signature := ""
 var speed := 1.0
 var encounter_id := "sentinel"
 var encounter_selector: OptionButton
@@ -204,7 +208,7 @@ func _build_interface() -> void:
 	details_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	details_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	details.add_child(details_scroll)
-	var details_content := VBoxContainer.new()
+	details_content = VBoxContainer.new()
 	details_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details_content.add_theme_constant_override("separation", 14)
 	details_scroll.add_child(details_content)
@@ -243,6 +247,10 @@ func _build_interface() -> void:
 	speed_button = _button("1×", _speed)
 	footer.add_child(pause_button)
 	footer.add_child(speed_button)
+	if mage_focus:
+		rehearsal_button = _button("予行演習", _rehearse)
+		rehearsal_button.tooltip_text = "現在の配置で3種類の敵と仮想戦闘。素材や保存データは変わりません。"
+		footer.add_child(rehearsal_button)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(spacer)
@@ -414,6 +422,8 @@ func _new_class(id: String) -> void:
 		_notice("戦闘中は職業を変更できません。戦闘を終えるか戦前に戻してください。")
 		return
 	_close_recipe_book()
+	_rehearsal_signature = ""
+	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	grid.clear_merge_feedback()
 	var result: Dictionary = run.new_run(id, 12345)
 	if not result.ok:
@@ -553,6 +563,8 @@ func _load() -> void:
 	var result: Dictionary = Save.load_run(run, checkpoint_path)
 	_notice(str(result.message))
 	if result.ok:
+		_rehearsal_signature = ""
+		details_content.move_child(summary_label, details_content.get_child_count() - 1)
 		battle = BattleRules.new()
 		_before_battle = {}
 		arena.battle = battle
@@ -583,6 +595,8 @@ func _start_battle() -> void:
 	if persistence_enabled and not _save():
 		return
 	_before_battle = {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "seed_value": run.seed_value, "next_uid": run._next_uid, "discarded": run.discarded_materials.duplicate(true)}
+	_rehearsal_signature = ""
+	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	battle = candidate
 	arena.battle = battle
 	arena.reset_presentation()
@@ -598,6 +612,8 @@ func _restore_before_battle() -> void:
 		_notice("今回の戦前データはありません。以前の保存データを読めます。")
 		return
 	run.new_run(str(_before_battle.class_id), int(_before_battle.seed_value))
+	_rehearsal_signature = ""
+	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	run.items.assign(_before_battle.items.duplicate(true))
 	run.sources.assign(_before_battle.sources.duplicate(true))
 	run.gold = int(_before_battle.gold)
@@ -627,7 +643,33 @@ func _notice(message: String) -> void:
 	if status_label != null:
 		status_label.text = message
 
+func _rehearsal_state_signature() -> String:
+	# Include even unused raw elements: any committed layout edit invalidates the
+	# visible forecast, while selecting/rotating a held preview does not.
+	return JSON.stringify([run.class_id, run.items, run.sources, run.gold, run.hp, run.max_hp])
+
+func _rehearse() -> void:
+	if not mage_focus or run.phase != "prepare" or (recipe_overlay != null and recipe_overlay.visible):
+		return
+	var result: Dictionary = Rehearsal.simulate(run)
+	if not result.ok:
+		_notice(str(result.message))
+		return
+	var lines: PackedStringArray = ["予行演習 · 現在の配置", "乱数なしの現在ルールで仮想戦闘。報酬・素材消費なし。"]
+	for encounter: Dictionary in result.encounters:
+		var summary: Dictionary = encounter.summary
+		var outcome := "勝利" if summary.result == "won" else "時間切れ" if summary.result == "timeout" else "敗北"
+		lines.append("%s：%s · %.2f秒\n残りHP %d / %d · 与ダメージ %d" % [encounter.name, outcome, summary.duration, summary.hp, summary.max_hp, summary.damage_dealt])
+	summary_label.text = "\n".join(lines)
+	_rehearsal_signature = _rehearsal_state_signature()
+	details_content.move_child(summary_label, 0)
+	details_scroll.scroll_vertical = 0
+	_notice("予行演習の結果を表示しました。配置を変えると結果は消えます。")
+
 func _sync() -> void:
+	if not _rehearsal_signature.is_empty() and _rehearsal_signature != _rehearsal_state_signature():
+		_rehearsal_signature = ""
+		summary_label.text = "配置が変わりました。予行演習をもう一度実行してください。"
 	arena.playback_speed = speed
 	arena.encounter_id = encounter_id if mage_focus else "sentinel"
 	if encounter_selector != null:
@@ -687,6 +729,8 @@ func _sync() -> void:
 	replay_button.disabled = _before_battle.is_empty()
 	if recipe_button != null:
 		recipe_button.disabled = run.phase != "prepare"
+	if rehearsal_button != null:
+		rehearsal_button.disabled = run.phase != "prepare"
 	for id in class_buttons:
 		class_buttons[id].disabled = run.phase == "battle"
 	grid.update_preview()

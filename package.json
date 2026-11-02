@@ -10,6 +10,8 @@
     "game:mage:vfx:test": "node scripts/godot.mjs render-script res://tests/test_mage_vfx.gd",
     "game:mage:expansion:test": "node scripts/godot.mjs render-script res://tests/test_mage_expansion.gd",
     "game:mage:discovery:test": "node scripts/godot.mjs render-script res://tests/test_mage_discovery.gd",
+    "game:mage:hit:test": "node scripts/godot.mjs render-script res://tests/test_mage_hit_motion.gd",
+    "game:mage:rehearsal:test": "node scripts/godot.mjs render-script res://tests/test_mage_rehearsal.gd",
     "game:classes:test": "node scripts/godot.mjs class-test",
     "game:classes:art:test": "node scripts/godot.mjs class-art-test",
     "game:classes:feedback:render:test": "node scripts/godot.mjs render-script res://tests/test_class_feedback_render.gd",

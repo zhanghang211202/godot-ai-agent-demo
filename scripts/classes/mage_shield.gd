@@ -38,10 +38,21 @@ static func draw_front(canvas: CanvasItem, shields: Array, hero: Rect2) -> void:
 		canvas.draw_polyline(ring(center, radius, 0, TAU, 32), Color("9cc6ff", fade * 0.7), 2, false)
 		# Brighter frontal arc catches the incoming spell, leaving the face clear.
 		canvas.draw_polyline(ring(center, radius, -0.78, 0.78, 12), Color("ddf5ff", fade), 4, false)
+		# A second expanding arc makes the ward read as a flexible barrier, while
+		# its opacity follows only the real mitigated hit's bounded lifetime.
+		canvas.draw_polyline(ring(center, radius * (1.0 + progress * 0.07), -0.95, 0.95, 16), Color("80b8ff", fade * 0.6), 2, false)
 		for hit in range(mini(4, int(shield.hits))):
 			var point := center + Vector2(radius.x * 0.94, (hit - (int(shield.hits) - 1) * 0.5) * 22)
 			var ripple := 7 + progress * 34
 			canvas.draw_polyline(ring(point, Vector2(ripple * 0.42, ripple), 0, TAU, 10), Color("c5eaff", fade), 2, false)
+			var burst := maxf(0.0, 1.0 - progress * 3.0)
+			var impact := snap(point)
+			canvas.draw_line(impact - Vector2(0, 10), impact + Vector2(0, 10), Color("f0ffff", burst), 3, false)
+			canvas.draw_line(impact - Vector2(6, 0), impact + Vector2(8, 0), Color("f0ffff", burst), 3, false)
+			for shard in range(4):
+				var angle := -0.9 + shard * 0.6
+				var fragment := snap(point + Vector2.from_angle(angle) * (8 + progress * 34))
+				canvas.draw_rect(Rect2(fragment, Vector2(4, 4)), Color("b8e5ff", fade * 0.85))
 		for index in range(7):
 			var angle := -0.72 + index * 0.24
 			var at := center + Vector2(cos(angle), sin(angle)) * radius
