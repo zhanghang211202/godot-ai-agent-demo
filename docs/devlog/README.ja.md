@@ -1,11 +1,14 @@
 # 格子合成 RPG 開発記録（新タイトルは選定中）
 
+> 動画は当時の実機録画を戦闘部分に切り出し、文字が出る領域にモザイクを施した派生版です。元の録画は各マイルストーンのフォルダーに保存し、派生元と処理内容は各 manifest に記録しています。
+
 ブログ用の素材を、実際のコード・実行結果・スクリーンショットと一緒に残すための記録です。
 記録日は日本時間（JST）を基準にします。作業時間は計測していないため、所要時間や生産性の数値は記載しません。
 
 ## 記録
 
-- [2026-10-27：法盾が攻撃を受け止め、敵と魔法が増える（最新）](2026-10-27-mage-expansion.ja.md)
+- [2026-11-02：レシピ発見とゲーム画面の日本語化（最新）](2026-11-02-japanese-discovery.ja.md)
+- [2026-10-27：法盾が攻撃を受け止め、敵と魔法が増える](2026-10-27-mage-expansion.ja.md)
 - [2026-10-27：一本の線から、追える魔法へ](2026-10-27-mage-vfx.ja.md)
 
 - [2026-10-21：環境構築から Demo 0.2 まで](2026-10-21.ja.md)
@@ -39,7 +42,7 @@
 | 0.2 | 勝利後の祝福選択 | [blessings.png](screenshots/v0.2/blessings.png) |
 | 0.2 | 一時停止とセーブのメニュー | [menu.png](screenshots/v0.2/menu.png) |
 | 0.3 sample | 主役・苔団と皮革バッグ / 紙の手記 | [prepare.png](screenshots/v0.3-sample/prepare.png) |
-| 0.3 sample | 実行中の戦闘、5秒 / 無音 / 縮小GIF | [battle-motion.gif](screenshots/v0.3-sample/battle-motion.gif) |
+| 0.3 sample | 実行中の戦闘、5秒 / 無音 / 縮小GIF | [battle-motion.gif](screenshots/2026-11-02-text-obscured-v2/v03-battle.gif) |
 | 0.3 sample | ドラッグの占有範囲プレビュー | [drag-preview.png](screenshots/v0.3-sample/drag-preview.png) |
 | 0.3 sample | 初期資源だけの合成例、旧素材を含む | [forging.png](screenshots/v0.3-sample/forging.png) |
 | 0.3 sample | 祝福カードと全画面マスク | [blessings.png](screenshots/v0.3-sample/blessings.png) |

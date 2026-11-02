@@ -5,7 +5,7 @@ static func draw(ui) -> void:
 	var r: Rect2 = l.bag_rect
 	ui.Materials.draw_panel(ui, r, "leather")
 	ui._icon("backpack", Rect2(r.position + Vector2(20, 16), Vector2(32, 32)))
-	ui._label("旅人的行囊", r.position + Vector2(63, 39), 22, ui.TEXT)
+	ui._label("旅人のバッグ", r.position + Vector2(63, 39), 22, ui.TEXT)
 	ui._label("6 × 4", Vector2(r.end.x - 68, r.position.y + 38), 14, ui.GOLD)
 	var grid: Rect2 = l.grid_rect()
 	ui._frame(grid.grow(8), Color("211e1b"), Color("8c6746"))
@@ -28,7 +28,7 @@ static func draw(ui) -> void:
 	if ui.merge_glow > 0.0:
 		ui.draw_rect(grid.grow(8), Color(0.95, 0.77, 0.36, ui.merge_glow * 0.6), false, 3)
 	var stats: Dictionary = ui.game.get_stats()
-	ui._label("%d 组连接" % stats["synergy_count"], Vector2(r.position.x + 24, r.end.y - 27), 15, ui.TEAL)
-	ui._button(l.sell_rect, "出售  /  D", false, 14, ui.game.phase != "prepare")
+	ui._label("接続 %d 組" % stats["synergy_count"], Vector2(r.position.x + 24, r.end.y - 27), 15, ui.TEAL)
+	ui._button(l.sell_rect, "売却 / D", false, 14, ui.game.phase != "prepare")
 	if r.size.y > 410:
-		ui._center("R 旋转  ·  同级叠放升级  ·  蓝点连接武器", Rect2(grid.position.x, grid.end.y + 18, grid.size.x, 26), 13, Color("b4b29a"))
+		ui._center("R 回転 · 同じ装備を重ねて強化 · 青点で接続", Rect2(grid.position.x, grid.end.y + 18, grid.size.x, 26), 13, Color("b4b29a"))

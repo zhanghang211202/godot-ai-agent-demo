@@ -18,7 +18,7 @@ var discarded_materials: Dictionary = {}
 func new_run(id: String = "mage", seed: int = 12345) -> Dictionary:
 	var info: Dictionary = Catalog.create_info(id)
 	if info.is_empty():
-		return _failure("未知职业，当前整备未改变。")
+		return _failure("不明な職業です。現在の準備は変更されません。")
 	class_id = id
 	seed_value = seed
 	items = Catalog.initial_inventory(id)
@@ -29,7 +29,7 @@ func new_run(id: String = "mage", seed: int = 12345) -> Dictionary:
 	phase = "prepare"
 	discarded_materials.clear()
 	_next_uid = items.size() + 1
-	return {"ok": true, "event": "new_run", "message": "已开启固定来源的 C0 一战规则切片。"}
+	return {"ok": true, "event": "new_run", "message": "有限素材の試練を開始しました。"}
 
 func get_definition(kind: String) -> Dictionary:
 	return Catalog.definition(kind)
@@ -78,18 +78,18 @@ func _can_place_ignoring(item: Dictionary, cell: Vector2i, ignored: Array) -> bo
 
 func acquire(source_index: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 	if phase != "prepare":
-		return _failure("只有整备阶段可以取得资源。")
+		return _failure("素材は準備中のみ取得できます。")
 	if source_index < 0 or source_index >= sources.size():
-		return _failure("无效资源来源。")
+		return _failure("素材の取得元が無効です。")
 	var source: Dictionary = sources[source_index]
 	var definition: Dictionary = get_definition(str(source.get("kind", "")))
 	if definition.is_empty() or str(definition["class_id"]) != class_id:
-		return _failure("该来源不属于当前职业。")
+		return _failure("この素材は現在の職業では取得できません。")
 	if int(source["remaining"]) <= 0:
-		return _failure("本次来源已耗尽，不会自动刷新。")
+		return _failure("この素材は使い切りました。自動補充はありません。")
 	var cost: int = int(source["cost"])
 	if cost < 0 or gold < cost:
-		return _failure("金币不足。")
+		return _failure("金貨が足りません。")
 	var candidate: Dictionary = {"uid": _next_uid, "kind": source["kind"], "pos": cell, "rotated": rotated}
 	var result: Dictionary = _place_or_merge(candidate, cell, false)
 	if not bool(result["ok"]):
@@ -103,10 +103,10 @@ func acquire(source_index: int, cell: Vector2i, rotated: bool = false) -> Dictio
 
 func move(uid: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 	if phase != "prepare":
-		return _failure("只有整备阶段可以移动或合成。")
+		return _failure("移動や合成は準備中のみ可能です。")
 	var original: Dictionary = item_by_uid(uid)
 	if original.is_empty():
-		return _failure("未找到物件。")
+		return _failure("アイテムが見つかりません。")
 	var candidate: Dictionary = original.duplicate(true)
 	candidate["rotated"] = rotated
 	return _place_or_merge(candidate, cell, true)
@@ -126,7 +126,7 @@ func preview_placement(data: Dictionary, cell: Vector2i) -> Dictionary:
 	elif str(data.get("origin", "")) == "bag":
 		result = copy.move(int(data.get("uid", -1)), cell, bool(data.get("rotated", false)))
 	else:
-		return _failure("未选择物件。")
+		return _failure("アイテムが選択されていません。")
 	if not result.ok:
 		return result
 	var item: Dictionary = copy.item_by_uid(int(result.uid))
@@ -142,22 +142,22 @@ func _place_or_merge(candidate: Dictionary, cell: Vector2i, owned: bool) -> Dict
 	if not target.is_empty() and int(target["uid"]) != uid:
 		var product_kind: String = get_merge_result(candidate, target)
 		if product_kind.is_empty():
-			return _failure("目标不符合任何本职业配方。")
+			return _failure("この組み合わせのレシピはありません。")
 		var product: Dictionary = {"uid": target["uid"], "kind": product_kind, "pos": target["pos"], "rotated": candidate["rotated"]}
 		var ignored: Array = [int(target["uid"])]
 		if owned:
 			ignored.append(uid)
 		if not _can_place_ignoring(product, product["pos"], ignored):
-			return _failure("合成产物空间不足；材料、来源次数与金币均已保留。")
+			return _failure("完成品の空きマスが不足しています。素材や金貨は消費されません。")
 		if owned:
 			_remove_uid(uid)
 		var actual_target: Dictionary = item_by_uid(int(target["uid"]))
 		actual_target["kind"] = product_kind
 		actual_target["rotated"] = candidate["rotated"]
-		return {"ok": true, "event": "merge", "uid": target["uid"], "kind": product_kind, "message": "合成完成：" + str(get_definition(product_kind)["name"])}
+		return {"ok": true, "event": "merge", "uid": target["uid"], "kind": product_kind, "message": "合成完了：" + str(get_definition(product_kind)["name"])}
 	var ignore_uid: int = uid if owned else -1
 	if not can_place(candidate, cell, ignore_uid):
-		return _failure("物件越界、空间被占用或不属于当前职业。")
+		return _failure("盤の外、配置済みのマス、または職業に合わないアイテムです。")
 	if owned:
 		var actual_item: Dictionary = item_by_uid(uid)
 		actual_item["pos"] = cell
@@ -165,19 +165,19 @@ func _place_or_merge(candidate: Dictionary, cell: Vector2i, owned: bool) -> Dict
 	else:
 		candidate["pos"] = cell
 		items.append(candidate)
-	return {"ok": true, "event": "move" if owned else "acquire", "uid": uid, "kind": candidate["kind"], "message": "已放置：" + str(get_definition(candidate["kind"])["name"])}
+	return {"ok": true, "event": "move" if owned else "acquire", "uid": uid, "kind": candidate["kind"], "message": "配置しました：" + str(get_definition(candidate["kind"])["name"])}
 
 func discard(uid: int) -> Dictionary:
 	if phase != "prepare":
-		return _failure("只有整备阶段可以舍弃物件。")
+		return _failure("アイテムは準備中のみ捨てられます。")
 	var item: Dictionary = item_by_uid(uid)
 	if item.is_empty():
-		return _failure("未找到物件。")
+		return _failure("アイテムが見つかりません。")
 	var materials: Dictionary = get_definition(str(item["kind"]))["materials"]
 	for kind: Variant in materials:
 		discarded_materials[kind] = int(discarded_materials.get(kind, 0)) + int(materials[kind])
 	_remove_uid(uid)
-	return {"ok": true, "event": "discard", "message": "已舍弃；不会退款或返还元素。"}
+	return {"ok": true, "event": "discard", "message": "捨てました。金貨や元素は返却されません。"}
 
 func _remove_uid(uid: int) -> void:
 	for index: int in range(items.size()):

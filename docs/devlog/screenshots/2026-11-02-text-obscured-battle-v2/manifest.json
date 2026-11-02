@@ -1,0 +1,87 @@
+{
+  "kind": "derived-runtime-crops-not-new-recordings",
+  "note": "Original historical GIFs remain unchanged. Fixed mosaic zones obscure floating text and may obscure some effects.",
+  "records": [
+    {
+      "file": "mage-vfx.gif",
+      "source": "docs/devlog/screenshots/mage-vfx-v2/mage-vfx.gif",
+      "crop": [
+        0,
+        0,
+        1056,
+        262
+      ],
+      "mosaic": [
+        [
+          365,
+          110,
+          130,
+          80
+        ],
+        [
+          620,
+          110,
+          135,
+          80
+        ]
+      ],
+      "frames": 144,
+      "duration_ms": 6000,
+      "sha256": "5ee8522ad4f759986784d6cf8f823cb793cbaff9688c02f7356813a5bb4b38f1"
+    },
+    {
+      "file": "moth.gif",
+      "source": "docs/devlog/screenshots/mage-expansion-v1/moth.gif",
+      "crop": [
+        0,
+        0,
+        1056,
+        262
+      ],
+      "mosaic": [
+        [
+          365,
+          110,
+          130,
+          80
+        ],
+        [
+          620,
+          110,
+          135,
+          80
+        ]
+      ],
+      "frames": 144,
+      "duration_ms": 6000,
+      "sha256": "545d222ec6932ffe93317c83dce3143af8244965fcbaa1475ea87adc1d3e2176"
+    },
+    {
+      "file": "golem.gif",
+      "source": "docs/devlog/screenshots/mage-expansion-v1/golem.gif",
+      "crop": [
+        0,
+        0,
+        1056,
+        262
+      ],
+      "mosaic": [
+        [
+          365,
+          110,
+          130,
+          80
+        ],
+        [
+          620,
+          110,
+          135,
+          80
+        ]
+      ],
+      "frames": 144,
+      "duration_ms": 6000,
+      "sha256": "8c52b1a8f7a98f7adb8f99bb22a21261397e13cdf651c8857d99d80bc8c4a9b6"
+    }
+  ]
+}

@@ -111,8 +111,8 @@ func _finish_training() -> void:
 		ui._process(0.1)
 
 func _test_native_mage_flow() -> void:
-	check(ui.resources_label.text.contains("吸收") and ui.resources_label.text.contains("有限"), "Mage source panel explains finite absorption")
-	check(ui.source_buttons[0].text.contains("火元素") and ui.source_buttons[0].text.contains("剩余 2"), "Mage source button exposes name and remaining count")
+	check(ui.resources_label.text.contains("吸収") and ui.resources_label.text.contains("有限"), "Mage source panel explains finite absorption")
+	check(ui.source_buttons[0].text.contains("火の元素") and ui.source_buttons[0].text.contains("残り 2"), "Mage source button exposes name and remaining count")
 	# Full window-coordinate input routing, including the native Button itself.
 	await _native_click(ui.source_buttons[0].get_global_rect().get_center())
 	check(ui.held.get("origin") == "source" and ui.held.get("index") == 0, "Native source Button click enters click-to-place mode")
@@ -133,7 +133,7 @@ func _test_native_mage_flow() -> void:
 	var focus: Dictionary = ui.run.item_at(Vector2i(2, 1))
 	var focus_uid := int(focus.get("uid", -1))
 	check(ui.selected_uid == focus_uid and focus_uid > 0, "Native grid click selects the directional support")
-	check(ui.detail_label.text.contains("聚能晶核") and ui.detail_label.text.contains("实际占格"), "Selected item details expose the actual support and occupied shape")
+	check(ui.detail_label.text.contains("集魔の結晶核") and ui.detail_label.text.contains("使用マス"), "Selected item details expose the actual support and occupied shape")
 	await _native_key(KEY_R)
 	check(ui.held.get("rotated", false), "Native R rotates the pending item")
 	await _native_click(_cell_center(Vector2i(2, 1)))
@@ -157,7 +157,7 @@ func _test_native_mage_flow() -> void:
 	var flash: float = ui.arena.flash
 	ui._process(8.0)
 	ui.arena._process(8.0)
-	check(ui.battle.paused and ui.pause_button.text == "继续" and ui.battle.get_summary() == paused and ui.arena.flash == flash, "Pause freezes simulation, event statistics and schematic animation")
+	check(ui.battle.paused and ui.pause_button.text == "再開" and ui.battle.get_summary() == paused and ui.arena.flash == flash, "Pause freezes simulation, event statistics and schematic animation")
 	ui.pause_button.pressed.emit()
 	ui.speed_button.pressed.emit()
 	var prior_time: float = ui.battle.battle_time
@@ -165,7 +165,7 @@ func _test_native_mage_flow() -> void:
 	check(ui.speed == 2.0 and ui.speed_button.text == "2×" and is_equal_approx(ui.battle.battle_time - prior_time, 0.5), "2x UI advances the engine exactly twice the supplied delta")
 	_finish_training()
 	check(ui.run.phase == "won" and ui.battle.phase == "won" and ui.battle.enemy_hp == 0, "Normally assembled mage build completes the training battle")
-	check(ui.summary_label.text.contains("一战复盘") and ui.summary_label.text.contains("焰爆法印") and ui.summary_label.text.contains("潮汐连枪"), "Result panel displays both actual spell contributions")
+	check(ui.summary_label.text.contains("戦闘の振り返り") and ui.summary_label.text.contains("爆炎の法印") and ui.summary_label.text.contains("潮汐の連槍"), "Result panel displays both actual spell contributions")
 	check(not ui.replay_button.disabled and not ui.class_buttons.knight.disabled, "Finished battle permits comparison or another class")
 	ui.replay_button.pressed.emit()
 	check(_state() == preparation and ui.battle.phase == "idle", "Restoring preparation returns the exact finite-resource checkpoint")
@@ -175,7 +175,7 @@ func _test_native_mage_flow() -> void:
 func _test_knight_flow() -> void:
 	ui.class_buttons.knight.pressed.emit()
 	check(ui.run.class_id == "knight" and ui.run.gold == 12 and ui._before_battle.is_empty(), "New class clears the other class's transient battle checkpoint")
-	check(ui.resources_label.text.contains("12 金币") and ui.source_buttons[1].text.contains("4 金币"), "Knight source panel exposes actual finite purchase cost")
+	check(ui.resources_label.text.contains("12 金貨") and ui.source_buttons[1].text.contains("4 金貨"), "Knight source panel exposes actual finite purchase cost")
 	ui.source_buttons[1].pressed.emit()
 	await _native_click(_cell_center(Vector2i(4, 0)))
 	check(ui.run.gold == 12 and ui.run.sources[1].remaining == 2, "Rejected paid drop preserves both coins and source count")
@@ -189,7 +189,7 @@ func _test_knight_flow() -> void:
 	ui._process(0.05)
 	check(ui.arena.last_event.get("type") == "charge" and ui.arena.last_event.get("source_kind") == "greatblade", "Live arena receives a source-tagged heavy charge event")
 	_finish_training()
-	check(ui.run.phase == "won" and ui.summary_label.text.contains("誓约重刃"), "Knight finishes with a real heavy-weapon contribution summary")
+	check(ui.run.phase == "won" and ui.summary_label.text.contains("誓約の大剣"), "Knight finishes with a real heavy-weapon contribution summary")
 	ui.replay_button.pressed.emit()
 	check(_state() == preparation and ui.run.gold == 4 and ui.run.sources[1].remaining == 0, "Knight battle restore preserves spent gold and exhausted sources")
 

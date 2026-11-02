@@ -35,7 +35,7 @@ const GOLD = Materials.GOLD
 const TEAL = Materials.TEAL
 const RED = Materials.RED
 const MONSTERS := ["slime", "wolf", "goblin", "boss", "boss"]
-const LEVEL_NAMES := ["普通", "精良", "史诗"]
+const LEVEL_NAMES := ["普通", "上質", "英雄"]
 const LEVEL_COLORS := [Color("91b4aa"), Color("91b9e6"), Color("ecc276")]
 
 var game: EmberRun = Run.new()
@@ -56,7 +56,7 @@ var _confirm_new_run := false
 var _persistence_enabled := DisplayServer.get_name() != "headless"
 var checkpoint_path := "user://emberpack-run.json"
 var _save_info: Dictionary = {}
-var _save_status := "整装与战利品阶段自动保存"
+var _save_status := "準備と報酬の画面で自動保存"
 var muted := false
 var speed := 1.0
 var elapsed := 0.0
@@ -70,7 +70,7 @@ var enemy_lunge := 0.0
 var hero_flash := 0.0
 var enemy_flash := 0.0
 var merge_glow := 0.0
-var toast_text := "拖动两把短剑叠在一起，试试你的第一次合成。"
+var toast_text := "短剣を重ねて合成してみよう。"
 var toast_time := 8.0
 var toast_good := true
 var floating: Array[Dictionary] = []
@@ -84,6 +84,8 @@ var _result_delay := 0.0
 var _sound_player: AudioStreamPlayer
 
 func _ready() -> void:
+	# Keep project.godot's application name stable: it determines user:// saves.
+	get_window().title = "星火の旅鞄 · Emberpack"
 	get_window().min_size = Vector2i(1280, 800)
 	resized.connect(_update_layout)
 	_update_layout()
@@ -122,7 +124,7 @@ func _ready() -> void:
 		selected_uid = int(game.item_at(Vector2i(0, 0))["uid"])
 		recipes_open = true
 		recipe_page = 1
-		_toast("用初始的 18 金币，也能合成两件进阶装备。")
+		_toast("最初の18金貨でも2つの装備を合成できます。")
 	if "--demo-menu" in OS.get_cmdline_user_args():
 		menu_open = true
 	if "--demo-drag" in OS.get_cmdline_user_args():
@@ -261,7 +263,7 @@ func _press(position: Vector2) -> void:
 				_choose_blessing(index)
 				return
 		if PRIMARY_RECT.has_point(position):
-			_toast("先从三张卡片中选择一个旅途祝福。", false)
+			_toast("3枚のカードから祝福を選んでください。", false)
 		return
 	if PRIMARY_RECT.has_point(position):
 		_primary_action()
@@ -304,7 +306,7 @@ func _press(position: Vector2) -> void:
 		if _shop_rect(index).has_point(position) and not game.shop_offers[index].is_empty():
 			var kind: String = game.shop_offers[index]
 			if game.gold < int(game.get_definition(kind)["cost"]):
-				_toast("金币不足。可以先出售装备，或出发赚取奖励。", false)
+				_toast("金貨が足りません。装備を売るか、出発して報酬を得ましょう。", false)
 				return
 			drag = {"source": "shop", "offer_index": index, "kind": kind, "level": 1, "pos": Vector2i(-9, -9), "rotated": false, "uid": -100 - index, "offset": Vector2i.ZERO}
 			selected_uid = -1
@@ -318,7 +320,7 @@ func _release(position: Vector2) -> void:
 	if position.distance_to(press_position) < 5.0:
 		if drag["source"] == "shop":
 			click_picked = true
-			_toast("在背包里点击放下；按 R 旋转，右键取消。")
+			_toast("バッグをクリックして配置。R で回転、右クリックで取消。")
 		else:
 			drag.clear()
 		return
@@ -335,7 +337,7 @@ func _drop(position: Vector2) -> void:
 		else:
 			result = game.move(int(drag["uid"]), cell, bool(drag["rotated"]))
 	else:
-		result = {"ok": false, "message": "已取消放置，物品和金币都保留。"}
+		result = {"ok": false, "message": "配置を取り消しました。アイテムと金貨は保持されます。"}
 	if result.get("ok", false) and _in_grid(cell):
 		var placed := game.item_at(cell)
 		if not placed.is_empty():
@@ -360,7 +362,7 @@ func _sell_selected() -> void:
 		selected_uid = -1
 		drag.clear()
 	else:
-		_toast("先点击背包里的装备，再出售。", false)
+		_toast("売る前にバッグの装備を選んでください。", false)
 
 func _primary_action() -> void:
 	drag.clear()
@@ -380,7 +382,7 @@ func _primary_action() -> void:
 			selected_uid = -1
 			battle_log.clear()
 			floating.clear()
-			_toast("新的旅程，新的构筑。整理好行囊再出发吧。")
+			_toast("新しい旅の始まり。荷物を整えて出発しよう。")
 			_tone(523.0, 0.14)
 			_save_checkpoint()
 
@@ -418,9 +420,9 @@ func _battle_event(event: Dictionary) -> void:
 			effects.append({"kind": "arrow" if kind in ["bow", "windbow"] else ("fire_slash" if kind == "flame_sword" else "slash"), "age": 0.0})
 			enemy_flash = 1.0
 			var critical: bool = event.get("critical", false)
-			_float_text(("暴击 " if critical else "") + str(amount), feet[1] - Vector2(25, 80), GOLD if critical else TEXT)
+			_float_text(("会心 " if critical else "") + str(amount), feet[1] - Vector2(25, 80), GOLD if critical else TEXT)
 			item_flashes[int(event.get("uid", event.get("source_uid", -1)))] = 1.0
-			battle_log.push_front("%s造成 %d 点伤害" % ["暴击！" if critical else "装备攻击", amount])
+			battle_log.push_front("%sで%dダメージ" % ["会心！" if critical else "装備の攻撃", amount])
 			_tone(390.0 if critical else 250.0, 0.035)
 		"enemy_attack":
 			enemy_lunge = 1.0
@@ -431,7 +433,7 @@ func _battle_event(event: Dictionary) -> void:
 			effects.append({"kind": "enemy", "age": 0.0})
 			hero_flash = 1.0
 			_float_text("−" + str(amount), feet[0] - Vector2(25, 85), RED)
-			battle_log.push_front("%s攻击，受到 %d 点伤害" % [game.enemy_name, amount])
+			battle_log.push_front("%sの攻撃で%dダメージ" % [game.enemy_name, amount])
 		"heal", "potion":
 			effects.append({"kind": "heal", "age": 0.0})
 			_float_text("+" + str(amount), feet[0] - Vector2(25, 90), TEAL)
@@ -439,14 +441,14 @@ func _battle_event(event: Dictionary) -> void:
 		"reflect":
 			effects.append({"kind": "reflect", "age": 0.0})
 			enemy_flash = 0.7
-			_float_text("反伤 " + str(amount), feet[1] - Vector2(30, 60), TEAL)
-			battle_log.push_front("苔刺反击，造成 %d 点伤害" % amount)
+			_float_text("反撃 " + str(amount), feet[1] - Vector2(30, 60), TEAL)
+			battle_log.push_front("棘の反撃で%dダメージ" % amount)
 		"victory":
 			enemy_clip = "defeat"
 			enemy_clip_time = 0.0
 			_result_delay = 0.25
-			_float_text("胜利  +%d 金币" % game.last_reward, BATTLE_RECT.get_center() - Vector2(80, 20), GOLD)
-			_toast("战斗胜利！获得 %d 金币，休息恢复 18 点生命。" % game.last_reward)
+			_float_text("勝利  +%d 金貨" % game.last_reward, BATTLE_RECT.get_center() - Vector2(80, 20), GOLD)
+			_toast("勝利！%d金貨を獲得し、休息でHPを18回復。" % game.last_reward)
 			_tone(784.0, 0.3)
 			if game.phase == "won":
 				_clear_checkpoint()
@@ -455,7 +457,7 @@ func _battle_event(event: Dictionary) -> void:
 		"defeat":
 			hero_clip = "defeat"
 			hero_clip_time = 0.0
-			_toast("旅程暂告一段落。试试升级护盾，搭配月露草再挑战。", false)
+			_toast("旅はここまで。盾を強化し、月露草と組み合わせて再挑戦。", false)
 			_tone(150.0, 0.35)
 			_clear_checkpoint()
 	if battle_log.size() > 4:
@@ -491,29 +493,29 @@ func _offer_saved_run() -> void:
 func _save_checkpoint(silent: bool = true) -> bool:
 	if not _persistence_enabled:
 		if not silent:
-			_toast("测试或截图模式不写入真实存档。")
+			_toast("検証・撮影モードではプレイヤーデータを保存しません。")
 		return true
 	if _resume_prompt:
 		if not silent:
-			_toast("先继续上次远征，或确认开始新的远征。", false)
+			_toast("前回の遠征を続けるか、新しい遠征を確認してください。", false)
 		return false
 	if game.phase not in ["prepare", "reward"]:
 		if not silent:
-			_toast("战斗前已留存整装记录。战斗结束后可以再次保存。", false)
+			_toast("戦前の準備を保存済みです。戦闘終了後に再び保存できます。", false)
 		return false
 	var result: Dictionary = Save.save_run(game, checkpoint_path)
 	if result.get("ok", false):
-		_save_status = "已保存 · 第 %d / 5 场 · %d 金币" % [game.wave, game.gold]
+		_save_status = "保存済み · %d / 5 戦 · %d 金貨" % [game.wave, game.gold]
 		_refresh_save_info()
 	else:
-		_save_status = "自动保存失败，可在菜单中重试"
+		_save_status = "自動保存に失敗しました。メニューから再試行できます"
 	if not silent or not result.get("ok", false):
-		_toast(str(result.get("message", "保存失败。")), result.get("ok", false))
+		_toast(str(result.get("message", "保存に失敗しました。")), result.get("ok", false))
 	return bool(result.get("ok", false))
 
 func _load_checkpoint() -> void:
 	if not _persistence_enabled:
-		_toast("测试或截图模式不读取真实存档。", false)
+		_toast("検証・撮影モードではプレイヤーデータを読みません。", false)
 		return
 	var result: Dictionary = Save.load_run(game, checkpoint_path)
 	if result.get("ok", false):
@@ -527,19 +529,19 @@ func _load_checkpoint() -> void:
 		_result_delay = 0.0
 		_refresh_save_info()
 	else:
-		_save_status = str(result.get("message", "无法读取存档。"))
-	_toast(str(result.get("message", "读取失败。")), result.get("ok", false))
+		_save_status = str(result.get("message", "データを読み込めません。"))
+	_toast(str(result.get("message", "読込に失敗しました。")), result.get("ok", false))
 
 func _clear_checkpoint() -> void:
 	if _persistence_enabled:
 		var result: Dictionary = Save.delete_save(checkpoint_path)
 		if result.get("ok", false):
 			_save_info.clear()
-			_save_status = "本段旅程已结束"
+			_save_status = "この旅は終了しました"
 		else:
 			_refresh_save_info()
-			_save_status = "存档清理失败，旧记录仍保留"
-			_toast(str(result.get("message", "无法清理旧存档，请在重开前检查。")), false)
+			_save_status = "データ整理に失敗しました。旧データは残っています"
+			_toast(str(result.get("message", "旧データを整理できません。再開前に確認してください。")), false)
 
 func _menu_press(position: Vector2) -> void:
 	if MENU_CONTINUE.has_point(position):
@@ -563,7 +565,7 @@ func _menu_press(position: Vector2) -> void:
 		selected_uid = -1
 		battle_log.clear()
 		floating.clear()
-		_toast("一只背包，一场新的冒险。")
+		_toast("ひとつのバッグ、新しい冒険。")
 		_save_checkpoint()
 
 func _reward_rect(index: int) -> Rect2:
@@ -635,16 +637,16 @@ func _draw_background_details() -> void:
 
 func _draw_header() -> void:
 	_icon("backpack", Rect2(28, 18, 48, 48))
-	_label("星火旅囊", Vector2(90, 43), 28, TEXT)
-	_label("E M B E R P A C K   /   雾松篇", Vector2(92, 65), 11, GOLD)
+	_label("星火の旅鞄", Vector2(90, 43), 28, TEXT)
+	_label("E M B E R P A C K   /   霧松の章", Vector2(92, 65), 11, GOLD)
 	if size.x >= 1400:
-		_label("把一格，留给下一次可能。", Vector2(300, 44), 16, MUTED)
-	_button(MENU_RECT, "旅途菜单  /  Esc", false, 15)
+		_label("ひとマスに、次の可能性を。", Vector2(300, 44), 16, MUTED)
+	_button(MENU_RECT, "旅のメニュー  /  Esc", false, 15)
 	_icon("coin", Rect2(size.x - 400, 28, 32, 32))
 	_label(str(game.gold), Vector2(size.x - 356, 54), 26, GOLD)
-	_label("金币", Vector2(size.x - 309, 51), 14, MUTED)
-	_button(layout.header_sound_rect, "静音" if muted else "音效 开", false, 15)
-	_button(layout.header_help_rect, "玩法  ?", false, 15)
+	_label("金貨", Vector2(size.x - 309, 51), 14, MUTED)
+	_button(layout.header_sound_rect, "消音" if muted else "効果音 ON", false, 15)
+	_button(layout.header_help_rect, "遊び方  ?", false, 15)
 
 func _draw_battle() -> void:
 	var r: Rect2 = BATTLE_RECT
@@ -668,20 +670,20 @@ func _draw_battle() -> void:
 		enemy_tint.a = 0.3
 	draw_texture_rect(enemy_texture, Rect2(enemy_position, enemy_texture.get_size() * scale_value), false, enemy_tint)
 	_draw_combat_effects(feet)
-	_label("阿烬 · 雾松古道", r.position + Vector2(22, 28), 17, TEXT)
+	_label("アシェ · 霧松の古道", r.position + Vector2(22, 28), 17, TEXT)
 	_label(game.enemy_name, Vector2(r.end.x - 250, r.position.y + 28), 17, TEXT)
 	var bar_width: float = minf(224, r.size.x * 0.25)
 	_health_bar(Rect2(r.position + Vector2(22, 40), Vector2(bar_width, 10)), game.hp, game.max_hp, TEAL)
 	_health_bar(Rect2(r.end.x - 250, r.position.y + 40, bar_width, 10), game.enemy_hp, game.enemy_max_hp, RED)
 	_label("%d / %d" % [game.hp, game.max_hp], r.position + Vector2(22, 69), 14, TEXT)
 	_label("%d / %d" % [maxi(0, game.enemy_hp), game.enemy_max_hp], Vector2(r.end.x - 250, r.position.y + 69), 14, TEXT)
-	var mode := "整 装 待 发"
+	var mode := "出 発 準 備"
 	if game.phase == "battle":
-		mode = "自动战斗  ·  %.1fs" % game.battle_time
+		mode = "自動戦闘  ·  %.1fs" % game.battle_time
 	elif game.phase in ["reward", "won"]:
-		mode = "胜 利 归 来"
+		mode = "勝 利"
 	elif game.phase == "lost":
-		mode = "旅 途 未 尽"
+		mode = "旅 は 続 く"
 	_center(mode, Rect2(r.get_center().x - 115, r.position.y + 17, 230, 36), 16, GOLD)
 	_button(layout.speed_rect, "× %.0f" % speed, false, 14)
 	for number in floating:
@@ -698,7 +700,7 @@ func _draw_route() -> void:
 	for i in range(game.blessings.size()):
 		var blessing: Dictionary = game.get_blessing_definition(game.blessings[i])
 		_icon(blessing.get("icon", "spark"), layout.blessing_rect(i))
-	_label("雾松遗迹", r.position + Vector2(20, 70), 26, TEXT)
+	_label("霧松の遺跡", r.position + Vector2(20, 70), 26, TEXT)
 	_wrapped(game.get_enemy_info().get("trait", ""), Rect2(r.position + Vector2(20, 85), Vector2(r.size.x - 40, 48)), 14, MUTED)
 	var node_y: float = r.end.y - 83
 	draw_line(Vector2(r.position.x + 33, node_y), Vector2(r.end.x - 33, node_y), PANEL_EDGE, 2)
@@ -710,7 +712,7 @@ func _draw_route() -> void:
 		draw_circle(point, 12, Color("a99c6f") if active else Color("5a725b"), false, 1)
 		_center(str(index + 1), Rect2(point - Vector2(12, 12), Vector2(24, 24)), 14, BG if complete or active else MUTED)
 	var stats := game.get_stats()
-	var labels := ["攻击", "护甲", "恢复/2s"]
+	var labels := ["攻撃", "防御", "回復/2s"]
 	var values := [str(stats["attack"]), str(stats["armor"]), str(stats["regen"])]
 	for i in range(3):
 		var x: float = r.position.x + 22 + i * (r.size.x - 40) / 3.0
@@ -803,14 +805,14 @@ func _draw_footer() -> void:
 		draw_rect(Rect2(r.position, Vector2(3, r.size.y)), TEAL if toast_good else RED)
 		_wrapped(toast_text, Rect2(r.position + Vector2(14, 8), r.size - Vector2(28, 12)), 15, TEAL if toast_good else RED)
 	else:
-		_wrapped("拖放整理  /  R 旋转  /  D 出售  /  空格 出发", Rect2(r.position + Vector2(4, 10), r.size), 15, MUTED)
-	var label := "整装出发    →"
+		_wrapped("ドラッグで整理 / R 回転 / D 売却 / Space 出発", Rect2(r.position + Vector2(4, 10), r.size), 15, MUTED)
+	var label := "出発    →"
 	match game.phase:
-		"battle": label = "战斗中  ·  %.1fs" % game.battle_time
-		"reward": label = "继续旅程    →" if game.reward_chosen else "先选择一个旅途祝福"
-		"won", "lost": label = "重新出发    ↻"
+		"battle": label = "戦闘中  ·  %.1fs" % game.battle_time
+		"reward": label = "旅を続ける    →" if game.reward_chosen else "先に祝福を選択"
+		"won", "lost": label = "再出発    ↻"
 	_button(PRIMARY_RECT, label, true, 20, game.phase == "battle" or (game.phase == "reward" and not game.reward_chosen))
-	_label(_save_status if _persistence_enabled else "一只背包，一段未知的旅程。", Vector2(26, size.y - 7), 11, Color("83947c"))
+	_label(_save_status if _persistence_enabled else "ひとつのバッグ、未知の旅。", Vector2(26, size.y - 7), 11, Color("83947c"))
 	_label("EMBERPACK / 0.3 ART SAMPLE", Vector2(size.x - 260, size.y - 7), 10, Color("83947c"))
 
 func _draw_drag() -> void:
@@ -829,14 +831,14 @@ func _draw_drag() -> void:
 		draw_rect(preview, Color(0.7, 0.9, 0.7, 0.18) if allowed else Color(0.9, 0.3, 0.25, 0.24))
 		draw_rect(preview, GOLD if merging else (TEAL if allowed else RED), false, 2.0)
 		if merging:
-			_label("可合成  ✦", preview.position + Vector2(4, -9), 14, GOLD)
+			_label("合成可能  ✦", preview.position + Vector2(4, -9), 14, GOLD)
 		elif has_recipe:
-			_label("合成空间不足", preview.position + Vector2(4, -9), 13, RED)
+			_label("合成スペース不足", preview.position + Vector2(4, -9), 13, RED)
 	var display_size := Vector2(item_size) * CELL_SIZE
 	var origin := mouse - Vector2(offset) * CELL_SIZE - Vector2(30, 30)
 	_draw_item(drag, Rect2(origin, display_size), 0.87, true)
 	_frame(Rect2(mouse + Vector2(17, display_size.y + 5), Vector2(142, 29)), Color("162720"), GOLD)
-	_center("R 旋转  /  右键取消", Rect2(mouse + Vector2(17, display_size.y + 5), Vector2(142, 29)), 11, TEXT)
+	_center("R 回転 / 右クリック取消", Rect2(mouse + Vector2(17, display_size.y + 5), Vector2(142, 29)), 11, TEXT)
 
 func _draw_result() -> void:
 	OverlayView.result(self)
@@ -863,7 +865,7 @@ func _draw_help() -> void:
 	OverlayView.help(self)
 
 func _category_name(category: String) -> String:
-	return {"weapon": "武器", "armor": "防具", "healing": "恢复", "support": "辅助"}.get(category, category)
+	return {"weapon": "武器", "armor": "防具", "healing": "回復", "support": "補助"}.get(category, category)
 
 func _frame(rect: Rect2, fill: Color = PANEL, edge: Color = PANEL_EDGE) -> void:
 	draw_rect(Rect2(rect.position + Vector2(0, 4), rect.size), Color(0.0, 0.0, 0.0, 0.16))

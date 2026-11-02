@@ -207,7 +207,15 @@ func _finish_and_compare(id: String, expected_hero: String, expected_background:
 	var old_report = JSON.parse_string(FileAccess.get_file_as_string("res://docs/devlog/screenshots/c0-class-rules-v1/" + id + "-report.json"))
 	# JSON does not retain GDScript's typed arrays and integer representation.
 	var current_json = JSON.parse_string(JSON.stringify(ui.battle.get_summary()))
-	check(old_report is Dictionary and current_json == old_report.get("summary", {}), id + " legal fixture still matches the recorded C0 result in every serialized summary field")
+	var historical: Dictionary = old_report.get("summary", {}).duplicate(true) if old_report is Dictionary else {}
+	# Localized labels are presentation, while IDs and all numeric fields remain
+	# comparable to the immutable Chinese-language historical report.
+	for source in current_json.get("by_source", []):
+		check(source.name == ui.run.get_definition(source.kind).name, id + " summary uses the current localized item label")
+		source.erase("name")
+	for source in historical.get("by_source", []):
+		source.erase("name")
+	check(not historical.is_empty() and current_json == historical, id + " legal fixture matches every language-independent recorded C0 summary field")
 	_layout(expected_hero, expected_background)
 
 func _test_layouts(hero: String, background: String) -> void:

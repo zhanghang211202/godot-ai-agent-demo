@@ -10,7 +10,7 @@ const MAX_STEPS := 1800
 const ENEMY_HP := 140
 const ENEMY_ATTACK := 8
 const ENEMY_INTERVAL_STEPS := 36
-const ENEMY_NAME := "训练守卫"
+const ENEMY_NAME := "訓練用の守衛"
 const ZERO_STATS := {"damage_dealt": 0, "raw_damage_dealt": 0, "damage_taken": 0,
 	"raw_damage_taken": 0, "armor_mitigated": 0, "enemy_attacks": 0,
 	"overkill_damage_dealt": 0, "overkill_damage_taken": 0}
@@ -47,7 +47,7 @@ func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dicti
 		return {"ok": false, "message": error}
 	var enemy := Encounters.definition(selected_encounter)
 	if enemy.is_empty() or (config.class_id != "mage" and selected_encounter != "sentinel"):
-		return {"ok": false, "message": "当前职业不能挑战这个敌人。"}
+		return {"ok": false, "message": "現在の職業ではこの敵に挑戦できません。"}
 	encounter_id = selected_encounter
 	_enemy_definition = enemy
 	_config = config.duplicate(true)
@@ -87,7 +87,7 @@ func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dicti
 			"damage": 0, "raw_damage": 0, "activations": 0, "hits": 0}
 		if warmup_steps > 0:
 			_initial_events.append(_event("charge", action, 0, "enemy"))
-	return {"ok": true, "message": "一战实验开始"}
+	return {"ok": true, "message": "試練開始"}
 
 func tick(delta: float) -> Array[Dictionary]:
 	var events: Array[Dictionary] = []
@@ -206,7 +206,7 @@ func _event(type: String, source: Dictionary, amount: int, target: String) -> Di
 	return {"event_id": _event_id, "time": battle_time, "type": type,
 		"source_uid": source.get("uid", 0),
 		"source_kind": source.get("kind", "enemy" if type == "enemy_attack" else "battle"),
-		"source_name": source.get("name", enemy_name if type == "enemy_attack" else "战斗规则"),
+		"source_name": source.get("name", enemy_name if type == "enemy_attack" else "戦闘ルール"),
 		"amount": amount, "target": target}
 
 func _steps(seconds: float) -> int:
@@ -223,28 +223,28 @@ func _text(value: Variant, limit: int) -> bool:
 
 func _validate(config: Dictionary) -> String:
 	if typeof(config.get("class_id")) != TYPE_STRING or config.get("class_id") not in ["mage", "knight"]:
-		return "未知职业"
+		return "不明な職業"
 	if not _integer_in(config.get("rules_version"), 1, 1):
-		return "不支持的职业规则版本"
+		return "未対応の職業ルール"
 	if not _integer_in(config.get("max_hp"), 1, 10000) or not _integer_in(config.get("hp"), 1, 10000):
-		return "生命数据无效"
+		return "HP データが無効です"
 	if config["hp"] > config["max_hp"] or not _integer_in(config.get("armor"), 0, 100):
-		return "生命或护甲超出范围"
+		return "HP または防御が範囲外です"
 	if not config.get("actions") is Array or config["actions"].is_empty() or config["actions"].size() > 24:
-		return "至少需要一个合法攻击来源，最多二十四个"
+		return "攻撃手段は1〜24個必要です"
 	var seen: Dictionary = {}
 	for action: Variant in config["actions"]:
 		if not action is Dictionary:
-			return "攻击来源格式无效"
+			return "攻撃手段の形式が無効です"
 		if not _integer_in(action.get("uid"), 1, 1000000000) or seen.has(action.get("uid")):
-			return "攻击来源标识无效或重复"
+			return "攻撃手段の識別子が無効または重複しています"
 		seen[action["uid"]] = true
 		if not _text(action.get("kind"), 128) or not _text(action.get("name"), 128) or not _text(action.get("event_type"), 64):
-			return "攻击来源名称或事件类型无效"
+			return "攻撃手段の名前またはイベント種別が無効です"
 		if not _integer_in(action.get("damage"), 1, 10000) or not _integer_in(action.get("hits"), 1, 16):
-			return "攻击伤害或段数超出范围"
+			return "攻撃ダメージまたは回数が範囲外です"
 		if not _number_in(action.get("interval"), STEP, TIME_LIMIT) or not _number_in(action.get("warmup"), 0.0, TIME_LIMIT):
-			return "攻击时间无效"
+			return "攻撃時間が無効です"
 		if action["warmup"] > action["interval"]:
-			return "蓄势时长不能超过攻击间隔"
+			return "溜め時間は攻撃間隔を超えられません"
 	return ""

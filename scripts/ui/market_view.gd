@@ -3,15 +3,15 @@ extends RefCounted
 static func draw(ui) -> void:
 	var r: Rect2 = ui.layout.market_rect
 	ui.Materials.draw_panel(ui, r, "dark")
-	ui._label("林间补给", r.position + Vector2(20, 39), 22, ui.TEXT)
-	ui._button(ui.REFRESH_RECT, "刷新 %d 金" % ui.game.reroll_cost, false, 14, ui.game.phase != "prepare")
+	ui._label("森の補給", r.position + Vector2(20, 39), 22, ui.TEXT)
+	ui._button(ui.REFRESH_RECT, "更新 %d 金貨" % ui.game.reroll_cost, false, 14, ui.game.phase != "prepare")
 	for index in range(4):
 		var card: Rect2 = ui.layout.shop_rect(index)
 		var kind: String = ui.game.shop_offers[index]
 		var active: bool = ui.game.phase == "prepare"
 		if kind.is_empty():
 			ui._frame(card, Color("172724"), Color("35473c"))
-			ui._center("已收入行囊", card, 16, Color("758578"))
+			ui._center("購入済み", card, 16, Color("758578"))
 			continue
 		var definition: Dictionary = ui.game.get_definition(kind)
 		var hover: bool = card.has_point(ui.mouse) and active
@@ -25,4 +25,4 @@ static func draw(ui) -> void:
 		ui._label("%d×%d" % [footprint.x, footprint.y], Vector2(card.position.x + 12, card.end.y - 15), 13, ui.MUTED)
 		ui._icon("coin", Rect2(card.end - Vector2(57, 35), Vector2(24, 24)))
 		ui._label(str(definition["cost"]), card.end - Vector2(26, 15), 18, ui.GOLD if ui.game.gold >= int(definition["cost"]) else ui.RED)
-	ui._label("战斗中暂停交易" if ui.game.phase != "prepare" else "拖入行囊，或点击后选择落点", Vector2(r.position.x + 20, r.end.y - 17), 13, ui.MUTED)
+	ui._label("戦闘中は取引不可" if ui.game.phase != "prepare" else "ドラッグまたはクリックして配置", Vector2(r.position.x + 20, r.end.y - 17), 13, ui.MUTED)

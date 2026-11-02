@@ -425,7 +425,7 @@ func _test_checkpoint_failure_protection() -> void:
 	check(DirAccess.make_dir_recursive_absolute(blocked_temporary) == OK, "An isolated directory can block the checkpoint temporary-file path")
 	_click(_center("PRIMARY_RECT"))
 	check(game.get("phase") == "prepare" and is_zero_approx(float(game.get("battle_time"))), "A failed pre-battle checkpoint prevents the primary button from starting combat")
-	check(not bool(ui.get("toast_good")) and not str(ui.get("toast_text")).is_empty() and str(ui.get("_save_status")).contains("失败"), "Pre-battle save failure retains visible error feedback")
+	check(not bool(ui.get("toast_good")) and not str(ui.get("toast_text")).is_empty() and str(ui.get("_save_status")).contains("失敗"), "Pre-battle save failure retains visible error feedback")
 	check(FileAccess.get_file_as_bytes(BLOCKED_CHECKPOINT) == before_failed_save, "Failed pre-battle checkpoint leaves the previous saved bytes untouched")
 	check(DirAccess.remove_absolute(blocked_temporary) == OK, "Blocked temporary-path fixture is removed after the save-failure check")
 	# A directory deterministically exercises deletion failure without relying on OS file-lock semantics.
@@ -434,7 +434,7 @@ func _test_checkpoint_failure_protection() -> void:
 	ui.set("checkpoint_path", DELETE_FAILURE_DIRECTORY)
 	ui.set("_save_info", {"ok": true, "wave": 99})
 	ui.call("_clear_checkpoint")
-	check(DirAccess.dir_exists_absolute(delete_directory) and str(ui.get("_save_status")).contains("失败") and not bool(ui.get("toast_good")), "Failed checkpoint deletion preserves the target and reports failure instead of successful cleanup")
+	check(DirAccess.dir_exists_absolute(delete_directory) and str(ui.get("_save_status")).contains("失敗") and not bool(ui.get("toast_good")), "Failed checkpoint deletion preserves the target and reports failure instead of successful cleanup")
 	check(not Dictionary(ui.get("_save_info")).get("ok", true), "Failed checkpoint deletion refreshes stale cached save metadata")
 	ui.set("_persistence_enabled", false)
 	Save.delete_save(CORRUPT_CHECKPOINT)
