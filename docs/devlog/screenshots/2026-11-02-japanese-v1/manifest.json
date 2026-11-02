@@ -1,0 +1,41 @@
+{
+  "kind": "native-runtime-fixture",
+  "description": "Japanese UI and recipe interaction. Screenshots are native Godot viewport captures, not human playtesting.",
+  "files": [
+    {
+      "file": "legacy-prepare.png",
+      "bytes": 160762,
+      "sha256": "3a7b28eb5c6e32083d1c07eb166b56a84ee8ec1e587c7dcbddb271267d80fff3"
+    },
+    {
+      "file": "recipe-book.png",
+      "bytes": 521513,
+      "sha256": "0f54a5e931afe418ea747aae7c8bef46066ea2692b4614a540c539a80e1e011a"
+    },
+    {
+      "file": "recipe-targets.png",
+      "bytes": 954663,
+      "sha256": "fade07e39feb6e0c53620eecc7fea5d5bfaa37b900c7cb86ce57b67e175fe457"
+    },
+    {
+      "file": "recipe-preview.png",
+      "bytes": 953368,
+      "sha256": "4c4c6c28a4d1ee608182f0f9256cd55d3522855b8301eca462d85eb324aa47e4"
+    },
+    {
+      "file": "merge-feedback.png",
+      "bytes": 943819,
+      "sha256": "6ac9eef842fbb1f2884b4197f63146549eb1345dbe9d3c49ea06ce2f4d234464"
+    },
+    {
+      "file": "owned-drag-merge.png",
+      "bytes": 961668,
+      "sha256": "baef0aa897fd742c83b559a94e98b158fdd8d4103a3a8eb6ce62c9613a1c2a77"
+    },
+    {
+      "file": "test-report.json",
+      "bytes": 1506,
+      "sha256": "6fd25c2fc48d520afb3f0f7ccd33f9eb116c3d2fb4e66b0aee341c2dd76194fa"
+    }
+  ]
+}

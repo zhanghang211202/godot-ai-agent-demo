@@ -5,41 +5,41 @@ extends RefCounted
 const GRID_SIZE := Vector2i(6, 4)
 const MAX_LEVEL := 3
 const DEFINITIONS := {
-	"sword": {"name": "旅人短剑", "size": Vector2i(1, 2), "cost": 4, "description": "每 1.25 秒攻击。相同装备可合成；短剑 + 磨刀石 = 长剑。", "category": "weapon", "color": "a7c5d5"},
-	"longsword": {"name": "淬锋长剑", "size": Vector2i(1, 3), "cost": 8, "description": "占据三格，每 1.35 秒重击。长剑 + 火种 = 焰纹大剑。", "category": "weapon", "color": "eed898"},
-	"flame_sword": {"name": "焰纹大剑", "size": Vector2i(1, 3), "cost": 12, "description": "每 1.4 秒斩击，造成强力火焰伤害。", "category": "weapon", "color": "ef9c65"},
-	"thorn_shield": {"name": "荆棘木盾", "size": Vector2i(2, 2), "cost": 9, "description": "提供护甲，受到攻击后向敌人反弹伤害。", "category": "armor", "color": "91b77c"},
-	"windbow": {"name": "逐风猎弓", "size": Vector2i(3, 1), "cost": 9, "description": "占据三格，每 0.9 秒射击，增加 8% 暴击。", "category": "weapon", "color": "9acdbb"},
-	"greater_potion": {"name": "浓缩暖心药", "size": Vector2i(1, 2), "cost": 8, "description": "每战一次：生命低于 50% 时大量恢复生命。", "category": "healing", "color": "dea3d2"},
-	"shield": {"name": "橡木圆盾", "size": Vector2i(2, 2), "cost": 6, "description": "护甲减少每次受到的伤害，至少承受 1 点。", "category": "armor", "color": "c99662"},
-	"bow": {"name": "林地猎弓", "size": Vector2i(2, 1), "cost": 5, "description": "每 1.05 秒射击，并增加 5% 暴击率。", "category": "weapon", "color": "cba87b"},
-	"herb": {"name": "月露草", "size": Vector2i(1, 1), "cost": 3, "description": "战斗中每 2 秒恢复生命；升级提升恢复量。", "category": "healing", "color": "8cc89b"},
-	"potion": {"name": "暖心药水", "size": Vector2i(1, 1), "cost": 5, "description": "每场战斗一次：生命低于 50% 时自动治疗。", "category": "healing", "color": "e0a4b6"},
-	"whetstone": {"name": "银纹磨刀石", "size": Vector2i(1, 1), "cost": 4, "description": "强化左右蓝点上的武器；旋转后强化上下。与短剑合成长剑。", "category": "support", "color": "b1abc7"},
-	"ember": {"name": "不熄火种", "size": Vector2i(1, 1), "cost": 4, "description": "增加暴击率，相邻武器获得额外攻击力。", "category": "support", "color": "efad68"},
+	"sword": {"name": "旅人の短剣", "size": Vector2i(1, 2), "cost": 4, "description": "1.25秒ごとに攻撃。同じ装備を合成可能。短剣 + 砥石 = 長剣。", "category": "weapon", "color": "a7c5d5"},
+	"longsword": {"name": "鍛えた長剣", "size": Vector2i(1, 3), "cost": 8, "description": "3マス使用、1.35秒ごとに重撃。長剣 + 火種 = 炎紋の大剣。", "category": "weapon", "color": "eed898"},
+	"flame_sword": {"name": "炎紋の大剣", "size": Vector2i(1, 3), "cost": 12, "description": "1.4秒ごとに強力な炎の斬撃。", "category": "weapon", "color": "ef9c65"},
+	"thorn_shield": {"name": "茨の木盾", "size": Vector2i(2, 2), "cost": 9, "description": "防御を上げ、被弾後に敵へダメージを返す。", "category": "armor", "color": "91b77c"},
+	"windbow": {"name": "追風の狩弓", "size": Vector2i(3, 1), "cost": 9, "description": "3マス使用、0.9秒ごとに射撃。会心率+8%。", "category": "weapon", "color": "9acdbb"},
+	"greater_potion": {"name": "濃縮あたため薬", "size": Vector2i(1, 2), "cost": 8, "description": "戦闘ごとに1回、HPが50%未満になると大きく回復。", "category": "healing", "color": "dea3d2"},
+	"shield": {"name": "樫の丸盾", "size": Vector2i(2, 2), "cost": 6, "description": "防御は被ダメージを軽減。最低1ダメージを受ける。", "category": "armor", "color": "c99662"},
+	"bow": {"name": "森の狩弓", "size": Vector2i(2, 1), "cost": 5, "description": "1.05秒ごとに射撃、会心率+5%。", "category": "weapon", "color": "cba87b"},
+	"herb": {"name": "月露草", "size": Vector2i(1, 1), "cost": 3, "description": "戦闘中は2秒ごとに回復。強化で回復量が増える。", "category": "healing", "color": "8cc89b"},
+	"potion": {"name": "あたため薬", "size": Vector2i(1, 1), "cost": 5, "description": "戦闘ごとに1回、HPが50%未満になると自動回復。", "category": "healing", "color": "e0a4b6"},
+	"whetstone": {"name": "銀紋の砥石", "size": Vector2i(1, 1), "cost": 4, "description": "左右の青点にある武器を強化。回転で上下に接続。短剣と合わせて長剣に。", "category": "support", "color": "b1abc7"},
+	"ember": {"name": "消えない火種", "size": Vector2i(1, 1), "cost": 4, "description": "会心率を上げ、隣接する武器の攻撃力を強化。", "category": "support", "color": "efad68"},
 }
 const RECIPES: Array[Dictionary] = [
-	{"first": "sword", "second": "whetstone", "result": "longsword", "label": "淬锋锻造"},
-	{"first": "longsword", "second": "ember", "result": "flame_sword", "label": "焰纹锻造"},
-	{"first": "shield", "second": "herb", "result": "thorn_shield", "label": "荆棘编织"},
-	{"first": "bow", "second": "ember", "result": "windbow", "label": "逐风附魔"},
-	{"first": "potion", "second": "herb", "result": "greater_potion", "label": "暖心浓缩"},
+	{"first": "sword", "second": "whetstone", "result": "longsword", "label": "長剣の鍛造"},
+	{"first": "longsword", "second": "ember", "result": "flame_sword", "label": "炎紋の鍛造"},
+	{"first": "shield", "second": "herb", "result": "thorn_shield", "label": "茨の紡ぎ"},
+	{"first": "bow", "second": "ember", "result": "windbow", "label": "追風の付呪"},
+	{"first": "potion", "second": "herb", "result": "greater_potion", "label": "あたため薬の濃縮"},
 ]
 const BLESSINGS := {
-	"vitality": {"name": "旅人的韧性", "description": "最大生命 +18，并恢复 18 点生命。", "icon": "vitality", "max_hp": 18, "heal": 18},
-	"coin_pouch": {"name": "路边的宝藏", "description": "立即获得 8 金币，下一次补给更从容。", "icon": "fortune", "gold": 8},
-	"keen_edge": {"name": "破甲之锋", "description": "每件武器攻击 +2，护甲 -1。", "icon": "fury", "attack_bonus": 2, "armor_bonus": -1},
-	"ironbark": {"name": "古树庇佑", "description": "护甲 +2，暴击率 -3%。", "icon": "bastion", "armor_bonus": 2, "crit_bonus": -0.03},
-	"moonwater": {"name": "月露低语", "description": "战斗中每 2 秒额外恢复 2 点生命。", "icon": "renewal", "regen_bonus": 2},
-	"focus": {"name": "孤注一掷", "description": "暴击率 +12%，每 2 秒恢复量 -1。", "icon": "precision", "crit_bonus": 0.12, "regen_bonus": -1},
-	"campfire": {"name": "温暖营火", "description": "立即恢复 28 点生命；每 2 秒恢复量 +1。", "icon": "potion", "heal": 28, "regen_bonus": 1},
+	"vitality": {"name": "旅人の粘り", "description": "最大HP +18、HPを18回復。", "icon": "vitality", "max_hp": 18, "heal": 18},
+	"coin_pouch": {"name": "道端の宝", "description": "すぐに8金貨を獲得。", "icon": "fortune", "gold": 8},
+	"keen_edge": {"name": "鎧砕きの刃", "description": "武器ごとの攻撃+2、防御-1。", "icon": "fury", "attack_bonus": 2, "armor_bonus": -1},
+	"ironbark": {"name": "古木の加護", "description": "防御+2、会心率-3%。", "icon": "bastion", "armor_bonus": 2, "crit_bonus": -0.03},
+	"moonwater": {"name": "月露の囁き", "description": "戦闘中、2秒ごとに追加でHPを2回復。", "icon": "renewal", "regen_bonus": 2},
+	"focus": {"name": "一か八か", "description": "会心率+12%、2秒ごとの回復量-1。", "icon": "precision", "crit_bonus": 0.12, "regen_bonus": -1},
+	"campfire": {"name": "温かな焚き火", "description": "すぐにHPを28回復、2秒ごとの回復量+1。", "icon": "potion", "heal": 28, "regen_bonus": 1},
 }
 const ENEMIES := [
-	{"name": "苔团", "hp": 72, "attack": 8, "interval": 1.8, "trait": "行动缓慢，适合试验装备与蓝点布局。"},
-	{"name": "暮林狼", "hp": 112, "attack": 11, "interval": 1.7, "trait": "攻击更频繁，盾牌能减轻每次伤害。"},
-	{"name": "苔刃哥布林", "hp": 166, "attack": 15, "interval": 1.7, "trait": "生命与攻击提高，合成装备能加快战斗。"},
-	{"name": "遗迹树卫", "hp": 238, "attack": 19, "interval": 1.6, "trait": "耐久强敌，护甲与持续恢复尤其有用。"},
-	{"name": "灰烬树王", "hp": 350, "attack": 24, "interval": 1.5, "trait": "最终首领，用高阶装备和祝福挑战它。"},
+	{"name": "苔玉", "hp": 72, "attack": 8, "interval": 1.8, "trait": "動きが遅い。装備と接続の練習に最適。"},
+	{"name": "夕森の狼", "hp": 112, "attack": 11, "interval": 1.7, "trait": "攻撃が速い。盾で被ダメージを軽減しよう。"},
+	{"name": "苔刃のゴブリン", "hp": 166, "attack": 15, "interval": 1.7, "trait": "HPと攻撃力が高い。装備の合成が有効。"},
+	{"name": "遺跡の樹衛", "hp": 238, "attack": 19, "interval": 1.6, "trait": "耐久力が高い強敵。防御と継続回復が有効。"},
+	{"name": "灰燼の樹王", "hp": 350, "attack": 24, "interval": 1.5, "trait": "最後のボス。高品質の装備と祝福で挑もう。"},
 ]
 const SHOP_POOL := ["sword", "shield", "bow", "herb", "potion", "whetstone", "ember"]
 const SIMULATION_STEP := 0.05
@@ -53,7 +53,7 @@ var hp: int = 100
 var max_hp: int = 100
 var enemy_hp: int = 72
 var enemy_max_hp: int = 72
-var enemy_name: String = "苔团"
+var enemy_name: String = "苔玉"
 var battle_time: float = 0.0
 var battle_duration: float = 0.0
 var last_reward: int = 0
@@ -132,13 +132,13 @@ func can_place(item: Dictionary, cell: Vector2i, ignore_uid: int = -1) -> bool:
 
 func buy(offer_index: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 	if phase != "prepare":
-		return _result(false, "战斗结束后才能整理行囊。")
+		return _result(false, "戦闘終了後にバッグを整理できます。")
 	if offer_index < 0 or offer_index >= shop_offers.size() or shop_offers[offer_index].is_empty():
-		return _result(false, "这件货品已售出。")
+		return _result(false, "この商品は売り切れです。")
 	var kind: String = shop_offers[offer_index]
 	var cost: int = DEFINITIONS[kind]["cost"]
 	if gold < cost:
-		return _result(false, "金币不足。")
+		return _result(false, "金貨が足りません。")
 	var candidate := {"uid": _next_uid, "kind": kind, "level": 1, "pos": cell, "rotated": rotated}
 	var target: Dictionary = item_at(cell)
 	var merge_result: Dictionary = {}
@@ -147,7 +147,7 @@ func buy(offer_index: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 		if not merge_result["ok"]:
 			return merge_result
 	elif not can_place(candidate, cell):
-		return _result(false, "这里放不下，试试旋转或腾出空格。")
+		return _result(false, "ここには置けません。回転するか空きマスを作ってください。")
 	else:
 		items.append(candidate)
 	gold -= cost
@@ -155,47 +155,47 @@ func buy(offer_index: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 	shop_offers[offer_index] = ""
 	if not merge_result.is_empty():
 		return merge_result
-	return _result(true, "购入了" + str(DEFINITIONS[kind]["name"]) + "。", "buy")
+	return _result(true, "購入：" + str(DEFINITIONS[kind]["name"]) + "。", "buy")
 
 func move(uid: int, cell: Vector2i, rotated: bool = false) -> Dictionary:
 	if phase != "prepare":
-		return _result(false, "战斗结束后才能整理行囊。")
+		return _result(false, "戦闘終了後にバッグを整理できます。")
 	var item: Dictionary = item_by_uid(uid)
 	if item.is_empty():
-		return _result(false, "找不到这件物品。")
+		return _result(false, "アイテムが見つかりません。")
 	var candidate: Dictionary = item.duplicate()
 	candidate["rotated"] = rotated
 	var target: Dictionary = item_at(cell)
 	if not target.is_empty() and target["uid"] != uid and not get_merge_result(item, target).is_empty():
 		return _merge(candidate, target)
 	if not can_place(candidate, cell, uid):
-		return _result(false, "这里放不下，试试旋转或腾出空格。")
+		return _result(false, "ここには置けません。回転するか空きマスを作ってください。")
 	item["pos"] = cell
 	item["rotated"] = rotated
-	return _result(true, "已整理行囊。", "move")
+	return _result(true, "バッグを整理しました。", "move")
 
 func sell(uid: int) -> Dictionary:
 	if phase != "prepare":
-		return _result(false, "战斗结束后才能出售。")
+		return _result(false, "売却は戦闘終了後にできます。")
 	var item: Dictionary = item_by_uid(uid)
 	if item.is_empty():
-		return _result(false, "找不到这件物品。")
+		return _result(false, "アイテムが見つかりません。")
 	var refund: int = get_sell_price(item)
 	items.erase(item)
 	gold += refund
-	return _result(true, "出售获得 %d 金币。" % refund, "sell")
+	return _result(true, "売却して%d金貨を獲得。" % refund, "sell")
 
 func get_sell_price(item: Dictionary) -> int:
 	return maxi(1, int(DEFINITIONS[item["kind"]]["cost"]) * (1 << (int(item["level"]) - 1)) / 2)
 
 func reroll() -> Dictionary:
 	if phase != "prepare":
-		return _result(false, "战斗结束后商人才会补货。")
+		return _result(false, "戦闘終了後に商人が補充します。")
 	if gold < reroll_cost:
-		return _result(false, "刷新需要 %d 金币。" % reroll_cost)
+		return _result(false, "更新には%d金貨が必要です。" % reroll_cost)
 	gold -= reroll_cost
 	_roll_shop()
-	return _result(true, "商人补上了新货。", "reroll")
+	return _result(true, "商品を補充しました。", "reroll")
 
 func get_merge_result(source: Dictionary, target: Dictionary) -> String:
 	if source.get("uid", -1) == target.get("uid", -2):
@@ -296,9 +296,9 @@ func get_stats() -> Dictionary:
 
 func start_battle() -> Dictionary:
 	if phase != "prepare":
-		return _result(false, "当前无法出发。")
+		return _result(false, "今は出発できません。")
 	if int(get_stats()["attack"]) == 0:
-		return _result(false, "至少带上一件武器再出发。")
+		return _result(false, "武器を1つ以上持って出発してください。")
 	phase = "battle"
 	battle_time = 0.0
 	battle_duration = 0.0
@@ -314,7 +314,7 @@ func start_battle() -> Dictionary:
 	_enemy_timer = 1.2
 	_regen_timer = 2.0
 	_set_enemy()
-	return _result(true, "遭遇了" + enemy_name + "！", "battle")
+	return _result(true, "遭遇：" + enemy_name + "！", "battle")
 
 func tick(delta: float) -> Array[Dictionary]:
 	var events: Array[Dictionary] = []
@@ -328,25 +328,25 @@ func tick(delta: float) -> Array[Dictionary]:
 
 func claim_reward() -> Dictionary:
 	if phase != "reward":
-		return _result(false, "还没有可领取的战利品。")
+		return _result(false, "受け取れる報酬はありません。")
 	if not reward_chosen:
-		return _result(false, "先选择一项旅途祝福，再继续出发。")
+		return _result(false, "先に祝福を選んでください。")
 	wave += 1
 	phase = "prepare"
 	reward_choices.clear()
 	reward_chosen = false
 	_roll_shop()
 	_set_enemy()
-	return _result(true, "前方是第 %d 场遭遇。" % wave, "prepare")
+	return _result(true, "次は第%d戦です。" % wave, "prepare")
 
 func choose_reward(index: int) -> Dictionary:
 	if phase != "reward" or reward_chosen:
-		return _result(false, "当前没有可选择的旅途祝福。")
+		return _result(false, "選択できる祝福はありません。")
 	if index < 0 or index >= reward_choices.size():
-		return _result(false, "请选择一项旅途祝福。")
+		return _result(false, "祝福をひとつ選んでください。")
 	var id: String = reward_choices[index]
 	if not BLESSINGS.has(id) or id in blessings:
-		return _result(false, "这项旅途祝福已领取。")
+		return _result(false, "この祝福は取得済みです。")
 	var blessing: Dictionary = BLESSINGS[id]
 	blessings.append(id)
 	max_hp += int(blessing.get("max_hp", 0))
@@ -354,7 +354,7 @@ func choose_reward(index: int) -> Dictionary:
 	gold += int(blessing.get("gold", 0))
 	reward_choices.clear()
 	reward_chosen = true
-	return _result(true, "获得祝福：" + str(blessing["name"]) + "。", "blessing")
+	return _result(true, "祝福を獲得：" + str(blessing["name"]) + "。", "blessing")
 
 func _add_item(kind: String, pos: Vector2i, level: int = 1) -> Dictionary:
 	var item := {"uid": _next_uid, "kind": kind, "level": level, "pos": pos, "rotated": false}
@@ -377,14 +377,14 @@ func _fits(item: Dictionary, cell: Vector2i, ignore_uids: Array) -> bool:
 func _merge(source: Dictionary, target: Dictionary) -> Dictionary:
 	var merged: Dictionary = _get_merged_item(source, target)
 	if merged.is_empty():
-		return _result(false, "同类同级物品才可升级。")
+		return _result(false, "同じ種類と品質のアイテムのみ強化できます。")
 	if not _fits(merged, merged["pos"], [source["uid"], target["uid"]]):
-		return _result(false, "合成后的装备放不下，先腾出空间或旋转材料。")
+		return _result(false, "完成品を置く空きがありません。場所を空けるか素材を回転してください。")
 	var owned_source: Dictionary = item_by_uid(source["uid"])
 	if not owned_source.is_empty():
 		items.erase(owned_source)
 	target.assign(merged)
-	return _result(true, "合成成功：%s · %d 阶！" % [DEFINITIONS[merged["kind"]]["name"], merged["level"]], "merge")
+	return _result(true, "合成成功：%s · 品質%d！" % [DEFINITIONS[merged["kind"]]["name"], merged["level"]], "merge")
 
 func _get_merged_item(source: Dictionary, target: Dictionary) -> Dictionary:
 	var result_kind: String = get_merge_result(source, target)

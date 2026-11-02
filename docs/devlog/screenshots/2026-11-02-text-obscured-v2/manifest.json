@@ -1,0 +1,222 @@
+{
+  "kind": "derived-runtime-crops-not-new-recordings",
+  "note": "Original historical GIFs remain unchanged. Fixed mosaic zones obscure floating text and may obscure some effects.",
+  "records": [
+    {
+      "file": "v03-battle.gif",
+      "source": "docs/devlog/screenshots/v0.3-sample/battle-motion.gif",
+      "crop": [
+        12,
+        80,
+        516,
+        100
+      ],
+      "mosaic": [
+        [
+          0,
+          44,
+          180,
+          32
+        ],
+        [
+          340,
+          44,
+          176,
+          32
+        ]
+      ],
+      "frames": 40,
+      "duration_ms": 5000,
+      "sha256": "f33bdb5caf65954f9f6653f910a5b91cf95026a78ff74d39f0fc22c1da7dd685"
+    },
+    {
+      "file": "mage-motion.gif",
+      "source": "docs/devlog/screenshots/c1-motion-v1/mage-motion.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 96,
+      "duration_ms": 6000,
+      "sha256": "377cccc2d80bc517e9db1f06ea1b997c2a661d997e1a9be344574df5adaef391"
+    },
+    {
+      "file": "greatblade-motion.gif",
+      "source": "docs/devlog/screenshots/c1-motion-v1/greatblade-motion.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 96,
+      "duration_ms": 6000,
+      "sha256": "759b97c699ccf27734970bb7427100cd5dd05f5181c8d4ea21bc78dad0a82e93"
+    },
+    {
+      "file": "sword-motion.gif",
+      "source": "docs/devlog/screenshots/c1-motion-v1/sword-motion.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 96,
+      "duration_ms": 6000,
+      "sha256": "8ad78e854af513e3bfd6fe70c68295c632c6b441f08699dc284ebb59c8a7747f"
+    },
+    {
+      "file": "mage-feedback.gif",
+      "source": "docs/devlog/screenshots/c1-feedback-v1/mage-feedback.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 96,
+      "duration_ms": 6000,
+      "sha256": "406bc0bc1644a7d29a9a189f43dde8481ab2376ffbba8cb9f853f0433b77e4bc"
+    },
+    {
+      "file": "heavy-feedback.gif",
+      "source": "docs/devlog/screenshots/c1-feedback-v1/heavy-feedback.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 96,
+      "duration_ms": 6000,
+      "sha256": "3b3f5567cfba6434489f005e3c287b4a628a28692f4d7b746e425f46b1d683fd"
+    },
+    {
+      "file": "loss-feedback.gif",
+      "source": "docs/devlog/screenshots/c1-feedback-v1/loss-feedback.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 80,
+      "duration_ms": 5000,
+      "sha256": "305257649f8f58f950e2d8cf0212fa2c562e7ab4052a87c964fdc9077cf9e9de"
+    },
+    {
+      "file": "mage-battle.gif",
+      "source": "docs/devlog/screenshots/mage-trial-v1/mage-battle.gif",
+      "crop": [
+        8,
+        76,
+        704,
+        134
+      ],
+      "mosaic": [
+        [
+          245,
+          47,
+          84,
+          48
+        ],
+        [
+          415,
+          47,
+          76,
+          48
+        ]
+      ],
+      "frames": 96,
+      "duration_ms": 6000,
+      "sha256": "dcc4a79e1efff6b4d0ccbfc15ab7d2abf6907110fd4533879b160c38e1555fe4"
+    }
+  ]
+}

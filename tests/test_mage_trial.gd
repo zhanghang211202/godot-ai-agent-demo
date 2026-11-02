@@ -56,13 +56,13 @@ func _run() -> void:
 	ui._select_source(0)
 	ui.grid.hover_cell = Vector2i.ZERO
 	ui.grid.update_preview()
-	check(ui.preview_label.visible and ui.preview_label.text.contains("焰爆法印") and ui.preview_label.text.contains("20 × 1"), "Hover shows real product and support-adjusted damage")
+	check(ui.preview_label.visible and ui.preview_label.text.contains("爆炎の法印") and ui.preview_label.text.contains("20 × 1"), "Hover shows real product and support-adjusted damage")
 	check(_state(ui.run) == before, "Native hover preview consumes no source or UID")
 	ui._clear_selection()
 	for action in [[0, Vector2i.ZERO], [1, Vector2i(3, 2)], [2, Vector2i(3, 2)]]:
 		check(ui.run.acquire(action[0], action[1]).ok, "Runtime fixture uses legal finite element acquisition")
 	ui._sync()
-	check(ui.detail_label.text.contains("协同+2/段") and ui.detail_label.text.contains("每段承伤6"), "Preparation explains actual synergy and per-hit incoming damage")
+	check(ui.detail_label.text.contains("接続+2/回") and ui.detail_label.text.contains("各段6ダメージ"), "Preparation explains actual synergy and per-hit incoming damage")
 	await _geometry()
 	_live_battle()
 	_compare_layouts()
@@ -93,7 +93,7 @@ func _previews() -> void:
 	check(blocked.acquire(1, Vector2i(1, 0)).ok, "A legal element can block the larger recipe product")
 	before = _state(blocked)
 	preview = blocked.preview_placement({"origin": "source", "index": 0}, Vector2i.ZERO)
-	check(not preview.ok and preview.message.contains("空间不足") and _state(blocked) == before, "Blocked product preview rejects without spending ingredients")
+	check(not preview.ok and preview.message.contains("不足") and _state(blocked) == before, "Blocked product preview rejects without spending ingredients")
 	check(not blocked.preview_placement({"origin": "source", "index": 99}, Vector2i.ZERO).ok, "Invalid source preview fails safely")
 	var owned := Run.new()
 	owned.new_run("mage")
@@ -183,7 +183,7 @@ func _checkpoints() -> void:
 	var before := _state(ui.run)
 	ui.persistence_enabled = true
 	ui._load()
-	check(_state(ui.run) == before and ui.status_label.text.contains("不是法师"), "Focused load rejects a valid knight checkpoint without changing the mage")
+	check(_state(ui.run) == before and ui.status_label.text.contains("魔術師用ではありません"), "Focused load rejects a valid knight checkpoint without changing the mage")
 	check(ui._save(), "Mage preparation can be saved with the existing schema")
 	ui._load()
 	ui.persistence_enabled = false

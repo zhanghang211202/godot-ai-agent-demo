@@ -8,9 +8,9 @@ const CLASS_IDS: Array[String] = ["mage", "knight"]
 static func class_info(id: String) -> Dictionary:
 	match id:
 		"mage":
-			return {"name": "元素编织师", "subtitle": "有限元素 · 战前编织 · 自动施法", "carrier": "法术编织盘", "background": "月光观测庭", "accent": "b5a0eb"}
+			return {"name": "元素紡ぎの魔術師", "subtitle": "有限の元素 · 戦前に紡ぐ · 自動詠唱", "carrier": "魔法の紡ぎ盤", "background": "月光の観測庭", "accent": "b5a0eb"}
 		"knight":
-			return {"name": "圣堂骑士", "subtitle": "有限武装 · 整备锻造 · 蓄势重击", "carrier": "遗物整备盘", "background": "余烬圣堂", "accent": "e3bd73"}
+			return {"name": "聖堂騎士", "subtitle": "有限の武装 · 鍛造 · 溜め攻撃", "carrier": "遺物の整備盤", "background": "残火の聖堂", "accent": "e3bd73"}
 	return {}
 
 static func create_info(id: String) -> Dictionary:
@@ -23,37 +23,37 @@ static func definition(kind: String) -> Dictionary:
 	var result: Dictionary = {}
 	match kind:
 		"spark":
-			result = {"name": "微光术式", "class_id": "mage", "size": Vector2i(1, 2), "color": "c9b3fa", "category": "attack", "description": "基础自动术式。与火元素编织成占地更大的焰爆法印。", "damage": 5, "hits": 1, "interval": 1.5, "warmup": 0.4, "event_type": "spell"}
+			result = {"name": "微光の術式", "class_id": "mage", "size": Vector2i(1, 2), "color": "c9b3fa", "category": "attack", "description": "基本の自動術式。火の元素と紡ぐと、より広い爆炎の法印になる。", "damage": 5, "hits": 1, "interval": 1.5, "warmup": 0.4, "event_type": "spell"}
 		"fire_mote":
-			result = {"name": "火元素", "class_id": "mage", "size": Vector2i.ONE, "color": "f29165", "category": "material", "description": "有限元素。与微光编织焰爆、与水编织蒸汽、与风编织焰风涡旋。"}
+			result = {"name": "火の元素", "class_id": "mage", "size": Vector2i.ONE, "color": "f29165", "category": "material", "description": "有限の元素。微光と爆炎、水と蒸気、風と炎風を紡ぐ。"}
 		"water_mote":
-			result = {"name": "水元素", "class_id": "mage", "size": Vector2i.ONE, "color": "78c8e4", "category": "material", "description": "与微光编织冰矢、与风编织潮汐、与火编织蒸汽。原料也占格。"}
+			result = {"name": "水の元素", "class_id": "mage", "size": Vector2i.ONE, "color": "78c8e4", "category": "material", "description": "微光と氷矢、風と潮汐、火と蒸気を紡ぐ。素材もマスを使う。"}
 		"wind_mote":
-			result = {"name": "风元素", "class_id": "mage", "size": Vector2i.ONE, "color": "94d7b3", "category": "material", "description": "与微光编织双风刃、与水编织潮汐、与火编织焰风涡旋。每局来源有限。"}
+			result = {"name": "風の元素", "class_id": "mage", "size": Vector2i.ONE, "color": "94d7b3", "category": "material", "description": "微光と風刃、水と潮汐、火と炎風を紡ぐ。取得数には限りがある。"}
 		"frost_bolt":
-			result = {"name": "霜晶冰矢", "class_id": "mage", "size": Vector2i(1, 2), "color": "9cdef7", "category": "attack", "description": "水与微光编织的晶质冰矢。紧凑单击，首次0.5秒，每1.8秒释放。", "damage": 9, "hits": 1, "interval": 1.8, "warmup": 0.5, "event_type": "spell", "materials": {"spark": 1, "water_mote": 1}}
+			result = {"name": "霜晶の氷矢", "class_id": "mage", "size": Vector2i(1, 2), "color": "9cdef7", "category": "attack", "description": "水と微光で紡ぐ氷矢。初回0.5秒、以後1.8秒ごとに単発攻撃。", "damage": 9, "hits": 1, "interval": 1.8, "warmup": 0.5, "event_type": "spell", "materials": {"spark": 1, "water_mote": 1}}
 		"gale_blades":
-			result = {"name": "回旋风刃", "class_id": "mage", "size": Vector2i(2, 1), "color": "a0e7ba", "category": "attack", "description": "风与微光编织的双刃。每1.4秒两段命中，各4伤害；晶核支援逐段生效。", "damage": 4, "hits": 2, "interval": 1.4, "warmup": 0.3, "event_type": "spell_multi", "materials": {"spark": 1, "wind_mote": 1}}
+			result = {"name": "旋回する風刃", "class_id": "mage", "size": Vector2i(2, 1), "color": "a0e7ba", "category": "attack", "description": "風と微光の双刃。1.4秒ごとに2回、各4ダメージ。結晶核は各段に有効。", "damage": 4, "hits": 2, "interval": 1.4, "warmup": 0.3, "event_type": "spell_multi", "materials": {"spark": 1, "wind_mote": 1}}
 		"steam_burst":
-			result = {"name": "蒸汽爆破", "class_id": "mage", "size": Vector2i(2, 2), "color": "e5c4a0", "category": "attack", "description": "火与水直接编织的高压法印。首次1.9秒，之后每3.4秒集中爆发22伤害。", "damage": 22, "hits": 1, "interval": 3.4, "warmup": 1.9, "event_type": "spell_burst", "materials": {"fire_mote": 1, "water_mote": 1}}
+			result = {"name": "蒸気爆破", "class_id": "mage", "size": Vector2i(2, 2), "color": "e5c4a0", "category": "attack", "description": "火と水で紡ぐ高圧の法印。初回1.9秒、以後3.4秒ごとに22ダメージ。", "damage": 22, "hits": 1, "interval": 3.4, "warmup": 1.9, "event_type": "spell_burst", "materials": {"fire_mote": 1, "water_mote": 1}}
 		"ember_tornado":
-			result = {"name": "焰风涡旋", "class_id": "mage", "size": Vector2i(2, 3), "color": "f1a875", "category": "attack", "description": "火与风编织的大型术式。占六格，每2.8秒四段命中，各6伤害；需要为聚能连接预留空间。", "damage": 6, "hits": 4, "interval": 2.8, "warmup": 1.2, "event_type": "spell_multi", "materials": {"fire_mote": 1, "wind_mote": 1}}
+			result = {"name": "炎風の渦", "class_id": "mage", "size": Vector2i(2, 3), "color": "f1a875", "category": "attack", "description": "火と風の大型術式。6マス使用、2.8秒ごとに4回、各6ダメージ。結晶核との接続にも空きが必要。", "damage": 6, "hits": 4, "interval": 2.8, "warmup": 1.2, "event_type": "spell_multi", "materials": {"fire_mote": 1, "wind_mote": 1}}
 		"flame_glyph":
-			result = {"name": "焰爆法印", "class_id": "mage", "size": Vector2i(2, 2), "color": "ef936b", "category": "attack", "description": "单次集中爆发。每3秒释放，首次准备1.6秒，占用四格。", "damage": 18, "hits": 1, "interval": 3.0, "warmup": 1.6, "event_type": "spell_burst", "materials": {"spark": 1, "fire_mote": 1}}
+			result = {"name": "爆炎の法印", "class_id": "mage", "size": Vector2i(2, 2), "color": "ef936b", "category": "attack", "description": "集中した単発攻撃。初回1.6秒、以後3秒ごとに発動。4マス使用。", "damage": 18, "hits": 1, "interval": 3.0, "warmup": 1.6, "event_type": "spell_burst", "materials": {"spark": 1, "fire_mote": 1}}
 		"tide_lances":
-			result = {"name": "潮汐连枪", "class_id": "mage", "size": Vector2i(3, 1), "color": "6ac7dc", "category": "attack", "description": "每次施法产生三段命中。更宽的占格需要预留落点。", "damage": 5, "hits": 3, "interval": 2.6, "warmup": 0.8, "event_type": "spell_multi", "materials": {"water_mote": 1, "wind_mote": 1}}
+			result = {"name": "潮汐の連槍", "class_id": "mage", "size": Vector2i(3, 1), "color": "6ac7dc", "category": "attack", "description": "詠唱ごとに3回攻撃。横長のため配置場所を確保しよう。", "damage": 5, "hits": 3, "interval": 2.6, "warmup": 0.8, "event_type": "spell_multi", "materials": {"water_mote": 1, "wind_mote": 1}}
 		"arcane_focus":
-			result = {"name": "聚能晶核", "class_id": "mage", "size": Vector2i.ONE, "color": "b79fe8", "category": "support", "description": "左右边缘连接到的术式每段伤害+2；旋转后改为上下连接。", "support_bonus": 2}
+			result = {"name": "集魔の結晶核", "class_id": "mage", "size": Vector2i.ONE, "color": "b79fe8", "category": "support", "description": "左右に接した術式の各段ダメージ+2。回転すると上下に接続。", "support_bonus": 2}
 		"mage_ward":
-			result = {"name": "护身符板", "class_id": "mage", "size": Vector2i(2, 1), "color": "91a6dd", "category": "armor", "description": "受击时展开月纹法盾，每段抵挡2伤害。保留在编织盘上即可持续保护。", "armor": 2}
+			result = {"name": "護符の板", "class_id": "mage", "size": Vector2i(2, 1), "color": "91a6dd", "category": "armor", "description": "被弾時に月の盾を展開し、各段のダメージを2軽減。盤上に置くと常時有効。", "armor": 2}
 		"iron_blade":
-			result = {"name": "制式长剑", "class_id": "knight", "size": Vector2i(1, 3), "color": "c6ccd2", "category": "attack", "description": "稳定基础攻击。与蓄势徽记锻造为更宽的誓约重刃。", "damage": 9, "hits": 1, "interval": 1.4, "warmup": 0.35, "event_type": "attack"}
+			result = {"name": "制式長剣", "class_id": "knight", "size": Vector2i(1, 3), "color": "c6ccd2", "category": "attack", "description": "安定した基本攻撃。溜めの紋章と合わせると幅広い大剣になる。", "damage": 9, "hits": 1, "interval": 1.4, "warmup": 0.35, "event_type": "attack"}
 		"greatblade":
-			result = {"name": "誓约重刃", "class_id": "knight", "size": Vector2i(2, 3), "color": "e5bd73", "category": "attack", "description": "蓄势后释放重击，之后每3.2秒攻击。六格占地会挤压支援与护甲。", "damage": 32, "hits": 1, "interval": 3.2, "warmup": 1.4, "event_type": "heavy_charge", "materials": {"iron_blade": 1, "charge_seal": 1}}
+			result = {"name": "誓約の大剣", "class_id": "knight", "size": Vector2i(2, 3), "color": "e5bd73", "category": "attack", "description": "溜めた後に重撃。以後3.2秒ごとに攻撃。6マスを使う。", "damage": 32, "hits": 1, "interval": 3.2, "warmup": 1.4, "event_type": "heavy_charge", "materials": {"iron_blade": 1, "charge_seal": 1}}
 		"charge_seal":
-			result = {"name": "蓄势徽记", "class_id": "knight", "size": Vector2i.ONE, "color": "d79c67", "category": "support", "description": "与长剑锻造重刃；保留时使左右连接武器伤害+4，旋转改为上下。", "support_bonus": 4}
+			result = {"name": "溜めの紋章", "class_id": "knight", "size": Vector2i.ONE, "color": "d79c67", "category": "support", "description": "長剣と合わせて大剣を鍛造。左右の武器に+4、回転で上下に接続。", "support_bonus": 4}
 		"knight_ward":
-			result = {"name": "圣堂甲片", "class_id": "knight", "size": Vector2i(2, 1), "color": "e5d8b6", "category": "armor", "description": "护甲+2。这是护甲，不提供尚未实现的格挡或反击。", "armor": 2}
+			result = {"name": "聖堂の装甲片", "class_id": "knight", "size": Vector2i(2, 1), "color": "e5d8b6", "category": "armor", "description": "防御+2。未実装のガードや反撃は発生しない。", "armor": 2}
 	if not result.is_empty() and not result.has("materials"):
 		result["materials"] = {kind: 1}
 	return result
@@ -62,14 +62,14 @@ static func recipes_for(class_id: String) -> Array[Dictionary]:
 	var recipes: Array[Dictionary] = []
 	match class_id:
 		"mage":
-			recipes.append({"first": "fire_mote", "second": "spark", "result": "flame_glyph", "label": "火 + 微光 → 焰爆法印"})
-			recipes.append({"first": "water_mote", "second": "wind_mote", "result": "tide_lances", "label": "水 + 风 → 潮汐连枪"})
-			recipes.append({"first": "water_mote", "second": "spark", "result": "frost_bolt", "label": "水 + 微光 → 霜晶冰矢"})
-			recipes.append({"first": "wind_mote", "second": "spark", "result": "gale_blades", "label": "风 + 微光 → 回旋风刃"})
-			recipes.append({"first": "fire_mote", "second": "water_mote", "result": "steam_burst", "label": "火 + 水 → 蒸汽爆破"})
-			recipes.append({"first": "fire_mote", "second": "wind_mote", "result": "ember_tornado", "label": "火 + 风 → 焰风涡旋"})
+			recipes.append({"first": "fire_mote", "second": "spark", "result": "flame_glyph", "label": "火 + 微光 → 爆炎の法印"})
+			recipes.append({"first": "water_mote", "second": "wind_mote", "result": "tide_lances", "label": "水 + 風 → 潮汐の連槍"})
+			recipes.append({"first": "water_mote", "second": "spark", "result": "frost_bolt", "label": "水 + 微光 → 霜晶の氷矢"})
+			recipes.append({"first": "wind_mote", "second": "spark", "result": "gale_blades", "label": "風 + 微光 → 旋回する風刃"})
+			recipes.append({"first": "fire_mote", "second": "water_mote", "result": "steam_burst", "label": "火 + 水 → 蒸気爆破"})
+			recipes.append({"first": "fire_mote", "second": "wind_mote", "result": "ember_tornado", "label": "火 + 風 → 炎風の渦"})
 		"knight":
-			recipes.append({"first": "iron_blade", "second": "charge_seal", "result": "greatblade", "label": "长剑 + 蓄势徽记 → 誓约重刃"})
+			recipes.append({"first": "iron_blade", "second": "charge_seal", "result": "greatblade", "label": "長剣 + 溜めの紋章 → 誓約の大剣"})
 	return recipes
 
 static func initial_inventory(id: String) -> Array[Dictionary]:

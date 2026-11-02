@@ -12,6 +12,8 @@ npm run godot:open
 
 这个命令会使用项目内的 SDK 编译 C#，再打开 Godot .NET 编辑器，并自动启动本地 MCP 服务。
 
+请先保存并关闭已经直接打开的同一项目编辑器，再使用上述命令启动。直接双击 Godot 不会继承此脚本设置的本地 SDK、NuGet 缓存和 `GODOT_MCP_*` 环境；例如 2026-11-02 实测直接打开的窗口处于 Cloud 模式，而 Codex 指向本机服务器，且本机端口拒绝连接。`npm run godot:status` 可核对编辑器与服务状态。修改客户端配置后通常需要新开 Codex 会话才能重新加载工具；即使 CLI 就绪，当前会话也可能没有挂载该 MCP 工具。
+
 ```powershell
 npm run godot:build
 npm run godot:status

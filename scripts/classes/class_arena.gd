@@ -259,7 +259,7 @@ func _draw() -> void:
 		actor_material.set_shader_parameter("actor_opacity", feedback.opacity("hero"))
 	else:
 		actor_sprite.visible = false
-		_center("待配武装" if layout.hero_id == "" else "角色静态稿待载入", layout.ground_anchor - Vector2(0, 55), 16, tint)
+		_center("装備待ち" if layout.hero_id == "" else "キャラクター読込待ち", layout.ground_anchor - Vector2(0, 55), 16, tint)
 	var enemy_alpha: float = feedback.opacity("enemy")
 	enemy_sprite.visible = not layout.enemy_placeholder
 	if not layout.enemy_placeholder:
@@ -278,10 +278,10 @@ func _draw() -> void:
 		_draw_training_target(Rect2(layout.enemy_rect.position - pivot, layout.enemy_rect.size), Color(tint.lightened(feedback.enemy_hit), enemy_alpha))
 		draw_set_transform(Vector2.ZERO)
 	_draw_hud(layout, tint)
-	var footer_name := "月光观测庭" if run.class_id == "mage" else "余烬圣堂"
+	var footer_name := "月光の観測庭" if run.class_id == "mage" else "残火の聖堂"
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
-	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素试炼" if run.class_id == "mage" else " · 动作样板"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
-	var note := "七种法术 · 六种元素编织" if run.class_id == "mage" else "命中 / 受击 / 淡出反馈 · 专用姿势待制作"
+	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素の試練" if run.class_id == "mage" else " · 動作サンプル"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
+	var note := "7種類の魔法 · 6種類の組み合わせ" if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
@@ -337,20 +337,20 @@ func _draw_hud(layout: Dictionary, tint: Color) -> void:
 	var enemy_hp: int = battle.enemy_hp if battle.phase != "idle" else int(encounter.hp)
 	var enemy_max: int = battle.enemy_max_hp if battle.phase != "idle" else int(encounter.hp)
 	_bar(layout.health_rects[1], enemy_hp, enemy_max, Color("d3858b"))
-	draw_string(font, Vector2(16, 44), "%s  %d / %d" % ["月庭法师" if run.class_id == "mage" else "圣堂骑士", hp_value, hp_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, tint)
-	draw_string(font, Vector2(size.x * 0.70 - 16, 44), "%s  %d / %d" % [str(encounter.name) if run.class_id == "mage" else "训练守卫（占位）", enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("d9a2a7"))
-	var center_text := "准备完成后自动执行"
+	draw_string(font, Vector2(16, 44), "%s  %d / %d" % ["月庭の魔術師" if run.class_id == "mage" else "聖堂騎士", hp_value, hp_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, tint)
+	draw_string(font, Vector2(size.x * 0.70 - 16, 44), "%s  %d / %d" % [str(encounter.name) if run.class_id == "mage" else "訓練用の守衛（仮）", enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("d9a2a7"))
+	var center_text := "準備後に自動戦闘"
 	if battle.phase == "battle":
-		center_text = "已暂停" if battle.paused else "自动执行  %.1f 秒" % battle.battle_time
+		center_text = "一時停止中" if battle.paused else "自動戦闘  %.1f 秒" % battle.battle_time
 	elif battle.phase == "won":
-		center_text = "训练胜利 · 查看来源复盘"
+		center_text = "勝利 · 戦闘結果を確認"
 	elif battle.phase == "lost":
-		center_text = "训练失败 · 调整后再试"
+		center_text = "失敗 · 配置を見直そう"
 	_center(center_text, Vector2(size.x / 2, 28), 16, Color("d8dce7"))
 	if flash > 0 and not last_event.is_empty():
 		var label_text: String = str(last_event.get("source_name", ""))
 		if str(last_event.get("type", "")) == "charge":
-			label_text += " · 蓄势"
+			label_text += " · 溜め"
 		else:
 			label_text += "  -%d" % int(last_event.get("amount", 0))
 			var from: Vector2 = layout.hero_rect.get_center() if layout.hero_visible else layout.ground_anchor - Vector2(0, 75)
@@ -401,9 +401,9 @@ func _draw_feedback() -> void:
 		var progress: float = number.age / Feedback.NUMBER_TIME
 		var text := "-%d" % int(number.amount)
 		if int(number.hits) > 1:
-			text += " · %d段" % int(number.hits)
+			text += " · %d回" % int(number.hits)
 		if int(number.armor) > 0:
-			text += "  %s抵挡%d" % ["法盾" if run.class_id == "mage" else "护甲", int(number.armor)]
+			text += "  %s軽減%d" % ["魔法盾" if run.class_id == "mage" else "防御", int(number.armor)]
 		var point := origin + Vector2(0, -progress * 30 - slot * 24)
 		point.y = maxf(84, point.y)
 		var color := Color("ffb8b0") if target == "hero" else Color("ffe1a0") if number.kind == "greatblade" else Color("b9e7ff")

@@ -4,21 +4,26 @@ extends Control
 signal cell_selected(cell: Vector2i)
 signal drop_requested(data: Dictionary, cell: Vector2i)
 signal preview_changed(preview: Dictionary)
+signal drag_started(data: Dictionary)
 
 const Catalog = preload("res://scripts/classes/class_catalog.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
 const SHORT_LABELS := {
-	"spark": "微光", "fire_mote": "火", "water_mote": "水", "wind_mote": "风",
-	"flame_glyph": "焰爆", "tide_lances": "潮汐", "arcane_focus": "晶",
-	"mage_ward": "护符", "iron_blade": "长剑", "greatblade": "重刃",
-	"charge_seal": "势", "knight_ward": "甲片",
-	"frost_bolt": "冰矢", "gale_blades": "风刃", "steam_burst": "蒸爆", "ember_tornado": "焰涡",
+	"spark": "微光", "fire_mote": "火", "water_mote": "水", "wind_mote": "風",
+	"flame_glyph": "爆炎", "tide_lances": "潮汐", "arcane_focus": "晶",
+	"mage_ward": "護符", "iron_blade": "長剣", "greatblade": "大剣",
+	"charge_seal": "溜", "knight_ward": "装甲",
+	"frost_bolt": "氷矢", "gale_blades": "風刃", "steam_burst": "蒸爆", "ember_tornado": "炎渦",
 }
 var run: RefCounted
 var battle: RefCounted
 var playback_speed := 1.0
 var active_sources: Dictionary = {}
 var current_preview: Dictionary = {}
+var recipe_hints: Dictionary = {}
+var merge_uid := -1
+var merge_remaining := 0.0
+const MERGE_TIME := 0.65
 var selected_uid := -1
 var held: Dictionary = {}
 var hover_cell := Vector2i(-1, -1)
@@ -37,12 +42,24 @@ func _process(delta: float) -> void:
 	if battle == null or battle.paused:
 		return
 	var had_active_sources := not active_sources.is_empty()
+	var had_merge := merge_remaining > 0
+	merge_remaining = maxf(0, merge_remaining - maxf(delta, 0))
 	for uid in active_sources.keys():
 		active_sources[uid] = maxf(0, float(active_sources[uid]) - delta * playback_speed)
 		if active_sources[uid] <= 0:
 			active_sources.erase(uid)
-	if battle.phase == "battle" or had_active_sources:
+	if battle.phase == "battle" or had_active_sources or had_merge:
 		queue_redraw()
+
+func show_merge_feedback(uid: int) -> void:
+	merge_uid = uid
+	merge_remaining = MERGE_TIME
+	queue_redraw()
+
+func clear_merge_feedback() -> void:
+	merge_uid = -1
+	merge_remaining = 0.0
+	queue_redraw()
 
 func show_event(event: Dictionary) -> void:
 	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi"]:
@@ -86,9 +103,11 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 		return null
 	var preview := Label.new()
 	preview.add_theme_font_override("font", font)
-	preview.text = str(run.get_definition(item.kind).name) + " · 松开以放置"
+	preview.text = str(run.get_definition(item.kind).name) + " · 離して配置"
 	set_drag_preview(preview)
-	return {"origin": "bag", "uid": item.uid, "rotated": item.rotated}
+	var data := {"origin": "bag", "uid": item.uid, "rotated": item.rotated}
+	drag_started.emit(data.duplicate(true))
+	return data
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	hover_cell = cell_at(at_position)
@@ -106,7 +125,11 @@ func _get_tooltip(at_position: Vector2) -> String:
 	if item.is_empty():
 		return ""
 	var definition: Dictionary = run.get_definition(item.kind)
-	return str(definition.name) + "\n" + str(definition.get("description", ""))
+	var detail := str(definition.name) + "\n" + str(definition.get("description", ""))
+	if recipe_hints.has(int(item.uid)):
+		var hint: Dictionary = recipe_hints[int(item.uid)]
+		detail += "\n紡げます：" + str(run.get_definition(hint.product).name) if hint.ok else "\n紡げません：" + str(hint.message)
+	return detail
 
 func label_layout(kind: String, rect: Rect2, rotated: bool) -> Dictionary:
 	var definition: Dictionary = Catalog.definition(kind)
@@ -217,6 +240,22 @@ func _draw() -> void:
 			draw_string(font, label.baselines[index], label.lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1, label.font_size, tint.lightened(0.35))
 		for point: Vector2 in label.support_points:
 			draw_circle(point, 2, Color("8bdfd1"))
+		if recipe_hints.has(int(item.uid)):
+			var hint: Dictionary = recipe_hints[int(item.uid)]
+			var hint_color := Color("f5cd7c") if hint.ok else Color("ed8a93")
+			draw_rect(rect.grow(-1), hint_color, false, 3)
+			var corner := rect.position + Vector2(7, 7)
+			draw_colored_polygon(PackedVector2Array([corner + Vector2(0, -5), corner + Vector2(5, 0), corner + Vector2(0, 5), corner + Vector2(-5, 0)]), hint_color)
+		if int(item.uid) == merge_uid and merge_remaining > 0:
+			var progress := 1.0 - merge_remaining / MERGE_TIME
+			var glow := Color("ffe4a2", 1.0 - progress)
+			draw_rect(rect.grow(-2 + progress * 5), glow, false, 3)
+			for index in range(4):
+				var corner := rect.position + Vector2(rect.size.x if index % 2 else 0, rect.size.y if index >= 2 else 0)
+				var direction := Vector2(1 if index % 2 else -1, 1 if index >= 2 else -1)
+				var point := corner + direction * (4 + progress * 10)
+				draw_line(point - Vector2(5, 0), point + Vector2(5, 0), glow, 2)
+				draw_line(point - Vector2(0, 5), point + Vector2(0, 5), glow, 2)
 		if active_sources.has(int(item.uid)):
 			draw_rect(rect.grow(-1), Color(1, 0.88, 0.55, float(active_sources[int(item.uid)]) / 0.28), false, 2)
 		if run.class_id == "mage" and battle != null and battle.phase == "battle" and str(definition.category) == "attack":
