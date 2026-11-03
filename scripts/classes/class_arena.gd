@@ -180,15 +180,19 @@ func get_art_layout() -> Dictionary:
 	var destination := Rect2()
 	var factor := 0.0
 	var cast_point := anchor - Vector2(0, 110)
+	# Larger stages can give the mage more room while retaining the same anchor
+	# and common scale across every animation frame.
+	var hero_height := minf(256.0, scene.size.y - 3.0)
+	if run != null and run.class_id == "mage":
+		hero_height = minf(390.0, scene.size.y * 0.72)
 	if source.has_area():
-		var desired_height := minf(256.0, scene.size.y - 3.0)
-		factor = minf(desired_height / source.size.y, (size.x * 0.34) / source.size.x)
+		factor = minf(hero_height / source.size.y, (size.x * 0.34) / source.size.x)
 		var extent := source.size * factor
 		destination = Rect2(anchor - Vector2(extent.x * 0.5, extent.y), extent)
 	if not animated_hero.is_empty():
 		var frame: Dictionary = animated_hero.frames[frame_index]
 		source = frame.source_rect
-		factor = minf(minf(256.0, scene.size.y - 3.0) / float(animated_hero.height), (size.x * 0.34) / float(animated_hero.left + animated_hero.right))
+		factor = minf(hero_height / float(animated_hero.height), (size.x * 0.34) / float(animated_hero.left + animated_hero.right))
 		destination = Rect2(anchor + (source.position - Vector2(frame.pivot)) * factor, source.size * factor)
 		cast_point = anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * factor
 		hero = animated_hero
@@ -206,7 +210,11 @@ func get_art_layout() -> Dictionary:
 		enemy_anchor.y -= float(encounter.lift)
 		var frame: Dictionary = enemy_art.frames[enemy_index]
 		enemy_source = frame.source_rect
-		enemy_factor = minf(minf(float(encounter.height), scene.size.y - 6 - float(encounter.lift)) / float(enemy_art.height), size.x * 0.24 / float(enemy_art.left + enemy_art.right))
+		# Visual proportions are independent of combat statistics: the stone
+		# golem towers over the mage, while the hovering moth remains smaller.
+		var proportion: float = {"sentinel": 0.92, "mirror_moth": 0.68, "thorn_golem": 1.36}.get(str(encounter.id), 1.0)
+		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
+		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.38 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)
 		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy_anchor - Vector2(0, 100)
 	var missing: Array[String] = []
