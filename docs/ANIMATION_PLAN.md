@@ -4,7 +4,7 @@
 >
 > 创建日期：2026-10-29；审查日期：2026-11-02
 >
-> 状态：2026-11-02 已完成审查；用户随后要求继续完善动画，已实现并接入法师受击 PoC。下方第三至第五节是审查时的基线记录，实施结果见第六节。
+> 状态：2026-11-02 已完成审查并接入法师受击 PoC；2026-11-03 实测本地 MCP 操作 AnimationPlayer，结果见第九节。下方第三至第五节保留审查时的基线记录。
 
 ## 一、目标
 
@@ -85,3 +85,9 @@
 - Godot 官方 [2D Sprite animation](https://docs.godotengine.org/en/stable/tutorials/2d/2d_sprite_animation.html) 和 [AnimationPlayer](https://docs.godotengine.org/en/stable/classes/class_animationplayer.html)。
 - 已安装插件：[IvanMurzak/Godot-MCP](https://github.com/IvanMurzak/Godot-MCP)；[Animation Tools 扩展](https://github.com/IvanMurzak/Godot-MCP/blob/main/extensions/Godot-AI-Animation/README.md)。
 - 原备选：[godot-mcp2](https://github.com/Mobuis/godot-mcp2)、[Funplay Godot MCP](https://store.godotengine.org/asset/funplay/funplay-godot-mcp/)。本轮未安装，也未声称已验证其兼容性。
+
+## 九、MCP 与 AnimationPlayer 实测（2026-11-03）
+
+编辑器原先处于 Cloud 模式且本地服务未启动；在不关闭编辑器的情况下切换为 Custom，启动已安装的本地服务并重新配置项目客户端。本地 MCP 协议握手成功，发现15个工具；RQL 打开 `res://scenes/components/mage_hit_motion.tscn`，查询到 `MageHitMotion` 和 `AnimationPlayer` 节点，原 `main.tscn` 保持在另一标签页。随后以 MCP 的 `script-execute` 读取实际 `hit` 动画：0.22 秒、1 条 `.:position` 轨道、5 个关键帧。
+
+以 MCP 在该 Animation 的**内存深拷贝**上把第二个关键帧从 `(-5, 0)` 改为 `(-6, 0)` 并恢复；原动画仍为 `(-5, 0)`。这验证了经 MCP 调用 Godot API 读取和修改关键帧，但没有保存生产动画的修改，也没有验证可选 Animation Tools 扩展或运行游戏的 MCP 错误采集。此前 PoC 仍是直接通过项目 Godot 工具制作，不能追述成由 MCP 制作。当前 Codex 会话的工具列表未动态出现 Godot MCP；此次实际调用使用项目内独立 MCP 客户端和本地 HTTP 工具接口。[实测记录](devlog/2026-11-03-mcp-mage-analysis.ja.md)。

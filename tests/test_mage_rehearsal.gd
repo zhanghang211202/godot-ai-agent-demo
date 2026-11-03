@@ -60,6 +60,11 @@ func _run() -> void:
 	for _i in range(4): await process_frame
 	await _click(ui.rehearsal_button.get_global_rect().get_center())
 	check(ui.summary_label.text.contains("予行演習") and ui.summary_label.text.contains("鏡翼の蛾") and ui.summary_label.text.contains("茨の石像"), "Real click displays Japanese results for each encounter")
+	for encounter: Dictionary in result.encounters:
+		var summary: Dictionary = encounter.summary
+		check(ui.summary_label.text.contains("法盾で軽減 %d · 被弾 %d回" % [summary.armor_mitigated, summary.enemy_attacks]), str(encounter.id) + " displays actual mitigation and incoming hits")
+		for source: Dictionary in summary.by_source:
+			check(ui.summary_label.text.contains("%s #%d：%dダメージ · %d回発動 / %dヒット" % [source.name, source.uid, source.damage, source.activations, source.hits]), str(encounter.id) + " displays the actual contribution of each distinct spell")
 	check(_state() == before and ui.run.phase == "prepare", "Opening results consumes no source and does not start battle")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	await RenderingServer.frame_post_draw
@@ -70,6 +75,15 @@ func _run() -> void:
 		check(ui.summary_label.text.contains("予行演習") and not ui._rehearsal_signature.is_empty(), str(dimensions) + " results remain visible after resize")
 		await RenderingServer.frame_post_draw
 		check(root.get_texture().get_image().save_png(OUTPUT.path_join("rehearsal-%d.png" % dimensions.x)) == OK, str(dimensions) + " native screenshot saved")
+		if dimensions.x == 1280:
+			var bar: VScrollBar = ui.details_scroll.get_v_scroll_bar()
+			check(bar.max_value > bar.page, "The detailed results can scroll in the smallest tested window")
+			ui.details_scroll.scroll_vertical = maxi(1, int(ui.summary_label.size.y - ui.details_scroll.size.y + 16))
+			await process_frame
+			check(ui.details_scroll.scroll_vertical > 0, "The player can scroll to the end of the detailed results")
+			await RenderingServer.frame_post_draw
+			check(root.get_texture().get_image().save_png(OUTPUT.path_join("rehearsal-1280-bottom.png")) == OK, "Scrolled results screenshot saved")
+			ui.details_scroll.scroll_vertical = 0
 	root.size = Vector2i(1440, 960)
 	for _i in range(4): await process_frame
 	check(ui.run.move(3, Vector2i(3, 1)).ok, "Changed-build fixture moves the focus legally")
@@ -80,6 +94,10 @@ func _run() -> void:
 	check(ui.run.acquire(0, Vector2i(3, 2)).ok, "Raw material fixture places an unused element")
 	ui._sync()
 	check(ui.summary_label.text.contains("配置が変わりました"), "Even an unused material placement invalidates the displayed forecast")
+	ui._new_class("mage")
+	check(ui.run.discard(4).ok, "No-ward fixture removes the defensive item normally")
+	ui._rehearse()
+	check(ui.summary_label.text.count("法盾で軽減 0") == 3, "Every opponent reports zero mitigation when the ward is absent")
 	ui._new_class("mage")
 	check(ui.run.discard(1).ok and ui.run.discard(2).ok, "No-attack fixture uses normal discards")
 	before = _state()
