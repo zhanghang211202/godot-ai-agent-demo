@@ -91,3 +91,5 @@
 编辑器原先处于 Cloud 模式且本地服务未启动；在不关闭编辑器的情况下切换为 Custom，启动已安装的本地服务并重新配置项目客户端。本地 MCP 协议握手成功，发现15个工具；RQL 打开 `res://scenes/components/mage_hit_motion.tscn`，查询到 `MageHitMotion` 和 `AnimationPlayer` 节点，原 `main.tscn` 保持在另一标签页。随后以 MCP 的 `script-execute` 读取实际 `hit` 动画：0.22 秒、1 条 `.:position` 轨道、5 个关键帧。
 
 以 MCP 在该 Animation 的**内存深拷贝**上把第二个关键帧从 `(-5, 0)` 改为 `(-6, 0)` 并恢复；原动画仍为 `(-5, 0)`。这验证了经 MCP 调用 Godot API 读取和修改关键帧，但没有保存生产动画的修改，也没有验证可选 Animation Tools 扩展或运行游戏的 MCP 错误采集。此前 PoC 仍是直接通过项目 Godot 工具制作，不能追述成由 MCP 制作。当前 Codex 会话的工具列表未动态出现 Godot MCP；此次实际调用使用项目内独立 MCP 客户端和本地 HTTP 工具接口。[实测记录](devlog/2026-11-03-mcp-mage-analysis.ja.md)。
+
+同日后续新增 `res://scenes/components/mage_cast_timeline.tscn`，用独立 AnimationPlayer 的四个姿势关键帧衔接蓄力、释放与收势；飞行开始时而不是命中时切换释放姿势。实际命中仍由规则事件产生，同步策略、同发/近邻施法、取消和战斗一致性测试见[日语记录](devlog/2026-11-03-mage-cast-sync.ja.md)。通过本地 MCP 打开该场景并读取 AnimationPlayer 的1条轨道和4个键；场景文件本身由常规项目编辑创建。它沿用已有四帧，不代表完成新肢体动画。

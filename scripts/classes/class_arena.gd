@@ -9,12 +9,14 @@ const MageEffects = preload("res://scripts/classes/mage_effects.gd")
 const Shield = preload("res://scripts/classes/mage_shield.gd")
 const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const MageHitMotion = preload("res://scenes/components/mage_hit_motion.tscn")
+const MageCastTimeline = preload("res://scenes/components/mage_cast_timeline.tscn")
 var motion = Motion.new()
 var feedback = Feedback.new()
 var pixel_cutout_enabled := true
 var shield_effects_enabled := true
 var actor_sprite: Sprite2D
 var mage_hit_motion: Node2D
+var mage_cast_timeline: Node
 var actor_material: ShaderMaterial
 var enemy_sprite: Sprite2D
 var enemy_material: ShaderMaterial
@@ -41,6 +43,8 @@ func _ready() -> void:
 	add_child(ground_effects_layer)
 	mage_hit_motion = MageHitMotion.instantiate()
 	add_child(mage_hit_motion)
+	mage_cast_timeline = MageCastTimeline.instantiate()
+	add_child(mage_cast_timeline)
 	actor_sprite = Sprite2D.new()
 	actor_sprite.centered = false
 	actor_sprite.region_enabled = true
@@ -69,8 +73,11 @@ func show_event(event: Dictionary) -> void:
 	feedback.show_event(event)
 	if run != null and run.class_id == "mage" and mage_hit_motion != null:
 		mage_hit_motion.show_hit(event)
+		if battle != null and battle.phase != "idle":
+			mage_cast_timeline.show_event(event)
 	if str(event.get("type", "")) == "battle_end":
 		motion.finish_battle()
+		mage_cast_timeline.finish_battle()
 	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi", "attack", "heavy_charge", "charge"]:
 		last_event = event
 		flash = 0.6
@@ -83,19 +90,24 @@ func reset_presentation() -> void:
 	feedback.reset()
 	if mage_hit_motion != null:
 		mage_hit_motion.reset_motion()
+	if mage_cast_timeline != null:
+		mage_cast_timeline.reset()
 	queue_redraw()
 	if effects_layer != null:
 		effects_layer.queue_redraw()
 
 func has_pending_presentation() -> bool:
-	return motion.state != "idle" or feedback.is_active() or (mage_hit_motion != null and mage_hit_motion.player.is_playing())
+	return motion.state != "idle" or feedback.is_active() or (mage_hit_motion != null and mage_hit_motion.player.is_playing()) or (mage_cast_timeline != null and mage_cast_timeline.mode != "idle")
 
 func _process(delta: float) -> void:
 	if battle != null and battle.paused:
 		return
 	if flash > 0 or has_pending_presentation() or (battle != null and battle.phase == "battle"):
 		mage_hit_motion.advance_motion(delta, false, playback_speed)
+		mage_cast_timeline.advance(delta, false, playback_speed)
 		motion.advance(delta * playback_speed)
+		if run != null and run.class_id == "mage":
+			mage_cast_timeline.sync_prediction(_upcoming_casts())
 		if motion.state == "idle":
 			for cast: Dictionary in _upcoming_casts():
 				if cast.target == "enemy":
@@ -113,6 +125,17 @@ func _active_actions() -> Array:
 		var snapshot: Dictionary = battle.get("_config")
 		return snapshot.get("actions", [])
 	return run.get_combat_config().get("actions", [])
+
+func _source_cast_offset(uid: int) -> Vector2:
+	# Stable slots per equipped source prevent overlapping projectiles from
+	# jumping between emitters as other cooldowns appear or disappear.
+	var offsets: Array[Vector2] = [Vector2.ZERO, Vector2(28, -32), Vector2(34, 28), Vector2(-30, -38), Vector2(-34, 28), Vector2(46, 0)]
+	var actions := _active_actions()
+	for index in range(actions.size()):
+		if int(actions[index].get("uid", -1)) == uid:
+			var layer := int(index / offsets.size())
+			return offsets[index % offsets.size()] + Vector2(layer * 10, -layer * 10)
+	return Vector2.ZERO
 
 func _upcoming_casts() -> Array[Dictionary]:
 	if run == null or run.class_id != "mage" or battle == null or battle.phase != "battle":
@@ -171,6 +194,8 @@ func get_art_layout() -> Dictionary:
 	var clip_id: String = motion.clip if not motion.clip.is_empty() else default_clip
 	var animated_hero := Motion.get_asset(clip_id)
 	var frame_index: int = motion.frame_index() if not motion.clip.is_empty() else 0
+	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
+		frame_index = int(mage_cast_timeline.pose)
 	var background: Dictionary = Art.get_asset(background_id)
 	var scene := Rect2(1, 61, maxf(0, size.x - 2), maxf(0, size.y - 89))
 	var background_crop := _background_crop(background, scene)
@@ -180,11 +205,12 @@ func get_art_layout() -> Dictionary:
 	var destination := Rect2()
 	var factor := 0.0
 	var cast_point := anchor - Vector2(0, 110)
+	var release_point := cast_point
 	# Larger stages can give the mage more room while retaining the same anchor
 	# and common scale across every animation frame.
 	var hero_height := minf(256.0, scene.size.y - 3.0)
 	if run != null and run.class_id == "mage":
-		hero_height = minf(390.0, scene.size.y * 0.72)
+		hero_height = minf(scene.size.y - 3.0, minf(390.0, maxf(136.0, scene.size.y * 0.56)))
 	if source.has_area():
 		factor = minf(hero_height / source.size.y, (size.x * 0.34) / source.size.x)
 		var extent := source.size * factor
@@ -195,6 +221,11 @@ func get_art_layout() -> Dictionary:
 		factor = minf(hero_height / float(animated_hero.height), (size.x * 0.34) / float(animated_hero.left + animated_hero.right))
 		destination = Rect2(anchor + (source.position - Vector2(frame.pivot)) * factor, source.size * factor)
 		cast_point = anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * factor
+		if clip_id == "mage-cast":
+			var release_frame: Dictionary = animated_hero.frames[2]
+			release_point = anchor + (Vector2(release_frame.cast_point) - Vector2(release_frame.pivot)) * factor
+		else:
+			release_point = cast_point
 		hero = animated_hero
 	var health: Array[Rect2] = [Rect2(16, 12, size.x * 0.30, 8), Rect2(size.x * 0.70 - 16, 12, size.x * 0.30, 8)]
 	var phase := Rect2(size.x * 0.33, 8, size.x * 0.34, 43)
@@ -212,9 +243,9 @@ func get_art_layout() -> Dictionary:
 		enemy_source = frame.source_rect
 		# Visual proportions are independent of combat statistics: the stone
 		# golem towers over the mage, while the hovering moth remains smaller.
-		var proportion: float = {"sentinel": 0.92, "mirror_moth": 0.68, "thorn_golem": 1.36}.get(str(encounter.id), 1.0)
+		var proportion: float = {"sentinel": 0.92, "mirror_moth": 0.68, "thorn_golem": 1.78}.get(str(encounter.id), 1.0)
 		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
-		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.38 / float(enemy_art.left + enemy_art.right))
+		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.46 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)
 		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy_anchor - Vector2(0, 100)
 	var missing: Array[String] = []
@@ -224,7 +255,7 @@ func get_art_layout() -> Dictionary:
 		missing.append(background_id)
 	return {"class_id": str(run.class_id) if run != null else "", "hero_id": hero_id,
 		"hero_path": hero.get("path", ""), "background_id": background_id, "background_path": Art.asset_path(background_id),
-		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination, "hero_cast_point": cast_point,
+		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination, "hero_cast_point": cast_point, "hero_release_point": release_point,
 		"background_source_size": background.get("size", Vector2i.ZERO), "background_source_rect": background_crop,
 		"stage_rect": Rect2(Vector2.ZERO, size), "scene_rect": scene, "ground_anchor": anchor, "ground_y": ground,
 		"enemy_rect": enemy, "health_rects": health, "phase_rect": phase,
@@ -234,6 +265,7 @@ func get_art_layout() -> Dictionary:
 		"hero_visible": destination.has_area(), "animated": not animated_hero.is_empty(), "enemy_placeholder": enemy_art.is_empty(),
 		"enemy_path": enemy_art.get("path", ""), "enemy_source_rect": enemy_source, "enemy_scale": enemy_factor, "enemy_frame": enemy_index, "enemy_anchor": enemy_anchor,
 		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index,
+		"cast_timeline_mode": mage_cast_timeline.mode if mage_cast_timeline != null else "idle",
 		"alpha_render_mode": "cutout >=128, opaque interior" if pixel_cutout_enabled else "original alpha comparison",
 		"feedback": feedback.report(), "spell_effects": MageEffects.visible_effects(feedback.numbers) if run != null and run.class_id == "mage" else [],
 		"spell_casts": _upcoming_casts(), "effect_clip_rect": scene, "encounter_id": encounter.id,
@@ -409,7 +441,7 @@ func _draw_feedback() -> void:
 	effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	if run.class_id == "mage":
 		for cast: Dictionary in layout.spell_casts:
-			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else Vector2(layout.hero_cast_point) + _mage_recoil()
+			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else Vector2(layout.hero_release_point if cast.phase == "flight" else layout.hero_cast_point) + _mage_recoil() + _source_cast_offset(int(cast.source_uid))
 			var to: Vector2 = _incoming_point(layout) if cast.target == "hero" else layout.enemy_cast_point
 			MageEffects.draw_cast(effects_layer, cast, from, to)
 		for effect: Dictionary in layout.spell_effects:

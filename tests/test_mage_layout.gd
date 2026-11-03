@@ -58,7 +58,7 @@ func _run() -> void:
 			check(Rect2(layout.scene_rect).encloses(hero) and Rect2(layout.scene_rect).encloses(enemy) and not hero.intersects(enemy), str(dimensions) + " " + id + " silhouettes fit")
 			if id == "thorn_golem":
 				print("Golem proportions ", dimensions, ": hero=", hero.size, ", enemy=", enemy.size)
-				check(enemy.size.y > hero.size.y * 1.05 and enemy.size.x > hero.size.x, str(dimensions) + " golem is visibly larger than the mage")
+				check(enemy.size.y > hero.size.y * 1.4 and enemy.size.x > hero.size.x * 1.7, str(dimensions) + " golem is visibly larger than the mage")
 			elif id == "mirror_moth":
 				check(enemy.size.y < hero.size.y * 0.8, str(dimensions) + " moth remains smaller than the mage")
 		if dimensions.x == 1440:
@@ -66,6 +66,20 @@ func _run() -> void:
 		ui._start_battle()
 		await _settle()
 		check(ui.battle.phase == "battle" and not ui.workspace_panel.visible and ui.arena.size.y > prepared.size.y, str(dimensions) + " battle automatically expands stage")
+		var battle_layout: Dictionary = ui.arena.get_art_layout()
+		var battle_hero: Rect2 = battle_layout.hero_rect
+		var battle_enemy: Rect2 = battle_layout.enemy_rect
+		check(battle_enemy.size.y > battle_hero.size.y * 1.2 and battle_enemy.size.x > battle_hero.size.x * 1.4, str(dimensions) + " golem remains larger after battle stage expansion")
+		var enemy_deadline: int = ui.battle._enemy_next_step
+		for frame in range(4):
+			ui.arena.feedback.hero_hit = 1.0 if frame == 2 else 0.0
+			ui.arena.feedback.enemy_hit = 1.0 if frame == 3 else 0.0
+			ui.battle._enemy_next_step = ui.battle._step_index + (1 if frame == 1 else 1000)
+			var pose: Dictionary = ui.arena.get_art_layout()
+			check(pose.enemy_frame == frame and Rect2(pose.scene_rect).encloses(pose.enemy_rect) and not Rect2(pose.enemy_rect).intersects(pose.hero_rect), str(dimensions) + " golem pose %d fits the stage" % frame)
+		ui.arena.feedback.hero_hit = 0.0
+		ui.arena.feedback.enemy_hit = 0.0
+		ui.battle._enemy_next_step = enemy_deadline
 		check(viewport.encloses(ui.workspace_button.get_global_rect()) and viewport.encloses(ui.primary_button.get_global_rect()), str(dimensions) + " battle controls remain on screen")
 		await _capture("battle-golem-%d.png" % dimensions.x)
 		ui.workspace_button.pressed.emit()
