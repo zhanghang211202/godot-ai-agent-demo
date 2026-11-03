@@ -2,6 +2,7 @@ extends RefCounted
 ## Presentation only. Event timestamps, damage, cooldowns and saves stay in ClassBattle.
 
 const ROOT := "res://assets/art/c1-motion-v1/characters/"
+const MAGE_CAST_PATH := "res://assets/art/mage-leg-revision-v1/characters/mage-cast.png"
 const FILES := {"mage-cast": "mage-cast.png", "knight-sword": "knight-sword.png", "knight-greatblade": "knight-greatblade.png"}
 # Measured boot-midpoint x anchors in original PNG coordinates. Y is the last
 # alpha>=128 row of each frame. A common scale is used throughout each clip.
@@ -92,7 +93,7 @@ static func get_asset(id: String) -> Dictionary:
 		return _assets[id]
 	if not FILES.has(id):
 		return {}
-	var path := ROOT + str(FILES[id])
+	var path := MAGE_CAST_PATH if id == "mage-cast" else ROOT + str(FILES[id])
 	var image := Image.load_from_file(path)
 	if image == null or image.is_empty():
 		return {}
