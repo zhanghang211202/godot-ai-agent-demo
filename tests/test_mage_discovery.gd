@@ -84,7 +84,7 @@ func _run() -> void:
 	ui.grid.set_process(false)
 	var original := _state(ui.run)
 	await _click(ui.recipe_button.get_global_rect().get_center())
-	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 6, "Real button opens six actual recipe cards")
+	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 10, "Real button opens ten actual recipe cards")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _frame in range(4): await process_frame

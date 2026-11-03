@@ -42,6 +42,14 @@ static func definition(kind: String) -> Dictionary:
 			result = {"name": "爆炎の法印", "class_id": "mage", "size": Vector2i(2, 2), "color": "ef936b", "category": "attack", "description": "集中した単発攻撃。初回1.6秒、以後3秒ごとに発動。4マス使用。", "damage": 18, "hits": 1, "interval": 3.0, "warmup": 1.6, "event_type": "spell_burst", "materials": {"spark": 1, "fire_mote": 1}}
 		"tide_lances":
 			result = {"name": "潮汐の連槍", "class_id": "mage", "size": Vector2i(3, 1), "color": "6ac7dc", "category": "attack", "description": "詠唱ごとに3回攻撃。横長のため配置場所を確保しよう。", "damage": 5, "hits": 3, "interval": 2.6, "warmup": 0.8, "event_type": "spell_multi", "materials": {"water_mote": 1, "wind_mote": 1}}
+		"solar_crown":
+			result = {"name": "陽炎の三連星", "class_id": "mage", "size": Vector2i(2, 2), "color": "ffc06c", "category": "attack", "description": "火を二つ重ねる三連星。2.6秒ごとに3回、各8ダメージ。", "damage": 8, "hits": 3, "interval": 2.6, "warmup": 0.8, "event_type": "spell_multi", "materials": {"fire_mote": 2}}
+		"glacier_prism":
+			result = {"name": "氷晶の大槍", "class_id": "mage", "size": Vector2i(1, 3), "color": "a5e6ff", "category": "attack", "description": "水を二つ重ねる大槍。2.4秒ごとに20ダメージ。", "damage": 20, "hits": 1, "interval": 2.4, "warmup": 1.1, "event_type": "spell_burst", "materials": {"water_mote": 2}}
+		"storm_orbit":
+			result = {"name": "暴風の五重輪", "class_id": "mage", "size": Vector2i(2, 2), "color": "9aefd2", "category": "attack", "description": "風を二つ重ねる五段攻撃。各3ダメージに結晶核の支援が乗る。", "damage": 3, "hits": 5, "interval": 2.2, "warmup": 0.6, "event_type": "spell_multi", "materials": {"wind_mote": 2}}
+		"arcane_nova":
+			result = {"name": "星環の大魔法", "class_id": "mage", "size": Vector2i(2, 2), "color": "d5b8ff", "category": "attack", "description": "微光二つを一つの大魔法に紡ぐ。2.9秒ごとに26ダメージ。", "damage": 26, "hits": 1, "interval": 2.9, "warmup": 1.1, "event_type": "spell_burst", "materials": {"spark": 2}}
 		"arcane_focus":
 			result = {"name": "集魔の結晶核", "class_id": "mage", "size": Vector2i.ONE, "color": "b79fe8", "category": "support", "description": "左右に接した術式の各段ダメージ+2。回転すると上下に接続。", "support_bonus": 2}
 		"mage_ward":
@@ -68,6 +76,10 @@ static func recipes_for(class_id: String) -> Array[Dictionary]:
 			recipes.append({"first": "wind_mote", "second": "spark", "result": "gale_blades", "label": "風 + 微光 → 旋回する風刃"})
 			recipes.append({"first": "fire_mote", "second": "water_mote", "result": "steam_burst", "label": "火 + 水 → 蒸気爆破"})
 			recipes.append({"first": "fire_mote", "second": "wind_mote", "result": "ember_tornado", "label": "火 + 風 → 炎風の渦"})
+			recipes.append({"first": "fire_mote", "second": "fire_mote", "result": "solar_crown", "label": "火 + 火 → 陽炎の三連星"})
+			recipes.append({"first": "water_mote", "second": "water_mote", "result": "glacier_prism", "label": "水 + 水 → 氷晶の大槍"})
+			recipes.append({"first": "wind_mote", "second": "wind_mote", "result": "storm_orbit", "label": "風 + 風 → 暴風の五重輪"})
+			recipes.append({"first": "spark", "second": "spark", "result": "arcane_nova", "label": "微光 + 微光 → 星環の大魔法"})
 		"knight":
 			recipes.append({"first": "iron_blade", "second": "charge_seal", "result": "greatblade", "label": "長剣 + 溜めの紋章 → 誓約の大剣"})
 	return recipes

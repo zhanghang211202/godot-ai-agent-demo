@@ -8,10 +8,12 @@ const WINDUP := 0.64
 const FLIGHT := 0.24
 const COLORS := {"spark": Color("bc9cff"), "flame_glyph": Color("ff964e"), "tide_lances": Color("70d9fa"), "enemy": Color("81e2ff"),
 	"frost_bolt": Color("b9eaff"), "gale_blades": Color("a4e9c2"), "steam_burst": Color("e7dcca"), "ember_tornado": Color("ffb061"),
-	"moth_bolt": Color("c5acff"), "thorn_crash": Color("9bdb95")}
-const ENEMY_KINDS := ["enemy", "moth_bolt", "thorn_crash"]
+	"solar_crown": Color("ffc36f"), "glacier_prism": Color("b8edff"), "storm_orbit": Color("a7efd5"), "arcane_nova": Color("e1bcff"),
+	"moth_bolt": Color("c5acff"), "thorn_crash": Color("9bdb95"), "boss_star": Color("e1b4ff"), "boss_crash": Color("b6a3f0")}
+const ENEMY_KINDS := ["enemy", "moth_bolt", "thorn_crash", "boss_star", "boss_crash"]
 const DURATIONS := {"spark": 0.48, "flame_glyph": LIFE, "tide_lances": 0.64, "enemy": 0.48,
-	"frost_bolt": 0.62, "gale_blades": 0.68, "steam_burst": 0.78, "ember_tornado": 0.82, "moth_bolt": 0.52, "thorn_crash": 0.70}
+	"frost_bolt": 0.62, "gale_blades": 0.68, "steam_burst": 0.78, "ember_tornado": 0.82,
+	"solar_crown": 0.78, "glacier_prism": 0.75, "storm_orbit": 0.72, "arcane_nova": 0.82, "moth_bolt": 0.52, "thorn_crash": 0.70, "boss_star": 0.62, "boss_crash": 0.82}
 const MAX_EFFECTS := 8
 const MAX_CASTS := 6
 
@@ -80,7 +82,7 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 	if remaining > FLIGHT:
 		return
 	var flight := clampf(1.0 - remaining / FLIGHT, 0, 1)
-	var count := clampi(int(cast.planned_hits), 1, 3) if kind in ["tide_lances", "gale_blades", "moth_bolt"] else 1
+	var count := clampi(int(cast.planned_hits), 1, 5) if kind in ["tide_lances", "gale_blades", "moth_bolt", "boss_star", "solar_crown", "storm_orbit"] else 1
 	for index in range(count):
 		var offset := (index - (count - 1) * 0.5) * 22
 		var tip := trajectory(from, to + Vector2(0, offset), flight, kind, index)
@@ -103,10 +105,30 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 			star(canvas, tip, 8, Color("ffe2a2"))
 		elif kind == "ember_tornado":
 			vortex(canvas, tip, flight, 1.0, 4)
+		elif kind == "solar_crown":
+			pixel_sprite(canvas, "flame", tip, 2, 1.0, int(progress * 20) + index)
+			star(canvas, tip, 9, Color("fff2bf"))
+		elif kind == "glacier_prism":
+			pixel_sprite(canvas, "lance", tip - Vector2(34, 0), 4, 1.0)
+			seal(canvas, tip, Vector2(19, 15), flight, Color(color, 0.8), 8)
+		elif kind == "storm_orbit":
+			pixel_sprite(canvas, "crescent", tip, 2, 1.0)
+			seal(canvas, tip, Vector2(13, 9), flight * 3 + index, Color(color, 0.8), 6)
+		elif kind == "arcane_nova":
+			pixel_sprite(canvas, "comet", tip, 3, 1.0)
+			seal(canvas, tip, Vector2.ONE * 18, flight * 2, Color(color, 0.85), 8)
 		elif kind == "moth_bolt":
 			diamond(canvas, tip, 12, Color("7453b0"))
 			seal(canvas, tip, Vector2.ONE * 10, progress, Color("dfd4ff"), 8)
 			star(canvas, tip, 6, Color("fff4ff"))
+		elif kind == "boss_star":
+			diamond(canvas, tip, 15, Color("564078"))
+			seal(canvas, tip, Vector2.ONE * 14, progress * 2, Color("eccbff"), 8)
+			star(canvas, tip, 10, Color("fff5d3"))
+		elif kind == "boss_crash":
+			diamond(canvas, tip, 19, Color("4a3b62"))
+			seal(canvas, tip, Vector2(22, 18), progress, Color("dec18a"), 6)
+			star(canvas, tip, 8, color)
 		elif kind == "thorn_crash":
 			for spike in range(3):
 				var at := tip + Vector2((spike - 1) * 13, (spike % 2) * 10)
@@ -150,7 +172,7 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, hero: Vector2, e
 	if progress < 0.24:
 		var sign_x := -1 if effect.target == "hero" else 1
 		canvas.draw_line(snap(at - Vector2(sign_x * 90, 0)), snap(at), Color(color, (1.0 - progress / 0.24) * 0.6), 3, false)
-	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "moth_bolt", "thorn_crash"]:
+	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "moth_bolt", "thorn_crash", "boss_star", "boss_crash"]:
 		expansion_impact(canvas, effect, at)
 	elif kind == "flame_glyph":
 		flame_impact(canvas, at, progress)
@@ -212,7 +234,7 @@ static func expansion_impact(canvas: CanvasItem, effect: Dictionary, at: Vector2
 	var progress := float(effect.progress)
 	var fade := 1.0 - progress
 	var color: Color = COLORS[kind]
-	var hits := clampi(int(effect.hits), 1, 4)
+	var hits := clampi(int(effect.hits), 1, 5)
 	if kind == "frost_bolt":
 		pixel_sprite(canvas, "lance", at - Vector2(18, 0), 3, maxf(0, 1 - progress * 4))
 		seal(canvas, at, Vector2.ONE * (16 + progress * 42), PI / 6, Color(color, fade), 6)
@@ -232,11 +254,42 @@ static func expansion_impact(canvas: CanvasItem, effect: Dictionary, at: Vector2
 		star(canvas, at, maxf(2, 28 * (1.0 - progress * 3)), Color("fff2cd", fade))
 	elif kind == "ember_tornado":
 		vortex(canvas, at, progress, fade, hits)
+	elif kind == "solar_crown":
+		for hit in range(hits):
+			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 20)
+			pixel_sprite(canvas, "flame", point - Vector2(0, progress * 18), 2, fade, hit)
+			star(canvas, point, 16 * fade, Color("ffe7a5", fade))
+	elif kind == "glacier_prism":
+		pixel_sprite(canvas, "lance", at, 4, maxf(0, 1 - progress * 3))
+		for index in range(12):
+			pixel_sprite(canvas, "shard", at + Vector2.from_angle(index * TAU / 12) * (12 + progress * 65), 2, fade)
+		seal(canvas, at, Vector2.ONE * (18 + progress * 58), 0, Color(color, fade), 8)
+	elif kind == "storm_orbit":
+		for hit in range(hits):
+			var angle := progress * 6 + hit * TAU / hits
+			canvas.draw_polyline(arc_points(at, Vector2(28 + progress * 44, 18 + progress * 30), angle, 2.5, 12), Color(color, fade), 3, false)
+			pixel_sprite(canvas, "crescent", at + Vector2.from_angle(angle) * (20 + progress * 40), 1, fade)
+	elif kind == "arcane_nova":
+		seal(canvas, at, Vector2.ONE * (18 + progress * 68), progress, Color(color, fade), 8)
+		seal(canvas, at, Vector2.ONE * (12 + progress * 45), -progress, Color("f2dfff", fade), 6)
+		for index in range(8):
+			star(canvas, at + Vector2.from_angle(index * TAU / 8) * (12 + progress * 56), 6 * fade, Color(color, fade))
 	elif kind == "moth_bolt":
 		for hit in range(hits):
 			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)
 			seal(canvas, point, Vector2.ONE * (11 + progress * 38), progress * 1.2, Color(color, fade), 8)
 			star(canvas, point, 20 * fade, Color("eee4ff", fade))
+	elif kind == "boss_star":
+		for hit in range(hits):
+			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)
+			seal(canvas, point, Vector2.ONE * (14 + progress * 48), -progress * 2, Color(color, fade), 8)
+			star(canvas, point, 24 * fade, Color("fff3dc", fade))
+	elif kind == "boss_crash":
+		seal(canvas, at, Vector2(24 + progress * 78, 16 + progress * 50), progress, Color("e7c586", fade), 8)
+		for index in range(8):
+			var point := at + Vector2.from_angle(index * TAU / 8) * (14 + progress * 62)
+			diamond(canvas, point, 10 * fade + 2, Color("6c548c", fade))
+			star(canvas, point, 4 * fade, Color(color, fade))
 	else:
 		for index in range(7):
 			var point := at + Vector2((index - 3) * (8 + progress * 9), progress * progress * 45 - (index % 3) * 8)
