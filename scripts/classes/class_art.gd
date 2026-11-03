@@ -12,6 +12,8 @@ const FILES := {
 static var _cache: Dictionary = {}
 
 static func asset_path(id: String) -> String:
+	if id == "mage-idle":
+		return "res://assets/art/mage-leg-revision-v1/characters/mage-idle.png"
 	return ROOT + str(FILES[id]) if FILES.has(id) else ""
 
 static func get_asset(id: String) -> Dictionary:

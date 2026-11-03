@@ -1,0 +1,23 @@
+{
+  "tool": "built-in imagegen, edit",
+  "date": "2026-11-03",
+  "assets": [
+    {
+      "file": "characters/mage-cast.png",
+      "reference": "assets/art/c1-motion-v1/characters/mage-cast.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "c93b4352e18211686b5d9a18bdf117107edf9806558c5e2d74b864890a1d99fe",
+      "role": "Four-frame runtime mage sheet; alpha preserved; not a new animation system."
+    },
+    {
+      "file": "characters/mage-idle.png",
+      "reference": "assets/art/c1-static-v1/characters/mage-idle.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "e90765bde0238a9ab428f81a293e97f1e7325c895665fe32e68bfa47f309bf66",
+      "role": "Revised static mage image and fallback; alpha preserved."
+    }
+  ],
+  "limitations": "Generated corrections are visually reviewed candidates; hands, staff, foot anchors and pixel consistency need continued human review."
+}
