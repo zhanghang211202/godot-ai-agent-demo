@@ -1,0 +1,9 @@
+{
+  "tool": "built-in imagegen",
+  "date": "2026-11-03",
+  "assets": [
+    {"file": "enemies/moon-crowned-boss.png", "reference": "assets/art/mage-expansion-v1/enemies/thorn-golem.png", "width": 1254, "height": 1254, "sha256": "fef21f8632856e007b2cc499c04e9e44b95c9c526f82a732c964d9b7069a325e", "role": "Four-pose boss atlas, transparent background"},
+    {"file": "items/same-element-spells.png", "reference": "assets/art/mage-trial-v1/items/mage-items.png", "width": 1774, "height": 887, "sha256": "cc611cc1b63794e2ff5428de1d2bb875669ff7b3140d248fe1b8ddb827f47fb7", "role": "Four same-ingredient spell icons, transparent background"}
+  ],
+  "limitations": "Generated assets are runtime candidates; their source pixel grid and frame-to-frame anatomy still require artistic review."
+}

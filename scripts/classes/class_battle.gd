@@ -39,6 +39,7 @@ var _result: String = "idle"
 var _armor: int = 0
 var encounter_id := "sentinel"
 var _enemy_definition: Dictionary = Encounters.definition("sentinel")
+var _enemy_pattern_index := 0
 
 func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dictionary:
 	# Validate and copy before modifying any running battle, including its timers.
@@ -50,6 +51,7 @@ func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dicti
 		return {"ok": false, "message": "現在の職業ではこの敵に挑戦できません。"}
 	encounter_id = selected_encounter
 	_enemy_definition = enemy
+	_enemy_pattern_index = 0
 	_config = config.duplicate(true)
 	_actions.clear()
 	_by_source.clear()
@@ -127,8 +129,13 @@ func get_presentation_timing() -> Dictionary:
 		var period: int = int(action.warmup_steps) if initial and int(action.warmup_steps) > 0 else int(action.interval_steps)
 		var remaining := maxf(0, float(int(action.next_step) - _step_index) * STEP)
 		sources[int(action.uid)] = {"remaining": remaining, "progress": clampf(1.0 - remaining / (maxi(1, period) * STEP), 0, 1), "charging": bool(action.charged)}
+	var attack := _current_enemy_attack()
 	return {"sources": sources, "enemy_remaining": maxf(0, float(_enemy_next_step - _step_index) * STEP), "substep": _accumulator,
-		"enemy_kind": _enemy_definition.effect, "enemy_windup": _enemy_definition.windup, "enemy_hits": _enemy_definition.hits}
+		"enemy_kind": attack.effect, "enemy_windup": attack.windup, "enemy_hits": attack.hits}
+
+func _current_enemy_attack() -> Dictionary:
+	var pattern: Array = _enemy_definition.get("pattern", [])
+	return pattern[_enemy_pattern_index] if not pattern.is_empty() else _enemy_definition
 
 func get_encounter() -> Dictionary:
 	return _enemy_definition.duplicate(true)
@@ -166,9 +173,13 @@ func _step(events: Array[Dictionary]) -> void:
 			action["charged"] = true
 			events.append(_event("charge", action, 0, "enemy"))
 	if _step_index >= _enemy_next_step:
-		_enemy_next_step += _steps(float(_enemy_definition.interval))
-		for hit in range(1, int(_enemy_definition.hits) + 1):
-			var raw := int(_enemy_definition.damage)
+		var attack := _current_enemy_attack()
+		var pattern: Array = _enemy_definition.get("pattern", [])
+		if not pattern.is_empty():
+			_enemy_pattern_index = (_enemy_pattern_index + 1) % pattern.size()
+		_enemy_next_step += _steps(float(_current_enemy_attack().interval))
+		for hit in range(1, int(attack.hits) + 1):
+			var raw := int(attack.damage)
 			var mitigated := mini(_armor, raw - 1)
 			var after_armor := raw - mitigated
 			var effective := mini(hp, after_armor)
@@ -178,7 +189,7 @@ func _step(events: Array[Dictionary]) -> void:
 			_stats["armor_mitigated"] += mitigated
 			_stats["overkill_damage_taken"] += after_armor - effective
 			_stats["enemy_attacks"] += 1
-			var source: Dictionary = {} if encounter_id == "sentinel" else {"kind": _enemy_definition.effect}
+			var source: Dictionary = {} if encounter_id == "sentinel" else {"kind": attack.effect}
 			var event := _event("enemy_attack", source, effective, "hero")
 			event["raw_amount"] = raw
 			event["armor_mitigated"] = mitigated

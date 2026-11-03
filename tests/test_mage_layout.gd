@@ -61,6 +61,8 @@ func _run() -> void:
 				check(enemy.size.y > hero.size.y * 1.4 and enemy.size.x > hero.size.x * 1.7, str(dimensions) + " golem is visibly larger than the mage")
 			elif id == "mirror_moth":
 				check(enemy.size.y < hero.size.y * 0.8, str(dimensions) + " moth remains smaller than the mage")
+			elif id == "sentinel":
+				check(enemy.size.y > hero.size.y * 1.2, str(dimensions) + " sentinel is visibly taller than the mage")
 		if dimensions.x == 1440:
 			await _capture("prepare-golem-1440.png")
 		ui._start_battle()

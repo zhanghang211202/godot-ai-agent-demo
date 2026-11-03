@@ -2,6 +2,7 @@ extends Control
 ## Dedicated action-frame sample over the unchanged C0 event engine.
 
 const Art = preload("res://scripts/classes/class_art.gd")
+const Catalog = preload("res://scripts/classes/class_catalog.gd")
 const Motion = preload("res://scripts/classes/class_motion.gd")
 const Feedback = preload("res://scripts/classes/class_feedback.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
@@ -28,6 +29,7 @@ var run: RefCounted
 var battle: RefCounted
 var last_event: Dictionary = {}
 var flash := 0.0
+var campaign_reward := 0
 var font: Font = preload("res://assets/fonts/NotoSansCJKsc-Regular.otf")
 
 func _ready() -> void:
@@ -86,6 +88,7 @@ func show_event(event: Dictionary) -> void:
 func reset_presentation() -> void:
 	last_event = {}
 	flash = 0.0
+	campaign_reward = 0
 	motion.reset()
 	feedback.reset()
 	if mage_hit_motion != null:
@@ -93,6 +96,11 @@ func reset_presentation() -> void:
 	if mage_cast_timeline != null:
 		mage_cast_timeline.reset()
 	queue_redraw()
+	if effects_layer != null:
+		effects_layer.queue_redraw()
+
+func show_campaign_reward(amount: int) -> void:
+	campaign_reward = maxi(0, amount)
 	if effects_layer != null:
 		effects_layer.queue_redraw()
 
@@ -171,7 +179,8 @@ func _incoming_point(layout: Dictionary) -> Vector2:
 	if run.class_id == "mage" and int(config.get("armor", 0)) > 0:
 		var shape := Shield.geometry(_mage_effect_rect(layout))
 		return Vector2(shape.center) + Vector2(Vector2(shape.radius).x * 0.94, 0)
-	return Vector2(layout.ground_anchor) - Vector2(0, 110)
+	var hero := _mage_effect_rect(layout)
+	return hero.position + hero.size * Vector2(0.65, 0.46)
 
 func enemy_frame() -> int:
 	if feedback.enemy_exit >= 0:
@@ -180,7 +189,7 @@ func enemy_frame() -> int:
 		return 2
 	if feedback.enemy_hit > 0:
 		return 3
-	var anticipation := 0.35 if _encounter().id == "sentinel" else float(_encounter().windup)
+	var anticipation := 0.35 if _encounter().id == "sentinel" else float(battle.get_presentation_timing().enemy_windup) if battle != null and battle.phase == "battle" else float(_encounter().windup)
 	if battle != null and battle.phase == "battle" and float(battle.get_presentation_timing().enemy_remaining) <= anticipation:
 		return 1
 	return 0
@@ -243,11 +252,11 @@ func get_art_layout() -> Dictionary:
 		enemy_source = frame.source_rect
 		# Visual proportions are independent of combat statistics: the stone
 		# golem towers over the mage, while the hovering moth remains smaller.
-		var proportion: float = {"sentinel": 0.92, "mirror_moth": 0.68, "thorn_golem": 1.78}.get(str(encounter.id), 1.0)
+		var proportion: float = {"sentinel": 1.36, "mirror_moth": 0.68, "thorn_golem": 1.78, "sentinel_elite": 1.45, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
 		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
 		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.46 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)
-		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy_anchor - Vector2(0, 100)
+		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy.position + enemy.size * Vector2(0.5, 0.46)
 	var missing: Array[String] = []
 	if hero_id != "" and hero.is_empty():
 		missing.append(hero_id)
@@ -340,7 +349,8 @@ func _draw() -> void:
 	var footer_name := "月光の観測庭" if run.class_id == "mage" else "残火の聖堂"
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
 	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素の試練" if run.class_id == "mage" else " · 動作サンプル"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
-	var note := "7種類の魔法 · 6種類の組み合わせ" if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
+	var recipes_count := Catalog.recipes_for("mage").size()
+	var note := "%d種類の魔法 · %d種類の組み合わせ" % [recipes_count + 1, recipes_count] if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
@@ -448,6 +458,14 @@ func _draw_feedback() -> void:
 			var hero_point: Vector2 = _incoming_point(layout) if effect.target == "hero" else Vector2(layout.hero_cast_point) + _mage_recoil()
 			MageEffects.draw_effect(effects_layer, effect, hero_point, layout.enemy_cast_point)
 		Shield.draw_front(effects_layer, layout.shields, _mage_effect_rect(layout))
+		if campaign_reward > 0 and battle.phase == "won":
+			var origin: Vector2 = layout.enemy_rect.get_center()
+			var reward_text := "魔力残滓 +%d" % campaign_reward
+			var width := font.get_string_size(reward_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 22).x
+			MageEffects.seal(effects_layer, origin, Vector2.ONE * 28, PI / 8, Color("d5a8ff"), 8)
+			MageEffects.star(effects_layer, origin, 13, Color("fff4cf"))
+			effects_layer.draw_string(font, origin + Vector2(-width / 2 + 1, -42), reward_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("20192b"))
+			effects_layer.draw_string(font, origin + Vector2(-width / 2, -44), reward_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color("ead5ff"))
 	var slots := {"hero": 0, "enemy": 0}
 	for index in range(feedback.numbers.size() - 1, -1, -1):
 		var number: Dictionary = feedback.numbers[index]

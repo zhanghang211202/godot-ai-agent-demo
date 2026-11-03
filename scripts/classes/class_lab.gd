@@ -11,8 +11,10 @@ const MageArt = preload("res://scripts/classes/mage_art.gd")
 const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const RecipeGuide = preload("res://scripts/classes/mage_recipe_guide.gd")
 const Rehearsal = preload("res://scripts/classes/mage_rehearsal.gd")
+const Campaign = preload("res://scripts/classes/mage_campaign.gd")
 
 @export var mage_focus := false
+@export var campaign_focus := false
 
 var run = RunRules.new()
 var battle = BattleRules.new()
@@ -48,7 +50,11 @@ var _rehearsal_signature := ""
 var speed := 1.0
 var encounter_id := "sentinel"
 var encounter_selector: OptionButton
+var campaign_stage_label: Label
+var campaign_stage := 0
 var recipe_button: Button
+var condense_button: Button
+var source_scroll: ScrollContainer
 var recipe_overlay: ColorRect
 var recipe_cards: Array[Button] = []
 var recipe_close_button: Button
@@ -69,7 +75,9 @@ var _ready_frames := 0
 var _last_phase := "idle"
 
 func _ready() -> void:
-	get_window().title = "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練"
+	get_window().title = "月庭の魔術師 · 五つの試練" if campaign_focus else "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練"
+	if campaign_focus:
+		persistence_enabled = false
 	for argument in OS.get_cmdline_user_args():
 		if argument == "--no-save":
 			persistence_enabled = false
@@ -130,12 +138,15 @@ func _build_interface() -> void:
 	margin.add_child(root)
 	var header := HBoxContainer.new()
 	root.add_child(header)
-	var heading := _label("月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
+	var heading := _label("月庭の魔術師 · 五つの試練" if campaign_focus else "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
 	if mage_focus:
 		heading.add_theme_color_override("font_color", Color("e2d3ff"))
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
-	if mage_focus:
+	if campaign_focus:
+		campaign_stage_label = _label("", 19, Color("e5c783"))
+		header.add_child(campaign_stage_label)
+	elif mage_focus:
 		encounter_selector = OptionButton.new()
 		encounter_selector.custom_minimum_size = Vector2(205, 42)
 		for id in Encounters.IDS:
@@ -147,10 +158,10 @@ func _build_interface() -> void:
 			continue
 		var b := _button("魔術師で開始" if id == "mage" else "騎士 H で開始", func(): _new_class(id))
 		if mage_focus:
-			b.text = "魔術師の試練をやり直す"
+			b.text = "最初から" if campaign_focus else "魔術師の試練をやり直す"
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("元素を吸収 → 6種類の魔法を紡ぐ → 結晶核・法盾を配置 → 敵を選ぶ" if mage_focus else "C1 戦闘演出サンプル · ダメージ / 防御 / 被弾 / フェード", 15, Color("b6acc5"))
+	var notice := _label("敵の魔力残滓を集め、素材を凝結 → 魔法を紡ぐ → 次の戦いへ · 中断保存なし" if campaign_focus else "元素を吸収 → 魔法を紡ぐ → 結晶核・法盾を配置 → 敵を選ぶ" if mage_focus else "C1 戦闘演出サンプル · ダメージ / 防御 / 被弾 / フェード", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
@@ -187,9 +198,14 @@ func _build_interface() -> void:
 	if mage_focus:
 		recipe_button = _button("レシピ", _open_recipe_book)
 		recipe_button.custom_minimum_size = Vector2(70, 38)
-		recipe_button.tooltip_text = "6種類の組み合わせを見て素材を選ぶ"
+		recipe_button.tooltip_text = "%d種類の組み合わせを見て素材を選ぶ" % Catalog.recipes_for("mage").size()
 		source_heading.add_child(recipe_button)
-	var source_scroll := ScrollContainer.new()
+	if campaign_focus:
+		condense_button = _button("凝結", _show_condense)
+		condense_button.custom_minimum_size = Vector2(60, 38)
+		condense_button.tooltip_text = "魔力残滓を元素や道具に変える一覧へ"
+		source_heading.add_child(condense_button)
+	source_scroll = ScrollContainer.new()
 	source_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	source_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	source_column.add_child(source_scroll)
@@ -197,7 +213,9 @@ func _build_interface() -> void:
 	source_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	source_list.add_theme_constant_override("separation", 10)
 	source_scroll.add_child(source_list)
-	for index in range(3):
+	for index in range(9 if campaign_focus else 3):
+		if campaign_focus and index == 3:
+			source_list.add_child(_label("魔力残滓で凝結", 19, Color("e4cf9d")))
 		var b := _button("", func(): _select_source(index))
 		b.custom_minimum_size.y = 62
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -251,21 +269,25 @@ func _build_interface() -> void:
 	footer.add_child(save_button)
 	footer.add_child(load_button)
 	footer.add_child(replay_button)
+	if campaign_focus:
+		save_button.visible = false
+		load_button.visible = false
 	pause_button = _button("一時停止", _pause)
 	speed_button = _button("1×", _speed)
 	footer.add_child(pause_button)
 	footer.add_child(speed_button)
-	if mage_focus:
+	if mage_focus and not campaign_focus:
 		rehearsal_button = _button("予行演習", _rehearse)
 		rehearsal_button.tooltip_text = "現在の配置で3種類の敵と仮想戦闘。素材や保存データは変わりません。"
 		footer.add_child(rehearsal_button)
+	if mage_focus:
 		workspace_button = _button("盤面を畳む", _toggle_workspace)
 		workspace_button.tooltip_text = "戦闘舞台を広く表示します。再度押すと盤面を表示します。"
 		footer.add_child(workspace_button)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(spacer)
-	primary_button = _button("戦闘開始  /  Space", _start_battle)
+	primary_button = _button("戦闘開始  /  Space", _primary_action)
 	primary_button.custom_minimum_size.x = 245
 	if mage_focus:
 		primary_button.add_theme_stylebox_override("normal", _style(Color("544374"), Color("d9bd83")))
@@ -343,6 +365,10 @@ func _open_recipe_book() -> void:
 			return
 	recipe_close_button.grab_focus()
 
+func _show_condense() -> void:
+	if campaign_focus and source_buttons.size() > 3:
+		source_scroll.ensure_control_visible(source_buttons[3])
+
 func _close_recipe_book() -> void:
 	if recipe_overlay != null:
 		recipe_overlay.visible = false
@@ -357,8 +383,8 @@ func _refresh_recipe_book() -> void:
 		var available: Dictionary = RecipeGuide.availability(run, recipe)
 		var first: Dictionary = Catalog.definition(recipe.first)
 		var second: Dictionary = Catalog.definition(recipe.second)
-		var counts := "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
-		var status := counts if available.available else "不足：" + "、".join(available.missing.map(func(kind): return str(Catalog.definition(kind).name)))
+		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
+		var status := counts if available.available else "魔力残滓が不足" if available.insufficient_funds else "不足：" + "、".join(available.missing.map(func(kind): return str(Catalog.definition(kind).name)))
 		var card: Button = recipe_cards[index]
 		card.text = "%s\n%d×%d マス · %d×%d回 / %.1f秒\n%s" % [recipe.label, definition.size.x, definition.size.y, definition.damage, definition.hits, definition.interval, status]
 		card.icon = MageArt.icon(str(recipe.result)).get("atlas", null)
@@ -445,12 +471,16 @@ func _new_class(id: String) -> void:
 	if not result.ok:
 		_notice(str(result.message))
 		return
+	if campaign_focus:
+		campaign_stage = 0
+		encounter_id = Campaign.encounter(campaign_stage)
+		run.sources.append_array(Campaign.shop_sources())
 	battle = BattleRules.new()
 	_before_battle = {}
 	arena.battle = battle
 	arena.reset_presentation()
 	_clear_selection()
-	summary_label.text = "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
+	summary_label.text = "五戦を踏破しよう。勝利で魔力残滓を獲得し、下の凝結欄で元素や道具に変換できます。各戦後HP全回復。中断保存はありません。" if campaign_focus else "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
 	grid.active_sources.clear()
 	_notice("魔術師：火を選んで微光に重ねると爆炎に。水と風は3連撃になります。" if id == "mage" else "騎士：溜めの紋章を長剣に重ねて大剣を鍛造。紋章を残して強化も可能。")
 	_sync()
@@ -471,7 +501,7 @@ func _select_source(index: int) -> void:
 	grid.update_preview()
 
 func _select_encounter(id: String) -> void:
-	if not mage_focus or run.phase != "prepare" or id not in Encounters.IDS:
+	if not mage_focus or campaign_focus or run.phase != "prepare" or id not in Encounters.IDS:
 		return
 	encounter_id = id
 	arena.encounter_id = id
@@ -608,6 +638,30 @@ func _toggle_workspace() -> void:
 
 var _before_battle: Dictionary = {}
 
+func _primary_action() -> void:
+	if campaign_focus and run.phase == "won":
+		_advance_campaign()
+	else:
+		_start_battle()
+
+func _advance_campaign() -> void:
+	if not campaign_focus or run.phase != "won" or campaign_stage + 1 >= Encounters.CAMPAIGN_IDS.size():
+		return
+	campaign_stage += 1
+	encounter_id = Campaign.encounter(campaign_stage)
+	run.hp = run.max_hp
+	run.phase = "prepare"
+	battle = BattleRules.new()
+	arena.battle = battle
+	arena.reset_presentation()
+	_before_battle = {}
+	grid.clear_merge_feedback()
+	_set_workspace_open(true)
+	_clear_selection()
+	summary_label.text = "次の戦いに備えよう。HPは全回復、配置・元素・魔力残滓は引き継ぎます。凝結欄はスクロールできます。"
+	_notice("第%d戦：%s。魔力残滓で道具を凝結できます。" % [campaign_stage + 1, Encounters.definition(encounter_id).name])
+	_sync()
+
 func _start_battle() -> void:
 	if run.phase != "prepare" or (recipe_overlay != null and recipe_overlay.visible):
 		return
@@ -710,7 +764,10 @@ func _sync() -> void:
 	grid.playback_speed = speed
 	var info: Dictionary = Catalog.class_info(run.class_id)
 	carrier_label.text = str(info.carrier) + "   6 × 4"
-	resources_label.text = "元素吸収 · 無料 / 有限" if run.class_id == "mage" else "武装補給 · %d 金貨" % run.gold
+	resources_label.text = "残滓 %d" % run.gold if campaign_focus else "元素吸収 · 無料 / 有限" if run.class_id == "mage" else "武装補給 · %d 金貨" % run.gold
+	resources_label.tooltip_text = "敵から得た魔力残滓。凝結に使います。" if campaign_focus else ""
+	if campaign_stage_label != null:
+		campaign_stage_label.text = "第 %d / %d 戦%s" % [campaign_stage + 1, Encounters.CAMPAIGN_IDS.size(), " · BOSS" if campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else ""]
 	for i in range(source_buttons.size()):
 		var source: Dictionary = run.sources[i]
 		var definition: Dictionary = run.get_definition(source.kind)
@@ -718,13 +775,14 @@ func _sync() -> void:
 		source_buttons[i].icon = art.get("atlas", null)
 		source_buttons[i].expand_icon = true
 		source_buttons[i].add_theme_constant_override("icon_max_width", 36)
-		source_buttons[i].text = "%s\n%s · 残り %d" % [definition.name, "吸収" if int(source.cost) == 0 else "%d 金貨" % int(source.cost), int(source.remaining)]
+		var cost_label := "吸収" if int(source.cost) == 0 else "%d 残滓で凝結" % int(source.cost) if campaign_focus else "%d 金貨" % int(source.cost)
+		source_buttons[i].text = "%s\n%s · 残り %d" % [definition.name, cost_label, int(source.remaining)]
 		source_buttons[i].disabled = run.phase != "prepare" or int(source.remaining) <= 0 or run.gold < int(source.cost)
 		source_buttons[i].tooltip_text = str(definition.description)
 	var recipes: PackedStringArray = []
 	for recipe in Catalog.recipes_for(run.class_id):
 		recipes.append(str(recipe.label))
-	recipe_label.text = "上の「レシピ」で6種類の組み合わせを確認。\n完成品は重ねた相手の位置に配置されます。" if mage_focus else "\n\n".join(recipes) + "\n\n完成品は重ねた相手の位置に配置。空き不足では素材や金貨を消費しません。"
+	recipe_label.text = "上の「レシピ」で%d種類の組み合わせを確認。\n完成品は重ねた相手の位置に配置されます。" % recipes.size() if mage_focus else "\n\n".join(recipes) + "\n\n完成品は重ねた相手の位置に配置。空き不足では素材や金貨を消費しません。"
 	phase_label.text = "準備 · 配置可能" if run.phase == "prepare" else "戦闘 · 配置変更不可" if run.phase == "battle" else "戦闘終了 · 振り返り"
 	var item: Dictionary = run.item_by_uid(selected_uid)
 	var selected_art := MageArt.icon(str(item.get("kind", "")))
@@ -739,6 +797,9 @@ func _sync() -> void:
 			var enemy: Dictionary = Encounters.definition(encounter_id if mage_focus else "sentinel")
 			var incoming := int(enemy.damage) - mini(int(config.armor), int(enemy.damage) - 1)
 			var lines: PackedStringArray = ["%s HP%d · %d×%dダメージ / %.1f秒\n法盾で%d軽減 → 各段%dダメージ" % [enemy.name, enemy.hp, enemy.damage, enemy.hits, enemy.interval, int(config.armor), incoming], str(enemy.hint), "現在の魔法"]
+			if enemy.has("pattern"):
+				var pattern: Array = enemy.pattern
+				lines[0] = "%s HP%d\n星弾 %d×%d / %.1f秒 → 重撃 %d×%d / %.1f秒\n法盾で各段%d軽減（最低1ダメージ）" % [enemy.name, enemy.hp, pattern[0].damage, pattern[0].hits, pattern[0].interval, pattern[1].damage, pattern[1].hits, pattern[1].interval, int(config.armor)]
 			for action: Dictionary in config.actions:
 				lines.append("%s：%d × %d回 / %.1f秒\n初回%.1f秒 · 接続+%d/回" % [action.name, action.damage, action.hits, action.interval, action.warmup, action.support_bonus])
 			detail_label.text = "\n".join(lines)
@@ -748,7 +809,8 @@ func _sync() -> void:
 	grid.recipe_hints = RecipeGuide.target_hints(run, held) if mage_focus else {}
 	grid.queue_redraw()
 	arena.queue_redraw()
-	primary_button.disabled = run.phase != "prepare"
+	primary_button.disabled = run.phase != "prepare" and not (campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size())
+	primary_button.text = "次の戦いへ  /  Space" if campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size() else "五つの試練を踏破" if campaign_focus and run.phase == "won" else "戦闘開始  /  Space"
 	save_button.disabled = run.phase != "prepare" or not persistence_enabled
 	load_button.disabled = run.phase == "battle" or not persistence_enabled
 	pause_button.disabled = battle.phase != "battle"
@@ -775,6 +837,10 @@ func _process(delta: float) -> void:
 		if battle.phase in ["won", "lost"] and _last_phase == "battle":
 			_last_phase = battle.phase
 			run.phase = battle.phase
+			if campaign_focus and battle.phase == "won":
+				var reward := int(Campaign.REWARDS[campaign_stage])
+				run.gold += reward
+				arena.show_campaign_reward(reward)
 			_show_summary()
 			_sync()
 	_ready_frames += 1
@@ -794,7 +860,7 @@ func _show_placement_preview(preview: Dictionary) -> void:
 		return
 	var item: Dictionary = preview.item
 	var definition: Dictionary = run.get_definition(str(item.kind))
-	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで元素は消費しません" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
+	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで素材や資源は消費しません" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
 	for action: Dictionary in preview.combat.actions:
 		if int(action.uid) == int(item.uid):
 			preview_label.text += "\n%d × %d回 / %.1f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
@@ -804,8 +870,13 @@ func _show_summary() -> void:
 	var lines: PackedStringArray = ["戦闘の振り返り · %s" % ("勝利" if battle.phase == "won" else "失敗"), "%.2f 秒 · 与ダメージ %d · 被ダメージ %d" % [float(summary.duration), int(summary.damage_dealt), int(summary.damage_taken)]]
 	for source in summary.by_source:
 		lines.append("%s：%d ダメージ / %d 回発動 / %d 回" % [source.name, int(source.damage), int(source.activations), int(source.hits)])
+	if campaign_focus and battle.phase == "won":
+		lines.append("魔力残滓 +%d · 所持 %d" % [int(Campaign.REWARDS[campaign_stage]), run.gold])
 	summary_label.text = "\n".join(lines)
-	_notice("戦闘終了。戦前に戻り魔法や敵を変えて再挑戦できます。" if mage_focus else "戦闘終了。戦前の配置に戻して比較できます。")
+	if campaign_focus:
+		_notice("五つの試練を踏破！" if battle.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else "勝利！魔力残滓 +%d（所持 %d）。次の戦いへ。" % [int(Campaign.REWARDS[campaign_stage]), run.gold] if battle.phase == "won" else "敗北。戦前に戻して配置を変え、再挑戦できます。")
+	else:
+		_notice("戦闘終了。戦前に戻り魔法や敵を変えて再挑戦できます。" if mage_focus else "戦闘終了。戦前の配置に戻して比較できます。")
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
@@ -814,7 +885,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	match event.keycode:
 		KEY_R: _rotate()
-		KEY_SPACE: _start_battle()
+		KEY_SPACE: _primary_action()
 		KEY_ESCAPE:
 			_clear_selection()
 			_sync()
@@ -827,7 +898,7 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_SPACE:
-		_start_battle()
+		_primary_action()
 		get_viewport().set_input_as_handled()
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 		_clear_selection()

@@ -5,19 +5,37 @@ const Catalog = preload("res://scripts/classes/class_catalog.gd")
 
 static func availability(run: RefCounted, recipe: Dictionary) -> Dictionary:
 	var counts := {}
+	var required := {}
+	var owned := {}
 	for kind in [str(recipe.first), str(recipe.second)]:
 		counts[kind] = 0
+		owned[kind] = 0
+		required[kind] = int(required.get(kind, 0)) + 1
 	for item: Dictionary in run.items:
 		if counts.has(item.kind):
 			counts[item.kind] += 1
+			owned[item.kind] += 1
 	for source: Dictionary in run.sources:
 		if counts.has(source.kind) and run.gold >= int(source.cost):
 			counts[source.kind] += int(source.remaining)
 	var missing: Array[String] = []
-	for kind in [str(recipe.first), str(recipe.second)]:
-		if int(counts[kind]) <= 0:
+	var total_cost := 0
+	for kind in required:
+		if int(counts[kind]) < int(required[kind]):
 			missing.append(kind)
-	return {"counts": counts, "missing": missing, "available": missing.is_empty()}
+		var need := maxi(0, int(required[kind]) - int(owned[kind]))
+		var supplies: Array[Dictionary] = []
+		for source: Dictionary in run.sources:
+			if source.kind == kind and int(source.remaining) > 0:
+				supplies.append(source)
+		supplies.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.cost) < int(b.cost))
+		for source: Dictionary in supplies:
+			var amount := mini(need, int(source.remaining))
+			total_cost += amount * int(source.cost)
+			need -= amount
+			if need <= 0: break
+	var insufficient_funds: bool = total_cost > int(run.gold)
+	return {"counts": counts, "missing": missing, "required_cost": total_cost, "insufficient_funds": insufficient_funds, "available": missing.is_empty() and not insufficient_funds}
 
 static func target_hints(run: RefCounted, held: Dictionary) -> Dictionary:
 	var hints := {}

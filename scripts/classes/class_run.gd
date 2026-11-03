@@ -89,7 +89,7 @@ func acquire(source_index: int, cell: Vector2i, rotated: bool = false) -> Dictio
 		return _failure("この素材は使い切りました。自動補充はありません。")
 	var cost: int = int(source["cost"])
 	if cost < 0 or gold < cost:
-		return _failure("金貨が足りません。")
+		return _failure("魔力残滓が足りません。" if class_id == "mage" else "金貨が足りません。")
 	var candidate: Dictionary = {"uid": _next_uid, "kind": source["kind"], "pos": cell, "rotated": rotated}
 	var result: Dictionary = _place_or_merge(candidate, cell, false)
 	if not bool(result["ok"]):
@@ -148,7 +148,7 @@ func _place_or_merge(candidate: Dictionary, cell: Vector2i, owned: bool) -> Dict
 		if owned:
 			ignored.append(uid)
 		if not _can_place_ignoring(product, product["pos"], ignored):
-			return _failure("完成品の空きマスが不足しています。素材や金貨は消費されません。")
+			return _failure("完成品の空きマスが不足しています。素材や資源は消費されません。")
 		if owned:
 			_remove_uid(uid)
 		var actual_target: Dictionary = item_by_uid(int(target["uid"]))
