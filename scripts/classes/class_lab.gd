@@ -37,6 +37,8 @@ var discard_button: Button
 var rotate_button: Button
 var replay_button: Button
 var rehearsal_button: Button
+var workspace_button: Button
+var workspace_panel: HBoxContainer
 var summary_label: Label
 var preview_label: Label
 var detail_icon: TextureRect
@@ -129,6 +131,8 @@ func _build_interface() -> void:
 	var header := HBoxContainer.new()
 	root.add_child(header)
 	var heading := _label("月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
+	if mage_focus:
+		heading.add_theme_color_override("font_color", Color("e2d3ff"))
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
 	if mage_focus:
@@ -152,10 +156,13 @@ func _build_interface() -> void:
 	arena.run = run
 	arena.battle = battle
 	arena.pixel_cutout_enabled = not _original_alpha_comparison
+	if mage_focus:
+		arena.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(arena)
 	var body := HBoxContainer.new()
+	workspace_panel = body
 	body.add_theme_constant_override("separation", 14)
-	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body.size_flags_vertical = Control.SIZE_FILL if mage_focus else Control.SIZE_EXPAND_FILL
 	root.add_child(body)
 	var inventory := _panel(body, 440, 1.35)
 	carrier_label = _label("", 22)
@@ -168,8 +175,9 @@ func _build_interface() -> void:
 	grid.drag_started.connect(_on_drag_started)
 	grid.preview_changed.connect(_show_placement_preview)
 	inventory.add_child(grid)
-	inventory.add_child(_label("クリック / ドラッグ · R 回転 · 右クリックで取消", 14, Color("a7b4c5")))
-	inventory.add_child(_label("青：配置可能 · 赤：不可 · 金：合成候補", 14, Color("a7b4c5")))
+	inventory.add_child(_label("ドラッグ · R 回転 · 右クリック取消  /  青：配置 · 金：合成", 14, Color("a7b4c5")))
+	if not mage_focus:
+		inventory.add_child(_label("赤：配置不可", 14, Color("a7b4c5")))
 	var source_column := _panel(body, 270, 0.8)
 	var source_heading := HBoxContainer.new()
 	source_column.add_child(source_heading)
@@ -251,11 +259,18 @@ func _build_interface() -> void:
 		rehearsal_button = _button("予行演習", _rehearse)
 		rehearsal_button.tooltip_text = "現在の配置で3種類の敵と仮想戦闘。素材や保存データは変わりません。"
 		footer.add_child(rehearsal_button)
+		workspace_button = _button("盤面を畳む", _toggle_workspace)
+		workspace_button.tooltip_text = "戦闘舞台を広く表示します。再度押すと盤面を表示します。"
+		footer.add_child(workspace_button)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(spacer)
 	primary_button = _button("戦闘開始  /  Space", _start_battle)
 	primary_button.custom_minimum_size.x = 245
+	if mage_focus:
+		primary_button.add_theme_stylebox_override("normal", _style(Color("544374"), Color("d9bd83")))
+		primary_button.add_theme_stylebox_override("hover", _style(Color("6a538e"), Color("f3dca8")))
+		primary_button.add_theme_stylebox_override("pressed", _style(Color("41345c"), Color("e6c882")))
 	footer.add_child(primary_button)
 	status_label = _label("", 16, Color("dfc394"))
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -422,6 +437,7 @@ func _new_class(id: String) -> void:
 		_notice("戦闘中は職業を変更できません。戦闘を終えるか戦前に戻してください。")
 		return
 	_close_recipe_book()
+	_set_workspace_open(true)
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	grid.clear_merge_feedback()
@@ -563,6 +579,7 @@ func _load() -> void:
 	var result: Dictionary = Save.load_run(run, checkpoint_path)
 	_notice(str(result.message))
 	if result.ok:
+		_set_workspace_open(true)
 		_rehearsal_signature = ""
 		details_content.move_child(summary_label, details_content.get_child_count() - 1)
 		battle = BattleRules.new()
@@ -578,7 +595,16 @@ func _resize_layout() -> void:
 	if arena != null:
 		arena.custom_minimum_size.y = 350 if size.y >= 900 else 280
 	if grid != null:
-		grid.custom_minimum_size.y = 230 if size.y >= 900 else 184
+		grid.custom_minimum_size.y = (200 if size.y >= 900 else 164) if mage_focus else (230 if size.y >= 900 else 184)
+
+func _set_workspace_open(open: bool) -> void:
+	if not mage_focus or workspace_panel == null:
+		return
+	workspace_panel.visible = open
+	workspace_button.text = "盤面を畳む" if open else "盤面を開く"
+
+func _toggle_workspace() -> void:
+	_set_workspace_open(not workspace_panel.visible)
 
 var _before_battle: Dictionary = {}
 
@@ -602,6 +628,7 @@ func _start_battle() -> void:
 	arena.reset_presentation()
 	grid.clear_merge_feedback()
 	run.phase = "battle"
+	_set_workspace_open(false)
 	_last_phase = "battle"
 	_clear_selection()
 	_notice("戦闘開始。停止や 1× / 2× の切り替えができます。")
@@ -611,6 +638,7 @@ func _restore_before_battle() -> void:
 	if _before_battle.is_empty():
 		_notice("今回の戦前データはありません。以前の保存データを読めます。")
 		return
+	_set_workspace_open(true)
 	run.new_run(str(_before_battle.class_id), int(_before_battle.seed_value))
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)

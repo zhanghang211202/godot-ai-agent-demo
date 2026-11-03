@@ -169,8 +169,9 @@ func item_layout(kind: String, rect: Rect2, rotated: bool) -> Dictionary:
 	var label := label_layout(kind, rect, rotated)
 	if art.is_empty():
 		return {"icon_rect": Rect2(), "label": label}
-	var icon_space := rect.grow(-5)
-	if Vector2i(Catalog.definition(kind).size) == Vector2i.ONE:
+	var single_cell := Vector2i(Catalog.definition(kind).size) == Vector2i.ONE
+	var icon_space := rect.grow(-2 if single_cell else -5)
+	if single_cell:
 		label.lines = []
 		label.baselines = []
 		label.bounds = []
