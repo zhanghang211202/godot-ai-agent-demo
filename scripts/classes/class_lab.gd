@@ -659,7 +659,9 @@ func _rehearse() -> void:
 	for encounter: Dictionary in result.encounters:
 		var summary: Dictionary = encounter.summary
 		var outcome := "勝利" if summary.result == "won" else "時間切れ" if summary.result == "timeout" else "敗北"
-		lines.append("%s：%s · %.2f秒\n残りHP %d / %d · 与ダメージ %d" % [encounter.name, outcome, summary.duration, summary.hp, summary.max_hp, summary.damage_dealt])
+		lines.append("%s：%s · %.2f秒\n残りHP %d / %d · 与ダメージ %d\n法盾で軽減 %d · 被弾 %d回" % [encounter.name, outcome, summary.duration, summary.hp, summary.max_hp, summary.damage_dealt, summary.armor_mitigated, summary.enemy_attacks])
+		for source: Dictionary in summary.by_source:
+			lines.append("  %s #%d：%dダメージ · %d回発動 / %dヒット" % [source.name, source.uid, source.damage, source.activations, source.hits])
 	summary_label.text = "\n".join(lines)
 	_rehearsal_signature = _rehearsal_state_signature()
 	details_content.move_child(summary_label, 0)
