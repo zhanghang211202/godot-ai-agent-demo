@@ -8,12 +8,23 @@ const END_AT := 1.06
 @export var pose := 0
 @onready var player: AnimationPlayer = $AnimationPlayer
 var mode := "idle"
+var clip := "mage-cast"
+var variants_enabled := true
 var _last_hit_time := -1.0
+
+func _clip_for(kind: String) -> String:
+	if variants_enabled:
+		if kind in ["flame_glyph", "ember_tornado", "solar_crown", "arcane_nova"]:
+			return "mage-swing"
+		if kind in ["tide_lances", "frost_bolt", "gale_blades", "steam_burst", "glacier_prism", "storm_orbit"]:
+			return "mage-gesture"
+	return "mage-cast"
 
 func reset() -> void:
 	player.stop()
 	pose = 0
 	mode = "idle"
+	clip = "mage-cast"
 	_last_hit_time = -1.0
 
 func show_event(event: Dictionary) -> void:
@@ -24,6 +35,8 @@ func show_event(event: Dictionary) -> void:
 	if time >= 0 and is_equal_approx(time, _last_hit_time):
 		return
 	_last_hit_time = time
+	if mode == "idle":
+		clip = _clip_for(str(event.get("source_kind", "")))
 	mode = "recovery"
 	_seek(IMPACT_AT)
 
@@ -50,9 +63,11 @@ func sync_prediction(casts: Array) -> void:
 	# follow-through, which prevents very close sources flickering between poses.
 	if remaining <= Effects.FLIGHT:
 		mode = "prediction"
+		clip = _clip_for(str(next.get("kind", "")))
 		_seek(clampf(Effects.WINDUP - remaining, RELEASE_AT + 0.0001, IMPACT_AT - 0.0001))
 	elif mode != "recovery":
 		mode = "prediction"
+		clip = _clip_for(str(next.get("kind", "")))
 		_seek(clampf(Effects.WINDUP - remaining, 0.0, RELEASE_AT - 0.0001))
 
 func finish_battle() -> void:
@@ -63,6 +78,6 @@ func _seek(time: float) -> void:
 	# Discrete tracks do not reliably replay an earlier key when seeking
 	# backwards from recovery. Start at zero and cross the keys in order.
 	player.stop()
-	player.play("cast")
+	player.play("swing" if clip == "mage-swing" else "gesture" if clip == "mage-gesture" else "cast")
 	player.seek(0.0, true)
 	player.advance(clampf(time, 0.0, END_AT))

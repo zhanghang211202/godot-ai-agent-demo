@@ -15,6 +15,7 @@ var motion = Motion.new()
 var feedback = Feedback.new()
 var pixel_cutout_enabled := true
 var shield_effects_enabled := true
+var mage_motion_variants_enabled := false
 var actor_sprite: Sprite2D
 var mage_hit_motion: Node2D
 var mage_cast_timeline: Node
@@ -46,6 +47,7 @@ func _ready() -> void:
 	mage_hit_motion = MageHitMotion.instantiate()
 	add_child(mage_hit_motion)
 	mage_cast_timeline = MageCastTimeline.instantiate()
+	mage_cast_timeline.variants_enabled = mage_motion_variants_enabled
 	add_child(mage_cast_timeline)
 	actor_sprite = Sprite2D.new()
 	actor_sprite.centered = false
@@ -201,6 +203,8 @@ func get_art_layout() -> Dictionary:
 	var hero: Dictionary = Art.get_asset(hero_id)
 	var default_clip := {"mage-idle": "mage-cast", "knight-sword-idle": "knight-sword", "knight-greatblade-idle": "knight-greatblade"}.get(hero_id, "") as String
 	var clip_id: String = motion.clip if not motion.clip.is_empty() else default_clip
+	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
+		clip_id = str(mage_cast_timeline.clip)
 	var animated_hero := Motion.get_asset(clip_id)
 	var frame_index: int = motion.frame_index() if not motion.clip.is_empty() else 0
 	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
@@ -227,10 +231,18 @@ func get_art_layout() -> Dictionary:
 	if not animated_hero.is_empty():
 		var frame: Dictionary = animated_hero.frames[frame_index]
 		source = frame.source_rect
-		factor = minf(hero_height / float(animated_hero.height), (size.x * 0.34) / float(animated_hero.left + animated_hero.right))
+		var clip_height: float = animated_hero.height
+		var clip_width: float = animated_hero.left + animated_hero.right
+		if run != null and run.class_id == "mage" and mage_motion_variants_enabled:
+			for variant in ["mage-cast", "mage-swing", "mage-gesture"]:
+				var other: Dictionary = Motion.get_asset(variant)
+				if not other.is_empty():
+					clip_height = maxf(clip_height, float(other.height))
+					clip_width = maxf(clip_width, float(other.left + other.right))
+		factor = minf(hero_height / clip_height, (size.x * 0.34) / clip_width)
 		destination = Rect2(anchor + (source.position - Vector2(frame.pivot)) * factor, source.size * factor)
 		cast_point = anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * factor
-		if clip_id == "mage-cast":
+		if clip_id in ["mage-cast", "mage-swing", "mage-gesture"]:
 			var release_frame: Dictionary = animated_hero.frames[2]
 			release_point = anchor + (Vector2(release_frame.cast_point) - Vector2(release_frame.pivot)) * factor
 		else:
@@ -252,7 +264,7 @@ func get_art_layout() -> Dictionary:
 		enemy_source = frame.source_rect
 		# Visual proportions are independent of combat statistics: the stone
 		# golem towers over the mage, while the hovering moth remains smaller.
-		var proportion: float = {"sentinel": 1.36, "mirror_moth": 0.68, "thorn_golem": 1.78, "sentinel_elite": 1.45, "astral_scribe": 1.3, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
+		var proportion: float = {"sentinel": 1.36, "campaign_sentinel": 1.36, "mirror_moth": 0.68, "campaign_moth": 0.68, "thorn_golem": 1.78, "campaign_golem": 1.78, "sentinel_elite": 1.45, "astral_scribe": 1.3, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
 		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
 		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.46 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)

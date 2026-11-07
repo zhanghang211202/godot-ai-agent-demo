@@ -1,0 +1,52 @@
+extends SceneTree
+## Deterministic, legal boards give a repeatable balance baseline, not a player study.
+const Run = preload("res://scripts/classes/class_run.gd")
+const Battle = preload("res://scripts/classes/class_battle.gd")
+const Campaign = preload("res://scripts/classes/mage_campaign.gd")
+const Encounters = preload("res://scripts/classes/mage_encounters.gd")
+var checks := 0
+var failures := 0
+
+func check(ok: bool, label: String) -> void:
+	checks += 1
+	if not ok:
+		failures += 1
+		push_error("FAIL: " + label)
+
+func _initialize() -> void:
+	var beginner := Run.new()
+	beginner.new_run("mage")
+	var opening := _fight(beginner, 0)
+	check(opening.phase == "won" and opening.hp >= 30, "Unchanged starter board can learn the first battle with room to spare")
+	check(_fight(beginner, 2).phase == "lost", "Starter board does not trivialize the later campaign")
+	var mixed := Run.new()
+	mixed.new_run("mage")
+	for op in [[0, Vector2i.ZERO], [1, Vector2i(3, 2)], [2, Vector2i(3, 2)]]:
+		check(mixed.acquire(op[0], op[1]).ok, "Mixed build legally acquires and weaves free elements")
+	var last_hp := mixed.max_hp
+	var last_duration := 0.0
+	for stage in range(5):
+		var battle := _fight(mixed, stage)
+		print("Balance mixed stage %d: %s HP %d time %.2f" % [stage + 1, battle.phase, battle.hp, battle.battle_time])
+		check(battle.phase == "won", "Mixed build beats stage %d" % (stage + 1))
+		check(battle.hp <= last_hp and battle.battle_time >= last_duration, "Mixed build observes rising pressure at stage %d" % (stage + 1))
+		last_hp = battle.hp
+		last_duration = battle.battle_time
+	var specialist := Run.new()
+	specialist.new_run("mage")
+	for op in [[0, Vector2i(3, 1)], [0, Vector2i(3, 1)], [1, Vector2i(5, 1)], [1, Vector2i(5, 1)], [2, Vector2i(1, 2)], [2, Vector2i(1, 2)]]:
+		check(specialist.acquire(op[0], op[1]).ok, "Same-element build legally weaves its ingredients")
+	for stage in range(5):
+		var battle := _fight(specialist, stage)
+		print("Balance specialist stage %d: %s HP %d time %.2f" % [stage + 1, battle.phase, battle.hp, battle.battle_time])
+		check(battle.phase == "won", "Same-element build beats stage %d" % (stage + 1))
+	check(Encounters.definition("sentinel").hp == 140 and Encounters.definition("mirror_moth").hp == 108 and Encounters.definition("thorn_golem").hp == 220, "Legacy single-trial enemies retain original balance")
+	print("Mage balance: %d checks, %d failures" % [checks, failures])
+	quit(1 if failures else 0)
+
+func _fight(run: RefCounted, stage: int) -> RefCounted:
+	var battle := Battle.new()
+	var result: Dictionary = battle.start(run.get_combat_config(), Campaign.encounter(stage))
+	check(result.ok, "Legal build starts stage %d" % (stage + 1))
+	battle.tick(Battle.TIME_LIMIT)
+	return battle

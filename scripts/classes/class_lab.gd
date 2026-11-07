@@ -169,6 +169,7 @@ func _build_interface() -> void:
 	arena.run = run
 	arena.battle = battle
 	arena.pixel_cutout_enabled = not _original_alpha_comparison
+	arena.mage_motion_variants_enabled = mage_focus
 	if mage_focus:
 		arena.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(arena)
