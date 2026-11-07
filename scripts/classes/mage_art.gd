@@ -109,24 +109,24 @@ static func _extra_icon(kind: String) -> Dictionary:
 static func _extra_enemy(id: String) -> Dictionary:
 	if _enemies.has(id):
 		return _enemies[id]
-	var filename: String = {"mirror_moth": "mirror-moth.png", "thorn_golem": "thorn-golem.png", "moon_crowned": "moon-crowned-boss.png"}.get(id, "")
+	var filename: String = {"mirror_moth": "mirror-moth.png", "thorn_golem": "thorn-golem.png", "astral_scribe": "astral-scribe.png", "moon_crowned": "moon-crowned-boss.png"}.get(id, "")
 	if filename.is_empty():
 		return {}
-	var path := ("res://assets/art/mage-campaign-v1/enemies/" if id == "moon_crowned" else EXTRA_ROOT + "enemies/") + filename
+	var path := ("res://assets/art/mage-campaign-v1/enemies/" if id == "moon_crowned" else "res://assets/art/mage-scribe-v1/enemies/" if id == "astral_scribe" else EXTRA_ROOT + "enemies/") + filename
 	var image := Image.load_from_file(path)
 	if image == null:
 		return {}
 	image.convert(Image.FORMAT_RGBA8)
 	var half := image.get_size() / 2
 	# Measured empty alpha>=128 gutters. Preserve extended lower-left silhouettes.
-	var split := 704 if id == "mirror_moth" else 627 if id == "moon_crowned" else 672
+	var split := 704 if id == "mirror_moth" else 627 if id in ["moon_crowned", "astral_scribe"] else 672
 	var regions: Array[Rect2i] = [Rect2i(Vector2i.ZERO, half), Rect2i(Vector2i(half.x, 0), half),
 		Rect2i(Vector2i(0, half.y), Vector2i(split, half.y)), Rect2i(Vector2i(split, half.y), Vector2i(image.get_width() - split, half.y))]
 	var frames: Array[Dictionary] = []
 	var height := 0.0
 	var left := 0.0
 	var right := 0.0
-	var cast_points := [Vector2(245, 388), Vector2(846, 409), Vector2(257, 1008), Vector2(993, 1012)] if id == "mirror_moth" else [Vector2(277, 307), Vector2(887, 328), Vector2(333, 940), Vector2(960, 850)] if id == "moon_crowned" else [Vector2(299, 307), Vector2(887, 306), Vector2(271, 951), Vector2(1020, 947)]
+	var cast_points := [Vector2(245, 388), Vector2(846, 409), Vector2(257, 1008), Vector2(993, 1012)] if id == "mirror_moth" else [Vector2(277, 307), Vector2(887, 328), Vector2(333, 940), Vector2(960, 850)] if id == "moon_crowned" else [Vector2(422, 290), Vector2(810, 145), Vector2(187, 825), Vector2(827, 830)] if id == "astral_scribe" else [Vector2(299, 307), Vector2(887, 306), Vector2(271, 951), Vector2(1020, 947)]
 	for index in range(regions.size()):
 		var region: Rect2i = regions[index]
 		var bounds := _bounds(image, region)

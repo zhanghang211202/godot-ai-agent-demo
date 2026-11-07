@@ -1,0 +1,13 @@
+{
+  "tool": "built-in imagegen",
+  "assets": [
+    {
+      "file": "enemies/astral-scribe.png",
+      "reference": "assets/art/mage-expansion-v1/enemies/thorn-golem.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "5b9f8163297aa6390120d6f8fd0673f392d2ed044595836d56bb63ca46ba8c40",
+      "role": "Four-pose fourth encounter atlas, transparent background"
+    }
+  ]
+}
