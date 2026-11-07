@@ -252,7 +252,7 @@ func get_art_layout() -> Dictionary:
 		enemy_source = frame.source_rect
 		# Visual proportions are independent of combat statistics: the stone
 		# golem towers over the mage, while the hovering moth remains smaller.
-		var proportion: float = {"sentinel": 1.36, "mirror_moth": 0.68, "thorn_golem": 1.78, "sentinel_elite": 1.45, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
+		var proportion: float = {"sentinel": 1.36, "mirror_moth": 0.68, "thorn_golem": 1.78, "sentinel_elite": 1.45, "astral_scribe": 1.3, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
 		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
 		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.46 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)

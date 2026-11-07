@@ -87,6 +87,29 @@ func _boss_pattern() -> void:
 	check(incoming.size() == 3 and incoming[0].source_kind == "boss_star" and incoming[1].source_kind == "boss_star" and incoming[2].source_kind == "boss_crash", "Boss alternates a two-hit volley and a charged heavy hit")
 	check(is_equal_approx(incoming[0].time, 2.7) and is_equal_approx(incoming[2].time, 5.8), "Boss timings follow the declared pattern")
 
+func _distinct_enemies() -> void:
+	var paths: Array[String] = []
+	for stage in range(5):
+		var art: Dictionary = Art.enemy(Campaign.encounter(stage))
+		check(not art.is_empty() and art.frames.size() == 4, "Stage %d has four enemy poses" % (stage + 1))
+		if art.is_empty():
+			continue
+		paths.append(str(art.path))
+		for frame: Dictionary in art.frames:
+			var bounds: Rect2 = frame.source_rect
+			check(bounds.has_area() and Rect2(frame.region).encloses(bounds.grow(1) if stage == 3 else bounds), "Stage %d enemy pose fits its atlas cell" % (stage + 1))
+	check(paths.size() == 5 and paths.duplicate().reduce(func(acc: Array, path: String):
+		if path not in acc: acc.append(path)
+		return acc, []).size() == 5, "All five stages have distinct enemy art")
+	var run := Run.new()
+	run.new_run("mage")
+	var config: Dictionary = run.get_combat_config()
+	for action: Dictionary in config.actions: action.damage = 1
+	var battle := Battle.new()
+	check(battle.start(config, "astral_scribe").ok, "Fourth enemy starts its own encounter")
+	var incoming := battle.tick(2.4).filter(func(e: Dictionary): return e.type == "enemy_attack")
+	check(incoming.size() == 3 and incoming.all(func(e: Dictionary): return e.source_kind == "scribe_rune" and e.amount == 3), "Fourth enemy fires three rune hits reduced separately by ward")
+
 func _second_build() -> void:
 	var run := Run.new()
 	run.new_run("mage")
@@ -105,6 +128,7 @@ func _run() -> void:
 		fingerprints[path] = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing"
 	_same_elements()
 	_boss_pattern()
+	_distinct_enemies()
 	_second_build()
 	root.size = Vector2i(1440, 960)
 	var ui = load("res://scenes/mage_campaign.tscn").instantiate()
@@ -134,13 +158,16 @@ func _run() -> void:
 	ui._close_recipe_book()
 	for stage in range(5):
 		check(ui.campaign_stage == stage and ui.encounter_id == Campaign.encounter(stage), "Stage %d selects the intended enemy" % (stage + 1))
+		if stage == 3:
+			check(ui.arena.get_art_layout().enemy_path.contains("astral-scribe"), "Fourth battle shows its own enemy artwork")
+			await _capture("stage-4-prepare.png")
 		if stage == 4:
 			check(ui.campaign_stage_label.text.contains("BOSS") and ui.arena.get_art_layout().enemy_path.contains("moon-crowned"), "Final battle uses the named boss and dedicated sprite")
 			await _capture("boss-prepare.png")
 		var before_gold: int = ui.run.gold
 		ui.primary_button.pressed.emit()
 		check(ui.battle.phase == "battle" and not ui.workspace_panel.visible, "Stage %d starts through the main button" % (stage + 1))
-		if stage == 4:
+		if stage in [3, 4]:
 			var deadline: int = ui.battle._enemy_next_step
 			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 				root.size = dimensions
@@ -150,18 +177,19 @@ func _run() -> void:
 					ui.arena.feedback.enemy_hit = 1.0 if frame == 3 else 0.0
 					ui.battle._enemy_next_step = ui.battle._step_index + (1 if frame == 1 else 1000)
 					var pose: Dictionary = ui.arena.get_art_layout()
-					check(pose.enemy_frame == frame and Rect2(pose.scene_rect).encloses(pose.enemy_rect) and not Rect2(pose.enemy_rect).intersects(pose.hero_rect), str(dimensions) + " boss pose %d is contained and distinct" % frame)
+					check(pose.enemy_frame == frame and Rect2(pose.scene_rect).encloses(pose.enemy_rect) and not Rect2(pose.enemy_rect).intersects(pose.hero_rect), str(dimensions) + " stage %d pose %d is contained and distinct" % [stage + 1, frame])
 				ui.arena.feedback.hero_hit = 0.0
 				ui.arena.feedback.enemy_hit = 0.0
 				ui.battle._enemy_next_step = deadline
 				if dimensions.x != 1440:
 					ui.arena.queue_redraw()
-					await _capture("boss-battle-%d.png" % dimensions.x)
+					await _capture(("boss-battle-%d.png" if stage == 4 else "stage-4-battle-%d.png") % dimensions.x)
 			root.size = Vector2i(1440, 960)
 			for _i in range(4): await process_frame
 		var reference := Battle.new()
 		reference.start(ui.run.get_combat_config(), ui.encounter_id)
 		var boss_effects := {}
+		var saw_scribe_rune := false
 		while ui.battle.phase == "battle":
 			ui._process(0.1)
 			ui.arena._process(0.1)
@@ -171,9 +199,16 @@ func _run() -> void:
 					if effect.kind in ["boss_star", "boss_crash"] and not boss_effects.has(effect.kind):
 						boss_effects[effect.kind] = true
 						await _capture("boss-" + str(effect.kind) + ".png")
+			if stage == 3 and not saw_scribe_rune:
+				for effect: Dictionary in ui.arena.get_art_layout().spell_effects:
+					if effect.kind == "scribe_rune":
+						saw_scribe_rune = true
+						await _capture("stage-4-scribe-rune.png")
 		check(ui.battle.phase == "won" and ui.battle.get_summary() == reference.get_summary(), "Stage %d wins with unchanged independent rules" % (stage + 1))
 		print("Campaign stage %d: %s at %.2fs, HP %d" % [stage + 1, ui.battle.phase, ui.battle.battle_time, ui.battle.hp])
 		if ui.battle.phase != "won": break
+		if stage == 3:
+			check(saw_scribe_rune, "Fourth battle renders the real rune attack")
 		if stage == 4:
 			check(boss_effects.has("boss_star") and boss_effects.has("boss_crash"), "Real boss battle renders both distinct attacks")
 		check(ui.run.gold == before_gold + Campaign.REWARDS[stage], "Stage %d drops residue exactly once" % (stage + 1))
