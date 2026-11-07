@@ -12,6 +12,7 @@ const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const RecipeGuide = preload("res://scripts/classes/mage_recipe_guide.gd")
 const Rehearsal = preload("res://scripts/classes/mage_rehearsal.gd")
 const Campaign = preload("res://scripts/classes/mage_campaign.gd")
+const CampaignSave = preload("res://scripts/classes/mage_campaign_save.gd")
 
 @export var mage_focus := false
 @export var campaign_focus := false
@@ -60,6 +61,7 @@ var recipe_cards: Array[Button] = []
 var recipe_close_button: Button
 var persistence_enabled := true
 @export var checkpoint_path := Save.DEFAULT_PATH
+@export var campaign_checkpoint_path := CampaignSave.DEFAULT_PATH
 var _capture_directory := ""
 var _capture_class := "mage"
 var _capture_done := false
@@ -76,8 +78,6 @@ var _last_phase := "idle"
 
 func _ready() -> void:
 	get_window().title = "月庭の魔術師 · 五つの試練" if campaign_focus else "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練"
-	if campaign_focus:
-		persistence_enabled = false
 	for argument in OS.get_cmdline_user_args():
 		if argument == "--no-save":
 			persistence_enabled = false
@@ -110,6 +110,8 @@ func _ready() -> void:
 	resized.connect(_resize_layout)
 	_resize_layout()
 	_new_class("mage" if mage_focus else _capture_class if _capture_class in Catalog.CLASS_IDS else "mage")
+	if campaign_focus and persistence_enabled and FileAccess.file_exists(campaign_checkpoint_path):
+		_load()
 
 func _build_interface() -> void:
 	var ui_theme := Theme.new()
@@ -161,7 +163,7 @@ func _build_interface() -> void:
 			b.text = "最初から" if campaign_focus else "魔術師の試練をやり直す"
 		header.add_child(b)
 		class_buttons[id] = b
-	var notice := _label("敵の魔力残滓を集め、素材を凝結 → 魔法を紡ぐ → 次の戦いへ · 中断保存なし" if campaign_focus else "元素を吸収 → 魔法を紡ぐ → 結晶核・法盾を配置 → 敵を選ぶ" if mage_focus else "C1 戦闘演出サンプル · ダメージ / 防御 / 被弾 / フェード", 15, Color("b6acc5"))
+	var notice := _label("敵の魔力残滓を集め、素材を凝結 → 魔法を紡ぐ → 次の戦いへ · 戦前に自動保存" if campaign_focus else "元素を吸収 → 魔法を紡ぐ → 結晶核・法盾を配置 → 敵を選ぶ" if mage_focus else "C1 戦闘演出サンプル · ダメージ / 防御 / 被弾 / フェード", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
 	arena.run = run
@@ -269,9 +271,6 @@ func _build_interface() -> void:
 	footer.add_child(save_button)
 	footer.add_child(load_button)
 	footer.add_child(replay_button)
-	if campaign_focus:
-		save_button.visible = false
-		load_button.visible = false
 	pause_button = _button("一時停止", _pause)
 	speed_button = _button("1×", _speed)
 	footer.add_child(pause_button)
@@ -480,7 +479,7 @@ func _new_class(id: String) -> void:
 	arena.battle = battle
 	arena.reset_presentation()
 	_clear_selection()
-	summary_label.text = "五戦を踏破しよう。勝利で魔力残滓を獲得し、下の凝結欄で元素や道具に変換できます。各戦後HP全回復。中断保存はありません。" if campaign_focus else "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
+	summary_label.text = "五戦を踏破しよう。勝利で魔力残滓を獲得し、凝結欄で元素や道具に変換できます。各戦後HP全回復。戦前に自動保存します。" if campaign_focus else "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
 	grid.active_sources.clear()
 	_notice("魔術師：火を選んで微光に重ねると爆炎に。水と風は3連撃になります。" if id == "mage" else "騎士：溜めの紋章を長剣に重ねて大剣を鍛造。紋章を残して強化も可能。")
 	_sync()
@@ -559,6 +558,8 @@ func _on_drop(data: Dictionary, cell: Vector2i) -> void:
 		if mage_focus and str(result.event) == "merge":
 			grid.show_merge_feedback(int(result.uid))
 	_sync()
+	if result.ok:
+		_autosave_campaign_change()
 
 func _rotate() -> void:
 	if run.phase != "prepare":
@@ -577,6 +578,8 @@ func _discard() -> void:
 	if result.ok:
 		_clear_selection()
 	_sync()
+	if result.ok:
+		_autosave_campaign_change()
 
 func _clear_selection() -> void:
 	held = {}
@@ -589,11 +592,19 @@ func _clear_selection() -> void:
 			grid.active_sources.clear()
 		grid.update_preview()
 
+func _autosave_campaign_change() -> void:
+	if not campaign_focus or not persistence_enabled or run.phase != "prepare":
+		return
+	var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path)
+	if not result.ok:
+		_notice("配置は変更されましたが保存できません：" + str(result.message))
+
 func _save() -> bool:
 	if not persistence_enabled:
 		_notice("検証・撮影モードではプレイヤーのデータを保存しません。")
 		return false
-	var result: Dictionary = Save.save_run(run, checkpoint_path)
+	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1
+	var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, final_victory, battle.hp if final_victory else 0) if campaign_focus else Save.save_run(run, checkpoint_path)
 	_notice(str(result.message))
 	return bool(result.ok)
 
@@ -601,24 +612,39 @@ func _load() -> void:
 	if not persistence_enabled:
 		_notice("検証・撮影モードではプレイヤーのデータを読みません。")
 		return
-	if mage_focus:
+	if run.phase == "battle":
+		_notice("戦闘中はデータを読み込めません。")
+		return
+	if mage_focus and not campaign_focus:
 		var info: Dictionary = Save.inspect_save(checkpoint_path)
 		if not info.ok or str(info.get("class_id", "")) != "mage":
 			_notice(str(info.message) if not info.ok else "このデータは魔術師用ではありません。現在の準備は変更されません。")
 			return
-	var result: Dictionary = Save.load_run(run, checkpoint_path)
+	var result: Dictionary = CampaignSave.load_run(run, campaign_checkpoint_path) if campaign_focus else Save.load_run(run, checkpoint_path)
 	_notice(str(result.message))
 	if result.ok:
+		if campaign_focus:
+			campaign_stage = int(result.stage)
+			encounter_id = Campaign.encounter(campaign_stage)
 		_set_workspace_open(true)
 		_rehearsal_signature = ""
 		details_content.move_child(summary_label, details_content.get_child_count() - 1)
 		battle = BattleRules.new()
+		if campaign_focus and bool(result.get("completed", false)):
+			battle.start(run.get_combat_config(), encounter_id)
+			battle.phase = "won"
+			battle.hp = int(result.completed_hp)
+			battle.enemy_hp = 0
+			run.phase = "won"
 		_before_battle = {}
 		arena.battle = battle
 		arena.reset_presentation()
+		if campaign_focus and bool(result.get("completed", false)):
+			arena.feedback.outcome = "won"
+			arena.feedback.enemy_exit = 1.0
 		grid.clear_merge_feedback()
 		_clear_selection()
-		summary_label.text = "準備時の状態を復元しました。旧版の遠征データは別扱いです。"
+		summary_label.text = "五つの試練を踏破した記録です。「最初から」で新しい遠征を始められます。" if campaign_focus and bool(result.get("completed", false)) else "遠征の準備を復元しました。戦闘はこの戦いの最初から始まります。" if campaign_focus else "準備時の状態を復元しました。旧版の遠征データは別扱いです。"
 	_sync()
 
 func _resize_layout() -> void:
@@ -659,7 +685,8 @@ func _advance_campaign() -> void:
 	_set_workspace_open(true)
 	_clear_selection()
 	summary_label.text = "次の戦いに備えよう。HPは全回復、配置・元素・魔力残滓は引き継ぎます。凝結欄はスクロールできます。"
-	_notice("第%d戦：%s。魔力残滓で道具を凝結できます。" % [campaign_stage + 1, Encounters.definition(encounter_id).name])
+	if not persistence_enabled or _save():
+		_notice("第%d戦：%s。魔力残滓で道具を凝結できます。" % [campaign_stage + 1, Encounters.definition(encounter_id).name])
 	_sync()
 
 func _start_battle() -> void:
@@ -709,8 +736,23 @@ func _restore_before_battle() -> void:
 	grid.clear_merge_feedback()
 	_clear_selection()
 	summary_label.text = "戦前の配置に戻りました。素材は追加・補充されません。"
-	_notice("戦前に戻りました。配置を調整して再挑戦できます。")
+	if not campaign_focus or not persistence_enabled or _save():
+		_notice("戦前に戻りました。配置を調整して再挑戦できます。")
 	_sync()
+
+func _save_next_campaign_preparation() -> Dictionary:
+	# A victory remains on screen, but the checkpoint represents the next
+	# preparation. Work on an isolated copy; never mutate the displayed battle.
+	var next = RunRules.new()
+	next.new_run("mage", run.seed_value)
+	next.items.assign(run.items.duplicate(true))
+	next.sources.assign(run.sources.duplicate(true))
+	next.gold = run.gold
+	next.hp = run.max_hp
+	next.max_hp = run.max_hp
+	next._next_uid = run._next_uid
+	next.discarded_materials = run.discarded_materials.duplicate(true)
+	return CampaignSave.save_run(next, campaign_stage + 1, campaign_checkpoint_path)
 
 func _pause() -> void:
 	if battle.phase == "battle":
@@ -811,7 +853,9 @@ func _sync() -> void:
 	arena.queue_redraw()
 	primary_button.disabled = run.phase != "prepare" and not (campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size())
 	primary_button.text = "次の戦いへ  /  Space" if campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size() else "五つの試練を踏破" if campaign_focus and run.phase == "won" else "戦闘開始  /  Space"
-	save_button.disabled = run.phase != "prepare" or not persistence_enabled
+	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1
+	save_button.disabled = (run.phase != "prepare" and not final_victory) or not persistence_enabled
+	save_button.text = "踏破を保存" if final_victory else "準備を保存"
 	load_button.disabled = run.phase == "battle" or not persistence_enabled
 	pause_button.disabled = battle.phase != "battle"
 	pause_button.text = "再開" if battle.paused else "一時停止"
@@ -837,11 +881,18 @@ func _process(delta: float) -> void:
 		if battle.phase in ["won", "lost"] and _last_phase == "battle":
 			_last_phase = battle.phase
 			run.phase = battle.phase
+			var completion_error := ""
 			if campaign_focus and battle.phase == "won":
 				var reward := int(Campaign.REWARDS[campaign_stage])
 				run.gold += reward
 				arena.show_campaign_reward(reward)
+				if persistence_enabled:
+					var saved: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, true, battle.hp) if campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else _save_next_campaign_preparation()
+					if not saved.ok:
+						completion_error = str(saved.message)
 			_show_summary()
+			if not completion_error.is_empty():
+				_notice("勝利しましたが保存できません：" + completion_error)
 			_sync()
 	_ready_frames += 1
 	if not _capture_directory.is_empty() and not _capture_done and _ready_frames > 10:
