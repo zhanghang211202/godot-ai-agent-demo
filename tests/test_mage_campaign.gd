@@ -11,7 +11,7 @@ const Art = preload("res://scripts/classes/mage_art.gd")
 const Feedback = preload("res://scripts/classes/class_feedback.gd")
 const Effects = preload("res://scripts/classes/mage_effects.gd")
 const OUTPUT := "res://.tools/mage-campaign-review"
-const PLAYER_PATHS := ["user://mage-trial-run.json", "user://class-prototype-run.json", "user://emberpack-run.json"]
+const PLAYER_PATHS := ["user://mage-trial-run.json", "user://class-prototype-run.json", "user://emberpack-run.json", "user://mage-campaign-run.json"]
 var checks := 0
 var failures := 0
 
@@ -108,6 +108,7 @@ func _run() -> void:
 	_second_build()
 	root.size = Vector2i(1440, 960)
 	var ui = load("res://scenes/mage_campaign.tscn").instantiate()
+	ui.persistence_enabled = false
 	root.add_child(ui)
 	for _i in range(4): await process_frame
 	ui.set_process(false)
@@ -121,6 +122,7 @@ func _run() -> void:
 		for _i in range(4): await process_frame
 		var viewport := Rect2(Vector2.ZERO, Vector2(dimensions))
 		check(viewport.encloses(ui.condense_button.get_global_rect()) and viewport.encloses(ui.recipe_button.get_global_rect()) and not ui.condense_button.get_global_rect().intersects(ui.recipe_button.get_global_rect()), str(dimensions) + " recipe and condensation controls are visible and separate")
+		check(viewport.encloses(ui.save_button.get_global_rect()) and viewport.encloses(ui.load_button.get_global_rect()) and viewport.encloses(ui.primary_button.get_global_rect()) and not ui.load_button.get_global_rect().intersects(ui.primary_button.get_global_rect()), str(dimensions) + " save and battle controls remain usable")
 	root.size = Vector2i(1440, 960)
 	for _i in range(4): await process_frame
 	check(ui.run.acquire(0, Vector2i.ZERO).ok and ui.run.acquire(1, Vector2i(3, 2)).ok and ui.run.acquire(2, Vector2i(3, 2)).ok, "Five-battle build uses only normal finite acquisition and weaving")
