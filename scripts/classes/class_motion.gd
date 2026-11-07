@@ -3,11 +3,15 @@ extends RefCounted
 
 const ROOT := "res://assets/art/c1-motion-v1/characters/"
 const MAGE_CAST_PATH := "res://assets/art/mage-leg-revision-v1/characters/mage-cast.png"
-const FILES := {"mage-cast": "mage-cast.png", "knight-sword": "knight-sword.png", "knight-greatblade": "knight-greatblade.png"}
+const MAGE_SWING_PATH := "res://assets/art/mage-motion-v2/characters/mage-swing.png"
+const MAGE_GESTURE_PATH := "res://assets/art/mage-motion-v2/characters/mage-gesture.png"
+const FILES := {"mage-cast": "mage-cast.png", "mage-swing": "mage-swing.png", "mage-gesture": "mage-gesture.png", "knight-sword": "knight-sword.png", "knight-greatblade": "knight-greatblade.png"}
 # Measured boot-midpoint x anchors in original PNG coordinates. Y is the last
 # alpha>=128 row of each frame. A common scale is used throughout each clip.
-const FOOT_X := {"mage-cast": [307, 879, 340, 880], "knight-sword": [260, 923, 246, 903], "knight-greatblade": [249, 924, 250, 842]}
+const FOOT_X := {"mage-cast": [307, 879, 340, 880], "mage-swing": [299, 828, 284, 855], "mage-gesture": [305, 870, 316, 872], "knight-sword": [260, 923, 246, 903], "knight-greatblade": [249, 924, 250, 842]}
 const MAGE_CAST_POINTS := [Vector2(452, 135), Vector2(1026, 155), Vector2(508, 810), Vector2(1028, 812)]
+const MAGE_SWING_POINTS := [Vector2(95, 160), Vector2(990, 75), Vector2(528, 870), Vector2(1042, 880)]
+const MAGE_GESTURE_POINTS := [Vector2(256, 260), Vector2(800, 265), Vector2(422, 920), Vector2(840, 955)]
 static var _assets: Dictionary = {}
 var clip := ""
 var state := "idle"
@@ -93,7 +97,7 @@ static func get_asset(id: String) -> Dictionary:
 		return _assets[id]
 	if not FILES.has(id):
 		return {}
-	var path := MAGE_CAST_PATH if id == "mage-cast" else ROOT + str(FILES[id])
+	var path := MAGE_CAST_PATH if id == "mage-cast" else MAGE_SWING_PATH if id == "mage-swing" else MAGE_GESTURE_PATH if id == "mage-gesture" else ROOT + str(FILES[id])
 	var image := Image.load_from_file(path)
 	if image == null or image.is_empty():
 		return {}
@@ -108,6 +112,11 @@ static func get_asset(id: String) -> Dictionary:
 		regions[2].size.x = 582
 		regions[3].position.x = 582
 		regions[3].size.x = dimensions.x - 582
+	if id == "mage-swing":
+		# The extended staff crosses the midpoint; the alpha-empty gutter begins at x585.
+		regions[2].size.x = 600
+		regions[3].position.x = 600
+		regions[3].size.x = dimensions.x - 600
 	var frames: Array[Dictionary] = []
 	var above := 0.0
 	var left := 0.0
@@ -119,7 +128,7 @@ static func get_asset(id: String) -> Dictionary:
 		left = maxf(left, pivot.x - bounds.position.x)
 		right = maxf(right, bounds.end.x - pivot.x)
 		frames.append({"source_rect": Rect2(bounds), "region": Rect2(regions[index]), "pivot": pivot,
-			"cast_point": MAGE_CAST_POINTS[index] if id == "mage-cast" else pivot})
+			"cast_point": MAGE_CAST_POINTS[index] if id == "mage-cast" else MAGE_SWING_POINTS[index] if id == "mage-swing" else MAGE_GESTURE_POINTS[index] if id == "mage-gesture" else pivot})
 	var result := {"id": id, "path": path, "texture": ImageTexture.create_from_image(image), "size": dimensions,
 		"frames": frames, "height": above, "left": left, "right": right}
 	_assets[id] = result

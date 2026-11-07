@@ -56,6 +56,7 @@ static func _same_icon(kind: String) -> Dictionary:
 	return _same_icons.get(kind, {})
 
 static func enemy(id: String = "sentinel") -> Dictionary:
+	id = {"campaign_sentinel": "sentinel", "campaign_moth": "mirror_moth", "campaign_golem": "thorn_golem"}.get(id, id)
 	if id == "sentinel_elite":
 		id = "sentinel"
 	if id != "sentinel":

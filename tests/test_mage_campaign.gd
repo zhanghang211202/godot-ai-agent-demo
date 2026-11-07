@@ -139,7 +139,7 @@ func _run() -> void:
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
-	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == "sentinel" and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
+	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == Campaign.encounter(0) and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
 	check(ui.source_buttons.size() == 9 and ui.source_buttons[3].disabled and ui.resources_label.text.contains("残滓"), "Free elements and residue condensation are available in one preparation UI")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
@@ -245,6 +245,7 @@ func _run() -> void:
 			check(ui.primary_button.disabled and ui.status_label.text.contains("踏破"), "Boss victory completes the five-battle campaign")
 	ui._new_class("mage")
 	check(ui.run.discard(1).ok, "Defeat fixture uses a normal discarded spell")
+	check(ui.run.discard(4).ok, "Defeat fixture also sacrifices the starting ward")
 	ui._start_battle()
 	while ui.battle.phase == "battle":
 		ui._process(0.1)
