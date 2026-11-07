@@ -219,8 +219,8 @@ func get_art_layout() -> Dictionary:
 	var factor := 0.0
 	var cast_point := anchor - Vector2(0, 110)
 	var release_point := cast_point
-	# Larger stages can give the mage more room while retaining the same anchor
-	# and common scale across every animation frame.
+	var body_height := 0.0
+	# Larger stages give the mage more room while retaining a common foot anchor.
 	var hero_height := minf(256.0, scene.size.y - 3.0)
 	if run != null and run.class_id == "mage":
 		hero_height = minf(scene.size.y - 3.0, minf(390.0, maxf(136.0, scene.size.y * 0.56)))
@@ -233,18 +233,24 @@ func get_art_layout() -> Dictionary:
 		source = frame.source_rect
 		var clip_height: float = animated_hero.height
 		var clip_width: float = animated_hero.left + animated_hero.right
-		if run != null and run.class_id == "mage" and mage_motion_variants_enabled:
+		var normalize_mage: bool = run != null and run.class_id == "mage" and mage_motion_variants_enabled
+		if normalize_mage:
+			clip_height = 0.0
+			clip_width = 0.0
 			for variant in ["mage-cast", "mage-swing", "mage-gesture"]:
 				var other: Dictionary = Motion.get_asset(variant)
 				if not other.is_empty():
-					clip_height = maxf(clip_height, float(other.height))
-					clip_width = maxf(clip_width, float(other.left + other.right))
-		factor = minf(hero_height / clip_height, (size.x * 0.34) / clip_width)
+					clip_height = maxf(clip_height, float(other.normalized_height))
+					clip_width = maxf(clip_width, float(other.normalized_left + other.normalized_right))
+		var base_factor := minf(hero_height / clip_height, (size.x * 0.34) / clip_width)
+		factor = base_factor * (float(frame.body_scale) if normalize_mage else 1.0)
 		destination = Rect2(anchor + (source.position - Vector2(frame.pivot)) * factor, source.size * factor)
 		cast_point = anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * factor
+		body_height = float(frame.body_height) * factor
 		if clip_id in ["mage-cast", "mage-swing", "mage-gesture"]:
 			var release_frame: Dictionary = animated_hero.frames[2]
-			release_point = anchor + (Vector2(release_frame.cast_point) - Vector2(release_frame.pivot)) * factor
+			var release_factor := base_factor * (float(release_frame.body_scale) if normalize_mage else 1.0)
+			release_point = anchor + (Vector2(release_frame.cast_point) - Vector2(release_frame.pivot)) * release_factor
 		else:
 			release_point = cast_point
 		hero = animated_hero
@@ -266,6 +272,8 @@ func get_art_layout() -> Dictionary:
 		# golem towers over the mage, while the hovering moth remains smaller.
 		var proportion: float = {"sentinel": 1.36, "campaign_sentinel": 1.36, "mirror_moth": 0.68, "campaign_moth": 0.68, "thorn_golem": 1.78, "campaign_golem": 1.78, "sentinel_elite": 1.45, "astral_scribe": 1.3, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
 		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
+		if mage_motion_variants_enabled and str(encounter.id) in ["mirror_moth", "campaign_moth"] and body_height > 0.0:
+			enemy_height = minf(enemy_height, body_height * proportion)
 		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.46 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)
 		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy.position + enemy.size * Vector2(0.5, 0.46)
@@ -276,12 +284,12 @@ func get_art_layout() -> Dictionary:
 		missing.append(background_id)
 	return {"class_id": str(run.class_id) if run != null else "", "hero_id": hero_id,
 		"hero_path": hero.get("path", ""), "background_id": background_id, "background_path": Art.asset_path(background_id),
-		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination, "hero_cast_point": cast_point, "hero_release_point": release_point,
+		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination, "hero_body_height": body_height, "hero_cast_point": cast_point, "hero_release_point": release_point,
 		"background_source_size": background.get("size", Vector2i.ZERO), "background_source_rect": background_crop,
 		"stage_rect": Rect2(Vector2.ZERO, size), "scene_rect": scene, "ground_anchor": anchor, "ground_y": ground,
 		"enemy_rect": enemy, "health_rects": health, "phase_rect": phase,
 		"source_scale": Vector2.ONE * factor, "source_scale_is_integer": factor >= 1.0 and is_equal_approx(factor, roundf(factor)),
-		"scaling_mode": "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
+		"scaling_mode": "body landmarks and boot anchors, nearest source-fit; logical pixel grid pending" if mage_motion_variants_enabled and run != null and run.class_id == "mage" else "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
 		"alpha_threshold": 128, "assets_ready": missing.is_empty(), "missing_assets": missing,
 		"hero_visible": destination.has_area(), "animated": not animated_hero.is_empty(), "enemy_placeholder": enemy_art.is_empty(),
 		"enemy_path": enemy_art.get("path", ""), "enemy_source_rect": enemy_source, "enemy_scale": enemy_factor, "enemy_frame": enemy_index, "enemy_anchor": enemy_anchor,

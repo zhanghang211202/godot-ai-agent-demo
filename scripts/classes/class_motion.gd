@@ -7,8 +7,10 @@ const MAGE_SWING_PATH := "res://assets/art/mage-motion-v2/characters/mage-swing.
 const MAGE_GESTURE_PATH := "res://assets/art/mage-motion-v2/characters/mage-gesture.png"
 const FILES := {"mage-cast": "mage-cast.png", "mage-swing": "mage-swing.png", "mage-gesture": "mage-gesture.png", "knight-sword": "knight-sword.png", "knight-greatblade": "knight-greatblade.png"}
 # Measured boot-midpoint x anchors in original PNG coordinates. Y is the last
-# alpha>=128 row of each frame. A common scale is used throughout each clip.
+# alpha>=128 row. Hat-to-foot landmarks exclude the staff and its ornaments.
 const FOOT_X := {"mage-cast": [307, 879, 340, 880], "mage-swing": [299, 828, 284, 855], "mage-gesture": [305, 870, 316, 872], "knight-sword": [260, 923, 246, 903], "knight-greatblade": [249, 924, 250, 842]}
+const MAGE_HAT_Y := {"mage-cast": [73, 87, 751, 749], "mage-swing": [155, 162, 823, 819], "mage-gesture": [71, 82, 750, 748]}
+const MAGE_REFERENCE_BODY_HEIGHT := 570.0
 const MAGE_CAST_POINTS := [Vector2(452, 135), Vector2(1026, 155), Vector2(508, 810), Vector2(1028, 812)]
 const MAGE_SWING_POINTS := [Vector2(95, 160), Vector2(990, 75), Vector2(528, 870), Vector2(1042, 880)]
 const MAGE_GESTURE_POINTS := [Vector2(256, 260), Vector2(800, 265), Vector2(422, 920), Vector2(840, 955)]
@@ -121,16 +123,26 @@ static func get_asset(id: String) -> Dictionary:
 	var above := 0.0
 	var left := 0.0
 	var right := 0.0
+	var normalized_above := 0.0
+	var normalized_left := 0.0
+	var normalized_right := 0.0
 	for index in range(4):
 		var bounds := _bounds(image, regions[index])
 		var pivot := Vector2(float(FOOT_X[id][index]), bounds.end.y)
+		var body_height := pivot.y - float(MAGE_HAT_Y[id][index]) if MAGE_HAT_Y.has(id) else 0.0
+		var body_scale := MAGE_REFERENCE_BODY_HEIGHT / body_height if body_height > 0.0 else 1.0
 		above = maxf(above, pivot.y - bounds.position.y)
 		left = maxf(left, pivot.x - bounds.position.x)
 		right = maxf(right, bounds.end.x - pivot.x)
+		normalized_above = maxf(normalized_above, (pivot.y - bounds.position.y) * body_scale)
+		normalized_left = maxf(normalized_left, (pivot.x - bounds.position.x) * body_scale)
+		normalized_right = maxf(normalized_right, (bounds.end.x - pivot.x) * body_scale)
 		frames.append({"source_rect": Rect2(bounds), "region": Rect2(regions[index]), "pivot": pivot,
+			"body_height": body_height, "body_scale": body_scale,
 			"cast_point": MAGE_CAST_POINTS[index] if id == "mage-cast" else MAGE_SWING_POINTS[index] if id == "mage-swing" else MAGE_GESTURE_POINTS[index] if id == "mage-gesture" else pivot})
 	var result := {"id": id, "path": path, "texture": ImageTexture.create_from_image(image), "size": dimensions,
-		"frames": frames, "height": above, "left": left, "right": right}
+		"frames": frames, "height": above, "left": left, "right": right,
+		"normalized_height": normalized_above, "normalized_left": normalized_left, "normalized_right": normalized_right}
 	_assets[id] = result
 	return result
 

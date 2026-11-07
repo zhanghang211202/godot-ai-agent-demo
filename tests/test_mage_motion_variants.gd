@@ -122,12 +122,36 @@ func _gesture_integration() -> void:
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _i in range(4): await process_frame
-		for clip in ["mage-swing", "mage-gesture"]:
+		var heights: Array[float] = []
+		for clip in ["mage-cast", "mage-swing", "mage-gesture"]:
+			var release_points: Array[Vector2] = []
 			for pose in range(4):
 				ui.arena.mage_cast_timeline.mode = "prediction"
 				ui.arena.mage_cast_timeline.clip = clip
 				ui.arena.mage_cast_timeline.pose = pose
 				var layout: Dictionary = ui.arena.get_art_layout()
 				check(Rect2(layout.scene_rect).encloses(layout.hero_rect) and not Rect2(layout.hero_rect).intersects(layout.enemy_rect), "%s %s pose %d remains inside the stage" % [str(dimensions), clip, pose])
+				check(is_equal_approx(Rect2(layout.hero_rect).end.y, float(layout.ground_y)), "%s %s pose %d keeps the foot anchor" % [str(dimensions), clip, pose])
+				heights.append(float(layout.hero_body_height))
+				release_points.append(layout.hero_release_point)
+				if pose == 2:
+					check(Vector2(layout.hero_cast_point).distance_to(layout.hero_release_point) < 0.01, "%s %s projectile starts at the visible release point" % [str(dimensions), clip])
+			for point in release_points:
+				check(point.distance_to(release_points[0]) < 0.01, "%s %s release point does not drift with other poses" % [str(dimensions), clip])
+		var minimum: float = heights.min()
+		var maximum: float = heights.max()
+		check(minimum > 0 and maximum - minimum < 0.05, "%s body landmark height remains constant across all 12 poses" % str(dimensions))
+	root.size = Vector2i(1440, 960)
+	for _i in range(4): await process_frame
+	var comparison := OUTPUT.path_join("size-comparison")
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(comparison))
+	for clip in ["mage-cast", "mage-swing", "mage-gesture"]:
+		ui.arena.mage_cast_timeline.mode = "prediction"
+		ui.arena.mage_cast_timeline.clip = clip
+		ui.arena.mage_cast_timeline.pose = 2
+		ui.arena.queue_redraw()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		check(root.get_texture().get_image().save_png(comparison.path_join(clip + ".png")) == OK, clip + " size comparison rendered")
 	ui.queue_free()
 	await process_frame
