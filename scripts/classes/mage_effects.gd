@@ -184,7 +184,7 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, hero: Vector2, e
 	if progress < 0.24:
 		var sign_x := -1 if effect.target == "hero" else 1
 		canvas.draw_line(snap(at - Vector2(sign_x * 90, 0)), snap(at), Color(color, (1.0 - progress / 0.24) * 0.6), 3, false)
-	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "solar_lance", "frost_orbit", "moth_bolt", "thorn_crash", "boss_star", "boss_crash"]:
+	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "solar_lance", "frost_orbit", "moth_bolt", "thorn_crash", "scribe_rune", "boss_star", "boss_crash"]:
 		expansion_impact(canvas, effect, at)
 	elif kind == "flame_glyph":
 		flame_impact(canvas, at, progress)
@@ -301,6 +301,17 @@ static func expansion_impact(canvas: CanvasItem, effect: Dictionary, at: Vector2
 			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)
 			seal(canvas, point, Vector2.ONE * (11 + progress * 38), progress * 1.2, Color(color, fade), 8)
 			star(canvas, point, 20 * fade, Color("eee4ff", fade))
+	elif kind == "scribe_rune":
+		# Each actual hit leaves one angular glyph against the ward, rather than
+		# reusing the generic sparkle or inventing all three on a lethal hit.
+		for hit in range(hits):
+			var point := at + Vector2(20, (hit - (hits - 1) * 0.5) * 30)
+			var radius := 14.0 + progress * 28.0
+			seal(canvas, point, Vector2.ONE * radius, PI / 4 + progress, Color("76e9d5", fade), 4)
+			seal(canvas, point, Vector2.ONE * (radius * 0.62), -progress, Color("d2fff3", fade * 0.9), 4)
+			diamond(canvas, point + Vector2(progress * 14, -progress * 8), 6 * fade + 2, Color("c7fff0", fade))
+			canvas.draw_line(snap(point - Vector2(6, 0)), snap(point + Vector2(6, 0)), Color("f1fff8", fade), 2, false)
+			canvas.draw_line(snap(point - Vector2(0, 6)), snap(point + Vector2(0, 6)), Color("f1fff8", fade), 2, false)
 	elif kind == "boss_star":
 		for hit in range(hits):
 			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)

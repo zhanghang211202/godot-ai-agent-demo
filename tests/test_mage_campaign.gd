@@ -109,6 +109,17 @@ func _distinct_enemies() -> void:
 	check(battle.start(config, "astral_scribe").ok, "Fourth enemy starts its own encounter")
 	var incoming := battle.tick(2.4).filter(func(e: Dictionary): return e.type == "enemy_attack")
 	check(incoming.size() == 3 and incoming.all(func(e: Dictionary): return e.source_kind == "scribe_rune" and e.amount == 3), "Fourth enemy fires three rune hits reduced separately by ward")
+	var feedback := Feedback.new()
+	for event: Dictionary in incoming: feedback.show_event(event)
+	var effects := Effects.visible_effects(feedback.numbers)
+	check(effects.size() == 1 and effects[0].kind == "scribe_rune" and effects[0].hits == 3, "Rune impact reflects the three actual warded hits")
+	config.hp = 4
+	var lethal := Battle.new()
+	check(lethal.start(config, "astral_scribe").ok, "Low-health scribe fixture starts normally")
+	feedback.reset()
+	for event: Dictionary in lethal.tick(2.4): feedback.show_event(event)
+	effects = Effects.visible_effects(feedback.numbers).filter(func(effect: Dictionary): return effect.kind == "scribe_rune")
+	check(lethal.phase == "lost" and effects.size() == 1 and effects[0].hits == 2, "Lethal rune impact presents only the two hits that actually occurred")
 
 func _second_build() -> void:
 	var run := Run.new()
