@@ -36,10 +36,18 @@ func _initialize() -> void:
 	specialist.new_run("mage")
 	for op in [[0, Vector2i(3, 1)], [0, Vector2i(3, 1)], [1, Vector2i(5, 1)], [1, Vector2i(5, 1)], [2, Vector2i(1, 2)], [2, Vector2i(1, 2)]]:
 		check(specialist.acquire(op[0], op[1]).ok, "Same-element build legally weaves its ingredients")
+	var first_specialist_hp := 0
+	var first_specialist_duration := 0.0
 	for stage in range(5):
 		var battle := _fight(specialist, stage)
 		print("Balance specialist stage %d: %s HP %d time %.2f" % [stage + 1, battle.phase, battle.hp, battle.battle_time])
 		check(battle.phase == "won", "Same-element build beats stage %d" % (stage + 1))
+		if stage == 0:
+			first_specialist_hp = battle.hp
+			first_specialist_duration = battle.battle_time
+		if stage == 4:
+			check(battle.hp >= 10 and battle.hp <= 50 and battle.battle_time >= 9.0 and battle.battle_time <= 16.0, "Specialist boss fight remains viable while allowing meaningful enemy pressure")
+			check(battle.hp < first_specialist_hp and battle.battle_time > first_specialist_duration, "The final battle pressures this build more than the opening fight")
 	check(Encounters.definition("sentinel").hp == 140 and Encounters.definition("mirror_moth").hp == 108 and Encounters.definition("thorn_golem").hp == 220, "Legacy single-trial enemies retain original balance")
 	print("Mage balance: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)

@@ -43,11 +43,11 @@ static func definition(kind: String) -> Dictionary:
 		"tide_lances":
 			result = {"name": "潮汐の連槍", "class_id": "mage", "size": Vector2i(3, 1), "color": "6ac7dc", "category": "attack", "description": "詠唱ごとに3回攻撃。横長のため配置場所を確保しよう。", "damage": 5, "hits": 3, "interval": 2.6, "warmup": 0.8, "event_type": "spell_multi", "materials": {"water_mote": 1, "wind_mote": 1}}
 		"solar_crown":
-			result = {"name": "陽炎の三連星", "class_id": "mage", "size": Vector2i(2, 2), "color": "ffc06c", "category": "attack", "description": "火を二つ重ねる三連星。2.6秒ごとに3回、各8ダメージ。", "damage": 8, "hits": 3, "interval": 2.6, "warmup": 0.8, "event_type": "spell_multi", "materials": {"fire_mote": 2}}
+			result = {"name": "陽炎の三連星", "class_id": "mage", "size": Vector2i(2, 2), "color": "ffc06c", "category": "attack", "description": "火を二つ重ねる三連星。3秒ごとに3回、各6ダメージ。", "damage": 6, "hits": 3, "interval": 3.0, "warmup": 0.8, "event_type": "spell_multi", "materials": {"fire_mote": 2}}
 		"glacier_prism":
-			result = {"name": "氷晶の大槍", "class_id": "mage", "size": Vector2i(1, 3), "color": "a5e6ff", "category": "attack", "description": "水を二つ重ねる大槍。2.4秒ごとに20ダメージ。", "damage": 20, "hits": 1, "interval": 2.4, "warmup": 1.1, "event_type": "spell_burst", "materials": {"water_mote": 2}}
+			result = {"name": "氷晶の大槍", "class_id": "mage", "size": Vector2i(1, 3), "color": "a5e6ff", "category": "attack", "description": "水を二つ重ねる大槍。2.8秒ごとに16ダメージ。", "damage": 16, "hits": 1, "interval": 2.8, "warmup": 1.1, "event_type": "spell_burst", "materials": {"water_mote": 2}}
 		"storm_orbit":
-			result = {"name": "暴風の五重輪", "class_id": "mage", "size": Vector2i(2, 2), "color": "9aefd2", "category": "attack", "description": "風を二つ重ねる五段攻撃。各3ダメージに結晶核の支援が乗る。", "damage": 3, "hits": 5, "interval": 2.2, "warmup": 0.6, "event_type": "spell_multi", "materials": {"wind_mote": 2}}
+			result = {"name": "暴風の五重輪", "class_id": "mage", "size": Vector2i(2, 2), "color": "9aefd2", "category": "attack", "description": "風を二つ重ねる五段攻撃。2.6秒ごとに各2ダメージ、結晶核の支援は各段に乗る。", "damage": 2, "hits": 5, "interval": 2.6, "warmup": 0.6, "event_type": "spell_multi", "materials": {"wind_mote": 2}}
 		"arcane_nova":
 			result = {"name": "星環の大魔法", "class_id": "mage", "size": Vector2i(2, 2), "color": "d5b8ff", "category": "attack", "description": "微光二つを一つの大魔法に紡ぐ。2.9秒ごとに26ダメージ。", "damage": 26, "hits": 1, "interval": 2.9, "warmup": 1.1, "event_type": "spell_burst", "materials": {"spark": 2}}
 		"solar_lance":
