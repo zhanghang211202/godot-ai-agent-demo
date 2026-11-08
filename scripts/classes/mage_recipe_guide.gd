@@ -37,6 +37,67 @@ static func availability(run: RefCounted, recipe: Dictionary) -> Dictionary:
 	var insufficient_funds: bool = total_cost > int(run.gold)
 	return {"counts": counts, "missing": missing, "required_cost": total_cost, "insufficient_funds": insufficient_funds, "available": missing.is_empty() and not insufficient_funds}
 
+static func plan(run: RefCounted, recipe: Dictionary) -> Dictionary:
+	# A one-step prerequisite is offered only when its exact inputs AND the
+	# final ingredient are available together. Never count the same stock twice.
+	var direct := availability(run, recipe)
+	if direct.available:
+		return {"available": true, "direct": true, "missing": [], "insufficient_funds": false, "required_cost": direct.required_cost}
+	var prerequisite: Dictionary = {}
+	var remaining_kind := ""
+	for pair in [[str(recipe.first), str(recipe.second)], [str(recipe.second), str(recipe.first)]]:
+		if int(direct.counts.get(pair[0], 0)) != 0:
+			continue
+		for candidate: Dictionary in Catalog.recipes_for("mage"):
+			if str(candidate.result) == pair[0]:
+				prerequisite = candidate
+				remaining_kind = pair[1]
+				break
+		if not prerequisite.is_empty():
+			break
+	if prerequisite.is_empty():
+		return {"available": false, "direct": false, "missing": direct.missing, "insufficient_funds": direct.insufficient_funds, "required_cost": direct.required_cost}
+	var required := {}
+	for kind in [str(prerequisite.first), str(prerequisite.second), remaining_kind]:
+		required[kind] = int(required.get(kind, 0)) + 1
+	var missing: Array[String] = []
+	var total_cost := 0
+	for kind in required:
+		var owned := 0
+		for item: Dictionary in run.items:
+			if item.kind == kind:
+				owned += 1
+		var need := maxi(0, int(required[kind]) - owned)
+		var supplies: Array[Dictionary] = []
+		for source: Dictionary in run.sources:
+			if source.kind == kind and int(source.remaining) > 0:
+				supplies.append(source)
+		supplies.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.cost) < int(b.cost))
+		for source: Dictionary in supplies:
+			var amount := mini(need, int(source.remaining))
+			total_cost += amount * int(source.cost)
+			need -= amount
+			if need <= 0: break
+		if need > 0:
+			missing.append(kind)
+	var insufficient_funds := total_cost > int(run.gold)
+	return {"available": missing.is_empty() and not insufficient_funds, "direct": false,
+		"missing": missing, "insufficient_funds": insufficient_funds, "required_cost": total_cost, "prerequisite": prerequisite}
+
+static func choose_planned(run: RefCounted, recipe: Dictionary) -> Dictionary:
+	if run.phase != "prepare" or run.class_id != "mage":
+		return {"ok": false, "missing": [], "reason": "レシピは魔術師の準備中に選べます。"}
+	var route := plan(run, recipe)
+	if not route.available:
+		return {"ok": false, "missing": route.missing, "insufficient_funds": route.insufficient_funds}
+	if route.direct:
+		return choose(run, recipe)
+	var step: Dictionary = choose(run, route.prerequisite)
+	if step.ok:
+		step["prerequisite"] = str(route.prerequisite.result)
+		step["final_product"] = str(recipe.result)
+	return step
+
 static func target_hints(run: RefCounted, held: Dictionary) -> Dictionary:
 	var hints := {}
 	if run.phase != "prepare" or held.is_empty():

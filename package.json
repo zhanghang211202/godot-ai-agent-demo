@@ -20,6 +20,7 @@
     "game:mage:campaign:rehearsal:test": "node scripts/godot.mjs render-script res://tests/test_mage_campaign_rehearsal.gd",
     "game:mage:undo:test": "node scripts/godot.mjs render-script res://tests/test_mage_undo.gd",
     "game:mage:advanced:test": "node scripts/godot.mjs render-script res://tests/test_mage_advanced.gd",
+    "game:mage:chain-guide:test": "node scripts/godot.mjs render-script res://tests/test_mage_chain_guide.gd",
     "game:mage:balance:test": "node scripts/godot.mjs script res://tests/test_mage_balance.gd",
     "game:mage:motion-v2:test": "node scripts/godot.mjs render-script res://tests/test_mage_motion_variants.gd",
     "game:mage:save:test": "node scripts/godot.mjs render-script res://tests/test_mage_campaign_save.gd",

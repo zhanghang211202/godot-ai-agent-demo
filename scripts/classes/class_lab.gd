@@ -402,21 +402,22 @@ func _refresh_recipe_book() -> void:
 		var recipe: Dictionary = recipes[index]
 		var definition: Dictionary = Catalog.definition(recipe.result)
 		var available: Dictionary = RecipeGuide.availability(run, recipe)
+		var route: Dictionary = RecipeGuide.plan(run, recipe)
 		var first: Dictionary = Catalog.definition(recipe.first)
 		var second: Dictionary = Catalog.definition(recipe.second)
 		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
-		var status := counts if available.available else "魔力残滓が不足" if available.insufficient_funds else "不足：" + "、".join(available.missing.map(func(kind): return str(Catalog.definition(kind).name)))
+		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "魔力残滓が不足" if route.insufficient_funds else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name)))
 		var card: Button = recipe_cards[index]
 		card.text = "%s\n%d×%d マス · %d×%d回 / %.1f秒\n%s" % [recipe.label, definition.size.x, definition.size.y, definition.damage, definition.hits, definition.interval, status]
 		card.icon = MageArt.icon(str(recipe.result)).get("atlas", null)
-		card.disabled = not available.available
+		card.disabled = not route.available
 		card.tooltip_text = str(definition.description)
 
 func _choose_recipe(index: int) -> void:
 	var recipes: Array[Dictionary] = Catalog.recipes_for("mage")
 	if recipe_overlay == null or not recipe_overlay.visible or run.phase != "prepare" or index < 0 or index >= recipes.size():
 		return
-	var choice: Dictionary = RecipeGuide.choose(run, recipes[index])
+	var choice: Dictionary = RecipeGuide.choose_planned(run, recipes[index])
 	if not choice.ok:
 		_notice("素材が足りません。配置を見直しましょう。")
 		_refresh_recipe_book()
@@ -433,6 +434,8 @@ func _choose_recipe(index: int) -> void:
 		var target: Dictionary = run.item_by_uid(int(choice.target_uid))
 		var rotation_note := "（回転済み）" if bool(choice.get("auto_rotated", false)) else ""
 		_notice("素材%sを選択。金枠の%sをクリックして%sを紡ぎます。" % [rotation_note, Catalog.definition(target.kind).name, Catalog.definition(choice.product).name])
+	if choice.has("prerequisite"):
+		_notice("まず%sを紡ぎ、次にレシピから%sを選びます。%s" % [Catalog.definition(choice.prerequisite).name, Catalog.definition(choice.final_product).name, status_label.text])
 	_sync()
 
 func _panel(parent: Control, minimum_width: float, ratio: float) -> VBoxContainer:
