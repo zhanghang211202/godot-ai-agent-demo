@@ -535,7 +535,9 @@ func _select_encounter(id: String) -> void:
 	_sync()
 
 func _source_drag(index: int, _at: Vector2) -> Variant:
-	if run.phase != "prepare" or int(run.sources[index].remaining) <= 0:
+	if run.phase != "prepare" or index < 0 or index >= run.sources.size():
+		return null
+	if int(run.sources[index].remaining) <= 0 or run.gold < int(run.sources[index].cost):
 		return null
 	_select_source(index)
 	return held.duplicate()

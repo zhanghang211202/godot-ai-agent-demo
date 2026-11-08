@@ -141,6 +141,23 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == Campaign.encounter(0) and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
 	check(ui.source_buttons.size() == 9 and ui.source_buttons[3].disabled and ui.resources_label.text.contains("残滓"), "Free elements and residue condensation are available in one preparation UI")
+	ui._select_source(0)
+	var selected_before: Dictionary = ui.held.duplicate(true)
+	var inventory_before: Array = ui.run.items.duplicate(true)
+	var sources_before: Array = ui.run.sources.duplicate(true)
+	check(ui._source_drag(3, Vector2.ZERO) == null and ui.held == selected_before, "Dragging an unaffordable source cannot return a previously selected element")
+	check(ui.run.items == inventory_before and ui.run.sources == sources_before and ui.run.gold == 0, "Rejected source dragging does not consume inventory, stock or residue")
+	check(ui._source_drag(-1, Vector2.ZERO) == null and ui._source_drag(ui.run.sources.size(), Vector2.ZERO) == null, "Source dragging safely rejects invalid indices")
+	var drag: Variant = ui._source_drag(1, Vector2.ZERO)
+	check(drag is Dictionary and drag.origin == "source" and drag.index == 1, "An affordable source drag carries the requested material")
+	var saved_remaining: int = ui.run.sources[0].remaining
+	ui.run.sources[0].remaining = 0
+	check(ui._source_drag(0, Vector2.ZERO) == null and ui.held.index == 1, "An exhausted source cannot start a drag or replace the current selection")
+	ui.run.sources[0].remaining = saved_remaining
+	ui.run.phase = "battle"
+	check(ui._source_drag(0, Vector2.ZERO) == null and ui.held.index == 1, "Source dragging is locked during battle")
+	ui.run.phase = "prepare"
+	ui._clear_selection()
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _i in range(4): await process_frame
