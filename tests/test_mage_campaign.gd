@@ -141,7 +141,17 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == Campaign.encounter(0) and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
 	check(ui.source_buttons.size() == 9 and ui.source_buttons[3].disabled and ui.resources_label.text.contains("残滓"), "Free elements and residue condensation are available in one preparation UI")
+	ui._rehearse()
+	check(not ui._rehearsal_signature.is_empty() and ui.details_content.get_child(0) == ui.summary_label, "The forecast appears first after rehearsal")
 	ui._select_source(0)
+	check(ui.detail_label.text.contains("火の元素") and ui.detail_label.text.contains("無料で吸収") and ui.detail_icon.visible, "Selecting a free element shows its effect, availability and icon")
+	check(not ui._rehearsal_signature.is_empty() and ui.summary_label.get_index() == ui.details_content.get_child_count() - 1 and ui.details_scroll.scroll_vertical == 0, "Selecting a source reveals its details while retaining the forecast below")
+	await _capture("source-fire-inspect.png")
+	root.size = Vector2i(1280, 800)
+	for _i in range(4): await process_frame
+	await _capture("source-fire-1280.png")
+	root.size = Vector2i(1440, 960)
+	for _i in range(4): await process_frame
 	var selected_before: Dictionary = ui.held.duplicate(true)
 	var inventory_before: Array = ui.run.items.duplicate(true)
 	var sources_before: Array = ui.run.sources.duplicate(true)
@@ -157,7 +167,16 @@ func _run() -> void:
 	ui.run.phase = "battle"
 	check(ui._source_drag(0, Vector2.ZERO) == null and ui.held.index == 1, "Source dragging is locked during battle")
 	ui.run.phase = "prepare"
+	ui.run.gold = 4
+	ui._select_source(4)
+	check(ui.detail_label.text.contains("護符の板") and ui.detail_label.text.contains("4残滓で凝結") and ui.detail_label.text.contains("2 × 1"), "Selecting a paid ward describes its effect, actual price and footprint")
+	ui._rotate()
+	check(ui.detail_label.text.contains("1 × 2") and ui.run.sources == sources_before and ui.run.items == inventory_before and ui.run.gold == 4, "Rotating the unpurchased ward updates its footprint without consuming resources")
+	await _capture("source-ward-rotated.png")
+	ui.run.gold = 0
 	ui._clear_selection()
+	ui._sync()
+	check(ui.detail_label.text.contains("月庭の衛兵") and not ui.detail_icon.visible, "Clearing the selection restores the enemy overview")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _i in range(4): await process_frame

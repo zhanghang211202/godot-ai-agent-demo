@@ -266,15 +266,20 @@ func _build_interface() -> void:
 	preview_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	preview_label.visible = false
 	details_content.add_child(preview_label)
+	var detail_row := HBoxContainer.new()
+	detail_row.add_theme_constant_override("separation", 10)
+	details_content.add_child(detail_row)
 	detail_icon = TextureRect.new()
-	detail_icon.custom_minimum_size = Vector2(52, 52)
+	detail_icon.custom_minimum_size = Vector2(44, 44)
+	detail_icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	detail_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	detail_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	detail_icon.visible = false
-	details_content.add_child(detail_icon)
+	detail_row.add_child(detail_icon)
 	detail_label = _label("", 17)
+	detail_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	details_content.add_child(detail_label)
+	detail_row.add_child(detail_label)
 	summary_label = _label("", 16, Color("a8d7cb"))
 	summary_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details_content.add_child(summary_label)
@@ -436,7 +441,9 @@ func _choose_recipe(index: int) -> void:
 		_notice("素材%sを選択。金枠の%sをクリックして%sを紡ぎます。" % [rotation_note, Catalog.definition(target.kind).name, Catalog.definition(choice.product).name])
 	if choice.has("prerequisite"):
 		_notice("まず%sを紡ぎ、次にレシピから%sを選びます。%s" % [Catalog.definition(choice.prerequisite).name, Catalog.definition(choice.final_product).name, status_label.text])
+	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	_sync()
+	details_scroll.scroll_vertical = 0
 
 func _panel(parent: Control, minimum_width: float, ratio: float) -> VBoxContainer:
 	var panel := PanelContainer.new()
@@ -522,7 +529,9 @@ func _select_source(index: int) -> void:
 	grid.held = held
 	var definition: Dictionary = run.get_definition(run.sources[index].kind)
 	_notice("%sを選択：空きマスに置くか、対応素材に重ねます。R で回転。" % definition.name)
+	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	_sync()
+	details_scroll.scroll_vertical = 0
 	grid.update_preview()
 
 func _select_encounter(id: String) -> void:
@@ -894,12 +903,24 @@ func _sync() -> void:
 	recipe_label.text = "上の「レシピ」で%d種類の組み合わせを確認。\n完成品は重ねた相手の位置に配置されます。" % recipes.size() if mage_focus else "\n\n".join(recipes) + "\n\n完成品は重ねた相手の位置に配置。空き不足では素材や金貨を消費しません。"
 	phase_label.text = "準備 · 配置可能" if run.phase == "prepare" else "戦闘 · 配置変更不可" if run.phase == "battle" else "戦闘終了 · 振り返り"
 	var item: Dictionary = run.item_by_uid(selected_uid)
-	var selected_art := MageArt.icon(str(item.get("kind", "")))
+	var selected_source: Dictionary = {}
+	if mage_focus and run.phase == "prepare" and held.get("origin", "") == "source":
+		var index := int(held.get("index", -1))
+		if index >= 0 and index < run.sources.size():
+			selected_source = run.sources[index]
+	var selected_art := MageArt.icon(str(item.get("kind", selected_source.get("kind", ""))))
 	detail_icon.visible = not selected_art.is_empty()
 	detail_icon.texture = selected_art.get("atlas", null)
 	if not item.is_empty():
 		var definition: Dictionary = run.get_definition(item.kind)
 		detail_label.text = "%s\n\n%s\n\n使用マス：%d × %d\n方向支援：+%d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y, run.get_adjacency_bonus(item)]
+	elif not selected_source.is_empty():
+		var definition: Dictionary = run.get_definition(selected_source.kind)
+		var size: Vector2i = definition.size
+		if bool(held.get("rotated", false)):
+			size = Vector2i(size.y, size.x)
+		var price := "無料で吸収" if int(selected_source.cost) == 0 else "%d残滓で凝結" % int(selected_source.cost)
+		detail_label.text = "%s\n%s · 残り%d\n使用マス：%d × %d\n配置まで消費しません。\n%s" % [definition.name, price, selected_source.remaining, size.x, size.y, definition.description]
 	else:
 		var config: Dictionary = run.get_combat_config()
 		if run.class_id == "mage":
