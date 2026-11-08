@@ -9,11 +9,12 @@ const FLIGHT := 0.24
 const COLORS := {"spark": Color("bc9cff"), "flame_glyph": Color("ff964e"), "tide_lances": Color("70d9fa"), "enemy": Color("81e2ff"),
 	"frost_bolt": Color("b9eaff"), "gale_blades": Color("a4e9c2"), "steam_burst": Color("e7dcca"), "ember_tornado": Color("ffb061"),
 	"solar_crown": Color("ffc36f"), "glacier_prism": Color("b8edff"), "storm_orbit": Color("a7efd5"), "arcane_nova": Color("e1bcff"),
+	"solar_lance": Color("ffb65c"), "frost_orbit": Color("9af1e8"),
 	"moth_bolt": Color("c5acff"), "thorn_crash": Color("9bdb95"), "scribe_rune": Color("7ce9d7"), "boss_star": Color("e1b4ff"), "boss_crash": Color("b6a3f0")}
 const ENEMY_KINDS := ["enemy", "moth_bolt", "thorn_crash", "scribe_rune", "boss_star", "boss_crash"]
 const DURATIONS := {"spark": 0.48, "flame_glyph": LIFE, "tide_lances": 0.64, "enemy": 0.48,
 	"frost_bolt": 0.62, "gale_blades": 0.68, "steam_burst": 0.78, "ember_tornado": 0.82,
-	"solar_crown": 0.78, "glacier_prism": 0.75, "storm_orbit": 0.72, "arcane_nova": 0.82, "moth_bolt": 0.52, "thorn_crash": 0.70, "scribe_rune": 0.64, "boss_star": 0.62, "boss_crash": 0.82}
+	"solar_crown": 0.78, "glacier_prism": 0.75, "storm_orbit": 0.72, "arcane_nova": 0.82, "solar_lance": 0.82, "frost_orbit": 0.76, "moth_bolt": 0.52, "thorn_crash": 0.70, "scribe_rune": 0.64, "boss_star": 0.62, "boss_crash": 0.82}
 const MAX_EFFECTS := 8
 const MAX_CASTS := 6
 
@@ -82,7 +83,7 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 	if remaining > FLIGHT:
 		return
 	var flight := clampf(1.0 - remaining / FLIGHT, 0, 1)
-	var count := clampi(int(cast.planned_hits), 1, 5) if kind in ["tide_lances", "gale_blades", "moth_bolt", "scribe_rune", "boss_star", "solar_crown", "storm_orbit"] else 1
+	var count := clampi(int(cast.planned_hits), 1, 5) if kind in ["tide_lances", "gale_blades", "moth_bolt", "scribe_rune", "boss_star", "solar_crown", "storm_orbit", "frost_orbit"] else 1
 	for index in range(count):
 		var offset := (index - (count - 1) * 0.5) * 22
 		var tip := trajectory(from, to + Vector2(0, offset), flight, kind, index)
@@ -117,6 +118,13 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 		elif kind == "arcane_nova":
 			pixel_sprite(canvas, "comet", tip, 3, 1.0)
 			seal(canvas, tip, Vector2.ONE * 18, flight * 2, Color(color, 0.85), 8)
+		elif kind == "solar_lance":
+			canvas.draw_line(snap(tip - Vector2(48, 0)), snap(tip), Color("ffbf67"), 8, false)
+			pixel_sprite(canvas, "flame", tip, 3, 1.0, int(progress * 24))
+			star(canvas, tip, 13, Color("fff1bb"))
+		elif kind == "frost_orbit":
+			pixel_sprite(canvas, "shard", tip, 2, 1.0)
+			seal(canvas, tip, Vector2(13, 9), flight * 3 + index, Color(color, 0.9), 6)
 		elif kind == "moth_bolt":
 			diamond(canvas, tip, 12, Color("7453b0"))
 			seal(canvas, tip, Vector2.ONE * 10, progress, Color("dfd4ff"), 8)
@@ -176,7 +184,7 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, hero: Vector2, e
 	if progress < 0.24:
 		var sign_x := -1 if effect.target == "hero" else 1
 		canvas.draw_line(snap(at - Vector2(sign_x * 90, 0)), snap(at), Color(color, (1.0 - progress / 0.24) * 0.6), 3, false)
-	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "moth_bolt", "thorn_crash", "boss_star", "boss_crash"]:
+	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "solar_lance", "frost_orbit", "moth_bolt", "thorn_crash", "boss_star", "boss_crash"]:
 		expansion_impact(canvas, effect, at)
 	elif kind == "flame_glyph":
 		flame_impact(canvas, at, progress)
@@ -278,6 +286,16 @@ static func expansion_impact(canvas: CanvasItem, effect: Dictionary, at: Vector2
 		seal(canvas, at, Vector2.ONE * (12 + progress * 45), -progress, Color("f2dfff", fade), 6)
 		for index in range(8):
 			star(canvas, at + Vector2.from_angle(index * TAU / 8) * (12 + progress * 56), 6 * fade, Color(color, fade))
+	elif kind == "solar_lance":
+		pixel_sprite(canvas, "flame", at, 3, fade, int(progress * 20))
+		seal(canvas, at, Vector2(22 + progress * 70, 18 + progress * 50), progress, Color(color, fade), 8)
+		for index in range(8):
+			star(canvas, at + Vector2.from_angle(index * TAU / 8) * (12 + progress * 60), 7 * fade, Color("fff0bc", fade))
+	elif kind == "frost_orbit":
+		for hit in range(hits):
+			var angle := progress * 5 + hit * TAU / hits
+			canvas.draw_polyline(arc_points(at, Vector2(22 + progress * 40, 16 + progress * 26), angle, 3.2, 16), Color(color, fade), 3, false)
+			pixel_sprite(canvas, "shard", at + Vector2.from_angle(angle) * (18 + progress * 50), 2, fade)
 	elif kind == "moth_bolt":
 		for hit in range(hits):
 			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)

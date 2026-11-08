@@ -50,6 +50,10 @@ static func definition(kind: String) -> Dictionary:
 			result = {"name": "暴風の五重輪", "class_id": "mage", "size": Vector2i(2, 2), "color": "9aefd2", "category": "attack", "description": "風を二つ重ねる五段攻撃。各3ダメージに結晶核の支援が乗る。", "damage": 3, "hits": 5, "interval": 2.2, "warmup": 0.6, "event_type": "spell_multi", "materials": {"wind_mote": 2}}
 		"arcane_nova":
 			result = {"name": "星環の大魔法", "class_id": "mage", "size": Vector2i(2, 2), "color": "d5b8ff", "category": "attack", "description": "微光二つを一つの大魔法に紡ぐ。2.9秒ごとに26ダメージ。", "damage": 26, "hits": 1, "interval": 2.9, "warmup": 1.1, "event_type": "spell_burst", "materials": {"spark": 2}}
+		"solar_lance":
+			result = {"name": "熾陽の大槍", "class_id": "mage", "size": Vector2i(3, 2), "color": "ffb557", "category": "attack", "description": "爆炎の法印に火を重ねた大槍。6マスを使い、3.4秒ごとに32ダメージ。", "damage": 32, "hits": 1, "interval": 3.4, "warmup": 1.6, "event_type": "spell_burst", "materials": {"spark": 1, "fire_mote": 2}}
+		"frost_orbit":
+			result = {"name": "霜嵐の四重輪", "class_id": "mage", "size": Vector2i(3, 2), "color": "95eadf", "category": "attack", "description": "氷矢に風を重ねた四連撃。6マスを使い、2.4秒ごとに各5ダメージ。", "damage": 5, "hits": 4, "interval": 2.4, "warmup": 0.8, "event_type": "spell_multi", "materials": {"spark": 1, "water_mote": 1, "wind_mote": 1}}
 		"arcane_focus":
 			result = {"name": "集魔の結晶核", "class_id": "mage", "size": Vector2i.ONE, "color": "b79fe8", "category": "support", "description": "左右に接した術式の各段ダメージ+2。回転すると上下に接続。", "support_bonus": 2}
 		"mage_ward":
@@ -80,6 +84,8 @@ static func recipes_for(class_id: String) -> Array[Dictionary]:
 			recipes.append({"first": "water_mote", "second": "water_mote", "result": "glacier_prism", "label": "水 + 水 → 氷晶の大槍"})
 			recipes.append({"first": "wind_mote", "second": "wind_mote", "result": "storm_orbit", "label": "風 + 風 → 暴風の五重輪"})
 			recipes.append({"first": "spark", "second": "spark", "result": "arcane_nova", "label": "微光 + 微光 → 星環の大魔法"})
+			recipes.append({"first": "flame_glyph", "second": "fire_mote", "result": "solar_lance", "label": "爆炎 + 火 → 熾陽の大槍"})
+			recipes.append({"first": "frost_bolt", "second": "wind_mote", "result": "frost_orbit", "label": "氷矢 + 風 → 霜嵐の四重輪"})
 		"knight":
 			recipes.append({"first": "iron_blade", "second": "charge_seal", "result": "greatblade", "label": "長剣 + 溜めの紋章 → 誓約の大剣"})
 	return recipes

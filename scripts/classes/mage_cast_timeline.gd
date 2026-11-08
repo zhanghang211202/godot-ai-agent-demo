@@ -14,9 +14,9 @@ var _last_hit_time := -1.0
 
 func _clip_for(kind: String) -> String:
 	if variants_enabled:
-		if kind in ["flame_glyph", "ember_tornado", "solar_crown", "arcane_nova"]:
+		if kind in ["flame_glyph", "ember_tornado", "solar_crown", "arcane_nova", "solar_lance"]:
 			return "mage-swing"
-		if kind in ["tide_lances", "frost_bolt", "gale_blades", "steam_burst", "glacier_prism", "storm_orbit"]:
+		if kind in ["tide_lances", "frost_bolt", "gale_blades", "steam_burst", "glacier_prism", "storm_orbit", "frost_orbit"]:
 			return "mage-gesture"
 	return "mage-cast"
 

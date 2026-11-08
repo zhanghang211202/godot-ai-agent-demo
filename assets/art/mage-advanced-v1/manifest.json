@@ -1,0 +1,8 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "reference": "assets/art/mage-campaign-v1/items/same-element-spells.png",
+  "assets": [
+    {"file": "items/advanced-spells.png", "width": 2172, "height": 724, "sha256": "df88122384da2ca9f07b7b0c6fa927d2e4d6c048c18df2649e4a1afe65e08ee9", "role": "First candidate: frost icon has three shards, not used in game"},
+    {"file": "items/advanced-spells-v2.png", "width": 2172, "height": 724, "sha256": "66bc5d9145081b0fb0e3665bfaf19925d064c4acb0ddf4caa28a68d80fa3461e", "reference": "items/advanced-spells.png", "role": "Selected two advanced icons; frost icon has four shards"}
+  ]
+}

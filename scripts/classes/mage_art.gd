@@ -5,14 +5,18 @@ const ROOT := "res://assets/art/mage-trial-v1/"
 const ICONS := ["spark", "fire_mote", "water_mote", "wind_mote", "flame_glyph", "tide_lances", "arcane_focus", "mage_ward"]
 const EXTRA_ICONS := ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado"]
 const SAME_ICONS := ["solar_crown", "glacier_prism", "storm_orbit", "arcane_nova"]
+const ADVANCED_ICONS := ["solar_lance", "frost_orbit"]
 const EXTRA_ROOT := "res://assets/art/mage-expansion-v1/"
 static var _icons: Dictionary = {}
 static var _enemy: Dictionary = {}
 static var _extra_icons: Dictionary = {}
 static var _same_icons: Dictionary = {}
+static var _advanced_icons: Dictionary = {}
 static var _enemies: Dictionary = {}
 
 static func icon(kind: String) -> Dictionary:
+	if kind in ADVANCED_ICONS:
+		return _advanced_icon(kind)
 	if kind in SAME_ICONS:
 		return _same_icon(kind)
 	if kind in EXTRA_ICONS:
@@ -54,6 +58,24 @@ static func _same_icon(kind: String) -> Dictionary:
 			atlas.region = Rect2(bounds)
 			_same_icons[SAME_ICONS[index]] = {"path": path, "texture": texture, "atlas": atlas, "source_rect": Rect2(bounds), "region": Rect2(region), "source_size": image.get_size()}
 	return _same_icons.get(kind, {})
+
+static func _advanced_icon(kind: String) -> Dictionary:
+	if _advanced_icons.is_empty():
+		var path := "res://assets/art/mage-advanced-v1/items/advanced-spells-v2.png"
+		var image := Image.load_from_file(path)
+		if image == null:
+			return {}
+		image.convert(Image.FORMAT_RGBA8)
+		var cell := Vector2i(image.get_width() / 2, image.get_height())
+		var texture := ImageTexture.create_from_image(image)
+		for index in range(ADVANCED_ICONS.size()):
+			var region := Rect2i(Vector2i(index * cell.x, 0), cell)
+			var bounds := _bounds(image, region)
+			var atlas := AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(bounds)
+			_advanced_icons[ADVANCED_ICONS[index]] = {"path": path, "texture": texture, "atlas": atlas, "source_rect": Rect2(bounds), "region": Rect2(region), "source_size": image.get_size()}
+	return _advanced_icons.get(kind, {})
 
 static func enemy(id: String = "sentinel") -> Dictionary:
 	id = {"campaign_sentinel": "sentinel", "campaign_moth": "mirror_moth", "campaign_golem": "thorn_golem"}.get(id, id)

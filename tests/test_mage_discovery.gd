@@ -33,7 +33,10 @@ func _model() -> void:
 	var recipes: Array[Dictionary] = Catalog.recipes_for("mage")
 	var before := _state(run)
 	for recipe in recipes:
-		check(Guide.availability(run, recipe).available, str(recipe.result) + " ingredients are counted from actual board and finite source")
+		if recipe.result in ["solar_lance", "frost_orbit"]:
+			check(not Guide.availability(run, recipe).available, str(recipe.result) + " requires its base spell to be woven first")
+		else:
+			check(Guide.availability(run, recipe).available, str(recipe.result) + " ingredients are counted from actual board and finite source")
 	var choice := Guide.choose(run, recipes[2])
 	check(choice.ok and choice.held.origin == "source" and choice.held.index == 1 and choice.target_uid == 1 and choice.preview.ok, "Ice arrow selects water and an existing spark without spending")
 	var hints := Guide.target_hints(run, choice.held)
@@ -84,7 +87,7 @@ func _run() -> void:
 	ui.grid.set_process(false)
 	var original := _state(ui.run)
 	await _click(ui.recipe_button.get_global_rect().get_center())
-	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 10, "Real button opens ten actual recipe cards")
+	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 12, "Real button opens twelve actual recipe cards")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _frame in range(4): await process_frame
