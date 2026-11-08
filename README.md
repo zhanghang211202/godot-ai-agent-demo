@@ -6,6 +6,8 @@
 
 五战有独立的递进难度，旧单战数值保持不变；法师根据术式使用基础施法、挥杖或手势动作。新动作由 AnimationPlayer 跟随真实发射和命中时机，仍是四个关键姿势，不改变道具冷却或自动战斗规则。[平衡与动画记录](docs/devlog/2026-11-07-mage-balance-motion.ja.md)
 
+战前可点击右侧「予行演習」，试算当前关卡敌人的胜负、剩余 HP、护盾减伤和各术式贡献；不会消耗素材或发放奖励，调整配置后需重新试算。[试算记录](docs/devlog/2026-11-08-mage-campaign-rehearsal.ja.md)
+
 ```powershell
 npm run game:mage
 ```

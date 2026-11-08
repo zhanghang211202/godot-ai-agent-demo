@@ -232,7 +232,16 @@ func _build_interface() -> void:
 	source_list.add_child(recipe_label)
 	var details := _panel(body, 285, 0.9)
 	phase_label = _label("", 20)
-	details.add_child(phase_label)
+	if campaign_focus:
+		var phase_header := HBoxContainer.new()
+		details.add_child(phase_header)
+		phase_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		phase_header.add_child(phase_label)
+		rehearsal_button = _button("予行演習", _rehearse)
+		rehearsal_button.tooltip_text = "この敵との戦闘を試算。報酬や素材の消費はありません。"
+		phase_header.add_child(rehearsal_button)
+	else:
+		details.add_child(phase_label)
 	details_scroll = ScrollContainer.new()
 	details_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	details_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -771,16 +780,16 @@ func _notice(message: String) -> void:
 func _rehearsal_state_signature() -> String:
 	# Include even unused raw elements: any committed layout edit invalidates the
 	# visible forecast, while selecting/rotating a held preview does not.
-	return JSON.stringify([run.class_id, run.items, run.sources, run.gold, run.hp, run.max_hp])
+	return JSON.stringify([run.class_id, run.items, run.sources, run.gold, run.hp, run.max_hp, encounter_id if campaign_focus else "", campaign_stage if campaign_focus else -1])
 
 func _rehearse() -> void:
 	if not mage_focus or run.phase != "prepare" or (recipe_overlay != null and recipe_overlay.visible):
 		return
-	var result: Dictionary = Rehearsal.simulate(run)
+	var result: Dictionary = Rehearsal.simulate(run, [encounter_id] if campaign_focus else Encounters.IDS)
 	if not result.ok:
 		_notice(str(result.message))
 		return
-	var lines: PackedStringArray = ["予行演習 · 現在の配置", "乱数なしの現在ルールで仮想戦闘。報酬・素材消費なし。"]
+	var lines: PackedStringArray = ["第%d戦の予行演習 · 現在の配置" % (campaign_stage + 1) if campaign_focus else "予行演習 · 現在の配置", "乱数なしの現在ルールで仮想戦闘。報酬・素材消費なし。"]
 	for encounter: Dictionary in result.encounters:
 		var summary: Dictionary = encounter.summary
 		var outcome := "勝利" if summary.result == "won" else "時間切れ" if summary.result == "timeout" else "敗北"

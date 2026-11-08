@@ -17,6 +17,7 @@
     "game:mage:legs:test": "node scripts/godot.mjs render-script res://tests/test_mage_leg_revision.gd",
     "game:mage:cast-sync:test": "node scripts/godot.mjs render-script res://tests/test_mage_cast_sync.gd",
     "game:mage:campaign:test": "node scripts/godot.mjs render-script res://tests/test_mage_campaign.gd",
+    "game:mage:campaign:rehearsal:test": "node scripts/godot.mjs render-script res://tests/test_mage_campaign_rehearsal.gd",
     "game:mage:balance:test": "node scripts/godot.mjs script res://tests/test_mage_balance.gd",
     "game:mage:motion-v2:test": "node scripts/godot.mjs render-script res://tests/test_mage_motion_variants.gd",
     "game:mage:save:test": "node scripts/godot.mjs render-script res://tests/test_mage_campaign_save.gd",
