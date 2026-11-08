@@ -38,6 +38,7 @@ var save_button: Button
 var load_button: Button
 var discard_button: Button
 var rotate_button: Button
+var undo_button: Button
 var replay_button: Button
 var rehearsal_button: Button
 var workspace_button: Button
@@ -48,6 +49,8 @@ var detail_icon: TextureRect
 var details_scroll: ScrollContainer
 var details_content: VBoxContainer
 var _rehearsal_signature := ""
+var _undo_items: Array[Dictionary] = []
+var _undo_signature := ""
 var speed := 1.0
 var encounter_id := "sentinel"
 var encounter_selector: OptionButton
@@ -180,7 +183,16 @@ func _build_interface() -> void:
 	root.add_child(body)
 	var inventory := _panel(body, 440, 1.35)
 	carrier_label = _label("", 22)
-	inventory.add_child(carrier_label)
+	if mage_focus:
+		var carrier_header := HBoxContainer.new()
+		inventory.add_child(carrier_header)
+		carrier_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		carrier_header.add_child(carrier_label)
+		undo_button = _button("戻す", _undo_placement)
+		undo_button.tooltip_text = "盤内の移動・回転・合成を1手戻します。吸収・凝結・廃棄・戦闘は戻せず、読み込みで履歴は消えます。Ctrl+Z"
+		carrier_header.add_child(undo_button)
+	else:
+		inventory.add_child(carrier_label)
 	grid = GridView.new()
 	grid.run = run
 	grid.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -480,6 +492,7 @@ func _new_class(id: String) -> void:
 	if not result.ok:
 		_notice(str(result.message))
 		return
+	_clear_undo()
 	if campaign_focus:
 		campaign_stage = 0
 		encounter_id = Campaign.encounter(campaign_stage)
@@ -551,6 +564,10 @@ func _on_cell_selected(cell: Vector2i) -> void:
 
 func _on_drop(data: Dictionary, cell: Vector2i) -> void:
 	var result: Dictionary
+	var prior_items: Array[Dictionary] = []
+	var owned := str(data.get("origin", "")) == "bag"
+	if mage_focus and owned:
+		prior_items.assign(run.items.duplicate(true))
 	var rotated: bool = bool(data.get("rotated", false))
 	# Native Godot drag data is a snapshot. R updates the active held item;
 	# apply that orientation only when this drop is the same source/item.
@@ -564,6 +581,11 @@ func _on_drop(data: Dictionary, cell: Vector2i) -> void:
 		result = run.move(int(data.get("uid", -1)), cell, rotated)
 	_notice(str(result.message))
 	if result.ok:
+		if mage_focus and owned and prior_items != run.items:
+			_undo_items.assign(prior_items)
+			_undo_signature = _undo_state_signature()
+		elif mage_focus and not owned:
+			_clear_undo()
 		_clear_selection()
 		if mage_focus and str(result.event) == "merge":
 			grid.show_merge_feedback(int(result.uid))
@@ -586,10 +608,34 @@ func _discard() -> void:
 	var result: Dictionary = run.discard(selected_uid)
 	_notice(str(result.message))
 	if result.ok:
+		_clear_undo()
 		_clear_selection()
 	_sync()
 	if result.ok:
 		_autosave_campaign_change()
+
+func _undo_state_signature() -> String:
+	return JSON.stringify([run.class_id, run.items, run.sources, run.gold, run.hp, run.max_hp, run._next_uid, run.discarded_materials, run.phase, campaign_stage, encounter_id])
+
+func _clear_undo() -> void:
+	_undo_items.clear()
+	_undo_signature = ""
+
+func _undo_placement() -> void:
+	if not mage_focus or run.phase != "prepare" or _undo_signature.is_empty() or (recipe_overlay != null and recipe_overlay.visible):
+		return
+	if _undo_signature != _undo_state_signature():
+		_clear_undo()
+		_notice("準備状態が変わったため元に戻せません。")
+		_sync()
+		return
+	run.items.assign(_undo_items.duplicate(true))
+	_clear_undo()
+	_clear_selection()
+	grid.clear_merge_feedback()
+	_notice("直前の盤内操作を元に戻しました。")
+	_sync()
+	_autosave_campaign_change()
 
 func _clear_selection() -> void:
 	held = {}
@@ -633,6 +679,7 @@ func _load() -> void:
 	var result: Dictionary = CampaignSave.load_run(run, campaign_checkpoint_path) if campaign_focus else Save.load_run(run, checkpoint_path)
 	_notice(str(result.message))
 	if result.ok:
+		_clear_undo()
 		if campaign_focus:
 			campaign_stage = int(result.stage)
 			encounter_id = Campaign.encounter(campaign_stage)
@@ -683,6 +730,7 @@ func _primary_action() -> void:
 func _advance_campaign() -> void:
 	if not campaign_focus or run.phase != "won" or campaign_stage + 1 >= Encounters.CAMPAIGN_IDS.size():
 		return
+	_clear_undo()
 	campaign_stage += 1
 	encounter_id = Campaign.encounter(campaign_stage)
 	run.hp = run.max_hp
@@ -711,6 +759,7 @@ func _start_battle() -> void:
 		return
 	if persistence_enabled and not _save():
 		return
+	_clear_undo()
 	_before_battle = {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "seed_value": run.seed_value, "next_uid": run._next_uid, "discarded": run.discarded_materials.duplicate(true)}
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)
@@ -729,6 +778,7 @@ func _restore_before_battle() -> void:
 	if _before_battle.is_empty():
 		_notice("今回の戦前データはありません。以前の保存データを読めます。")
 		return
+	_clear_undo()
 	_set_workspace_open(true)
 	run.new_run(str(_before_battle.class_id), int(_before_battle.seed_value))
 	_rehearsal_signature = ""
@@ -806,6 +856,8 @@ func _sync() -> void:
 	if not _rehearsal_signature.is_empty() and _rehearsal_signature != _rehearsal_state_signature():
 		_rehearsal_signature = ""
 		summary_label.text = "配置が変わりました。予行演習をもう一度実行してください。"
+	if not _undo_signature.is_empty() and _undo_signature != _undo_state_signature():
+		_clear_undo()
 	arena.playback_speed = speed
 	arena.encounter_id = encounter_id if mage_focus else "sentinel"
 	if encounter_selector != null:
@@ -877,6 +929,8 @@ func _sync() -> void:
 		recipe_button.disabled = run.phase != "prepare"
 	if rehearsal_button != null:
 		rehearsal_button.disabled = run.phase != "prepare"
+	if undo_button != null:
+		undo_button.disabled = run.phase != "prepare" or _undo_signature.is_empty()
 	for id in class_buttons:
 		class_buttons[id].disabled = run.phase == "battle"
 	grid.update_preview()
@@ -946,6 +1000,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	match event.keycode:
 		KEY_R: _rotate()
+		KEY_Z:
+			if event.ctrl_pressed: _undo_placement()
 		KEY_SPACE: _primary_action()
 		KEY_ESCAPE:
 			_clear_selection()

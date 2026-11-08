@@ -8,6 +8,8 @@
 
 战前可点击右侧「予行演習」，试算当前关卡敌人的胜负、剩余 HP、护盾减伤和各术式贡献；不会消耗素材或发放奖励，调整配置后需重新试算。[试算记录](docs/devlog/2026-11-08-mage-campaign-rehearsal.ja.md)
 
+法师准备区的「戻す」或 Ctrl+Z 可以撤销一次盘内移动、旋转或盘内合成。吸收、凝结、丢弃、开战和读档会清空撤销记录；撤销记录不会跨重启保留。[操作记录](docs/devlog/2026-11-08-mage-undo.ja.md)
+
 ```powershell
 npm run game:mage
 ```
