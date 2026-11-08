@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync } from 'node:child_process';
@@ -53,9 +53,9 @@ const env = {
   GODOT_MCP_START_SERVER: 'true',
 };
 
-function run(executable, parameters) {
+function run(executable, parameters, cwd = projectRoot) {
   const result = spawnSync(executable, parameters, {
-    cwd: projectRoot,
+    cwd,
     env,
     stdio: 'inherit',
     windowsHide: true,
@@ -74,6 +74,26 @@ if (command === 'cli') {
     process.exit(1);
   }
   process.exit(run(editor, [...(command === 'script' ? ['--headless'] : []), '--path', projectRoot, '--script', ...args]));
+} else if (command === 'image-pack-test') {
+  // Build a small isolated PCK, then run it without the source PNGs on disk.
+  const fixture = mkdtempSync(path.join(tools, 'image-pack-'));
+  const packed = path.join(tools, `${path.basename(fixture)}.pck`);
+  for (const name of ['project.godot', 'export_presets.cfg', 'smoke.tscn', 'smoke.gd', 'cold.tscn', 'cold.gd']) {
+    copyFileSync(path.join(projectRoot, 'tests', 'fixtures', 'image-pack', name), path.join(fixture, name));
+  }
+  for (const [source, target] of [
+    ['scripts/classes/class_image.gd', 'class_image.gd'],
+    ['assets/art/mage-leg-revision-v1/characters/mage-idle.png', 'mage-idle.png'],
+    ['assets/art/mage-trial-v1/enemies/moon-sentinel.png', 'moon-sentinel.png'],
+    ['assets/art/mage-advanced-v1/items/advanced-spells-v2.png', 'advanced-spells-v2.png'],
+  ]) copyFileSync(path.join(projectRoot, source), path.join(fixture, target));
+  let status = run(editor, ['--headless', '--path', fixture, 'res://cold.tscn']);
+  if (status !== 0) process.exit(status);
+  status = run(editor, ['--headless', '--path', fixture, '--editor', '--quit']);
+  if (status !== 0) process.exit(status);
+  status = run(editor, ['--headless', '--path', fixture, '--export-pack', 'Pack Fixture', packed]);
+  if (status !== 0) process.exit(status);
+  process.exit(run(editor, ['--headless', '--main-pack', packed], tools));
 } else if (command === 'class-capture' || command === 'mage-capture') {
   // Foreground process for bounded native render capture; the caller chooses
   // fresh output paths and --auto-quit. Keep the same local tool environment.

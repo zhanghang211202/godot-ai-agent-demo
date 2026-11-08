@@ -1,6 +1,7 @@
 extends RefCounted
 ## Dedicated mage-slice atlases. Source PNGs are never resampled or rewritten.
 
+const ClassImage = preload("res://scripts/classes/class_image.gd")
 const ROOT := "res://assets/art/mage-trial-v1/"
 const ICONS := ["spark", "fire_mote", "water_mote", "wind_mote", "flame_glyph", "tide_lances", "arcane_focus", "mage_ward"]
 const EXTRA_ICONS := ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado"]
@@ -25,7 +26,7 @@ static func icon(kind: String) -> Dictionary:
 		return {}
 	if _icons.is_empty():
 		var path := ROOT + "items/mage-items.png"
-		var image := Image.load_from_file(path)
+		var image := ClassImage.load_image(path)
 		if image == null:
 			return {}
 		image.convert(Image.FORMAT_RGBA8)
@@ -43,7 +44,7 @@ static func icon(kind: String) -> Dictionary:
 static func _same_icon(kind: String) -> Dictionary:
 	if _same_icons.is_empty():
 		var path := "res://assets/art/mage-campaign-v1/items/same-element-spells.png"
-		var image := Image.load_from_file(path)
+		var image := ClassImage.load_image(path)
 		if image == null:
 			return {}
 		image.convert(Image.FORMAT_RGBA8)
@@ -62,7 +63,7 @@ static func _same_icon(kind: String) -> Dictionary:
 static func _advanced_icon(kind: String) -> Dictionary:
 	if _advanced_icons.is_empty():
 		var path := "res://assets/art/mage-advanced-v1/items/advanced-spells-v2.png"
-		var image := Image.load_from_file(path)
+		var image := ClassImage.load_image(path)
 		if image == null:
 			return {}
 		image.convert(Image.FORMAT_RGBA8)
@@ -86,7 +87,7 @@ static func enemy(id: String = "sentinel") -> Dictionary:
 	if not _enemy.is_empty():
 		return _enemy
 	var path := ROOT + "enemies/moon-sentinel.png"
-	var image := Image.load_from_file(path)
+	var image := ClassImage.load_image(path)
 	if image == null:
 		return {}
 	image.convert(Image.FORMAT_RGBA8)
@@ -112,7 +113,7 @@ static func enemy(id: String = "sentinel") -> Dictionary:
 static func _extra_icon(kind: String) -> Dictionary:
 	if _extra_icons.is_empty():
 		var path := EXTRA_ROOT + "items/spell-items.png"
-		var image := Image.load_from_file(path)
+		var image := ClassImage.load_image(path)
 		if image == null:
 			return {}
 		image.convert(Image.FORMAT_RGBA8)
@@ -136,7 +137,7 @@ static func _extra_enemy(id: String) -> Dictionary:
 	if filename.is_empty():
 		return {}
 	var path := ("res://assets/art/mage-campaign-v1/enemies/" if id == "moon_crowned" else "res://assets/art/mage-scribe-v1/enemies/" if id == "astral_scribe" else EXTRA_ROOT + "enemies/") + filename
-	var image := Image.load_from_file(path)
+	var image := ClassImage.load_image(path)
 	if image == null:
 		return {}
 	image.convert(Image.FORMAT_RGBA8)

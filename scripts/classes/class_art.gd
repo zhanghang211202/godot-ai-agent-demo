@@ -1,6 +1,7 @@
 extends RefCounted
 ## Cache for newly drawn static battle-pose candidates. No source PNG is edited.
 
+const ClassImage = preload("res://scripts/classes/class_image.gd")
 const ROOT := "res://assets/art/c1-static-v1/"
 const FILES := {
 	"mage-idle": "characters/mage-idle.png",
@@ -20,9 +21,7 @@ static func get_asset(id: String) -> Dictionary:
 	if _cache.has(id):
 		return _cache[id]
 	var path := asset_path(id)
-	if path.is_empty() or not FileAccess.file_exists(path):
-		return {}
-	var picture := Image.load_from_file(path)
+	var picture := ClassImage.load_image(path)
 	if picture == null or picture.is_empty():
 		return {}
 	var source_rect := Rect2(Vector2.ZERO, Vector2(picture.get_size()))

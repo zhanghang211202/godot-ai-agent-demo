@@ -1,6 +1,7 @@
 extends RefCounted
 ## Presentation only. Event timestamps, damage, cooldowns and saves stay in ClassBattle.
 
+const ClassImage = preload("res://scripts/classes/class_image.gd")
 const ROOT := "res://assets/art/c1-motion-v1/characters/"
 const MAGE_CAST_PATH := "res://assets/art/mage-leg-revision-v1/characters/mage-cast.png"
 const MAGE_SWING_PATH := "res://assets/art/mage-motion-v2/characters/mage-swing.png"
@@ -100,7 +101,7 @@ static func get_asset(id: String) -> Dictionary:
 	if not FILES.has(id):
 		return {}
 	var path := MAGE_CAST_PATH if id == "mage-cast" else MAGE_SWING_PATH if id == "mage-swing" else MAGE_GESTURE_PATH if id == "mage-gesture" else ROOT + str(FILES[id])
-	var image := Image.load_from_file(path)
+	var image := ClassImage.load_image(path)
 	if image == null or image.is_empty():
 		return {}
 	image.convert(Image.FORMAT_RGBA8)
