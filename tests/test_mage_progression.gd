@@ -168,6 +168,20 @@ func _play_route(kind: String) -> void:
 			check(ui.summary_label.text.contains("月蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #8"), "The battle recap distinguishes the two actual companion sources")
 		if kind == "crowned" and stage == 2:
 			check(ui.summary_label.text.contains("月冠蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #9"), "The recap distinguishes upgraded and basic companion sources")
+			check(not ui.workspace_panel.visible and ui.workspace_button.text == "戦闘結果を見る" and ui.status_label.text.contains("戦闘結果を見る"), "Victory makes the hidden recap discoverable without shrinking the stage")
+			await _capture("crowned-recap-button.png")
+			ui.workspace_button.pressed.emit()
+			for _i in range(4): await process_frame
+			check(ui.workspace_panel.visible and ui.details_content.get_child(0) == ui.summary_label and ui.details_scroll.scroll_vertical == 0 and ui.status_label.text.contains("右側で戦闘結果"), "Opening the result puts the real source breakdown first and updates the hint")
+			await _capture("crowned-recap.png")
+			root.size = Vector2i(1280, 800)
+			for _i in range(4): await process_frame
+			check(ui.summary_label.get_global_rect().position.y >= ui.details_scroll.get_global_rect().position.y and ui.summary_label.get_global_rect().position.y < ui.details_scroll.get_global_rect().end.y, "The first recap line is visible at 1280×800")
+			await _capture("crowned-recap-1280.png")
+			root.size = Vector2i(1440, 960)
+			for _i in range(4): await process_frame
+			ui.workspace_button.pressed.emit()
+			check(not ui.workspace_panel.visible and ui.workspace_button.text == "戦闘結果を見る" and ui.status_label.text.contains("戦闘結果を見る"), "The result can be collapsed and reopened")
 		print("Progression ", kind, " stage ", stage + 1, ": ", ui.battle.phase, " HP ", ui.battle.hp, " time ", ui.battle.battle_time)
 		if ui.battle.phase != "won": break
 		last_stage = stage
@@ -183,6 +197,8 @@ func _play_route(kind: String) -> void:
 			break
 		ui._primary_action()
 		check(ui.campaign_stage == stage + 1 and ui.run.phase == "prepare", kind + " advances to the next real preparation")
+		if kind == "crowned" and stage == 2:
+			check(not ui._has_battle_summary and ui.workspace_panel.visible and ui.workspace_button.text == "盤面を畳む", "Advancing clears the previous result while retaining the new preparation")
 		if kind == "solar" and stage == 0:
 			check(ui.run.gold == 4 and Guide.plan(ui.run, solar).available, "First victory unlocks the two-fire route with an earned paid element")
 			await _capture("solar-stage-two-before.png")

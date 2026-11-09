@@ -298,7 +298,11 @@ func _run() -> void:
 		ui._process(0.1)
 		ui.arena._process(0.1)
 	check(ui.battle.phase == "lost" and ui.run.gold == 0 and ui.primary_button.disabled, "A defeat grants no residue and cannot advance")
+	check(ui.workspace_button.text == "戦闘結果を見る" and ui.summary_label.text.contains("失敗"), "Defeat exposes the real battle recap")
+	ui.workspace_button.pressed.emit()
+	check(ui.workspace_panel.visible and ui.details_content.get_child(0) == ui.summary_label, "The defeat recap opens at the top")
 	ui._restore_before_battle()
+	check(not ui._has_battle_summary and ui.workspace_button.text == "盤面を畳む", "Retry clears the stale result affordance")
 	check(ui.campaign_stage == 0 and ui.run.phase == "prepare" and ui.run.gold == 0 and ui.run.item_by_uid(1).is_empty(), "Retry restores the same legally prepared build")
 	await _render_new_spells(ui)
 	for path in fingerprints:

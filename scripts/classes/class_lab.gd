@@ -45,6 +45,7 @@ var rehearsal_button: Button
 var workspace_button: Button
 var workspace_panel: HBoxContainer
 var summary_label: Label
+var _has_battle_summary := false
 var preview_label: Label
 var detail_icon: TextureRect
 var details_scroll: ScrollContainer
@@ -504,6 +505,7 @@ func _new_class(id: String) -> void:
 		_notice("戦闘中は職業を変更できません。戦闘を終えるか戦前に戻してください。")
 		return
 	_close_recipe_book()
+	_has_battle_summary = false
 	_set_workspace_open(true)
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)
@@ -712,6 +714,7 @@ func _load() -> void:
 		if campaign_focus:
 			campaign_stage = int(result.stage)
 			encounter_id = Campaign.encounter(campaign_stage)
+		_has_battle_summary = false
 		_set_workspace_open(true)
 		_rehearsal_signature = ""
 		details_content.move_child(summary_label, details_content.get_child_count() - 1)
@@ -747,10 +750,15 @@ func _set_workspace_open(open: bool) -> void:
 	if not mage_focus or workspace_panel == null:
 		return
 	workspace_panel.visible = open
-	workspace_button.text = "盤面を畳む" if open else "盤面を開く"
+	workspace_button.text = "盤面を畳む" if open else "戦闘結果を見る" if _has_battle_summary else "盤面を開く"
+	workspace_button.tooltip_text = "戦闘結果と盤面を表示します。" if not open and _has_battle_summary else "戦闘舞台を広く表示します。再度押すと盤面を表示します。"
 
 func _toggle_workspace() -> void:
 	_set_workspace_open(not workspace_panel.visible)
+	if _has_battle_summary:
+		var closed_hint := " 「戦闘結果を見る」で振り返れます。"
+		var open_hint := " 右側で戦闘結果を確認できます。"
+		status_label.text = status_label.text.replace(closed_hint, open_hint) if workspace_panel.visible else status_label.text.replace(open_hint, closed_hint)
 
 var _before_battle: Dictionary = {}
 
@@ -773,6 +781,7 @@ func _advance_campaign() -> void:
 	arena.reset_presentation()
 	_before_battle = {}
 	grid.clear_merge_feedback()
+	_has_battle_summary = false
 	_set_workspace_open(true)
 	_clear_selection()
 	summary_label.text = "次の戦いに備えよう。HPは全回復、配置・元素・魔力残滓は引き継ぎます。凝結欄はスクロールできます。"
@@ -801,6 +810,7 @@ func _start_battle() -> void:
 	arena.reset_presentation()
 	grid.clear_merge_feedback()
 	run.phase = "battle"
+	_has_battle_summary = false
 	_set_workspace_open(false)
 	_last_phase = "battle"
 	_clear_selection()
@@ -812,6 +822,7 @@ func _restore_before_battle() -> void:
 		_notice("今回の戦前データはありません。以前の保存データを読めます。")
 		return
 	_clear_undo()
+	_has_battle_summary = false
 	_set_workspace_open(true)
 	run.new_run(str(_before_battle.class_id), int(_before_battle.seed_value))
 	run.campaign_rules_version = int(_before_battle.campaign_rules_version)
@@ -1040,15 +1051,21 @@ func _show_placement_preview(preview: Dictionary) -> void:
 func _show_summary() -> void:
 	var summary: Dictionary = battle.get_summary()
 	var lines: PackedStringArray = ["戦闘の振り返り · %s" % ("勝利" if battle.phase == "won" else "失敗"), "%.2f 秒 · 与ダメージ %d · 被ダメージ %d" % [float(summary.duration), int(summary.damage_dealt), int(summary.damage_taken)]]
+	lines.append("術式別：ダメージ · 発動 / ヒット")
 	for source in summary.by_source:
-		lines.append("%s #%d：%d ダメージ / %d 回発動 / %d 回" % [source.name, int(source.uid), int(source.damage), int(source.activations), int(source.hits)])
+		lines.append("%s #%d：%d · %d / %d" % [source.name, int(source.uid), int(source.damage), int(source.activations), int(source.hits)])
 	if campaign_focus and battle.phase == "won":
 		lines.append("魔力残滓 +%d · 所持 %d" % [int(Campaign.REWARDS[campaign_stage]), run.gold])
 	summary_label.text = "\n".join(lines)
+	_has_battle_summary = true
+	details_content.move_child(summary_label, 0)
+	details_scroll.scroll_vertical = 0
+	_set_workspace_open(workspace_panel.visible)
+	var recap_hint := " 右側で戦闘結果を確認できます。" if workspace_panel.visible else " 「戦闘結果を見る」で振り返れます。"
 	if campaign_focus:
-		_notice("五つの試練を踏破！" if battle.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else "勝利！魔力残滓 +%d（所持 %d）。次の戦いへ。" % [int(Campaign.REWARDS[campaign_stage]), run.gold] if battle.phase == "won" else "敗北。戦前に戻して配置を変え、再挑戦できます。")
+		_notice(("五つの試練を踏破！" if battle.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else "勝利！魔力残滓 +%d（所持 %d）。次の戦いへ。" % [int(Campaign.REWARDS[campaign_stage]), run.gold] if battle.phase == "won" else "敗北。戦前に戻して配置を変え、再挑戦できます。") + recap_hint)
 	else:
-		_notice("戦闘終了。戦前に戻り魔法や敵を変えて再挑戦できます。" if mage_focus else "戦闘終了。戦前の配置に戻して比較できます。")
+		_notice(("戦闘終了。戦前に戻って再挑戦できます。" + recap_hint) if mage_focus else "戦闘終了。戦前の配置に戻して比較できます。")
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo:
