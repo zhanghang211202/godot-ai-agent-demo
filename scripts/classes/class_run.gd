@@ -235,6 +235,22 @@ func get_adjacency_bonus(item: Dictionary) -> int:
 				break
 	return bonus
 
+func get_interval_factor(item: Dictionary) -> float:
+	var definition: Dictionary = get_definition(str(item.get("kind", "")))
+	if definition.is_empty() or str(definition.category) != "attack" or str(definition.class_id) != class_id:
+		return 1.0
+	var factor := 1.0
+	var rect := Rect2i(item.pos, get_item_size(item))
+	for support: Dictionary in items:
+		var support_def: Dictionary = get_definition(str(support.kind))
+		if support_def.get("class_id", "") != class_id or not support_def.has("interval_factor"):
+			continue
+		for cell: Vector2i in get_support_cells(support):
+			if rect.has_point(cell):
+				factor *= float(support_def.interval_factor)
+				break
+	return maxf(0.6, factor)
+
 func get_combat_config() -> Dictionary:
 	var actions: Array[Dictionary] = []
 	var supports: Array[Dictionary] = []
@@ -246,7 +262,15 @@ func get_combat_config() -> Dictionary:
 		armor += int(definition.get("armor", 0))
 		if str(definition["category"]) == "attack":
 			var bonus: int = get_adjacency_bonus(item)
-			actions.append({"uid": item["uid"], "kind": item["kind"], "name": definition["name"], "damage": int(definition["damage"]) + bonus, "base_damage": definition["damage"], "support_bonus": bonus, "hits": definition["hits"], "interval": definition["interval"], "warmup": definition["warmup"], "event_type": definition["event_type"]})
+			var factor := get_interval_factor(item)
+			var interval := float(definition.interval)
+			if factor < 1.0:
+				# Battle's clock resolves in 50 ms steps; show the same effective interval.
+				interval = ceilf(maxf(float(definition.warmup), interval * factor) / 0.05 - 0.000001) * 0.05
+			var action := {"uid": item["uid"], "kind": item["kind"], "name": definition["name"], "damage": int(definition["damage"]) + bonus, "base_damage": definition["damage"], "support_bonus": bonus, "hits": definition["hits"], "interval": interval, "warmup": definition["warmup"], "event_type": definition["event_type"]}
+			if factor < 1.0:
+				action["interval_factor"] = factor
+			actions.append(action)
 		elif str(definition["category"]) == "support":
 			supports.append({"uid": item["uid"], "kind": item["kind"], "name": definition["name"], "bonus": definition["support_bonus"], "cells": get_support_cells(item)})
 	return {"class_id": class_id, "hp": hp, "max_hp": max_hp, "armor": armor, "actions": actions, "supports": supports, "rules_version": Catalog.RULES_VERSION}

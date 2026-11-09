@@ -26,7 +26,7 @@ func _initialize() -> void:
 
 func _same_elements() -> void:
 	var recipes := Catalog.recipes_for("mage")
-	check(recipes.size() == 12, "Six mixed, four same-ingredient and two advanced recipes are available")
+	check(recipes.size() == 13, "Twelve spell recipes and one wind-support recipe are available")
 	for pair in [["solar_crown", 0], ["glacier_prism", 1], ["storm_orbit", 2], ["arcane_nova", -1]]:
 		var run := Run.new()
 		run.new_run("mage")
@@ -200,7 +200,7 @@ func _run() -> void:
 	ui._sync()
 	await _capture("stage-1-prepare.png")
 	ui.recipe_button.pressed.emit()
-	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 12, "Campaign can inspect all twelve recipes")
+	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 13, "Campaign can inspect all thirteen recipes")
 	await _capture("campaign-recipes.png")
 	ui._close_recipe_book()
 	for stage in range(5):

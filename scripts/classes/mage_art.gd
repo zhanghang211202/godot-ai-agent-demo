@@ -13,9 +13,25 @@ static var _enemy: Dictionary = {}
 static var _extra_icons: Dictionary = {}
 static var _same_icons: Dictionary = {}
 static var _advanced_icons: Dictionary = {}
+static var _wind_prism: Dictionary = {}
 static var _enemies: Dictionary = {}
 
 static func icon(kind: String) -> Dictionary:
+	if kind == "wind_prism":
+		if _wind_prism.is_empty():
+			var path := "res://assets/art/mage-haste-v1/items/wind-prism.png"
+			var image := ClassImage.load_image(path)
+			if image == null or image.is_empty():
+				return {}
+			image.convert(Image.FORMAT_RGBA8)
+			var region := Rect2i(Vector2i.ZERO, image.get_size())
+			var bounds := _bounds(image, region)
+			var texture := ImageTexture.create_from_image(image)
+			var atlas := AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(bounds)
+			_wind_prism = {"path": path, "texture": texture, "atlas": atlas, "source_rect": Rect2(bounds), "region": Rect2(region), "source_size": image.get_size()}
+		return _wind_prism
 	if kind in ADVANCED_ICONS:
 		return _advanced_icon(kind)
 	if kind in SAME_ICONS:

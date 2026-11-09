@@ -14,7 +14,7 @@ const SHORT_LABELS := {
 	"mage_ward": "護符", "iron_blade": "長剣", "greatblade": "大剣",
 	"charge_seal": "溜", "knight_ward": "装甲",
 	"frost_bolt": "氷矢", "gale_blades": "風刃", "steam_burst": "蒸爆", "ember_tornado": "炎渦",
-	"solar_crown": "三連星", "glacier_prism": "氷槍", "storm_orbit": "暴風", "arcane_nova": "星環",
+	"solar_crown": "三連星", "glacier_prism": "氷槍", "storm_orbit": "暴風", "arcane_nova": "星環", "wind_prism": "疾風環",
 	"solar_lance": "熾槍", "frost_orbit": "霜嵐",
 }
 var run: RefCounted

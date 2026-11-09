@@ -370,7 +370,10 @@ func _draw() -> void:
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
 	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素の試練" if run.class_id == "mage" else " · 動作サンプル"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	var recipes_count := Catalog.recipes_for("mage").size()
-	var note := "%d種類の魔法 · %d種類の組み合わせ" % [recipes_count + 1, recipes_count] if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
+	var spells_count := 1
+	for recipe: Dictionary in Catalog.recipes_for("mage"):
+		if Catalog.definition(recipe.result).category == "attack": spells_count += 1
+	var note := "%d種類の魔法 · %d種類の組み合わせ" % [spells_count, recipes_count] if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)

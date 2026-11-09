@@ -87,21 +87,27 @@ func _run() -> void:
 	ui.grid.set_process(false)
 	var original := _state(ui.run)
 	await _click(ui.recipe_button.get_global_rect().get_center())
-	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 12, "Real button opens twelve actual recipe cards")
+	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 13, "Real button opens thirteen actual recipe cards")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _frame in range(4): await process_frame
 		var viewport := Rect2(Vector2.ZERO, Vector2(dimensions))
 		var rects: Array = []
+		check(viewport.encloses(ui.recipe_scroll.get_global_rect()), str(dimensions) + " recipe scroll area remains within the window")
 		for card: Button in ui.recipe_cards:
+			ui.recipe_scroll.ensure_control_visible(card)
+			for _frame in range(2): await process_frame
 			var rect := card.get_global_rect()
-			check(viewport.encloses(rect) and rect.has_area(), str(dimensions) + " recipe card remains within the window")
+			check(ui.recipe_scroll.get_global_rect().encloses(rect) and rect.has_area(), str(dimensions) + " recipe card is reachable within the scroll area")
+			var local_rect := card.get_rect()
 			for previous: Rect2 in rects:
-				check(not rect.intersects(previous), str(dimensions) + " recipe cards do not overlap")
-			rects.append(rect)
+				check(not local_rect.intersects(previous), str(dimensions) + " recipe cards do not overlap")
+			rects.append(local_rect)
 		layouts.append({"viewport": [dimensions.x, dimensions.y], "cards": rects.map(func(rect: Rect2): return [rect.position.x, rect.position.y, rect.size.x, rect.size.y])})
 	root.size = Vector2i(1440, 960)
 	for _frame in range(4): await process_frame
+	ui.recipe_scroll.ensure_control_visible(ui.recipe_cards[2])
+	for _frame in range(2): await process_frame
 	await _capture("recipe-book")
 	await _click(ui.recipe_cards[2].get_global_rect().get_center())
 	check(not ui.recipe_overlay.visible and ui.held.origin == "source" and ui.held.index == 1 and _state(ui.run) == original, "Native ice card click selects water without consuming it")

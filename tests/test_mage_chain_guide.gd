@@ -99,6 +99,8 @@ func _ui_route(kind: String) -> void:
 	var base := "flame_glyph" if kind == "solar_lance" else "frost_bolt"
 	ui._open_recipe_book()
 	for _i in range(3): await process_frame
+	ui.recipe_scroll.ensure_control_visible(ui.recipe_cards[index])
+	for _i in range(2): await process_frame
 	check(not ui.recipe_cards[index].disabled and ui.recipe_cards[index].text.contains("先に"), kind + " card explains its available prerequisite")
 	if kind == "solar_lance":
 		await process_frame

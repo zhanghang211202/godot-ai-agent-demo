@@ -32,7 +32,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	_legacy_save()
 	await _legacy_ui()
-	for kind in ["mixed", "solar", "frost", "same"]:
+	for kind in ["mixed", "solar", "frost", "same", "haste"]:
 		await _play_route(kind)
 	for path in fingerprints:
 		check((FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing") == fingerprints[path], "Player save unchanged: " + path)
@@ -124,6 +124,10 @@ func _play_route(kind: String) -> void:
 			_drop(ui, 0, Vector2i(0, 2))
 		"same":
 			_drop(ui, 0, Vector2i(3, 1))
+		"haste":
+			_drop(ui, 2, Vector2i(2, 1))
+			_drop(ui, 0, Vector2i.ZERO)
+			_drop(ui, 1, Vector2i(0, 2))
 	var last_stage := -1
 	for stage in range(5):
 		var reference := Battle.new()
@@ -149,6 +153,7 @@ func _play_route(kind: String) -> void:
 				"solar": _drop(ui, 6, Vector2i.ZERO)
 				"frost": _drop(ui, 2, Vector2i.ZERO)
 				"same": _drop(ui, 6, Vector2i(3, 1))
+				"haste": _drop(ui, 3, Vector2i(1, 2))
 		elif stage == 1:
 			match kind:
 				"mixed": _drop(ui, 4, Vector2i(4, 1))
@@ -156,6 +161,10 @@ func _play_route(kind: String) -> void:
 				"same":
 					_drop(ui, 1, Vector2i(5, 1))
 					_drop(ui, 7, Vector2i(5, 1))
+				"haste": _drop(ui, 4, Vector2i(4, 1))
+		elif stage == 2 and kind == "haste":
+			_drop(ui, 5, Vector2i(3, 2))
+			await _capture("haste-stage-four.png")
 		if kind == "solar" and stage == 0:
 			check(ui.run.item_by_uid(1).kind == "solar_lance" and ui.run.gold == 2, "Solar upgrade consumes exactly two earned residue")
 			await _capture("solar-stage-two-after.png")

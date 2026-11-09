@@ -1,0 +1,13 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "prompt": "Use case: stylized-concept. Asset: one inventory icon for a 16-bit fantasy tactical RPG, used very small in a Godot 6x4 board. Create a single isolated magical haste sigil: an elegant violet amethyst crystal held in an antique gold moon-court bezel, with exactly two pale mint-green wind feathers curling around it to suggest quicker spellcasting. Detailed hand-clustered pixel art, dark navy outlines, warm gold highlights, crisp angular facets, readable silhouette and compact composition, matching a sophisticated 16-bit fantasy inventory icon. Front view, centered and fully visible with generous transparent padding. Genuine transparent background. No character, no hands, no lettering, no numbers, no watermark, no border or UI frame, no multiple objects or sprite sheet.",
+  "assets": [
+    {
+      "file": "items/wind-prism.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "d359a4e1dcdf60956e5a09e85dcf7ad0e05edc866c048be4756414150d4775b9",
+      "role": "Selected wind-speed support icon. The original generated PNG is preserved; the runtime derives an alpha >= 128 bounding box without rewriting it."
+    }
+  ]
+}

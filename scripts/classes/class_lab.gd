@@ -60,6 +60,7 @@ var recipe_button: Button
 var condense_button: Button
 var source_scroll: ScrollContainer
 var recipe_overlay: ColorRect
+var recipe_scroll: ScrollContainer
 var recipe_cards: Array[Button] = []
 var recipe_close_button: Button
 var persistence_enabled := true
@@ -357,14 +358,19 @@ func _build_recipe_book() -> void:
 	recipe_close_button = _button("閉じる", _close_recipe_book)
 	recipe_close_button.custom_minimum_size = Vector2(78, 40)
 	heading.add_child(recipe_close_button)
-	var hint := _label("魔法を選ぶと、合成できる素材が金枠で表示されます。赤枠は空き不足です。", 16, Color("b9c7d8"))
+	var hint := _label("術式や支援を選ぶと、合成できる素材が金枠で表示されます。赤枠は空き不足です。", 16, Color("b9c7d8"))
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(hint)
+	recipe_scroll = ScrollContainer.new()
+	recipe_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	recipe_scroll.follow_focus = true
+	column.add_child(recipe_scroll)
 	var cards := GridContainer.new()
 	cards.columns = 2
+	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cards.add_theme_constant_override("h_separation", 12)
 	cards.add_theme_constant_override("v_separation", 10)
-	column.add_child(cards)
+	recipe_scroll.add_child(cards)
 	for index in range(Catalog.recipes_for("mage").size()):
 		var card := _button("", func(): _choose_recipe(index))
 		card.custom_minimum_size = Vector2(0, 94)
@@ -385,6 +391,7 @@ func _open_recipe_book() -> void:
 		return
 	_refresh_recipe_book()
 	recipe_overlay.visible = true
+	recipe_scroll.scroll_vertical = 0
 	for card in recipe_cards:
 		if not card.disabled:
 			card.grab_focus()
@@ -413,7 +420,8 @@ func _refresh_recipe_book() -> void:
 		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
 		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "魔力残滓が不足" if route.insufficient_funds else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name)))
 		var card: Button = recipe_cards[index]
-		card.text = "%s\n%d×%d マス · %d×%d回 / %.1f秒\n%s" % [recipe.label, definition.size.x, definition.size.y, definition.damage, definition.hits, definition.interval, status]
+		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "接続術式の間隔 約20%短縮"
+		card.text = "%s\n%d×%d マス · %s\n%s" % [recipe.label, definition.size.x, definition.size.y, effect, status]
 		card.icon = MageArt.icon(str(recipe.result)).get("atlas", null)
 		card.disabled = not route.available
 		card.tooltip_text = str(definition.description)
@@ -726,6 +734,8 @@ func _resize_layout() -> void:
 		arena.custom_minimum_size.y = 350 if size.y >= 900 else 280
 	if grid != null:
 		grid.custom_minimum_size.y = (200 if size.y >= 900 else 164) if mage_focus else (230 if size.y >= 900 else 184)
+	if recipe_scroll != null:
+		recipe_scroll.custom_minimum_size.y = clampf(size.y - 250, 300, 660)
 
 func _set_workspace_open(open: bool) -> void:
 	if not mage_focus or workspace_panel == null:
@@ -918,7 +928,11 @@ func _sync() -> void:
 	detail_icon.texture = selected_art.get("atlas", null)
 	if not item.is_empty():
 		var definition: Dictionary = run.get_definition(item.kind)
-		detail_label.text = "%s\n\n%s\n\n使用マス：%d × %d\n方向支援：+%d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y, run.get_adjacency_bonus(item)]
+		detail_label.text = "%s\n\n%s\n\n使用マス：%d × %d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y]
+		if definition.category == "attack":
+			var action: Array = run.get_combat_config().actions.filter(func(entry: Dictionary): return entry.uid == item.uid)
+			if not action.is_empty():
+				detail_label.text += "\n方向支援：+%d / 回\n発動間隔：%.2f秒" % [action[0].support_bonus, action[0].interval]
 	elif not selected_source.is_empty():
 		var definition: Dictionary = run.get_definition(selected_source.kind)
 		var size: Vector2i = definition.size
@@ -936,7 +950,7 @@ func _sync() -> void:
 				var pattern: Array = enemy.pattern
 				lines[0] = "%s HP%d\n星弾 %d×%d / %.1f秒 → 重撃 %d×%d / %.1f秒\n法盾で各段%d軽減（最低1ダメージ）" % [enemy.name, enemy.hp, pattern[0].damage, pattern[0].hits, pattern[0].interval, pattern[1].damage, pattern[1].hits, pattern[1].interval, int(config.armor)]
 			for action: Dictionary in config.actions:
-				lines.append("%s：%d × %d回 / %.1f秒\n初回%.1f秒 · 接続+%d/回" % [action.name, action.damage, action.hits, action.interval, action.warmup, action.support_bonus])
+				lines.append("%s：%d × %d回 / %.2f秒\n初回%.1f秒 · 接続+%d/回" % [action.name, action.damage, action.hits, action.interval, action.warmup, action.support_bonus])
 			detail_label.text = "\n".join(lines)
 		else:
 			detail_label.text = "%s\n%s\n\n防御 %d · 攻撃手段 %d\n\n現在は%sを実装。\n\n%s · 4姿勢の攻撃と被弾・フェード演出を使用。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "大剣の鍛造と溜め攻撃", info.background]
@@ -1009,7 +1023,9 @@ func _show_placement_preview(preview: Dictionary) -> void:
 	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで素材や資源は消費しません" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
 	for action: Dictionary in preview.combat.actions:
 		if int(action.uid) == int(item.uid):
-			preview_label.text += "\n%d × %d回 / %.1f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
+			preview_label.text += "\n%d × %d回 / %.2f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
+		elif definition.has("interval_factor") and float(action.get("interval_factor", 1.0)) < 1.0:
+			preview_label.text += "\n%s：%.2f秒ごと" % [action.name, action.interval]
 
 func _show_summary() -> void:
 	var summary: Dictionary = battle.get_summary()
