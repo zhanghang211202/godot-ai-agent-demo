@@ -32,7 +32,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	_legacy_save()
 	await _legacy_ui()
-	for kind in ["mixed", "solar", "frost", "same", "haste", "familiar"]:
+	for kind in ["mixed", "solar", "frost", "same", "haste", "familiar", "crowned"]:
 		await _play_route(kind)
 	for path in fingerprints:
 		check((FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing") == fingerprints[path], "Player save unchanged: " + path)
@@ -128,7 +128,7 @@ func _play_route(kind: String) -> void:
 			_drop(ui, 2, Vector2i(2, 1))
 			_drop(ui, 0, Vector2i.ZERO)
 			_drop(ui, 1, Vector2i(0, 2))
-		"familiar":
+		"familiar", "crowned":
 			_drop(ui, 1, Vector2i(2, 1))
 			_drop(ui, 0, Vector2i.ZERO)
 			_drop(ui, 2, Vector2i(0, 2))
@@ -137,7 +137,7 @@ func _play_route(kind: String) -> void:
 		var reference := Battle.new()
 		check(reference.start(ui.run.get_combat_config(), Campaign.encounter(stage)).ok, kind + " stage %d reference starts" % (stage + 1))
 		ui._start_battle()
-		if kind == "familiar" and stage == 2:
+		if kind in ["familiar", "crowned"] and stage == 2:
 			check(ui.battle.get_summons().size() == 2, "Normal rewards and weaving produce two independent companions")
 			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 				root.size = dimensions
@@ -146,16 +146,28 @@ func _play_route(kind: String) -> void:
 				var first: Rect2 = layout.familiars[0].rect
 				var second: Rect2 = layout.familiars[1].rect
 				check(Rect2(layout.scene_rect).encloses(first) and Rect2(layout.scene_rect).encloses(second) and not first.intersects(second) and not first.intersects(layout.hero_rect) and not second.intersects(layout.enemy_rect), str(dimensions) + " two familiars fit without obscuring actors")
-				if dimensions.x == 1440: await _capture("two-familiars-stage-three.png")
+				if kind == "crowned":
+					check(layout.familiars[0].kind == "crowned_familiar" and layout.familiars[1].kind == "moon_familiar" and first.size.y > second.size.y, str(dimensions) + " upgraded and basic companions remain distinct")
+				if dimensions.x == 1440: await _capture("crowned-and-basic.png" if kind == "crowned" else "two-familiars-stage-three.png")
 			root.size = Vector2i(1440, 960)
 			for _i in range(4): await process_frame
+		var captured_crowned_flight := false
 		while ui.battle.phase == "battle":
 			ui._process(0.1)
 			ui.arena._process(0.1)
 			reference.tick(0.1)
+			if kind == "crowned" and stage == 2 and not captured_crowned_flight:
+				var casts: Array = ui.arena.get_art_layout().spell_casts.filter(func(cast: Dictionary): return cast.kind == "crowned_familiar" and cast.phase == "flight" and cast.planned_hits == 2)
+				if not casts.is_empty():
+					await _capture("crowned-flight.png")
+					captured_crowned_flight = true
+		if kind == "crowned" and stage == 2:
+			check(captured_crowned_flight, "The actual upgraded companion displays its two-hit attack in flight")
 		check(ui.battle.phase == "won" and ui.battle.get_summary() == reference.get_summary(), kind + " stage %d wins under actual independent rules" % (stage + 1))
 		if kind == "familiar" and stage == 2:
 			check(ui.summary_label.text.contains("月蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #8"), "The battle recap distinguishes the two actual companion sources")
+		if kind == "crowned" and stage == 2:
+			check(ui.summary_label.text.contains("月冠蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #9"), "The recap distinguishes upgraded and basic companion sources")
 		print("Progression ", kind, " stage ", stage + 1, ": ", ui.battle.phase, " HP ", ui.battle.hp, " time ", ui.battle.battle_time)
 		if ui.battle.phase != "won": break
 		last_stage = stage
@@ -174,6 +186,18 @@ func _play_route(kind: String) -> void:
 		if kind == "solar" and stage == 0:
 			check(ui.run.gold == 4 and Guide.plan(ui.run, solar).available, "First victory unlocks the two-fire route with an earned paid element")
 			await _capture("solar-stage-two-before.png")
+		if kind == "crowned" and stage == 0:
+			ui._open_recipe_book()
+			for _i in range(3): await process_frame
+			ui.recipe_scroll.ensure_control_visible(ui.recipe_cards[14])
+			for _i in range(3): await process_frame
+			check(not ui.recipe_cards[14].disabled and ui.recipe_cards[14].text.contains("月冠蛾"), "The earned-resource recipe book exposes the upgrade")
+			await _capture("crowned-recipe.png")
+			ui.recipe_cards[14].pressed.emit()
+			check(ui.held.get("index") == 7 and ui.grid.recipe_hints.size() == 1 and ui.grid.recipe_hints[3].product == "crowned_familiar", "Guidance selects paid water and only the selected evolved contract target")
+			ui._on_cell_selected(Vector2i(2, 1))
+			check(ui.run.item_by_uid(3).kind == "crowned_familiar" and ui.run.gold == 2, "The guided upgrade spends exactly two earned residue")
+			await _capture("crowned-prepare.png")
 		if stage == 0:
 			match kind:
 				"mixed": _drop(ui, 3, Vector2i(2, 2))
@@ -192,11 +216,18 @@ func _play_route(kind: String) -> void:
 				"familiar":
 					_drop(ui, 3, Vector2i(4, 2))
 					_drop(ui, 7, Vector2i(4, 2))
+				"crowned":
+					ui._on_drop({"origin": "bag", "uid": 3}, Vector2i(2, 2))
+					check(ui.run.item_by_uid(3).pos == Vector2i(2, 2), "The larger contract is moved to make space for a second companion")
+					_drop(ui, 3, Vector2i(2, 0))
+					_drop(ui, 7, Vector2i(2, 0))
 		elif stage == 2 and kind == "haste":
 			_drop(ui, 5, Vector2i(3, 2))
 			await _capture("haste-stage-four.png")
 		elif stage == 2 and kind == "familiar":
 			_drop(ui, 4, Vector2i(4, 1))
+		elif stage == 2 and kind == "crowned":
+			_drop(ui, 4, Vector2i(0, 3))
 		if kind == "solar" and stage == 0:
 			check(ui.run.item_by_uid(1).kind == "solar_lance" and ui.run.gold == 2, "Solar upgrade consumes exactly two earned residue")
 			await _capture("solar-stage-two-after.png")

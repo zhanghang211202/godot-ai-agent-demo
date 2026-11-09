@@ -8,6 +8,7 @@ const CampaignSave = preload("res://scripts/classes/mage_campaign_save.gd")
 const TrialSave = preload("res://scripts/classes/class_save.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
 const Timeline = preload("res://scenes/components/mage_cast_timeline.tscn")
+const Guide = preload("res://scripts/classes/mage_recipe_guide.gd")
 const OUTPUT := "res://.tools/mage-familiar-review"
 const PLAYER_PATHS := ["user://mage-campaign-run.json", "user://mage-trial-run.json", "user://class-prototype-run.json", "user://emberpack-run.json"]
 var checks := 0
@@ -32,6 +33,7 @@ func _run() -> void:
 	for path in PLAYER_PATHS:
 		hashes[path] = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing"
 	_model()
+	_crowned_model()
 	await _timeline()
 	await _ui()
 	for path in hashes:
@@ -95,12 +97,55 @@ func _model() -> void:
 	check(not art.is_empty() and Rect2(art.region).encloses(Rect2(art.source_rect).grow(1)), "The companion sprite has a complete separate source region")
 	check(Catalog.recipes_for("mage")[13].result == "moon_familiar", "The contract is appended after existing stable recipes")
 
+func _crowned_model() -> void:
+	var recipe: Dictionary = Catalog.recipes_for("mage")[14]
+	check(recipe.result == "crowned_familiar", "The evolved contract is appended after the existing recipe")
+	var campaign := Run.new()
+	campaign.new_run("mage")
+	campaign.sources = Campaign.initial_sources(2)
+	var before := _state(campaign)
+	check(not Guide.plan(campaign, recipe).available and _state(campaign) == before, "New campaigns cannot get two water elements before earning residue")
+	campaign.gold = 4
+	var plan: Dictionary = Guide.plan(campaign, recipe)
+	check(plan.available and not plan.direct and plan.required_cost == 2 and plan.prerequisite.result == "moon_familiar", "The guide accounts for both water elements and offers the prerequisite")
+	var blocked := Run.new()
+	blocked.new_run("mage")
+	check(blocked.move(2, Vector2i(4, 2)).ok and blocked.acquire(1, Vector2i(2, 1)).ok, "Place an obstacle beside the basic contract")
+	var old_state := _state(blocked)
+	var preview: Dictionary = blocked.preview_placement({"origin": "source", "index": 1}, Vector2i(2, 1))
+	check(not preview.ok and not blocked.acquire(1, Vector2i(2, 1)).ok and _state(blocked) == old_state, "The six-cell upgrade cannot consume water when its larger footprint is blocked")
+	var run := Run.new()
+	run.new_run("mage")
+	check(run.acquire(1, Vector2i(2, 1)).ok and run.acquire(1, Vector2i(2, 1)).ok, "Two real water elements upgrade the basic contract")
+	var actions: Array = run.get_combat_config().actions.filter(func(action: Dictionary): return action.get("summon", false))
+	check(actions.size() == 1 and actions[0].kind == "crowned_familiar" and actions[0].uid == 3 and actions[0].damage == 6 and actions[0].hits == 2 and is_equal_approx(actions[0].interval, 2.6), "The upgraded contract has one entity with a two-hit attack")
+	var path := OUTPUT.path_join("crowned-trial-%d.json" % Time.get_ticks_usec())
+	check(TrialSave.save_run(run, path).ok, "The upgraded raw-material ledger saves")
+	var restored := Run.new()
+	check(TrialSave.load_run(restored, path).ok and _state(restored) == _state(run), "The upgraded contract restores with its water and UID")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	var config: Dictionary = run.get_combat_config()
+	config.actions = actions
+	var battle := Battle.new()
+	check(battle.start(config, Campaign.encounter(0)).ok and battle.get_summons().size() == 1 and battle.get_summons()[0].kind == "crowned_familiar", "The evolved contract creates one distinct live companion")
+	var hits: Array = battle.tick(3.7).filter(func(event: Dictionary): return event.type == "familiar_attack")
+	check(hits.size() == 4 and hits.all(func(event: Dictionary): return event.amount == 6 and event.source_uid == 3) and is_equal_approx(hits[0].time, 1.1) and is_equal_approx(hits[2].time, 3.7), "Two actual hits share a source and repeat on the upgraded clock")
+	var finishing := Battle.new()
+	check(finishing.start(config, Campaign.encounter(0)).ok, "Upgraded lethal fixture starts")
+	finishing.enemy_hp = 5
+	var lethal: Array = finishing.tick(1.1).filter(func(event: Dictionary): return event.type == "familiar_attack")
+	check(finishing.phase == "won" and lethal.size() == 1 and lethal[0].amount == 5 and finishing.get_summons().is_empty(), "Lethal first hit does not invent a second hit or leave a companion")
+	var art := MageArt.icon("crowned_familiar")
+	check(not art.is_empty() and Rect2(art.region).encloses(Rect2(art.source_rect).grow(1)), "The evolved companion has a complete independent sprite")
+
 func _timeline() -> void:
 	var timeline = Timeline.instantiate()
 	root.add_child(timeline)
 	await process_frame
-	timeline.sync_prediction([{"target": "enemy", "kind": "moon_familiar", "source_uid": 3, "remaining": 0.1}])
+	timeline.sync_prediction([{"target": "enemy", "kind": "moon_familiar", "source_uid": 3, "summon": true, "remaining": 0.1}])
 	check(timeline.mode == "idle" and timeline.pose == 0, "An approaching familiar shot does not make the mage cast")
+	timeline.sync_prediction([{"target": "enemy", "kind": "crowned_familiar", "source_uid": 3, "summon": true, "remaining": 0.1}])
+	check(timeline.mode == "idle" and timeline.pose == 0, "The upgraded companion prediction does not animate the mage")
 	timeline.show_event({"type": "familiar_attack", "target": "enemy", "time": 0.8, "source_uid": 3})
 	check(timeline.mode == "idle" and timeline.pose == 0, "A familiar hit does not trigger the mage's own AnimationPlayer")
 	timeline.queue_free()

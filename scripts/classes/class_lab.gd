@@ -421,7 +421,7 @@ func _refresh_recipe_book() -> void:
 		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
 		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "魔力残滓が不足" if route.insufficient_funds else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name)))
 		var card: Button = recipe_cards[index]
-		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "使い魔：%d / %.1f秒" % [definition.damage, definition.interval] if definition.category == "summon" else "接続術式の間隔 約20%短縮"
+		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "使い魔：%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "summon" else "接続術式の間隔 約20%短縮"
 		card.text = "%s\n%d×%d マス · %s\n%s" % [recipe.label, definition.size.x, definition.size.y, effect, status]
 		card.icon = MageArt.icon(str(recipe.result)).get("atlas", null)
 		card.disabled = not route.available
@@ -1033,7 +1033,7 @@ func _show_placement_preview(preview: Dictionary) -> void:
 	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで素材や資源は消費しません" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
 	for action: Dictionary in preview.combat.actions:
 		if int(action.uid) == int(item.uid):
-			preview_label.text += "\n使い魔：%d / %.2f秒" % [action.damage, action.interval] if action.get("summon", false) else "\n%d × %d回 / %.2f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
+			preview_label.text += "\n使い魔：%d × %d回 / %.2f秒" % [action.damage, action.hits, action.interval] if action.get("summon", false) else "\n%d × %d回 / %.2f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
 		elif definition.has("interval_factor") and float(action.get("interval_factor", 1.0)) < 1.0:
 			preview_label.text += "\n%s：%.2f秒ごと" % [action.name, action.interval]
 

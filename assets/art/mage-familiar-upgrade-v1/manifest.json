@@ -1,0 +1,14 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "reference": "assets/art/mage-familiar-v1/moon-familiar.png",
+  "prompt": "Use case: identity-preserve. Asset: upgraded form of this exact moon-moth familiar, a single independent battle sprite for a 16-bit fantasy tactical RPG. Preserve its tiny pale cyan body, same amber eyes, two antennae, lavender-and-teal wing silhouette, golden crescent markings and right-facing three-quarter orientation. Make this one moth feel like a clearly stronger evolved familiar: add a modest ornate gold crescent diadem above the head, a slightly richer deep-violet and teal wing pattern, and two small gold star charms attached near the wings. Keep the complete creature centered, fully in frame, isolated on a genuinely transparent background; readable silhouette at 80 pixels tall. Match the reference's pixel-art treatment. No additional creatures, no detached limbs, no text, no UI frame, no watermark, no sprite sheet. Maintain the same character identity and recognizable anatomy.",
+  "assets": [
+    {
+      "file": "crowned-moth.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "04333860b74032cc6b22eff85e67971caa73ce23dbfcc766e9cc6e230baE30BE",
+      "role": "One evolved familiar battle sprite and contract icon. The original generated PNG is retained; runtime bounds use alpha >= 128."
+    }
+  ]
+}

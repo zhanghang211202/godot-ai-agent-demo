@@ -51,7 +51,7 @@ func advance(delta: float, paused: bool, speed: float) -> void:
 func sync_prediction(casts: Array) -> void:
 	var next: Dictionary = {}
 	for cast: Dictionary in casts:
-		if str(cast.get("target", "")) == "enemy" and str(cast.get("kind", "")) != "moon_familiar":
+		if str(cast.get("target", "")) == "enemy" and not bool(cast.get("summon", false)):
 			next = cast
 			break
 	if next.is_empty():

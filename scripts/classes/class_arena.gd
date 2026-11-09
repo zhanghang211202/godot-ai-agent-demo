@@ -120,7 +120,7 @@ func _process(delta: float) -> void:
 			mage_cast_timeline.sync_prediction(_upcoming_casts())
 		if motion.state == "idle":
 			for cast: Dictionary in _upcoming_casts():
-				if cast.target == "enemy" and cast.kind != "moon_familiar":
+				if cast.target == "enemy" and not bool(cast.get("summon", false)):
 					motion.prepare_mage_cast(int(cast.source_uid))
 					break
 		feedback.advance(delta * playback_speed)
@@ -285,17 +285,27 @@ func get_art_layout() -> Dictionary:
 	var familiars: Array[Dictionary] = []
 	if run != null and run.class_id == "mage" and battle != null and battle.phase == "battle":
 		var live: Array = battle.get_summons()
-		var familiar_art := MageArt.icon("moon_familiar") if not live.is_empty() else {}
-		if not live.is_empty() and familiar_art.is_empty(): missing.append("moon_familiar")
-		if not familiar_art.is_empty():
-			var familiar_source: Rect2 = familiar_art.source_rect
-			var familiar_height := clampf(hero_height * 0.27, 52.0, 92.0)
-			var familiar_size := Vector2(familiar_height * familiar_source.size.x / familiar_source.size.y, familiar_height)
-			var start_x := clampf(anchor.x + hero_height * 0.78, scene.position.x + familiar_size.x, maxf(scene.position.x + familiar_size.x, enemy.position.x - familiar_size.x * (live.size() + 0.5)))
-			for index in range(live.size()):
+		var profiles: Array[Dictionary] = []
+		var slot_width := 0.0
+		for entity: Dictionary in live:
+			var art := MageArt.icon(str(entity.kind))
+			if art.is_empty():
+				missing.append(str(entity.kind))
+				continue
+			var familiar_source: Rect2 = art.source_rect
+			var height := clampf(hero_height * 0.27, 52.0, 92.0) * (1.18 if entity.kind == "crowned_familiar" else 1.0)
+			var extent := Vector2(height * familiar_source.size.x / familiar_source.size.y, height)
+			slot_width = maxf(slot_width, extent.x)
+			profiles.append({"uid": entity.uid, "kind": entity.kind, "size": extent})
+		if not profiles.is_empty():
+			var earliest := scene.position.x + slot_width / 2
+			var latest := maxf(earliest, enemy.position.x - (profiles.size() - 1) * (slot_width + 12) - slot_width / 2 - 8)
+			var start_x := clampf(anchor.x + hero_height * 0.78, earliest, latest)
+			for index in range(profiles.size()):
+				var extent: Vector2 = profiles[index].size
 				var bob := sin(float(battle.battle_time) * 2.0 + index * PI) * 4.0
-				var center := Vector2(start_x + index * (familiar_size.x + 12), clampf(ground - hero_height * 0.68 - 20 + bob, scene.position.y + familiar_size.y / 2, ground - familiar_size.y / 2))
-				familiars.append({"uid": live[index].uid, "kind": live[index].kind, "center": center, "rect": Rect2(center - familiar_size / 2, familiar_size)})
+				var center := Vector2(start_x + index * (slot_width + 12), clampf(ground - hero_height * 0.68 - 20 + bob, scene.position.y + extent.y / 2, ground - extent.y / 2))
+				familiars.append({"uid": profiles[index].uid, "kind": profiles[index].kind, "center": center, "rect": Rect2(center - extent / 2, extent)})
 	return {"class_id": str(run.class_id) if run != null else "", "hero_id": hero_id,
 		"hero_path": hero.get("path", ""), "background_id": background_id, "background_path": Art.asset_path(background_id),
 		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination, "hero_body_height": body_height, "hero_cast_point": cast_point, "hero_release_point": release_point,
@@ -489,13 +499,13 @@ func _draw_feedback() -> void:
 	var layout := get_art_layout()
 	effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	if not layout.familiars.is_empty():
-		var familiar_art := MageArt.icon("moon_familiar")
 		for familiar: Dictionary in layout.familiars:
+			var familiar_art := MageArt.icon(str(familiar.kind))
 			effects_layer.draw_texture_rect_region(familiar_art.texture, familiar.rect, familiar_art.source_rect)
 	if run.class_id == "mage":
 		for cast: Dictionary in layout.spell_casts:
 			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else Vector2(layout.hero_release_point if cast.phase == "flight" else layout.hero_cast_point) + _mage_recoil() + _source_cast_offset(int(cast.source_uid))
-			if cast.kind == "moon_familiar":
+			if bool(cast.get("summon", false)):
 				var matching: Array = layout.familiars.filter(func(familiar: Dictionary): return familiar.uid == cast.source_uid)
 				if matching.is_empty(): continue
 				from = matching[0].center
