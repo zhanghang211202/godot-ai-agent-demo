@@ -25,7 +25,7 @@ func _initialize() -> void:
 	_run.call_deferred()
 
 func _state(run: RefCounted) -> Dictionary:
-	return {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "uid": run._next_uid, "phase": run.phase, "seed": run.seed_value, "discarded": run.discarded_materials.duplicate(true)}
+	return {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "uid": run._next_uid, "phase": run.phase, "seed": run.seed_value, "discarded": run.discarded_materials.duplicate(true), "campaign_rules_version": run.campaign_rules_version}
 
 func _write(path: String, content: String) -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -117,6 +117,8 @@ func _ui_roundtrip() -> void:
 	check(ui.run.acquire(0, Vector2i.ZERO).ok and ui.run.acquire(1, Vector2i(3, 2)).ok and ui.run.acquire(2, Vector2i(3, 2)).ok, "UI checkpoint fixture uses ordinary weaving")
 	ui._start_battle()
 	check(ui.battle.phase == "battle" and FileAccess.file_exists(UI_FILE), "Starting combat automatically writes a stage-one preparation")
+	var initial_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(UI_FILE))
+	check(initial_data.schema_version == 2 and initial_data.rules_version == 2, "A new campaign checkpoints the reduced-resource rules version")
 	var during := _state(ui.run)
 	ui._load()
 	check(ui.battle.phase == "battle" and _state(ui.run) == during, "Loading is refused during active combat")
@@ -135,7 +137,7 @@ func _ui_roundtrip() -> void:
 	await process_frame
 	ui._restore_before_battle()
 	var retry_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(UI_FILE))
-	check(ui.campaign_stage == 0 and ui.run.gold == 0 and retry_data.stage == 0 and retry_data.gold == 0, "Choosing retry checkpoints the original pre-battle state")
+	check(ui.campaign_stage == 0 and ui.run.gold == 0 and retry_data.stage == 0 and retry_data.gold == 0 and retry_data.rules_version == 2 and ui.run.campaign_rules_version == 2, "Choosing retry preserves both the original board and its reduced-resource rules")
 	ui._start_battle()
 	while ui.battle.phase == "battle":
 		ui._process(0.1)

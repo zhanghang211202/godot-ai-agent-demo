@@ -84,6 +84,14 @@ func _ui_route(kind: String) -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	if kind == "solar_lance":
+		ui._start_battle()
+		while ui.battle.phase == "battle":
+			ui._process(0.1)
+			ui.arena._process(0.1)
+		check(ui.battle.phase == "won", "Solar guide earns the first reward through the normal opening battle")
+		ui._primary_action()
+		check(ui.campaign_stage == 1 and ui.run.gold == 4, "Solar guide begins after a real first victory")
 	ui._on_drop({"origin": "bag", "uid": 3}, Vector2i(3, 1))
 	var before := _state(ui.run)
 	var index := 10 if kind == "solar_lance" else 11

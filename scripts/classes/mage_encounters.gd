@@ -21,9 +21,9 @@ static func definition(id: String) -> Dictionary:
 		"sentinel_elite":
 			return {"id": id, "name": "月庭の双星衛兵", "hp": 170, "damage": 7, "hits": 2, "interval": 2.1, "windup": 0.7, "effect": "enemy", "height": 230, "lift": 0, "hint": "強化された衛兵。2.1秒ごとに7ダメージを2回。"}
 		"astral_scribe":
-			return {"id": id, "name": "星詠みの書霊", "hp": 210, "damage": 5, "hits": 3, "interval": 2.4, "windup": 0.8, "effect": "scribe_rune", "height": 220, "lift": 18, "hint": "浮遊する書霊が2.4秒ごとに5ダメージの符弾を3発放つ。法盾は各段を軽減する。"}
+			return {"id": id, "name": "星詠みの書霊", "hp": 220, "damage": 7, "hits": 3, "interval": 2.4, "windup": 0.8, "effect": "scribe_rune", "height": 220, "lift": 18, "hint": "浮遊する書霊が2.4秒ごとに7ダメージの符弾を3発放つ。法盾は各段を軽減する。"}
 		"moon_crowned":
-			return {"id": id, "name": "月冠の星守", "hp": 260, "damage": 9, "hits": 2, "interval": 2.7, "windup": 0.8, "effect": "boss_star", "height": 250, "lift": 0, "hint": "BOSS：星弾2連撃と、長く溜める重撃を交互に放つ。", "pattern": [
-				{"damage": 9, "hits": 2, "interval": 2.7, "windup": 0.8, "effect": "boss_star"},
-				{"damage": 18, "hits": 1, "interval": 3.1, "windup": 1.1, "effect": "boss_crash"}]}
+			return {"id": id, "name": "月冠の星守", "hp": 260, "damage": 10, "hits": 2, "interval": 2.7, "windup": 0.8, "effect": "boss_star", "height": 250, "lift": 0, "hint": "BOSS：星弾2連撃と、長く溜める重撃を交互に放つ。", "pattern": [
+				{"damage": 10, "hits": 2, "interval": 2.7, "windup": 0.8, "effect": "boss_star"},
+				{"damage": 19, "hits": 1, "interval": 3.1, "windup": 1.1, "effect": "boss_crash"}]}
 	return {}

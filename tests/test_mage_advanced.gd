@@ -123,6 +123,8 @@ func _integration(kind: String) -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	if kind == "solar_lance":
+		_win_first_battle(ui)
 	var first := 0 if kind == "solar_lance" else 1
 	var index := 10 if kind == "solar_lance" else 11
 	ui._on_drop({"origin": "bag", "uid": 3}, Vector2i(3, 1))
@@ -162,9 +164,11 @@ func _integration(kind: String) -> void:
 	check(ui.battle.get_summary() == reference.get_summary(), kind + " presentation preserves actual combat")
 	ui._restore_before_battle()
 	ui._new_class("mage")
+	if kind == "solar_lance":
+		_win_first_battle(ui)
 	ui._on_drop({"origin": "bag", "uid": 3}, Vector2i(3, 1))
 	ui._on_drop({"origin": "source", "index": first}, Vector2i.ZERO)
-	var second := 0 if kind == "solar_lance" else 2
+	var second := 6 if kind == "solar_lance" else 2
 	ui._on_drop({"origin": "source", "index": second}, Vector2i(3, 2))
 	var before_owned := _state(ui.run)
 	var material: Dictionary = ui.run.item_at(Vector2i(3, 2))
@@ -176,3 +180,12 @@ func _integration(kind: String) -> void:
 		check(_state(ui.run) == before_owned, kind + " owned merge undo restores both ingredients without refunding stock")
 	ui.queue_free()
 	await process_frame
+
+func _win_first_battle(ui: Control) -> void:
+	ui._start_battle()
+	while ui.battle.phase == "battle":
+		ui._process(0.1)
+		ui.arena._process(0.1)
+	check(ui.battle.phase == "won", "Solar integration earns its paid element through the opening battle")
+	ui._primary_action()
+	check(ui.campaign_stage == 1 and ui.run.gold == 4, "Solar integration starts from the real second-stage reward")

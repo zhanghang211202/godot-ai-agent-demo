@@ -108,12 +108,12 @@ func _distinct_enemies() -> void:
 	var battle := Battle.new()
 	check(battle.start(config, "astral_scribe").ok, "Fourth enemy starts its own encounter")
 	var incoming := battle.tick(2.4).filter(func(e: Dictionary): return e.type == "enemy_attack")
-	check(incoming.size() == 3 and incoming.all(func(e: Dictionary): return e.source_kind == "scribe_rune" and e.amount == 3), "Fourth enemy fires three rune hits reduced separately by ward")
+	check(incoming.size() == 3 and incoming.all(func(e: Dictionary): return e.source_kind == "scribe_rune" and e.amount == 5), "Fourth enemy fires three rune hits reduced separately by ward")
 	var feedback := Feedback.new()
 	for event: Dictionary in incoming: feedback.show_event(event)
 	var effects := Effects.visible_effects(feedback.numbers)
 	check(effects.size() == 1 and effects[0].kind == "scribe_rune" and effects[0].hits == 3, "Rune impact reflects the three actual warded hits")
-	config.hp = 4
+	config.hp = 6
 	var lethal := Battle.new()
 	check(lethal.start(config, "astral_scribe").ok, "Low-health scribe fixture starts normally")
 	feedback.reset()
@@ -314,7 +314,13 @@ func _render_new_spells(ui: Control) -> void:
 		ui._new_class("mage")
 		var kind: String = pair[0]
 		if int(pair[1]) >= 0:
-			check(ui.run.acquire(pair[1], Vector2i(3, 1)).ok and ui.run.acquire(pair[1], Vector2i(3, 1)).ok, kind + " rendered fixture uses ordinary weaving")
+			ui._start_battle()
+			while ui.battle.phase == "battle":
+				ui._process(0.1)
+				ui.arena._process(0.1)
+			check(ui.battle.phase == "won", kind + " fixture earns residue in the first battle")
+			ui._primary_action()
+			check(ui.run.acquire(pair[1], Vector2i(3, 1)).ok and ui.run.acquire(int(pair[1]) + 6, Vector2i(3, 1)).ok, kind + " rendered fixture weaves a free element and an earned paid element")
 		else:
 			check(ui.run.move(2, Vector2i.ZERO).ok, kind + " rendered fixture uses owned sparks")
 		ui._start_battle()

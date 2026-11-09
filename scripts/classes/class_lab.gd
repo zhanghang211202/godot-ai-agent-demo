@@ -506,7 +506,8 @@ func _new_class(id: String) -> void:
 	if campaign_focus:
 		campaign_stage = 0
 		encounter_id = Campaign.encounter(campaign_stage)
-		run.sources.append_array(Campaign.shop_sources())
+		run.campaign_rules_version = Campaign.CURRENT_RULES_VERSION
+		run.sources = Campaign.initial_sources(run.campaign_rules_version)
 	battle = BattleRules.new()
 	_before_battle = {}
 	arena.battle = battle
@@ -514,7 +515,7 @@ func _new_class(id: String) -> void:
 	_clear_selection()
 	summary_label.text = "五戦を踏破しよう。勝利で魔力残滓を獲得し、凝結欄で元素や道具に変換できます。各戦後HP全回復。戦前に自動保存します。" if campaign_focus else "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
 	grid.active_sources.clear()
-	_notice("魔術師：火を選んで微光に重ねると爆炎に。水と風は3連撃になります。" if id == "mage" else "騎士：溜めの紋章を長剣に重ねて大剣を鍛造。紋章を残して強化も可能。")
+	_notice("元素は火・水・風が各1つ。勝利後の残滓で追加を凝結できます。" if campaign_focus else "魔術師：火を選んで微光に重ねると爆炎に。水と風は3連撃になります。" if id == "mage" else "騎士：溜めの紋章を長剣に重ねて大剣を鍛造。紋章を残して強化も可能。")
 	_sync()
 	grid.update_preview()
 
@@ -716,6 +717,8 @@ func _load() -> void:
 		grid.clear_merge_feedback()
 		_clear_selection()
 		summary_label.text = "五つの試練を踏破した記録です。「最初から」で新しい遠征を始められます。" if campaign_focus and bool(result.get("completed", false)) else "遠征の準備を復元しました。戦闘はこの戦いの最初から始まります。" if campaign_focus else "準備時の状態を復元しました。旧版の遠征データは別扱いです。"
+		if campaign_focus and run.campaign_rules_version == 1:
+			_notice("以前の遠征を復元しました。初期元素は旧ルールのままです。")
 	_sync()
 
 func _resize_layout() -> void:
@@ -774,7 +777,7 @@ func _start_battle() -> void:
 	if persistence_enabled and not _save():
 		return
 	_clear_undo()
-	_before_battle = {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "seed_value": run.seed_value, "next_uid": run._next_uid, "discarded": run.discarded_materials.duplicate(true)}
+	_before_battle = {"class_id": run.class_id, "items": run.items.duplicate(true), "sources": run.sources.duplicate(true), "gold": run.gold, "hp": run.hp, "max_hp": run.max_hp, "seed_value": run.seed_value, "next_uid": run._next_uid, "discarded": run.discarded_materials.duplicate(true), "campaign_rules_version": run.campaign_rules_version}
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	battle = candidate
@@ -795,6 +798,7 @@ func _restore_before_battle() -> void:
 	_clear_undo()
 	_set_workspace_open(true)
 	run.new_run(str(_before_battle.class_id), int(_before_battle.seed_value))
+	run.campaign_rules_version = int(_before_battle.campaign_rules_version)
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)
 	run.items.assign(_before_battle.items.duplicate(true))
@@ -819,6 +823,7 @@ func _save_next_campaign_preparation() -> Dictionary:
 	# preparation. Work on an isolated copy; never mutate the displayed battle.
 	var next = RunRules.new()
 	next.new_run("mage", run.seed_value)
+	next.campaign_rules_version = run.campaign_rules_version
 	next.items.assign(run.items.duplicate(true))
 	next.sources.assign(run.sources.duplicate(true))
 	next.gold = run.gold

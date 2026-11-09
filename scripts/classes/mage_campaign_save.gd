@@ -8,7 +8,8 @@ const Campaign = preload("res://scripts/classes/mage_campaign.gd")
 const ExistingSave = preload("res://scripts/classes/class_save.gd")
 const DEFAULT_PATH := "user://mage-campaign-run.json"
 const KIND := "mage-campaign"
-const VERSION := 1
+const VERSION := Campaign.CURRENT_RULES_VERSION
+const LEGACY_VERSION := 1
 const MAX_BYTES := 65536
 
 static func save_run(run: RefCounted, stage: int, path: String = DEFAULT_PATH, completed: bool = false, completion_hp: int = 0) -> Dictionary:
@@ -21,8 +22,8 @@ static func save_run(run: RefCounted, stage: int, path: String = DEFAULT_PATH, c
 		return snapshot
 	var raw: Dictionary = snapshot.data
 	raw.kind = KIND
-	raw.schema_version = VERSION
-	raw.rules_version = VERSION
+	raw.schema_version = run.campaign_rules_version
+	raw.rules_version = run.campaign_rules_version
 	raw["stage"] = stage
 	raw["completed"] = completed
 	raw["completed_hp"] = completion_hp if completed else 0
@@ -79,6 +80,7 @@ static func load_run(run: RefCounted, path: String = DEFAULT_PATH) -> Dictionary
 		return loaded
 	var data: Dictionary = loaded.data
 	run.new_run("mage", int(data.seed))
+	run.campaign_rules_version = int(data.campaign_rules_version)
 	run.items.assign(data.items)
 	run.sources.assign(data.sources)
 	run.gold = int(data.gold)
@@ -106,7 +108,7 @@ static func _read(path: String) -> Dictionary:
 	return _validate(json.data)
 
 static func _validate(raw: Variant) -> Dictionary:
-	if typeof(raw) != TYPE_DICTIONARY or raw.get("kind") != KIND or not ExistingSave._integer(raw.get("schema_version"), VERSION, VERSION) or not ExistingSave._integer(raw.get("rules_version"), VERSION, VERSION):
+	if typeof(raw) != TYPE_DICTIONARY or raw.get("kind") != KIND or not ExistingSave._integer(raw.get("schema_version"), LEGACY_VERSION, VERSION) or not ExistingSave._integer(raw.get("rules_version"), LEGACY_VERSION, VERSION) or int(raw.schema_version) != int(raw.rules_version):
 		return _failure("未対応の遠征データです。元のファイルは保持されます。")
 	if raw.get("class_id") != "mage" or raw.get("phase") != "prepare" or not ExistingSave._integer(raw.get("stage"), 0, Campaign.REWARDS.size() - 1):
 		return _failure("遠征の職業、進行または状態が無効です。")
@@ -121,8 +123,7 @@ static func _validate(raw: Variant) -> Dictionary:
 	var seed := ExistingSave._decimal_int64(raw.get("seed"))
 	if not seed.ok or not ExistingSave._integer(raw.get("next_uid"), 1, ExistingSave.NUMBER_LIMIT):
 		return _failure("遠征の識別子またはシードが無効です。")
-	var expected_sources: Array = Catalog.initial_sources("mage")
-	expected_sources.append_array(Campaign.shop_sources())
+	var expected_sources: Array = Campaign.initial_sources(int(raw.rules_version))
 	if typeof(raw.get("sources")) != TYPE_ARRAY or raw.sources.size() != expected_sources.size():
 		return _failure("元素や凝結の一覧が無効です。")
 	var sources: Array[Dictionary] = []
@@ -168,7 +169,7 @@ static func _validate(raw: Variant) -> Dictionary:
 	for key in expected:
 		if not actual.has(key) or int(actual[key]) != int(expected[key]):
 			return _failure("盤面と素材の数が一致しません。")
-	return {"ok": true, "data": {"stage": int(raw.stage), "completed": completed, "completed_hp": int(raw.get("completed_hp", 0)), "seed": seed.value, "hp": int(raw.hp), "max_hp": int(raw.max_hp), "gold": int(raw.gold), "next_uid": int(raw.next_uid), "items": items.items, "sources": sources, "discarded_materials": discarded}}
+	return {"ok": true, "data": {"stage": int(raw.stage), "completed": completed, "completed_hp": int(raw.get("completed_hp", 0)), "campaign_rules_version": int(raw.rules_version), "seed": seed.value, "hp": int(raw.hp), "max_hp": int(raw.max_hp), "gold": int(raw.gold), "next_uid": int(raw.next_uid), "items": items.items, "sources": sources, "discarded_materials": discarded}}
 
 static func _safe_path(path: String) -> String:
 	var absolute := ExistingSave._absolute_path(path)

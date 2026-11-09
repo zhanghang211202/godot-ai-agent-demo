@@ -55,7 +55,7 @@ func _battle(ward: bool) -> void:
 			if effect.kind != "scribe_rune": continue
 			found = true
 			check(effect.hits == 3 and layout.shields.size() == (1 if ward else 0), "Three real rune hits show a shield only when damage is mitigated")
-			check(ui.battle.get_summary().damage_taken == (9 if ward else 15) and ui.battle.get_summary().armor_mitigated == (6 if ward else 0), "Ward and unwarded damage follow the actual battle rules")
+			check(ui.battle.get_summary().damage_taken == (15 if ward else 21) and ui.battle.get_summary().armor_mitigated == (6 if ward else 0), "Ward and unwarded damage follow the actual battle rules")
 			var before: Dictionary = ui.arena.get_art_report().duplicate(true)
 			ui._pause()
 			ui._process(0.5)

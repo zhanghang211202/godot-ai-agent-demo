@@ -97,7 +97,7 @@ func _run() -> void:
 	ui._undo_placement()
 	check(_state() == first_move and ui.undo_button.disabled, "Only the last board action is retained")
 	ui._on_drop({"origin": "source", "index": 0}, Vector2i.ZERO)
-	check(ui.run.item_by_uid(1).kind == "flame_glyph" and ui.run.sources[0].remaining == 1 and ui.undo_button.disabled, "Element absorption and source merge clear undo without refund")
+	check(ui.run.item_by_uid(1).kind == "flame_glyph" and ui.run.sources[0].remaining == 0 and ui.undo_button.disabled, "Element absorption and source merge clear undo without refund")
 	var acquired := _state()
 	ui._undo_placement()
 	check(_state() == acquired, "Undo cannot reverse or duplicate acquired materials")

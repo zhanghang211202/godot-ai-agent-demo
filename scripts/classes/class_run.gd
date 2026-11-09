@@ -12,6 +12,8 @@ var max_hp: int = 0
 var phase: String = "prepare"
 var seed_value: int = 12345
 var _next_uid: int = 1
+## Only the separate mage campaign uses this; single-battle saves remain v1.
+var campaign_rules_version: int = 1
 ## Raw ingredients intentionally lost by discard. Required for exact save conservation.
 var discarded_materials: Dictionary = {}
 
@@ -27,6 +29,7 @@ func new_run(id: String = "mage", seed: int = 12345) -> Dictionary:
 	max_hp = int(info["max_hp"])
 	hp = max_hp
 	phase = "prepare"
+	campaign_rules_version = 1
 	discarded_materials.clear()
 	_next_uid = items.size() + 1
 	return {"ok": true, "event": "new_run", "message": "有限素材の試練を開始しました。"}
