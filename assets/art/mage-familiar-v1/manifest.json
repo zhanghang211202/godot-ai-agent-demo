@@ -1,0 +1,13 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "prompt": "Use case: stylized-concept. Asset: a single small floating familiar sprite for a polished 16-bit fantasy tactical RPG battle. Create a charming moonlit magical moth familiar, facing right in three-quarter view: luminous pale cyan pearl-like body, two clearly separate symmetrical lavender-and-teal butterfly wings with gold crescent markings, a tiny expressive face with two amber eyes, delicate short antennae. The silhouette should be legible when displayed only 70 pixels tall next to an adult mage; ornate but restrained. Elegant moon-court fantasy pixel art with dark navy outlines, clustered pixels, layered jewel-like color ramps, no noisy checker pattern. Isolated single complete creature, centered with generous transparent margin; both wings fully visible, no severed appendages. Genuine transparent background. No humans, hands, weapons, words, labels, borders, shadows, sprite sheets, duplicates or watermark.",
+  "assets": [
+    {
+      "file": "moon-familiar.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "67c3fbbf72691c0d49e8dcd697f2851db1802088d89a441f1b7b8fde2b9e1c40",
+      "role": "Single familiar battle sprite and contract icon. Original PNG preserved; the runtime uses the alpha >= 128 bounds."
+    }
+  ]
+}

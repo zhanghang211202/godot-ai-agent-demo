@@ -2,7 +2,7 @@ extends SceneTree
 ## Typography-only fixtures: direct placement exercises every shape, not acquisition.
 
 const Catalog = preload("res://scripts/classes/class_catalog.gd")
-const KINDS := ["spark", "fire_mote", "water_mote", "wind_mote", "flame_glyph", "tide_lances", "arcane_focus", "wind_prism", "mage_ward", "iron_blade", "greatblade", "charge_seal", "knight_ward"]
+const KINDS := ["spark", "fire_mote", "water_mote", "wind_mote", "flame_glyph", "tide_lances", "arcane_focus", "wind_prism", "moon_familiar", "mage_ward", "iron_blade", "greatblade", "charge_seal", "knight_ward"]
 const PLAYER_PATHS := ["user://class-prototype-run.json", "user://emberpack-run.json"]
 var checks := 0
 var failures := 0

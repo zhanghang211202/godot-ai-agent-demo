@@ -89,7 +89,7 @@ func _model() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(trial_path))
 	var icon := MageArt.icon("wind_prism")
 	check(not icon.is_empty() and Rect2(icon.region).encloses(Rect2(icon.source_rect).grow(1)), "Wind support uses a separate uncropped icon")
-	check(Catalog.recipes_for("mage").size() == 13 and Catalog.recipes_for("mage")[12].result == "wind_prism", "The support recipe is appended without changing prior recipe indices")
+	check(Catalog.recipes_for("mage").size() == 14 and Catalog.recipes_for("mage")[12].result == "wind_prism", "The support recipe keeps its stable index")
 
 func _ui() -> void:
 	root.size = Vector2i(1440, 960)

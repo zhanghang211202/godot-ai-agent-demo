@@ -32,7 +32,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	_legacy_save()
 	await _legacy_ui()
-	for kind in ["mixed", "solar", "frost", "same", "haste"]:
+	for kind in ["mixed", "solar", "frost", "same", "haste", "familiar"]:
 		await _play_route(kind)
 	for path in fingerprints:
 		check((FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing") == fingerprints[path], "Player save unchanged: " + path)
@@ -128,20 +128,47 @@ func _play_route(kind: String) -> void:
 			_drop(ui, 2, Vector2i(2, 1))
 			_drop(ui, 0, Vector2i.ZERO)
 			_drop(ui, 1, Vector2i(0, 2))
+		"familiar":
+			_drop(ui, 1, Vector2i(2, 1))
+			_drop(ui, 0, Vector2i.ZERO)
+			_drop(ui, 2, Vector2i(0, 2))
 	var last_stage := -1
 	for stage in range(5):
 		var reference := Battle.new()
 		check(reference.start(ui.run.get_combat_config(), Campaign.encounter(stage)).ok, kind + " stage %d reference starts" % (stage + 1))
 		ui._start_battle()
+		if kind == "familiar" and stage == 2:
+			check(ui.battle.get_summons().size() == 2, "Normal rewards and weaving produce two independent companions")
+			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
+				root.size = dimensions
+				for _i in range(4): await process_frame
+				var layout: Dictionary = ui.arena.get_art_layout()
+				var first: Rect2 = layout.familiars[0].rect
+				var second: Rect2 = layout.familiars[1].rect
+				check(Rect2(layout.scene_rect).encloses(first) and Rect2(layout.scene_rect).encloses(second) and not first.intersects(second) and not first.intersects(layout.hero_rect) and not second.intersects(layout.enemy_rect), str(dimensions) + " two familiars fit without obscuring actors")
+				if dimensions.x == 1440: await _capture("two-familiars-stage-three.png")
+			root.size = Vector2i(1440, 960)
+			for _i in range(4): await process_frame
 		while ui.battle.phase == "battle":
 			ui._process(0.1)
 			ui.arena._process(0.1)
 			reference.tick(0.1)
 		check(ui.battle.phase == "won" and ui.battle.get_summary() == reference.get_summary(), kind + " stage %d wins under actual independent rules" % (stage + 1))
+		if kind == "familiar" and stage == 2:
+			check(ui.summary_label.text.contains("月蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #8"), "The battle recap distinguishes the two actual companion sources")
 		print("Progression ", kind, " stage ", stage + 1, ": ", ui.battle.phase, " HP ", ui.battle.hp, " time ", ui.battle.battle_time)
 		if ui.battle.phase != "won": break
 		last_stage = stage
-		if stage == 4: break
+		if stage == 4:
+			if kind == "familiar":
+				var completed_path := OUTPUT.path_join("familiar-complete-%d.json" % Time.get_ticks_usec())
+				check(Save.save_run(ui.run, stage, completed_path, true, ui.battle.hp).ok, "A real two-companion boss victory can be saved")
+				var complete := Run.new()
+				var complete_result: Dictionary = Save.load_run(complete, completed_path)
+				var companions: Array = complete.get_combat_config().actions.filter(func(action: Dictionary): return action.get("summon", false))
+				check(complete_result.ok and complete_result.completed and companions.size() == 2 and complete.gold == ui.run.gold, "Completed save restores two contracts and the earned resource balance")
+				DirAccess.remove_absolute(ProjectSettings.globalize_path(completed_path))
+			break
 		ui._primary_action()
 		check(ui.campaign_stage == stage + 1 and ui.run.phase == "prepare", kind + " advances to the next real preparation")
 		if kind == "solar" and stage == 0:
@@ -162,9 +189,14 @@ func _play_route(kind: String) -> void:
 					_drop(ui, 1, Vector2i(5, 1))
 					_drop(ui, 7, Vector2i(5, 1))
 				"haste": _drop(ui, 4, Vector2i(4, 1))
+				"familiar":
+					_drop(ui, 3, Vector2i(4, 2))
+					_drop(ui, 7, Vector2i(4, 2))
 		elif stage == 2 and kind == "haste":
 			_drop(ui, 5, Vector2i(3, 2))
 			await _capture("haste-stage-four.png")
+		elif stage == 2 and kind == "familiar":
+			_drop(ui, 4, Vector2i(4, 1))
 		if kind == "solar" and stage == 0:
 			check(ui.run.item_by_uid(1).kind == "solar_lance" and ui.run.gold == 2, "Solar upgrade consumes exactly two earned residue")
 			await _capture("solar-stage-two-after.png")

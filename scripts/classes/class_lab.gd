@@ -22,6 +22,7 @@ var battle = BattleRules.new()
 var grid
 var arena
 var held: Dictionary = {}
+var _guided_product := ""
 var selected_uid := -1
 var source_buttons: Array[Button] = []
 var class_buttons: Dictionary = {}
@@ -358,7 +359,7 @@ func _build_recipe_book() -> void:
 	recipe_close_button = _button("閉じる", _close_recipe_book)
 	recipe_close_button.custom_minimum_size = Vector2(78, 40)
 	heading.add_child(recipe_close_button)
-	var hint := _label("術式や支援を選ぶと、合成できる素材が金枠で表示されます。赤枠は空き不足です。", 16, Color("b9c7d8"))
+	var hint := _label("レシピを選ぶと、合成できる素材が金枠で表示されます。赤枠は空き不足です。", 16, Color("b9c7d8"))
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(hint)
 	recipe_scroll = ScrollContainer.new()
@@ -420,7 +421,7 @@ func _refresh_recipe_book() -> void:
 		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
 		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "魔力残滓が不足" if route.insufficient_funds else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name)))
 		var card: Button = recipe_cards[index]
-		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "接続術式の間隔 約20%短縮"
+		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "使い魔：%d / %.1f秒" % [definition.damage, definition.interval] if definition.category == "summon" else "接続術式の間隔 約20%短縮"
 		card.text = "%s\n%d×%d マス · %s\n%s" % [recipe.label, definition.size.x, definition.size.y, effect, status]
 		card.icon = MageArt.icon(str(recipe.result)).get("atlas", null)
 		card.disabled = not route.available
@@ -437,6 +438,7 @@ func _choose_recipe(index: int) -> void:
 		return
 	_close_recipe_book()
 	held = choice.held.duplicate(true)
+	_guided_product = str(choice.product)
 	selected_uid = int(held.uid) if held.origin == "bag" else -1
 	grid.held = held
 	if choice.needs_placement:
@@ -534,6 +536,7 @@ func _select_source(index: int) -> void:
 		_notice("この素材は現在取得できません。")
 		return
 	held = {"origin": "source", "index": index, "rotated": false}
+	_guided_product = ""
 	selected_uid = -1
 	grid.held = held
 	var definition: Dictionary = run.get_definition(run.sources[index].kind)
@@ -567,6 +570,7 @@ func _on_drag_started(data: Dictionary) -> void:
 	if item.is_empty():
 		return
 	held = data.duplicate(true)
+	_guided_product = ""
 	selected_uid = int(item.uid)
 	grid.held = held
 	_sync()
@@ -578,6 +582,7 @@ func _on_cell_selected(cell: Vector2i) -> void:
 		_on_drop(held, cell)
 		return
 	var item: Dictionary = run.item_at(cell)
+	_guided_product = ""
 	selected_uid = int(item.get("uid", -1))
 	if not item.is_empty():
 		held = {"origin": "bag", "uid": item.uid, "rotated": item.rotated}
@@ -662,6 +667,7 @@ func _undo_placement() -> void:
 
 func _clear_selection() -> void:
 	held = {}
+	_guided_product = ""
 	selected_uid = -1
 	if grid != null:
 		grid.held = {}
@@ -929,10 +935,10 @@ func _sync() -> void:
 	if not item.is_empty():
 		var definition: Dictionary = run.get_definition(item.kind)
 		detail_label.text = "%s\n\n%s\n\n使用マス：%d × %d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y]
-		if definition.category == "attack":
+		if definition.category in ["attack", "summon"]:
 			var action: Array = run.get_combat_config().actions.filter(func(entry: Dictionary): return entry.uid == item.uid)
 			if not action.is_empty():
-				detail_label.text += "\n方向支援：+%d / 回\n発動間隔：%.2f秒" % [action[0].support_bonus, action[0].interval]
+				detail_label.text += "\n発動間隔：%.2f秒" % action[0].interval if definition.category == "summon" else "\n方向支援：+%d / 回\n発動間隔：%.2f秒" % [action[0].support_bonus, action[0].interval]
 	elif not selected_source.is_empty():
 		var definition: Dictionary = run.get_definition(selected_source.kind)
 		var size: Vector2i = definition.size
@@ -956,6 +962,10 @@ func _sync() -> void:
 			detail_label.text = "%s\n%s\n\n防御 %d · 攻撃手段 %d\n\n現在は%sを実装。\n\n%s · 4姿勢の攻撃と被弾・フェード演出を使用。" % [info.name, info.subtitle, int(config.armor), config.actions.size(), "大剣の鍛造と溜め攻撃", info.background]
 	grid.selected_uid = selected_uid
 	grid.recipe_hints = RecipeGuide.target_hints(run, held) if mage_focus else {}
+	if not _guided_product.is_empty():
+		for uid in grid.recipe_hints.keys():
+			if str(grid.recipe_hints[uid].get("product", "")) != _guided_product:
+				grid.recipe_hints.erase(uid)
 	grid.queue_redraw()
 	arena.queue_redraw()
 	primary_button.disabled = run.phase != "prepare" and not (campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size())
@@ -1023,7 +1033,7 @@ func _show_placement_preview(preview: Dictionary) -> void:
 	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで素材や資源は消費しません" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
 	for action: Dictionary in preview.combat.actions:
 		if int(action.uid) == int(item.uid):
-			preview_label.text += "\n%d × %d回 / %.2f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
+			preview_label.text += "\n使い魔：%d / %.2f秒" % [action.damage, action.interval] if action.get("summon", false) else "\n%d × %d回 / %.2f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
 		elif definition.has("interval_factor") and float(action.get("interval_factor", 1.0)) < 1.0:
 			preview_label.text += "\n%s：%.2f秒ごと" % [action.name, action.interval]
 
@@ -1031,7 +1041,7 @@ func _show_summary() -> void:
 	var summary: Dictionary = battle.get_summary()
 	var lines: PackedStringArray = ["戦闘の振り返り · %s" % ("勝利" if battle.phase == "won" else "失敗"), "%.2f 秒 · 与ダメージ %d · 被ダメージ %d" % [float(summary.duration), int(summary.damage_dealt), int(summary.damage_taken)]]
 	for source in summary.by_source:
-		lines.append("%s：%d ダメージ / %d 回発動 / %d 回" % [source.name, int(source.damage), int(source.activations), int(source.hits)])
+		lines.append("%s #%d：%d ダメージ / %d 回発動 / %d 回" % [source.name, int(source.uid), int(source.damage), int(source.activations), int(source.hits)])
 	if campaign_focus and battle.phase == "won":
 		lines.append("魔力残滓 +%d · 所持 %d" % [int(Campaign.REWARDS[campaign_stage]), run.gold])
 	summary_label.text = "\n".join(lines)

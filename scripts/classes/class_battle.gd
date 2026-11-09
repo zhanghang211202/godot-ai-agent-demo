@@ -7,6 +7,7 @@ const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const STEP := 0.05
 const TIME_LIMIT := 90.0
 const MAX_STEPS := 1800
+const MAX_SUMMONS := 2
 const ENEMY_HP := 140
 const ENEMY_ATTACK := 8
 const ENEMY_INTERVAL_STEPS := 36
@@ -27,6 +28,7 @@ var paused: bool = false
 
 var _config: Dictionary = {}
 var _actions: Array[Dictionary] = []
+var _summons: Array[Dictionary] = []
 var _stats: Dictionary = ZERO_STATS.duplicate(true)
 var _by_source: Dictionary = {}
 var _source_order: Array[int] = []
@@ -54,6 +56,7 @@ func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dicti
 	_enemy_pattern_index = 0
 	_config = config.duplicate(true)
 	_actions.clear()
+	_summons.clear()
 	_by_source.clear()
 	_source_order.clear()
 	_initial_events.clear()
@@ -84,6 +87,8 @@ func start(config: Dictionary, selected_encounter: String = "sentinel") -> Dicti
 		action["charged"] = warmup_steps > 0
 		_actions.append(action)
 		var uid: int = action["uid"]
+		if bool(action.get("summon", false)):
+			_summons.append({"uid": uid, "kind": action.kind, "name": action.name})
 		_source_order.append(uid)
 		_by_source[uid] = {"uid": uid, "kind": action["kind"], "name": action["name"],
 			"damage": 0, "raw_damage": 0, "activations": 0, "hits": 0}
@@ -139,6 +144,9 @@ func _current_enemy_attack() -> Dictionary:
 
 func get_encounter() -> Dictionary:
 	return _enemy_definition.duplicate(true)
+
+func get_summons() -> Array[Dictionary]:
+	return _summons.duplicate(true) if phase == "battle" else []
 
 func _step(events: Array[Dictionary]) -> void:
 	for action: Dictionary in _actions:
@@ -207,6 +215,7 @@ func _finish(result: String, events: Array[Dictionary]) -> void:
 		return
 	_result = result
 	phase = "won" if result == "won" else "lost"
+	_summons.clear()
 	battle_duration = battle_time
 	var event := _event("battle_end", {}, 0, "enemy" if result == "won" else "hero")
 	event["result"] = result
@@ -244,12 +253,23 @@ func _validate(config: Dictionary) -> String:
 	if not config.get("actions") is Array or config["actions"].is_empty() or config["actions"].size() > 24:
 		return "攻撃手段は1〜24個必要です"
 	var seen: Dictionary = {}
+	var summon_count := 0
 	for action: Variant in config["actions"]:
 		if not action is Dictionary:
 			return "攻撃手段の形式が無効です"
 		if not _integer_in(action.get("uid"), 1, 1000000000) or seen.has(action.get("uid")):
 			return "攻撃手段の識別子が無効または重複しています"
 		seen[action["uid"]] = true
+		if action.has("summon") and typeof(action.summon) != TYPE_BOOL:
+			return "使い魔の契約が無効です"
+		if action.get("event_type") == "familiar_attack" and not action.get("summon", false):
+			return "使い魔の攻撃元がありません"
+		if action.get("summon", false):
+			if config.class_id != "mage" or action.get("kind") != "moon_familiar" or action.get("event_type") != "familiar_attack":
+				return "使い魔の契約が無効です"
+			summon_count += 1
+			if summon_count > MAX_SUMMONS:
+				return "使い魔は最大2体です"
 		if not _text(action.get("kind"), 128) or not _text(action.get("name"), 128) or not _text(action.get("event_type"), 64):
 			return "攻撃手段の名前またはイベント種別が無効です"
 		if not _integer_in(action.get("damage"), 1, 10000) or not _integer_in(action.get("hits"), 1, 16):

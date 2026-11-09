@@ -14,7 +14,7 @@ const SHORT_LABELS := {
 	"mage_ward": "護符", "iron_blade": "長剣", "greatblade": "大剣",
 	"charge_seal": "溜", "knight_ward": "装甲",
 	"frost_bolt": "氷矢", "gale_blades": "風刃", "steam_burst": "蒸爆", "ember_tornado": "炎渦",
-	"solar_crown": "三連星", "glacier_prism": "氷槍", "storm_orbit": "暴風", "arcane_nova": "星環", "wind_prism": "疾風環",
+	"solar_crown": "三連星", "glacier_prism": "氷槍", "storm_orbit": "暴風", "arcane_nova": "星環", "wind_prism": "疾風環", "moon_familiar": "月蛾",
 	"solar_lance": "熾槍", "frost_orbit": "霜嵐",
 }
 var run: RefCounted
@@ -261,7 +261,7 @@ func _draw() -> void:
 				draw_line(point - Vector2(0, 5), point + Vector2(0, 5), glow, 2)
 		if active_sources.has(int(item.uid)):
 			draw_rect(rect.grow(-1), Color(1, 0.88, 0.55, float(active_sources[int(item.uid)]) / 0.28), false, 2)
-		if run.class_id == "mage" and battle != null and battle.phase == "battle" and str(definition.category) == "attack":
+		if run.class_id == "mage" and battle != null and battle.phase == "battle" and str(definition.category) in ["attack", "summon"]:
 			var timings: Dictionary = timing_sources
 			if timings.has(int(item.uid)):
 				var bar := Rect2(Vector2(rect.position.x + 3, rect.end.y - 3), Vector2(rect.size.x - 6, 2))

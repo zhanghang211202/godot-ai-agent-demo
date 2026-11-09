@@ -40,7 +40,7 @@ func _model() -> void:
 	var choice := Guide.choose(run, recipes[2])
 	check(choice.ok and choice.held.origin == "source" and choice.held.index == 1 and choice.target_uid == 1 and choice.preview.ok, "Ice arrow selects water and an existing spark without spending")
 	var hints := Guide.target_hints(run, choice.held)
-	check(hints.size() == 2 and hints[1].ok and hints[2].ok and hints[1].product == "frost_bolt", "Both compatible starter spells get truthful target hints")
+	check(hints.size() == 3 and hints[1].ok and hints[2].ok and hints[1].product == "frost_bolt" and hints[3].ok and hints[3].product == "moon_familiar", "Water highlights both starter spells and the compatible familiar contract")
 	check(_state(run) == before, "Opening guide and evaluating all target previews preserve every material and UID")
 	choice = Guide.choose(run, recipes[4])
 	check(choice.ok and choice.needs_placement and choice.first_kind == "fire_mote" and choice.next_kind == "water_mote", "Two source-only ingredients are explained as two normal steps")
@@ -87,7 +87,7 @@ func _run() -> void:
 	ui.grid.set_process(false)
 	var original := _state(ui.run)
 	await _click(ui.recipe_button.get_global_rect().get_center())
-	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 13, "Real button opens thirteen actual recipe cards")
+	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 14, "Real button opens fourteen actual recipe cards")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _frame in range(4): await process_frame
@@ -111,7 +111,7 @@ func _run() -> void:
 	await _capture("recipe-book")
 	await _click(ui.recipe_cards[2].get_global_rect().get_center())
 	check(not ui.recipe_overlay.visible and ui.held.origin == "source" and ui.held.index == 1 and _state(ui.run) == original, "Native ice card click selects water without consuming it")
-	check(ui.grid.recipe_hints.size() == 2 and ui.grid.recipe_hints[1].ok and ui.grid.recipe_hints[2].ok, "Gold hints identify both real valid ingredients")
+	check(ui.grid.recipe_hints.size() == 2 and ui.grid.recipe_hints[1].ok and ui.grid.recipe_hints[2].ok and not ui.grid.recipe_hints.has(3), "Ice recipe highlights only the two ingredients that make ice, not the familiar contract")
 	await _capture("recipe-targets")
 	await _move(_cell(Vector2i.ZERO))
 	check(ui.preview_label.visible and ui.preview_label.text.contains("霜晶の氷矢") and _state(ui.run) == original, "Hover shows the real ice output and remains non-destructive")

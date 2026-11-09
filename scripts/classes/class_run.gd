@@ -118,7 +118,7 @@ func preview_placement(data: Dictionary, cell: Vector2i) -> Dictionary:
 	# Run the actual transaction on an isolated copy. This includes owned-source
 	# removal, product anchoring, stock/cost validation and directional support.
 	var copy = get_script().new()
-	for field in ["class_id", "gold", "hp", "max_hp", "phase", "seed_value", "_next_uid"]:
+	for field in ["class_id", "gold", "hp", "max_hp", "phase", "seed_value", "_next_uid", "campaign_rules_version"]:
 		copy.set(field, get(field))
 	copy.items.assign(items.duplicate(true))
 	copy.sources.assign(sources.duplicate(true))
@@ -271,6 +271,8 @@ func get_combat_config() -> Dictionary:
 			if factor < 1.0:
 				action["interval_factor"] = factor
 			actions.append(action)
+		elif str(definition["category"]) == "summon":
+			actions.append({"uid": item.uid, "kind": item.kind, "name": definition.name, "damage": definition.damage, "base_damage": definition.damage, "support_bonus": 0, "hits": definition.hits, "interval": definition.interval, "warmup": definition.warmup, "event_type": definition.event_type, "summon": true})
 		elif str(definition["category"]) == "support":
 			supports.append({"uid": item["uid"], "kind": item["kind"], "name": definition["name"], "bonus": definition["support_bonus"], "cells": get_support_cells(item)})
 	return {"class_id": class_id, "hp": hp, "max_hp": max_hp, "armor": armor, "actions": actions, "supports": supports, "rules_version": Catalog.RULES_VERSION}

@@ -82,7 +82,7 @@ func show_event(event: Dictionary) -> void:
 	if str(event.get("type", "")) == "battle_end":
 		motion.finish_battle()
 		mage_cast_timeline.finish_battle()
-	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi", "attack", "heavy_charge", "charge"]:
+	if str(event.get("type", "")) in ["spell", "spell_burst", "spell_multi", "familiar_attack", "attack", "heavy_charge", "charge"]:
 		last_event = event
 		flash = 0.6
 	queue_redraw()
@@ -120,7 +120,7 @@ func _process(delta: float) -> void:
 			mage_cast_timeline.sync_prediction(_upcoming_casts())
 		if motion.state == "idle":
 			for cast: Dictionary in _upcoming_casts():
-				if cast.target == "enemy":
+				if cast.target == "enemy" and cast.kind != "moon_familiar":
 					motion.prepare_mage_cast(int(cast.source_uid))
 					break
 		feedback.advance(delta * playback_speed)
@@ -282,6 +282,20 @@ func get_art_layout() -> Dictionary:
 		missing.append(hero_id)
 	if background.is_empty():
 		missing.append(background_id)
+	var familiars: Array[Dictionary] = []
+	if run != null and run.class_id == "mage" and battle != null and battle.phase == "battle":
+		var live: Array = battle.get_summons()
+		var familiar_art := MageArt.icon("moon_familiar") if not live.is_empty() else {}
+		if not live.is_empty() and familiar_art.is_empty(): missing.append("moon_familiar")
+		if not familiar_art.is_empty():
+			var familiar_source: Rect2 = familiar_art.source_rect
+			var familiar_height := clampf(hero_height * 0.27, 52.0, 92.0)
+			var familiar_size := Vector2(familiar_height * familiar_source.size.x / familiar_source.size.y, familiar_height)
+			var start_x := clampf(anchor.x + hero_height * 0.78, scene.position.x + familiar_size.x, maxf(scene.position.x + familiar_size.x, enemy.position.x - familiar_size.x * (live.size() + 0.5)))
+			for index in range(live.size()):
+				var bob := sin(float(battle.battle_time) * 2.0 + index * PI) * 4.0
+				var center := Vector2(start_x + index * (familiar_size.x + 12), clampf(ground - hero_height * 0.68 - 20 + bob, scene.position.y + familiar_size.y / 2, ground - familiar_size.y / 2))
+				familiars.append({"uid": live[index].uid, "kind": live[index].kind, "center": center, "rect": Rect2(center - familiar_size / 2, familiar_size)})
 	return {"class_id": str(run.class_id) if run != null else "", "hero_id": hero_id,
 		"hero_path": hero.get("path", ""), "background_id": background_id, "background_path": Art.asset_path(background_id),
 		"source_size": hero.get("size", Vector2i.ZERO), "source_rect": source, "hero_rect": destination, "hero_body_height": body_height, "hero_cast_point": cast_point, "hero_release_point": release_point,
@@ -299,7 +313,7 @@ func get_art_layout() -> Dictionary:
 		"feedback": feedback.report(), "spell_effects": MageEffects.visible_effects(feedback.numbers) if run != null and run.class_id == "mage" else [],
 		"spell_casts": _upcoming_casts(), "effect_clip_rect": scene, "encounter_id": encounter.id,
 		"enemy_cast_point": enemy_cast_point,
-		"shields": Shield.visible_shields(feedback.numbers) if shield_effects_enabled and run != null and run.class_id == "mage" else []}
+		"shields": Shield.visible_shields(feedback.numbers) if shield_effects_enabled and run != null and run.class_id == "mage" else [], "familiars": familiars}
 
 func get_art_report() -> Dictionary:
 	var layout := get_art_layout()
@@ -371,9 +385,11 @@ func _draw() -> void:
 	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素の試練" if run.class_id == "mage" else " · 動作サンプル"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	var recipes_count := Catalog.recipes_for("mage").size()
 	var spells_count := 1
+	var familiar_count := 0
 	for recipe: Dictionary in Catalog.recipes_for("mage"):
 		if Catalog.definition(recipe.result).category == "attack": spells_count += 1
-	var note := "%d種類の魔法 · %d種類の組み合わせ" % [spells_count, recipes_count] if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
+		if Catalog.definition(recipe.result).category == "summon": familiar_count += 1
+	var note := "%d種の術式 · 契約%d種 · %d種の組合せ" % [spells_count, familiar_count, recipes_count] if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
@@ -472,9 +488,17 @@ func _draw_feedback() -> void:
 		return
 	var layout := get_art_layout()
 	effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
+	if not layout.familiars.is_empty():
+		var familiar_art := MageArt.icon("moon_familiar")
+		for familiar: Dictionary in layout.familiars:
+			effects_layer.draw_texture_rect_region(familiar_art.texture, familiar.rect, familiar_art.source_rect)
 	if run.class_id == "mage":
 		for cast: Dictionary in layout.spell_casts:
 			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else Vector2(layout.hero_release_point if cast.phase == "flight" else layout.hero_cast_point) + _mage_recoil() + _source_cast_offset(int(cast.source_uid))
+			if cast.kind == "moon_familiar":
+				var matching: Array = layout.familiars.filter(func(familiar: Dictionary): return familiar.uid == cast.source_uid)
+				if matching.is_empty(): continue
+				from = matching[0].center
 			var to: Vector2 = _incoming_point(layout) if cast.target == "hero" else layout.enemy_cast_point
 			MageEffects.draw_cast(effects_layer, cast, from, to)
 		for effect: Dictionary in layout.spell_effects:

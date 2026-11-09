@@ -14,9 +14,25 @@ static var _extra_icons: Dictionary = {}
 static var _same_icons: Dictionary = {}
 static var _advanced_icons: Dictionary = {}
 static var _wind_prism: Dictionary = {}
+static var _familiar: Dictionary = {}
 static var _enemies: Dictionary = {}
 
 static func icon(kind: String) -> Dictionary:
+	if kind == "moon_familiar":
+		if _familiar.is_empty():
+			var path := "res://assets/art/mage-familiar-v1/moon-familiar.png"
+			var image := ClassImage.load_image(path)
+			if image == null or image.is_empty():
+				return {}
+			image.convert(Image.FORMAT_RGBA8)
+			var region := Rect2i(Vector2i.ZERO, image.get_size())
+			var bounds := _bounds(image, region)
+			var texture := ImageTexture.create_from_image(image)
+			var atlas := AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(bounds)
+			_familiar = {"path": path, "texture": texture, "atlas": atlas, "source_rect": Rect2(bounds), "region": Rect2(region), "source_size": image.get_size()}
+		return _familiar
 	if kind == "wind_prism":
 		if _wind_prism.is_empty():
 			var path := "res://assets/art/mage-haste-v1/items/wind-prism.png"

@@ -162,7 +162,7 @@ static func _validate(raw: Variant) -> Dictionary:
 	var items := ExistingSave._validate_items(raw.get("items"), "mage", int(raw.next_uid), actual)
 	if not items.ok:
 		return items
-	if completed and not items.items.any(func(item: Dictionary): return Catalog.definition(item.kind).category == "attack"):
+	if completed and not items.items.any(func(item: Dictionary): return Catalog.definition(item.kind).category in ["attack", "summon"]):
 		return _failure("踏破記録の攻撃手段がありません。")
 	if expected.size() != actual.size():
 		return _failure("盤面と素材の数が一致しません。")
