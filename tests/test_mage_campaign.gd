@@ -152,6 +152,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == Campaign.encounter(0) and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
 	check(ui._mage_panel_texture != null and ui._mage_panel_texture.get_size() == Vector2(160, 104), "The moon-court frame is loaded and scaled for the actual UI")
+	check(ui._mage_button_texture != null and ui._mage_button_texture.get_size() == Vector2(128, 24) and ui.primary_button.get_theme_stylebox("normal") is StyleBoxTexture and ui.primary_button.get_theme_stylebox("hover") is StyleBoxTexture and ui.primary_button.get_theme_stylebox("disabled") is StyleBoxFlat, "Primary button uses the loaded pixel frame while unavailable actions remain visually muted")
 	for panel in ui.workspace_panel.get_children():
 		check(panel.get_theme_stylebox("panel") is StyleBoxTexture, "Each preparation panel uses the nine-slice fantasy frame")
 	check(ui.campaign_stage_label.text.contains("●○○○○") and ui.condense_button.text == "凝結 ↓", "The first stage and resource navigation are explicit")

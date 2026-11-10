@@ -1,0 +1,13 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "prompt": "Use case: game UI production asset. Create exactly one empty horizontal button background for a detailed 16-bit fantasy tactical RPG in a moonlit palace. A wide, low rectangular button with a dark desaturated royal-purple inset, fine antique-gold bevel, and tiny restrained crescent-inspired corner details. Straight continuous edges, symmetrical 90-degree corners, generous clear central area for a short text label. The button is isolated, complete and centered, with transparent background outside the rectangle. Front-on orthographic view, clustered pixel art, muted purple, slate and warm gold. No text, letters, numbers, icon, characters, watermark, drop shadow, extra buttons, sprite sheets, or full interface. Keep the outer contour regular so corners can be used in a nine-slice UI.",
+  "assets": [
+    {
+      "file": "moon-button.png",
+      "width": 2172,
+      "height": 724,
+      "sha256": "83e7d64f757996a1cd02bfd80a46f47500aa20be293fb28caaea0cdf28351c10",
+      "role": "Source nine-slice background for mage action buttons. Original PNG is preserved; runtime uses the measured alpha >= 128 bounds (49,164,2074,393) and nearest-neighbor scaling."
+    }
+  ]
+}

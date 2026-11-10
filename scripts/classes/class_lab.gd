@@ -63,6 +63,7 @@ var recipe_button: Button
 var condense_button: Button
 var _condense_view := false
 var _mage_panel_texture: Texture2D
+var _mage_button_texture: Texture2D
 var source_scroll: ScrollContainer
 var recipe_overlay: ColorRect
 var recipe_scroll: ScrollContainer
@@ -363,6 +364,44 @@ func _build_interface() -> void:
 	root.add_child(status_label)
 	if mage_focus:
 		_build_recipe_book()
+		_install_mage_button_art()
+
+func _install_mage_button_art() -> void:
+	var image := ClassImage.load_image("res://assets/art/mage-ui-button-v1/moon-button.png")
+	if image == null or image.is_empty() or image.get_width() < 2123 or image.get_height() < 557:
+		return
+	# The source includes faint stray alpha outside the button. This measured
+	# alpha >= 128 region contains the complete rectangular button.
+	image = image.get_region(Rect2i(49, 164, 2074, 393))
+	image.resize(128, 24, Image.INTERPOLATE_NEAREST)
+	_mage_button_texture = ImageTexture.create_from_image(image)
+	var buttons := [class_buttons.get("mage"), undo_button, recipe_button, condense_button, rehearsal_button,
+		save_button, load_button, replay_button, pause_button, speed_button, workspace_button, primary_button,
+		rotate_button, discard_button, recipe_close_button]
+	for button: Button in buttons:
+		if button == null: continue
+		button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		button.add_theme_stylebox_override("normal", _mage_button_box(Color.WHITE if button == primary_button else Color("b8adc3")))
+		button.add_theme_stylebox_override("hover", _mage_button_box(Color("fff0cf")))
+		button.add_theme_stylebox_override("pressed", _mage_button_box(Color("9884a5")))
+		button.add_theme_stylebox_override("disabled", _style(Color("1a2030"), Color("3b3d4a")))
+	if primary_button != null:
+		primary_button.add_theme_font_size_override("font_size", 18)
+		primary_button.add_theme_color_override("font_color", Color("fff1d0"))
+
+func _mage_button_box(tint: Color) -> StyleBoxTexture:
+	var box := StyleBoxTexture.new()
+	box.texture = _mage_button_texture
+	box.modulate_color = tint
+	box.set_texture_margin(SIDE_LEFT, 12)
+	box.set_texture_margin(SIDE_RIGHT, 12)
+	box.set_texture_margin(SIDE_TOP, 7)
+	box.set_texture_margin(SIDE_BOTTOM, 7)
+	box.content_margin_left = 12
+	box.content_margin_right = 12
+	box.content_margin_top = 8
+	box.content_margin_bottom = 8
+	return box
 
 func _build_recipe_book() -> void:
 	recipe_overlay = ColorRect.new()

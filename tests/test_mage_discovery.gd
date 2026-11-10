@@ -86,6 +86,8 @@ func _run() -> void:
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
 	var original := _state(ui.run)
+	await _move(ui.recipe_button.get_global_rect().get_center())
+	await _capture("magic-button-hover")
 	await _click(ui.recipe_button.get_global_rect().get_center())
 	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 16, "Real button opens sixteen actual recipe cards")
 	var filter_y: float = ui.recipe_filter_buttons["summon"].get_global_rect().position.y

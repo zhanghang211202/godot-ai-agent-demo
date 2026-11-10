@@ -91,6 +91,7 @@ if (command === 'cli') {
     ['assets/art/mage-familiar-upgrade-v1/crowned-moth.png', 'crowned-moth.png'],
     ['assets/art/mage-familiar-wind-v1/wind-moth.png', 'wind-moth.png'],
     ['assets/art/mage-ui-frame-v1/moon-panel.png', 'moon-panel.png'],
+    ['assets/art/mage-ui-button-v1/moon-button.png', 'moon-button.png'],
   ]) copyFileSync(path.join(projectRoot, source), path.join(fixture, target));
   let status = run(editor, ['--headless', '--path', fixture, 'res://cold.tscn']);
   if (status !== 0) process.exit(status);
