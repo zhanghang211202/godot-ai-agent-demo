@@ -596,5 +596,11 @@ func _center(text: String, position: Vector2, font_size: int, color: Color) -> v
 	draw_string(font, position - Vector2(width / 2.0, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
 
 func _bar(rect: Rect2, value: int, maximum: int, color: Color) -> void:
-	draw_rect(rect, Color("2c3647"))
-	draw_rect(Rect2(rect.position, Vector2(rect.size.x * clampf(float(value) / maxi(1, maximum), 0, 1), rect.size.y)), color)
+	var frame := rect.grow(2)
+	draw_rect(frame, Color("101422"))
+	draw_rect(frame.grow(-1), Color("8f7962"), false, 1)
+	draw_rect(rect, Color("282438"))
+	var fill := Rect2(rect.position, Vector2(rect.size.x * clampf(float(value) / maxi(1, maximum), 0, 1), rect.size.y))
+	if fill.has_area():
+		draw_rect(fill, color.darkened(0.14))
+		draw_rect(Rect2(fill.position, Vector2(fill.size.x, 2)), color.lightened(0.18))

@@ -485,6 +485,9 @@ func _build_recipe_book() -> void:
 		card.expand_icon = true
 		card.add_theme_constant_override("icon_max_width", 56)
 		card.add_theme_font_size_override("font_size", 16)
+		card.add_theme_stylebox_override("normal", _style(Color("2a263f"), Color("675b75")))
+		card.add_theme_stylebox_override("hover", _style(Color("423650"), Color("d3b77e")))
+		card.add_theme_stylebox_override("pressed", _style(Color("54435d"), Color("efcf8f")))
 		recipe_cards.append(card)
 		cards.add_child(card)
 	var footer := _label("素材数には盤上の未合成素材も含みます。選択時には消費しません。Esc で閉じる。", 14, Color("9eb0c5"))
@@ -1153,9 +1156,9 @@ func _sync() -> void:
 			var selected: bool = held.get("origin", "") == "source" and int(held.get("index", -1)) == i
 			var tint := Color(["b97459", "6bb9d2", "77b99a"][i]) if i < 3 else Color("8879a6")
 			var edge := Color("f2d290") if selected else tint.darkened(0.30)
-			source_buttons[i].add_theme_stylebox_override("normal", _source_style(Color("34314a") if selected else Color("253147"), edge))
-			source_buttons[i].add_theme_stylebox_override("hover", _source_style(Color("38445b"), tint.lightened(0.18)))
-			source_buttons[i].add_theme_stylebox_override("pressed", _source_style(Color("484056"), Color("f2d290")))
+			source_buttons[i].add_theme_stylebox_override("normal", _source_style(Color("44334d") if selected else Color("28263f"), edge))
+			source_buttons[i].add_theme_stylebox_override("hover", _source_style(Color("413650"), tint.lightened(0.18)))
+			source_buttons[i].add_theme_stylebox_override("pressed", _source_style(Color("534057"), Color("f2d290")))
 			source_buttons[i].add_theme_stylebox_override("disabled", _source_style(Color("202735"), Color("333d4e")))
 	var recipes: PackedStringArray = []
 	for recipe in Catalog.recipes_for(run.class_id):
