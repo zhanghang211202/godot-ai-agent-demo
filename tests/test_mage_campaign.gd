@@ -189,6 +189,9 @@ func _run() -> void:
 	check(ui.detail_label.text.contains("護符の板") and ui.detail_label.text.contains("4残滓で凝結") and ui.detail_label.text.contains("2 × 1"), "Selecting a paid ward describes its effect, actual price and footprint")
 	ui._rotate()
 	check(ui.detail_label.text.contains("1 × 2") and ui.run.sources == sources_before and ui.run.items == inventory_before and ui.run.gold == 4, "Rotating the unpurchased ward updates its footprint without consuming resources")
+	var ward_preview: Dictionary = ui.run.preview_placement(ui.held, Vector2i(4, 1))
+	ui._show_placement_preview(ward_preview)
+	check(ward_preview.ok and ui.preview_label.text.contains("法盾：2→4") and ui.preview_label.text.contains("残滓4→0") and ui.preview_label.text.contains("残り1→0") and ui.run.gold == 4 and ui.run.sources == sources_before and ui.run.items == inventory_before, "Ward preview shows the real mitigation and resource changes without spending")
 	await _capture("source-ward-rotated.png")
 	ui.run.gold = 0
 	ui._clear_selection()

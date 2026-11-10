@@ -1142,12 +1142,40 @@ func _show_placement_preview(preview: Dictionary) -> void:
 		return
 	var item: Dictionary = preview.item
 	var definition: Dictionary = run.get_definition(str(item.kind))
-	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで素材や資源は消費しません" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
+	preview_label.text = "%sプレビュー：%s\n%d×%dマス · 確定まで消費なし" % ["紡ぎ" if str(preview.event) == "merge" else "配置", definition.name, preview.size.x, preview.size.y]
+	if preview.has("source_index"):
+		var index := int(preview.source_index)
+		if index >= 0 and index < run.sources.size():
+			var source: Dictionary = run.sources[index]
+			preview_label.text += "\n%s：残り%d→%d" % [Catalog.definition(source.kind).name, int(source.remaining), int(preview.source_remaining_after)]
+			if campaign_focus and int(preview.gold_after) != run.gold:
+				preview_label.text += " · 残滓%d→%d" % [run.gold, int(preview.gold_after)]
+	var before: Dictionary = run.get_combat_config()
+	var previous := {}
+	for action: Dictionary in before.actions:
+		previous[int(action.uid)] = action
+	if int(before.armor) != int(preview.combat.armor):
+		preview_label.text += "\n法盾：%d→%d / 被弾の各段" % [before.armor, preview.combat.armor]
+	var remaining_uids := {}
 	for action: Dictionary in preview.combat.actions:
+		remaining_uids[int(action.uid)] = true
 		if int(action.uid) == int(item.uid):
 			preview_label.text += "\n使い魔：%d × %d回 / %.2f秒" % [action.damage, action.hits, action.interval] if action.get("summon", false) else "\n%d × %d回 / %.2f秒 · 接続+%d/回" % [action.damage, action.hits, action.interval, action.support_bonus]
-		elif definition.has("interval_factor") and float(action.get("interval_factor", 1.0)) < 1.0:
-			preview_label.text += "\n%s：%.2f秒ごと" % [action.name, action.interval]
+		if previous.has(int(action.uid)) and str(previous[int(action.uid)].kind) == str(action.kind):
+			var old: Dictionary = previous[int(action.uid)]
+			var changes: PackedStringArray = []
+			if int(old.damage) != int(action.damage):
+				changes.append("威力%d→%d" % [old.damage, action.damage])
+			if int(old.hits) != int(action.hits):
+				changes.append("段数%d→%d" % [old.hits, action.hits])
+			if not is_equal_approx(float(old.interval), float(action.interval)):
+				changes.append("間隔%.2f→%.2f秒" % [old.interval, action.interval])
+			if not changes.is_empty():
+				preview_label.text += "\n%s #%d\n  %s" % [action.name, action.uid, " · ".join(changes)]
+	if str(preview.event) == "merge":
+		for action: Dictionary in before.actions:
+			if not remaining_uids.has(int(action.uid)):
+				preview_label.text += "\n合成で消費：%s #%d" % [action.name, action.uid]
 
 func _show_summary() -> void:
 	var summary: Dictionary = battle.get_summary()

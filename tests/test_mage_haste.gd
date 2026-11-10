@@ -100,6 +100,10 @@ func _ui() -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	var before_move := _state(ui.run)
+	var moved_preview: Dictionary = ui.run.preview_placement({"origin": "bag", "uid": 1}, Vector2i(1, 0))
+	ui._show_placement_preview(moved_preview)
+	check(moved_preview.ok and ui.preview_label.text.contains("威力5→7") and _state(ui.run) == before_move, "Moving a spell previews its own gained connection without modifying the board")
 	ui._on_drop({"origin": "bag", "uid": 1}, Vector2i(1, 0))
 	ui._open_recipe_book()
 	for _i in range(3): await process_frame
@@ -119,8 +123,14 @@ func _ui() -> void:
 	check(ui.held.get("origin") == "source" and ui.held.get("index") == 2 and _state(ui.run) == before, "Recipe guidance selects actual wind without consumption")
 	var preview: Dictionary = ui.run.preview_placement(ui.held, Vector2i(2, 1))
 	ui._show_placement_preview(preview)
-	check(ui.preview_label.text.contains("1.20秒") and _state(ui.run) == before, "Placement preview exposes the connected spell's real accelerated interval")
+	check(ui.preview_label.text.contains("威力7→5") and ui.preview_label.text.contains("間隔1.50→1.20秒") and ui.preview_label.text.contains("風の元素：残り1→0") and _state(ui.run) == before, "Placement preview compares the affected spell and exact wind cost without consumption")
 	await _capture("preview.png")
+	root.size = Vector2i(1280, 800)
+	for _i in range(4): await process_frame
+	check(ui.details_scroll.get_global_rect().intersects(ui.preview_label.get_global_rect()) and ui.preview_label.visible, "The placement comparison remains reachable in a small window")
+	await _capture("preview-1280.png")
+	root.size = Vector2i(1440, 960)
+	for _i in range(4): await process_frame
 	ui._on_cell_selected(Vector2i(2, 1))
 	check(ui.run.item_by_uid(3).kind == "wind_prism" and is_equal_approx(_action(ui.run, 1).interval, 1.2), "Normal UI weaving produces the working support")
 	await _capture("prepared.png")

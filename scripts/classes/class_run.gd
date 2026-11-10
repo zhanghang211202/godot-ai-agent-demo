@@ -137,6 +137,12 @@ func preview_placement(data: Dictionary, cell: Vector2i) -> Dictionary:
 	result["size"] = copy.get_item_size(item)
 	result["combat"] = copy.get_combat_config()
 	result["support_bonus"] = copy.get_adjacency_bonus(item)
+	result["gold_after"] = copy.gold
+	if str(data.get("origin", "")) == "source":
+		var index := int(data.get("index", -1))
+		if index >= 0 and index < copy.sources.size():
+			result["source_index"] = index
+			result["source_remaining_after"] = int(copy.sources[index].remaining)
 	return result
 
 func _place_or_merge(candidate: Dictionary, cell: Vector2i, owned: bool) -> Dictionary:
