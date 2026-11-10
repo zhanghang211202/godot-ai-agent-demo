@@ -151,15 +151,21 @@ func _run() -> void:
 	ui.grid.set_process(false)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == Campaign.encounter(0) and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
+	check(ui.campaign_stage_label.text.contains("●○○○○") and ui.condense_button.text == "凝結 ↓", "The first stage and resource navigation are explicit")
 	check(ui.source_buttons.size() == 9 and ui.source_buttons[3].disabled and ui.resources_label.text.contains("残滓"), "Free elements and residue condensation are available in one preparation UI")
 	ui._rehearse()
 	check(not ui._rehearsal_signature.is_empty() and ui.details_content.get_child(0) == ui.summary_label, "The forecast appears first after rehearsal")
 	ui._select_source(0)
+	var selected_style := ui.source_buttons[0].get_theme_stylebox("normal") as StyleBoxFlat
+	var other_style := ui.source_buttons[1].get_theme_stylebox("normal") as StyleBoxFlat
+	check(selected_style.border_color == Color("f2d290") and other_style.border_color != selected_style.border_color, "The selected element has a distinct gold border")
 	check(ui.detail_label.text.contains("火の元素") and ui.detail_label.text.contains("無料で吸収") and ui.detail_icon.visible, "Selecting a free element shows its effect, availability and icon")
 	check(not ui._rehearsal_signature.is_empty() and ui.summary_label.get_index() == ui.details_content.get_child_count() - 1 and ui.details_scroll.scroll_vertical == 0, "Selecting a source reveals its details while retaining the forecast below")
 	await _capture("source-fire-inspect.png")
 	root.size = Vector2i(1280, 800)
 	for _i in range(4): await process_frame
+	for index in range(3):
+		check(ui.source_scroll.get_global_rect().encloses(ui.source_buttons[index].get_global_rect()), "1280×800 shows the entire free element card %d" % index)
 	await _capture("source-fire-1280.png")
 	root.size = Vector2i(1440, 960)
 	for _i in range(4): await process_frame
@@ -192,8 +198,10 @@ func _run() -> void:
 		root.size = dimensions
 		for _i in range(4): await process_frame
 		var viewport := Rect2(Vector2.ZERO, Vector2(dimensions))
+		check(viewport.encloses(ui.campaign_stage_label.get_global_rect()) and viewport.encloses(ui.class_buttons["mage"].get_global_rect()) and not ui.campaign_stage_label.get_global_rect().intersects(ui.class_buttons["mage"].get_global_rect()), str(dimensions) + " stage progress and restart do not overlap")
 		check(viewport.encloses(ui.condense_button.get_global_rect()) and viewport.encloses(ui.recipe_button.get_global_rect()) and not ui.condense_button.get_global_rect().intersects(ui.recipe_button.get_global_rect()), str(dimensions) + " recipe and condensation controls are visible and separate")
 		check(viewport.encloses(ui.save_button.get_global_rect()) and viewport.encloses(ui.load_button.get_global_rect()) and viewport.encloses(ui.primary_button.get_global_rect()) and not ui.load_button.get_global_rect().intersects(ui.primary_button.get_global_rect()), str(dimensions) + " save and battle controls remain usable")
+		if dimensions.x == 1920: await _capture("ui-prepare-1920.png")
 	root.size = Vector2i(1440, 960)
 	for _i in range(4): await process_frame
 	check(ui.run.acquire(0, Vector2i.ZERO).ok and ui.run.acquire(1, Vector2i(3, 2)).ok and ui.run.acquire(2, Vector2i(3, 2)).ok, "Five-battle build uses only normal finite acquisition and weaving")
@@ -279,7 +287,12 @@ func _run() -> void:
 				ui.condense_button.pressed.emit()
 				for _i in range(3): await process_frame
 				check(ui.source_scroll.scroll_vertical > 0 and ui.source_scroll.get_global_rect().intersects(ui.source_buttons[3].get_global_rect()), "Condense button reveals the purchasable item list")
+				check(ui.condense_button.text == "元素 ↑", "The resource navigation offers a return to the elements")
 				await _capture("stage-2-residue.png")
+				ui.condense_button.pressed.emit()
+				check(ui.source_scroll.scroll_vertical == 0 and ui.condense_button.text == "凝結 ↓", "The same control returns to free elements")
+				ui.condense_button.pressed.emit()
+				for _i in range(3): await process_frame
 				ui.source_buttons[3].pressed.emit()
 				ui._on_cell_selected(Vector2i(2, 2))
 				check(ui.run.gold == 0 and ui.run.item_at(Vector2i(2, 2)).kind == "arcane_focus", "Residue is spent once to condense a real support item")

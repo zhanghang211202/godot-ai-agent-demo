@@ -60,6 +60,7 @@ var campaign_stage_label: Label
 var campaign_stage := 0
 var recipe_button: Button
 var condense_button: Button
+var _condense_view := false
 var source_scroll: ScrollContainer
 var recipe_overlay: ColorRect
 var recipe_scroll: ScrollContainer
@@ -187,6 +188,8 @@ func _build_interface() -> void:
 	var inventory := _panel(body, 440, 1.35)
 	carrier_label = _label("", 22)
 	if mage_focus:
+		_decorate_panel(inventory, Color("78669d"))
+		carrier_label.add_theme_color_override("font_color", Color("e5d8ff"))
 		var carrier_header := HBoxContainer.new()
 		inventory.add_child(carrier_header)
 		carrier_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -208,9 +211,13 @@ func _build_interface() -> void:
 	if not mage_focus:
 		inventory.add_child(_label("赤：配置不可", 14, Color("a7b4c5")))
 	var source_column := _panel(body, 270, 0.8)
+	if mage_focus:
+		_decorate_panel(source_column, Color("8c785e"))
 	var source_heading := HBoxContainer.new()
 	source_column.add_child(source_heading)
 	resources_label = _label("", 20)
+	if mage_focus:
+		resources_label.add_theme_color_override("font_color", Color("efdba7"))
 	resources_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	source_heading.add_child(resources_label)
 	if mage_focus:
@@ -229,13 +236,15 @@ func _build_interface() -> void:
 	source_column.add_child(source_scroll)
 	var source_list := VBoxContainer.new()
 	source_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	source_list.add_theme_constant_override("separation", 10)
+	source_list.add_theme_constant_override("separation", 4 if mage_focus else 10)
 	source_scroll.add_child(source_list)
 	for index in range(9 if campaign_focus else 3):
 		if campaign_focus and index == 3:
 			source_list.add_child(_label("魔力残滓で凝結", 19, Color("e4cf9d")))
 		var b := _button("", func(): _select_source(index))
-		b.custom_minimum_size.y = 62
+		b.custom_minimum_size.y = 52 if mage_focus else 62
+		if mage_focus:
+			b.add_theme_font_size_override("font_size", 15)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		b.set_drag_forwarding(func(at: Vector2): return _source_drag(index, at), Callable(), Callable())
@@ -247,6 +256,9 @@ func _build_interface() -> void:
 	source_list.add_child(recipe_label)
 	var details := _panel(body, 285, 0.9)
 	phase_label = _label("", 20)
+	if mage_focus:
+		_decorate_panel(details, Color("5e858c"))
+		phase_label.add_theme_color_override("font_color", Color("c3e8e3"))
 	if campaign_focus:
 		var phase_header := HBoxContainer.new()
 		details.add_child(phase_header)
@@ -402,7 +414,12 @@ func _open_recipe_book() -> void:
 
 func _show_condense() -> void:
 	if campaign_focus and source_buttons.size() > 3:
-		source_scroll.ensure_control_visible(source_buttons[3])
+		_condense_view = not _condense_view
+		condense_button.text = "元素 ↑" if _condense_view else "凝結 ↓"
+		if _condense_view:
+			source_scroll.scroll_vertical = maxi(0, int(source_buttons[3].position.y) - 28)
+		else:
+			source_scroll.scroll_vertical = 0
 
 func _close_recipe_book() -> void:
 	if recipe_overlay != null:
@@ -471,6 +488,12 @@ func _panel(parent: Control, minimum_width: float, ratio: float) -> VBoxContaine
 	margin.add_child(column)
 	return column
 
+func _decorate_panel(column: VBoxContainer, accent: Color) -> void:
+	var panel := column.get_parent().get_parent() as PanelContainer
+	var box := _style(Color("192332"), accent.darkened(0.28))
+	box.border_width_top = 2
+	panel.add_theme_stylebox_override("panel", box)
+
 func _label(text: String, point_size: int, color: Color = Color("dce2ed")) -> Label:
 	var label := Label.new()
 	label.text = text
@@ -497,6 +520,12 @@ func _style(fill: Color, edge: Color) -> StyleBoxFlat:
 	box.content_margin_bottom = 8
 	return box
 
+func _source_style(fill: Color, edge: Color) -> StyleBoxFlat:
+	var box := _style(fill, edge)
+	box.content_margin_top = 4
+	box.content_margin_bottom = 4
+	return box
+
 func _new_class(id: String) -> void:
 	if mage_focus and id != "mage":
 		_notice("魔術師の試練です。")
@@ -506,6 +535,10 @@ func _new_class(id: String) -> void:
 		return
 	_close_recipe_book()
 	_has_battle_summary = false
+	_condense_view = false
+	if condense_button != null:
+		condense_button.text = "凝結 ↓"
+		source_scroll.scroll_vertical = 0
 	_set_workspace_open(true)
 	_rehearsal_signature = ""
 	details_content.move_child(summary_label, details_content.get_child_count() - 1)
@@ -917,7 +950,10 @@ func _sync() -> void:
 	resources_label.text = "残滓 %d" % run.gold if campaign_focus else "元素吸収 · 無料 / 有限" if run.class_id == "mage" else "武装補給 · %d 金貨" % run.gold
 	resources_label.tooltip_text = "敵から得た魔力残滓。凝結に使います。" if campaign_focus else ""
 	if campaign_stage_label != null:
-		campaign_stage_label.text = "第 %d / %d 戦%s" % [campaign_stage + 1, Encounters.CAMPAIGN_IDS.size(), " · BOSS" if campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else ""]
+		var steps := ""
+		for stage in range(Encounters.CAMPAIGN_IDS.size()):
+			steps += "●" if stage <= campaign_stage else "○"
+		campaign_stage_label.text = "%s  第 %d / %d 戦%s" % [steps, campaign_stage + 1, Encounters.CAMPAIGN_IDS.size(), " · BOSS" if campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else ""]
 	for i in range(source_buttons.size()):
 		var source: Dictionary = run.sources[i]
 		var definition: Dictionary = run.get_definition(source.kind)
@@ -929,6 +965,14 @@ func _sync() -> void:
 		source_buttons[i].text = "%s\n%s · 残り %d" % [definition.name, cost_label, int(source.remaining)]
 		source_buttons[i].disabled = run.phase != "prepare" or int(source.remaining) <= 0 or run.gold < int(source.cost)
 		source_buttons[i].tooltip_text = str(definition.description)
+		if mage_focus:
+			var selected: bool = held.get("origin", "") == "source" and int(held.get("index", -1)) == i
+			var tint := Color(["b97459", "6bb9d2", "77b99a"][i]) if i < 3 else Color("8879a6")
+			var edge := Color("f2d290") if selected else tint.darkened(0.30)
+			source_buttons[i].add_theme_stylebox_override("normal", _source_style(Color("34314a") if selected else Color("253147"), edge))
+			source_buttons[i].add_theme_stylebox_override("hover", _source_style(Color("38445b"), tint.lightened(0.18)))
+			source_buttons[i].add_theme_stylebox_override("pressed", _source_style(Color("484056"), Color("f2d290")))
+			source_buttons[i].add_theme_stylebox_override("disabled", _source_style(Color("202735"), Color("333d4e")))
 	var recipes: PackedStringArray = []
 	for recipe in Catalog.recipes_for(run.class_id):
 		recipes.append(str(recipe.label))
