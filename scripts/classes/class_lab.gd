@@ -72,6 +72,7 @@ var recipe_cards: Array[Button] = []
 var recipe_filter := "all"
 var recipe_filter_buttons: Dictionary = {}
 var recipe_close_button: Button
+var restart_dialog: ConfirmationDialog
 var persistence_enabled := true
 @export var checkpoint_path := Save.DEFAULT_PATH
 @export var campaign_checkpoint_path := CampaignSave.DEFAULT_PATH
@@ -189,11 +190,19 @@ func _build_interface() -> void:
 	for id in Catalog.CLASS_IDS:
 		if mage_focus and id != "mage":
 			continue
-		var b := _button("魔術師で開始" if id == "mage" else "騎士 H で開始", func(): _new_class(id))
+		var b := _button("魔術師で開始" if id == "mage" else "騎士 H で開始", func(): _request_restart(id) if campaign_focus else _new_class(id))
 		if mage_focus:
 			b.text = "最初から" if campaign_focus else "魔術師の試練をやり直す"
 		header.add_child(b)
 		class_buttons[id] = b
+	if campaign_focus:
+		restart_dialog = ConfirmationDialog.new()
+		restart_dialog.title = "遠征を最初から"
+		restart_dialog.dialog_text = "現在の遠征を終了し、七戦の新しい遠征を始めます。\n現在の配置・進行・魔力残滓は新しい記録に置き換わります。"
+		restart_dialog.ok_button_text = "新しく始める"
+		restart_dialog.cancel_button_text = "戻る"
+		restart_dialog.confirmed.connect(_confirm_campaign_restart)
+		add_child(restart_dialog)
 	var notice := _label("敵の魔力残滓を集め、素材を凝結 → 魔法を紡ぐ → 次の戦いへ · 戦前に自動保存" if campaign_focus else "元素を吸収 → 魔法を紡ぐ → 結晶核・法盾を配置 → 敵を選ぶ" if mage_focus else "C1 戦闘演出サンプル · ダメージ / 防御 / 被弾 / フェード", 15, Color("b6acc5"))
 	root.add_child(notice)
 	arena = ArenaView.new()
@@ -367,6 +376,8 @@ func _build_interface() -> void:
 	if mage_focus:
 		_build_recipe_book()
 		_install_mage_button_art()
+		if restart_dialog != null and _mage_panel_texture != null:
+			restart_dialog.add_theme_stylebox_override("panel", _mage_frame_box())
 
 func _install_mage_button_art() -> void:
 	var image := ClassImage.load_image("res://assets/art/mage-ui-button-v1/moon-button.png")
@@ -380,6 +391,8 @@ func _install_mage_button_art() -> void:
 	var buttons := [class_buttons.get("mage"), undo_button, recipe_button, condense_button, rehearsal_button,
 		save_button, load_button, replay_button, pause_button, speed_button, workspace_button, primary_button,
 		rotate_button, discard_button, recipe_close_button]
+	if restart_dialog != null:
+		buttons.append_array([restart_dialog.get_ok_button(), restart_dialog.get_cancel_button()])
 	for button: Button in buttons:
 		if button == null: continue
 		button.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -680,6 +693,21 @@ func _source_style(fill: Color, edge: Color) -> StyleBoxFlat:
 	box.content_margin_top = 4
 	box.content_margin_bottom = 4
 	return box
+
+func _request_restart(id: String) -> void:
+	if run.phase == "battle":
+		_notice("戦闘中は遠征をやり直せません。戦闘を終えるか戦前に戻してください。")
+		return
+	if id == "mage" and restart_dialog != null:
+		restart_dialog.popup_centered(Vector2i(560, 0))
+		restart_dialog.get_cancel_button().grab_focus()
+
+func _confirm_campaign_restart() -> void:
+	_new_class("mage")
+	if persistence_enabled:
+		var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path)
+		if not result.ok:
+			_notice("新しい遠征を保存できません：" + str(result.message))
 
 func _new_class(id: String) -> void:
 	if mage_focus and id != "mage":

@@ -38,6 +38,7 @@ func _run() -> void:
 	_enemy_rules()
 	_fixed_pressure()
 	_expanded_stock()
+	await _restart_confirmation()
 	for version in [1, 2]:
 		await _legacy(version)
 	for kind in ["mixed", "wind", "crowned"]:
@@ -46,6 +47,67 @@ func _run() -> void:
 		check((FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing") == fingerprints[path], "Actual player save unchanged: " + path)
 	print("Mage seven-stage: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
+
+func _restart_confirmation() -> void:
+	var path := OUTPUT.path_join("restart-%d.json" % Time.get_ticks_usec())
+	var old := Run.new()
+	old.new_run("mage")
+	old.campaign_rules_version = 2
+	old.sources = Campaign.initial_sources(2)
+	old.gold = 19
+	check(Save.save_run(old, 4, path).ok, "Restart fixture has an existing five-stage checkpoint")
+	var old_hash := FileAccess.get_sha256(path)
+	var ui = load("res://scenes/mage_campaign.tscn").instantiate()
+	ui.campaign_checkpoint_path = path
+	root.add_child(ui)
+	for _i in range(4): await process_frame
+	ui.set_process(false)
+	ui.arena.set_process(false)
+	ui.class_buttons["mage"].pressed.emit()
+	for _i in range(3): await process_frame
+	check(ui.restart_dialog.visible and ui.campaign_stage == 4 and ui.run.campaign_rules_version == 2 and FileAccess.get_sha256(path) == old_hash, "Restart asks first without changing the run or checkpoint")
+	if not DisplayServer.get_name().to_lower().contains("headless"):
+		root.get_texture().get_image().save_png(OUTPUT.path_join("restart-confirmation.png"))
+	for dimensions in [Vector2i(1280, 800), Vector2i(1920, 1080)]:
+		ui.restart_dialog.hide()
+		root.size = dimensions
+		await process_frame
+		ui.class_buttons["mage"].pressed.emit()
+		for _i in range(3): await process_frame
+		check(Rect2i(Vector2i.ZERO, dimensions).encloses(Rect2i(ui.restart_dialog.position, ui.restart_dialog.size)), "Restart dialog fits %s" % dimensions)
+		if not DisplayServer.get_name().to_lower().contains("headless"):
+			root.get_texture().get_image().save_png(OUTPUT.path_join("restart-confirmation-%dx%d.png" % [dimensions.x, dimensions.y]))
+	var cancel := InputEventKey.new()
+	cancel.keycode = KEY_ESCAPE
+	cancel.pressed = true
+	Input.parse_input_event(cancel)
+	for _i in range(3): await process_frame
+	check(not ui.restart_dialog.visible and ui.campaign_stage == 4 and FileAccess.get_sha256(path) == old_hash, "Cancelling restart preserves the old checkpoint")
+	root.size = Vector2i(1440, 960)
+	await process_frame
+	ui.class_buttons["mage"].pressed.emit()
+	await process_frame
+	check(ui.restart_dialog.get_cancel_button().has_focus(), "Restart initially focuses the cancel action")
+	var accept := InputEventKey.new()
+	accept.keycode = KEY_ENTER
+	accept.pressed = true
+	Input.parse_input_event(accept)
+	for _i in range(3): await process_frame
+	check(ui.campaign_stage == 4 and FileAccess.get_sha256(path) == old_hash, "Enter on the default focus does not replace the checkpoint")
+	ui.restart_dialog.hide()
+	ui.class_buttons["mage"].pressed.emit()
+	await process_frame
+	ui.restart_dialog.get_ok_button().pressed.emit()
+	await process_frame
+	var fresh := Run.new()
+	var loaded: Dictionary = Save.load_run(fresh, path)
+	check(loaded.ok and loaded.stage == 0 and fresh.campaign_rules_version == 3 and ui.run.campaign_rules_version == 3 and _state(fresh) == _state(ui.run), "Confirming writes a new seven-stage checkpoint immediately")
+	ui._start_battle()
+	ui.class_buttons["mage"].pressed.emit()
+	check(not ui.restart_dialog.visible and ui.run.phase == "battle", "Restart cannot open or replace a running battle")
+	ui.queue_free()
+	await process_frame
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 func _expanded_stock() -> void:
 	var run := Run.new()
