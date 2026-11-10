@@ -65,6 +65,8 @@ var source_scroll: ScrollContainer
 var recipe_overlay: ColorRect
 var recipe_scroll: ScrollContainer
 var recipe_cards: Array[Button] = []
+var recipe_filter := "all"
+var recipe_filter_buttons: Dictionary = {}
 var recipe_close_button: Button
 var persistence_enabled := true
 @export var checkpoint_path := Save.DEFAULT_PATH
@@ -349,14 +351,27 @@ func _build_recipe_book() -> void:
 	recipe_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	recipe_overlay.visible = false
 	add_child(recipe_overlay)
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	recipe_overlay.add_child(center)
+	var container := MarginContainer.new()
+	container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	container.add_theme_constant_override("margin_top", 60)
+	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	recipe_overlay.add_child(container)
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	container.add_child(row)
+	var left := Control.new()
+	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(left)
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(850, 0)
+	panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	panel.add_theme_stylebox_override("panel", _style(Color("1c2539"), Color("b5a0d9")))
-	center.add_child(panel)
+	row.add_child(panel)
+	var right := Control.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(right)
 	var margin := MarginContainer.new()
 	for edge in ["left", "top", "right", "bottom"]:
 		margin.add_theme_constant_override("margin_" + edge, 18)
@@ -375,6 +390,17 @@ func _build_recipe_book() -> void:
 	var hint := _label("レシピを選ぶと、合成できる素材が金枠で表示されます。赤枠は空き不足です。", 16, Color("b9c7d8"))
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(hint)
+	var filters := HBoxContainer.new()
+	filters.add_theme_constant_override("separation", 8)
+	column.add_child(filters)
+	for entry in [["all", "すべて"], ["attack", "術式"], ["summon", "使い魔"], ["support", "支援"]]:
+		var id := str(entry[0])
+		var button := _button(str(entry[1]), func(): _set_recipe_filter(id))
+		button.toggle_mode = true
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.custom_minimum_size.y = 38
+		recipe_filter_buttons[id] = button
+		filters.add_child(button)
 	recipe_scroll = ScrollContainer.new()
 	recipe_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	recipe_scroll.follow_focus = true
@@ -407,10 +433,18 @@ func _open_recipe_book() -> void:
 	recipe_overlay.visible = true
 	recipe_scroll.scroll_vertical = 0
 	for card in recipe_cards:
-		if not card.disabled:
+		if card.visible and not card.disabled:
 			card.grab_focus()
 			return
 	recipe_close_button.grab_focus()
+
+func _set_recipe_filter(id: String) -> void:
+	if id not in ["all", "attack", "summon", "support"]:
+		return
+	recipe_filter = id
+	_refresh_recipe_book()
+	if recipe_scroll != null:
+		recipe_scroll.scroll_vertical = 0
 
 func _show_condense() -> void:
 	if campaign_focus and source_buttons.size() > 3:
@@ -429,6 +463,17 @@ func _refresh_recipe_book() -> void:
 	if recipe_overlay == null:
 		return
 	var recipes: Array[Dictionary] = Catalog.recipes_for("mage")
+	var totals := {"all": recipes.size(), "attack": 0, "summon": 0, "support": 0}
+	for recipe: Dictionary in recipes:
+		var category := str(Catalog.definition(recipe.result).category)
+		if totals.has(category):
+			totals[category] += 1
+	for id in recipe_filter_buttons:
+		var button: Button = recipe_filter_buttons[id]
+		button.text = "%s %d" % [{"all": "すべて", "attack": "術式", "summon": "使い魔", "support": "支援"}[id], totals[id]]
+		button.set_pressed_no_signal(id == recipe_filter)
+		button.add_theme_stylebox_override("normal", _style(Color("393450") if id == recipe_filter else Color("283348"), Color("d9bd83") if id == recipe_filter else Color("516077")))
+		button.add_theme_stylebox_override("pressed", _style(Color("393450"), Color("d9bd83")))
 	for index in range(recipes.size()):
 		var recipe: Dictionary = recipes[index]
 		var definition: Dictionary = Catalog.definition(recipe.result)
@@ -439,11 +484,13 @@ func _refresh_recipe_book() -> void:
 		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
 		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "魔力残滓が不足" if route.insufficient_funds else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name)))
 		var card: Button = recipe_cards[index]
+		card.visible = recipe_filter == "all" or str(definition.category) == recipe_filter
 		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "使い魔：%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "summon" else "接続術式の間隔 約20%短縮"
 		card.text = "%s\n%d×%d マス · %s\n%s" % [recipe.label, definition.size.x, definition.size.y, effect, status]
 		card.icon = MageArt.icon(str(recipe.result)).get("atlas", null)
 		card.disabled = not route.available
 		card.tooltip_text = str(definition.description)
+	_resize_recipe_scroll()
 
 func _choose_recipe(index: int) -> void:
 	var recipes: Array[Dictionary] = Catalog.recipes_for("mage")
@@ -776,8 +823,18 @@ func _resize_layout() -> void:
 		arena.custom_minimum_size.y = 350 if size.y >= 900 else 280
 	if grid != null:
 		grid.custom_minimum_size.y = (200 if size.y >= 900 else 164) if mage_focus else (230 if size.y >= 900 else 184)
-	if recipe_scroll != null:
-		recipe_scroll.custom_minimum_size.y = clampf(size.y - 250, 300, 660)
+	_resize_recipe_scroll()
+
+func _resize_recipe_scroll() -> void:
+	if recipe_scroll == null:
+		return
+	var visible_count := 0
+	for card: Button in recipe_cards:
+		if card.visible:
+			visible_count += 1
+	var rows := ceili(float(visible_count) / 2.0)
+	var content_height := maxf(150.0, float(rows * 104 - 10))
+	recipe_scroll.custom_minimum_size.y = minf(clampf(size.y - 300, 260, 610), content_height)
 
 func _set_workspace_open(open: bool) -> void:
 	if not mage_focus or workspace_panel == null:

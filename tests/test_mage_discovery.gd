@@ -88,12 +88,35 @@ func _run() -> void:
 	var original := _state(ui.run)
 	await _click(ui.recipe_button.get_global_rect().get_center())
 	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 16, "Real button opens sixteen actual recipe cards")
+	var filter_y: float = ui.recipe_filter_buttons["summon"].get_global_rect().position.y
+	await _click(ui.recipe_filter_buttons["summon"].get_global_rect().get_center())
+	check(ui.recipe_filter == "summon" and ui.recipe_cards.filter(func(card: Button): return card.visible).size() == 3 and ui.recipe_cards[13].visible and ui.recipe_cards[14].visible and ui.recipe_cards[15].visible, "Native familiar filter shows exactly the three existing contract recipes")
+	check(ui.recipe_filter_buttons["summon"].button_pressed and _state(ui.run) == original, "The active filter is indicated without spending or changing the build")
+	for _i in range(4): await process_frame
+	check(is_equal_approx(ui.recipe_filter_buttons["summon"].get_global_rect().position.y, filter_y), "Filter buttons stay in place when the short category resizes")
+	await _capture("recipe-familiar-filter")
+	await _click(ui.recipe_cards[13].get_global_rect().get_center())
+	check(not ui.recipe_overlay.visible and ui.held.get("index") == 1 and ui.grid.recipe_hints[3].product == "moon_familiar" and _state(ui.run) == original, "A filtered recipe remains actionable through normal guided selection")
+	ui._clear_selection()
+	ui._sync()
+	await _click(ui.recipe_button.get_global_rect().get_center())
+	check(ui.recipe_overlay.visible and ui.recipe_filter == "summon", "Reopening the book retains the last category")
+	await _click(ui.recipe_filter_buttons["support"].get_global_rect().get_center())
+	check(ui.recipe_filter == "support" and ui.recipe_cards.filter(func(card: Button): return card.visible).size() == 1 and ui.recipe_cards[12].visible, "Native support filter shows the wind support")
+	for _i in range(4): await process_frame
+	await _click(ui.recipe_filter_buttons["attack"].get_global_rect().get_center())
+	check(ui.recipe_filter == "attack" and ui.recipe_cards.filter(func(card: Button): return card.visible).size() == 12, "Native spell filter shows the twelve spell recipes")
+	for _i in range(4): await process_frame
+	await _click(ui.recipe_filter_buttons["all"].get_global_rect().get_center())
+	check(ui.recipe_filter == "all" and ui.recipe_cards.all(func(card: Button): return card.visible) and _state(ui.run) == original, "Returning to all recipes preserves the build")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _frame in range(4): await process_frame
 		var viewport := Rect2(Vector2.ZERO, Vector2(dimensions))
 		var rects: Array = []
 		check(viewport.encloses(ui.recipe_scroll.get_global_rect()), str(dimensions) + " recipe scroll area remains within the window")
+		for button: Button in ui.recipe_filter_buttons.values():
+			check(viewport.encloses(button.get_global_rect()), str(dimensions) + " recipe category control remains on screen")
 		for card: Button in ui.recipe_cards:
 			ui.recipe_scroll.ensure_control_visible(card)
 			for _frame in range(2): await process_frame
@@ -104,6 +127,13 @@ func _run() -> void:
 				check(not local_rect.intersects(previous), str(dimensions) + " recipe cards do not overlap")
 			rects.append(local_rect)
 		layouts.append({"viewport": [dimensions.x, dimensions.y], "cards": rects.map(func(rect: Rect2): return [rect.position.x, rect.position.y, rect.size.x, rect.size.y])})
+		if dimensions.x == 1280:
+			await _click(ui.recipe_filter_buttons["summon"].get_global_rect().get_center())
+			for _frame in range(4): await process_frame
+			check(viewport.encloses(ui.recipe_scroll.get_global_rect()) and ui.recipe_cards[15].visible and ui.recipe_scroll.get_global_rect().encloses(ui.recipe_cards[15].get_global_rect()), "1280×800 shows the complete filtered familiar category")
+			await _capture("recipe-familiar-filter-1280")
+			await _click(ui.recipe_filter_buttons["all"].get_global_rect().get_center())
+			for _frame in range(4): await process_frame
 	root.size = Vector2i(1440, 960)
 	for _frame in range(4): await process_frame
 	ui.recipe_scroll.ensure_control_visible(ui.recipe_cards[2])
