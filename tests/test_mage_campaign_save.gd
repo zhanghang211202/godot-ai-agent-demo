@@ -113,6 +113,10 @@ func _ui_roundtrip() -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	# Keep the pre-existing five-stage save/restore suite on its v2 ledger.
+	ui.run.campaign_rules_version = 2
+	ui.run.sources = Campaign.initial_sources(2)
+	ui._sync()
 	check(ui.persistence_enabled and ui.save_button.visible and ui.load_button.visible, "Campaign exposes independent save and load controls")
 	check(ui.run.acquire(0, Vector2i.ZERO).ok and ui.run.acquire(1, Vector2i(3, 2)).ok and ui.run.acquire(2, Vector2i(3, 2)).ok, "UI checkpoint fixture uses ordinary weaving")
 	ui._start_battle()

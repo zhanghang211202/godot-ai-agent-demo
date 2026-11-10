@@ -90,7 +90,7 @@ var _ready_frames := 0
 var _last_phase := "idle"
 
 func _ready() -> void:
-	get_window().title = "月庭の魔術師 · 五つの試練" if campaign_focus else "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練"
+	get_window().title = "月庭の魔術師 · 星巡りの試練" if campaign_focus else "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練"
 	for argument in OS.get_cmdline_user_args():
 		if argument == "--no-save":
 			persistence_enabled = false
@@ -171,7 +171,7 @@ func _build_interface() -> void:
 	margin.add_child(root)
 	var header := HBoxContainer.new()
 	root.add_child(header)
-	var heading := _label("☾  月庭の魔術師 · 五つの試練" if campaign_focus else "☾  月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
+	var heading := _label("☾  月庭の魔術師 · 星巡りの試練" if campaign_focus else "☾  月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
 	if mage_focus:
 		heading.add_theme_color_override("font_color", Color("e2d3ff"))
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -706,15 +706,15 @@ func _new_class(id: String) -> void:
 	_clear_undo()
 	if campaign_focus:
 		campaign_stage = 0
-		encounter_id = Campaign.encounter(campaign_stage)
 		run.campaign_rules_version = Campaign.CURRENT_RULES_VERSION
+		encounter_id = Campaign.encounter(campaign_stage, run.campaign_rules_version)
 		run.sources = Campaign.initial_sources(run.campaign_rules_version)
 	battle = BattleRules.new()
 	_before_battle = {}
 	arena.battle = battle
 	arena.reset_presentation()
 	_clear_selection()
-	summary_label.text = "五戦を踏破しよう。勝利で魔力残滓を獲得し、凝結欄で元素や道具に変換できます。各戦後HP全回復。戦前に自動保存します。" if campaign_focus else "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
+	summary_label.text = "%d戦を踏破しよう。勝利で魔力残滓を獲得し、凝結欄で元素や道具に変換できます。各戦後HP全回復。戦前に自動保存します。" % Campaign.stage_count(run.campaign_rules_version) if campaign_focus else "まず火 + 微光、次に水 + 風を試そう。\n結晶核は左右の術式に各段+2。R で上下に回転。\n戦後は戦前の配置に戻せます。元素は有限、廃棄すると戻りません。" if mage_focus else "この試作は一戦のみ。\n素材は有限で補充されず、廃棄しても返却されません。"
 	grid.active_sources.clear()
 	_notice("元素は火・水・風が各1つ。勝利後の残滓で追加を凝結できます。" if campaign_focus else "魔術師：火を選んで微光に重ねると爆炎に。水と風は3連撃になります。" if id == "mage" else "騎士：溜めの紋章を長剣に重ねて大剣を鍛造。紋章を残して強化も可能。")
 	_sync()
@@ -879,7 +879,7 @@ func _save() -> bool:
 	if not persistence_enabled:
 		_notice("検証・撮影モードではプレイヤーのデータを保存しません。")
 		return false
-	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1
+	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1
 	var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, final_victory, battle.hp if final_victory else 0) if campaign_focus else Save.save_run(run, checkpoint_path)
 	_notice(str(result.message))
 	return bool(result.ok)
@@ -902,7 +902,7 @@ func _load() -> void:
 		_clear_undo()
 		if campaign_focus:
 			campaign_stage = int(result.stage)
-			encounter_id = Campaign.encounter(campaign_stage)
+			encounter_id = Campaign.encounter(campaign_stage, run.campaign_rules_version)
 		_has_battle_summary = false
 		_clear_grid_hover()
 		_set_workspace_open(true)
@@ -923,9 +923,11 @@ func _load() -> void:
 			arena.feedback.enemy_exit = 1.0
 		grid.clear_merge_feedback()
 		_clear_selection()
-		summary_label.text = "五つの試練を踏破した記録です。「最初から」で新しい遠征を始められます。" if campaign_focus and bool(result.get("completed", false)) else "遠征の準備を復元しました。戦闘はこの戦いの最初から始まります。" if campaign_focus else "準備時の状態を復元しました。旧版の遠征データは別扱いです。"
+		summary_label.text = "%d戦を踏破した記録です。「最初から」で新しい遠征を始められます。" % Campaign.stage_count(run.campaign_rules_version) if campaign_focus and bool(result.get("completed", false)) else "遠征の準備を復元しました。戦闘はこの戦いの最初から始まります。" if campaign_focus else "準備時の状態を復元しました。旧版の遠征データは別扱いです。"
 		if campaign_focus and run.campaign_rules_version == 1:
 			_notice("以前の遠征を復元しました。初期元素は旧ルールのままです。")
+		elif campaign_focus and run.campaign_rules_version == 2:
+			_notice("以前の五戦遠征を復元しました。敵と報酬は元の順序のままです。")
 	_sync()
 
 func _resize_layout() -> void:
@@ -969,11 +971,11 @@ func _primary_action() -> void:
 		_start_battle()
 
 func _advance_campaign() -> void:
-	if not campaign_focus or run.phase != "won" or campaign_stage + 1 >= Encounters.CAMPAIGN_IDS.size():
+	if not campaign_focus or run.phase != "won" or campaign_stage + 1 >= Campaign.stage_count(run.campaign_rules_version):
 		return
 	_clear_undo()
 	campaign_stage += 1
-	encounter_id = Campaign.encounter(campaign_stage)
+	encounter_id = Campaign.encounter(campaign_stage, run.campaign_rules_version)
 	run.hp = run.max_hp
 	run.phase = "prepare"
 	battle = BattleRules.new()
@@ -1138,9 +1140,10 @@ func _sync() -> void:
 	resources_label.tooltip_text = "敵から得た魔力残滓。凝結に使います。" if campaign_focus else ""
 	if campaign_stage_label != null:
 		var steps := ""
-		for stage in range(Encounters.CAMPAIGN_IDS.size()):
+		var stage_total := Campaign.stage_count(run.campaign_rules_version)
+		for stage in range(stage_total):
 			steps += "●" if stage <= campaign_stage else "○"
-		campaign_stage_label.text = "%s  第 %d / %d 戦%s" % [steps, campaign_stage + 1, Encounters.CAMPAIGN_IDS.size(), " · BOSS" if campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else ""]
+		campaign_stage_label.text = "%s  第 %d / %d 戦%s" % [steps, campaign_stage + 1, stage_total, " · BOSS" if campaign_stage == stage_total - 1 else ""]
 	for i in range(source_buttons.size()):
 		var source: Dictionary = run.sources[i]
 		var definition: Dictionary = run.get_definition(source.kind)
@@ -1214,9 +1217,9 @@ func _sync() -> void:
 				grid.recipe_hints.erase(uid)
 	grid.queue_redraw()
 	arena.queue_redraw()
-	primary_button.disabled = run.phase != "prepare" and not (campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size())
-	primary_button.text = "次の戦いへ  /  Space" if campaign_focus and run.phase == "won" and campaign_stage + 1 < Encounters.CAMPAIGN_IDS.size() else "五つの試練を踏破" if campaign_focus and run.phase == "won" else "戦闘開始  /  Space"
-	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1
+	primary_button.disabled = run.phase != "prepare" and not (campaign_focus and run.phase == "won" and campaign_stage + 1 < Campaign.stage_count(run.campaign_rules_version))
+	primary_button.text = "次の戦いへ  /  Space" if campaign_focus and run.phase == "won" and campaign_stage + 1 < Campaign.stage_count(run.campaign_rules_version) else "試練を踏破" if campaign_focus and run.phase == "won" else "戦闘開始  /  Space"
+	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1
 	save_button.disabled = (run.phase != "prepare" and not final_victory) or not persistence_enabled
 	save_button.text = "踏破を保存" if final_victory else "準備を保存"
 	load_button.disabled = run.phase == "battle" or not persistence_enabled
@@ -1248,11 +1251,11 @@ func _process(delta: float) -> void:
 			run.phase = battle.phase
 			var completion_error := ""
 			if campaign_focus and battle.phase == "won":
-				var reward := int(Campaign.REWARDS[campaign_stage])
+				var reward := int(Campaign.rewards(run.campaign_rules_version)[campaign_stage])
 				run.gold += reward
 				arena.show_campaign_reward(reward)
 				if persistence_enabled:
-					var saved: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, true, battle.hp) if campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else _save_next_campaign_preparation()
+					var saved: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, true, battle.hp) if campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1 else _save_next_campaign_preparation()
 					if not saved.ok:
 						completion_error = str(saved.message)
 			_show_summary()
@@ -1318,7 +1321,7 @@ func _show_summary() -> void:
 	for source in summary.by_source:
 		lines.append("%s #%d：%d · %d / %d" % [source.name, int(source.uid), int(source.damage), int(source.activations), int(source.hits)])
 	if campaign_focus and battle.phase == "won":
-		lines.append("魔力残滓 +%d · 所持 %d" % [int(Campaign.REWARDS[campaign_stage]), run.gold])
+		lines.append("魔力残滓 +%d · 所持 %d" % [int(Campaign.rewards(run.campaign_rules_version)[campaign_stage]), run.gold])
 	summary_label.text = "\n".join(lines)
 	_has_battle_summary = true
 	details_content.move_child(summary_label, 0)
@@ -1326,7 +1329,7 @@ func _show_summary() -> void:
 	_set_workspace_open(workspace_panel.visible)
 	var recap_hint := " 右側で戦闘結果を確認できます。" if workspace_panel.visible else " 「戦闘結果を見る」で振り返れます。"
 	if campaign_focus:
-		_notice(("五つの試練を踏破！" if battle.phase == "won" and campaign_stage == Encounters.CAMPAIGN_IDS.size() - 1 else "勝利！魔力残滓 +%d（所持 %d）。次の戦いへ。" % [int(Campaign.REWARDS[campaign_stage]), run.gold] if battle.phase == "won" else "敗北。戦前に戻して配置を変え、再挑戦できます。") + recap_hint)
+		_notice(("試練を踏破！" if battle.phase == "won" and campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1 else "勝利！魔力残滓 +%d（所持 %d）。次の戦いへ。" % [int(Campaign.rewards(run.campaign_rules_version)[campaign_stage]), run.gold] if battle.phase == "won" else "敗北。戦前に戻して配置を変え、再挑戦できます。") + recap_hint)
 	else:
 		_notice(("戦闘終了。戦前に戻って再挑戦できます。" + recap_hint) if mage_focus else "戦闘終了。戦前の配置に戻して比較できます。")
 

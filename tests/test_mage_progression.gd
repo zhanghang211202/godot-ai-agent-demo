@@ -103,6 +103,10 @@ func _play_route(kind: String) -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	# These established eight routes explicitly exercise the prior v2 campaign.
+	ui.run.campaign_rules_version = 2
+	ui.run.sources = Campaign.initial_sources(2)
+	ui._sync()
 	check(ui.run.campaign_rules_version == 2 and ui.run.sources.slice(0, 3).all(func(source: Dictionary): return source.remaining == 1), kind + " starts with one of each free element")
 	var solar: Dictionary = Catalog.recipes_for("mage")[10]
 	check(not Guide.plan(ui.run, solar).available, kind + " cannot start the two-fire advanced recipe before earning residue")

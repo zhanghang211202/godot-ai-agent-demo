@@ -143,7 +143,9 @@ static func _advanced_icon(kind: String) -> Dictionary:
 	return _advanced_icons.get(kind, {})
 
 static func enemy(id: String = "sentinel") -> Dictionary:
-	id = {"campaign_sentinel": "sentinel", "campaign_moth": "mirror_moth", "campaign_golem": "thorn_golem"}.get(id, id)
+	id = {"campaign_sentinel": "sentinel", "campaign_moth": "mirror_moth", "campaign_golem": "thorn_golem", "extended_astral_scribe": "astral_scribe", "extended_moon_crowned": "moon_crowned"}.get(id, id)
+	if id in ["moon_lantern", "astral_serpent"]:
+		return _standalone_enemy(id)
 	if id == "sentinel_elite":
 		id = "sentinel"
 	if id != "sentinel":
@@ -173,6 +175,29 @@ static func enemy(id: String = "sentinel") -> Dictionary:
 		right = maxf(right, bounds.end.x - pivot.x)
 	_enemy = {"path": path, "texture": ImageTexture.create_from_image(image), "size": image.get_size(), "frames": frames, "height": height, "left": left, "right": right}
 	return _enemy
+
+static func _standalone_enemy(id: String) -> Dictionary:
+	if _enemies.has(id):
+		return _enemies[id]
+	var filename := "moon-lantern.png" if id == "moon_lantern" else "astral-serpent.png"
+	var path := "res://assets/art/mage-seven-battles-v1/enemies/" + filename
+	var image := ClassImage.load_image(path)
+	if image == null or image.is_empty():
+		return {}
+	image.convert(Image.FORMAT_RGBA8)
+	var region := Rect2i(Vector2i.ZERO, image.get_size())
+	var bounds := _bounds(image, region)
+	if not bounds.has_area():
+		return {}
+	var pivot := Vector2(bounds.get_center().x, bounds.end.y)
+	var cast_point := Vector2(bounds.position) + Vector2(bounds.size) * (Vector2(0.50, 0.50) if id == "moon_lantern" else Vector2(0.22, 0.34))
+	var frames: Array[Dictionary] = []
+	for _index in range(4):
+		frames.append({"source_rect": Rect2(bounds), "region": Rect2(region), "pivot": pivot, "cast_point": cast_point})
+	var result := {"path": path, "texture": ImageTexture.create_from_image(image), "size": image.get_size(), "frames": frames,
+		"height": float(bounds.size.y), "left": pivot.x - bounds.position.x, "right": bounds.end.x - pivot.x, "single_pose": true}
+	_enemies[id] = result
+	return result
 
 static func _extra_icon(kind: String) -> Dictionary:
 	if _extra_icons.is_empty():

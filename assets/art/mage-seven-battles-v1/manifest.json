@@ -1,0 +1,21 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "assets": [
+    {
+      "file": "enemies/moon-lantern.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "09f0838a91a1b12082f3934f3217c05ebd6db86f4bdcce0c2d16b6375e5e8a90",
+      "prompt": "Use case: production enemy sprite, detailed 16-bit fantasy tactical RPG. A single floating enchanted moon lantern with a mysterious cyan flame inside, ivory-and-bronze housing and delicate gold crescent ornament, no living limbs. Three-quarter view facing left. The entire lantern including the top loop and the bottom crystal finial must be completely visible, centered in the MIDDLE HALF of the canvas, with very generous empty transparent space on every side (at least one-fifth of the canvas above, below, left and right). The top loop and bottom tip must not touch the image edges. Moon-court pixel art with navy outlines, teal glow and warm gold, one complete object only. Genuinely transparent outside. No text, watermark, extra creatures, ground, cropped parts, sprite sheet or additional objects.",
+      "role": "Standalone moon-lantern enemy. One source pose, with procedural floating and hit response."
+    },
+    {
+      "file": "enemies/astral-serpent.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "fd4e2553c5f25cf6393fb994c9f8ee5e22eb2553b92bbe1fc4b4cf2a061df365",
+      "prompt": "Use case: game character asset. A single enemy battle sprite for a polished detailed 16-bit fantasy tactical RPG set in a moonlit palace: a powerful floating celestial serpent made of midnight blue scales and pale turquoise crystal plates, its one head facing left toward the hero with two clear eyes, two elegant horns, a closed jaw and a single continuous long body coiled once, tapering to one tail. Crownlike gold crescent accents and restrained luminous star markings. Strong readable silhouette, no legs or hands, complete head, coil and tail fully in frame. Ornate 16-bit pixel-art clusters, navy outlines, moonlit blue-teal and gold. One creature only, isolated on genuinely transparent background. No text, watermark, ground, cropped tail, extra head, disconnected body parts, duplicate or sprite sheet.",
+      "role": "Standalone astral-serpent enemy. One source pose, with procedural floating and hit response."
+    }
+  ]
+}

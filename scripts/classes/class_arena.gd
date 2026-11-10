@@ -316,13 +316,20 @@ func get_art_layout() -> Dictionary:
 		enemy_source = frame.source_rect
 		# Visual proportions are independent of combat statistics: the stone
 		# golem towers over the mage, while the hovering moth remains smaller.
-		var proportion: float = {"sentinel": 1.36, "campaign_sentinel": 1.36, "mirror_moth": 0.68, "campaign_moth": 0.68, "thorn_golem": 1.78, "campaign_golem": 1.78, "sentinel_elite": 1.45, "astral_scribe": 1.3, "moon_crowned": 1.9}.get(str(encounter.id), 1.0)
+		var proportion: float = {"sentinel": 1.36, "campaign_sentinel": 1.36, "mirror_moth": 0.68, "campaign_moth": 0.68, "thorn_golem": 1.78, "campaign_golem": 1.78, "sentinel_elite": 1.45, "moon_lantern": 1.08, "astral_scribe": 1.3, "extended_astral_scribe": 1.3, "astral_serpent": 1.60, "moon_crowned": 1.9, "extended_moon_crowned": 1.9}.get(str(encounter.id), 1.0)
 		var enemy_height := minf(hero_height * proportion, scene.size.y - 6 - float(encounter.lift))
 		if mage_motion_variants_enabled and str(encounter.id) in ["mirror_moth", "campaign_moth"] and body_height > 0.0:
 			enemy_height = minf(enemy_height, body_height * proportion)
 		enemy_factor = minf(enemy_height / float(enemy_art.height), size.x * 0.46 / float(enemy_art.left + enemy_art.right))
 		enemy = Rect2(enemy_anchor + (enemy_source.position - Vector2(frame.pivot)) * enemy_factor, enemy_source.size * enemy_factor)
 		enemy_cast_point = enemy_anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * enemy_factor if frame.has("cast_point") else enemy.position + enemy.size * Vector2(0.5, 0.46)
+		if bool(enemy_art.get("single_pose", false)) and battle != null and battle.phase == "battle":
+			var movement := Vector2(6.0 if enemy_index == 1 else -6.0 if enemy_index == 2 else 0.0, -3.0 + sin(battle.battle_time * 2.0) * 3.0)
+			movement.x = clampf(movement.x, scene.position.x - enemy.position.x, scene.end.x - enemy.end.x)
+			movement.y = clampf(movement.y, scene.position.y - enemy.position.y, scene.end.y - enemy.end.y)
+			enemy.position += movement
+			enemy_anchor += movement
+			enemy_cast_point += movement
 	var missing: Array[String] = []
 	if hero_id != "" and hero.is_empty():
 		missing.append(hero_id)

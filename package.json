@@ -18,6 +18,7 @@
     "game:mage:cast-sync:test": "node scripts/godot.mjs render-script res://tests/test_mage_cast_sync.gd",
     "game:mage:campaign:test": "node scripts/godot.mjs render-script res://tests/test_mage_campaign.gd",
     "game:mage:progression:test": "node scripts/godot.mjs render-script res://tests/test_mage_progression.gd",
+    "game:mage:seven:test": "node scripts/godot.mjs render-script res://tests/test_mage_seven.gd",
     "game:mage:haste:test": "node scripts/godot.mjs render-script res://tests/test_mage_haste.gd",
     "game:mage:familiar:test": "node scripts/godot.mjs render-script res://tests/test_mage_familiar.gd",
     "game:mage:scribe:test": "node scripts/godot.mjs render-script res://tests/test_mage_scribe_impact.gd",

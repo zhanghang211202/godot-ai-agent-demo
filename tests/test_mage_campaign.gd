@@ -149,6 +149,10 @@ func _run() -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	# Preserve this existing five-stage fixture as a v2 compatibility run.
+	ui.run.campaign_rules_version = 2
+	ui.run.sources = Campaign.initial_sources(2)
+	ui._sync()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	check(ui.campaign_focus and not ui.persistence_enabled and ui.encounter_id == Campaign.encounter(0) and ui.run.gold == 0, "Campaign opens separately without player checkpoint writes")
 	check(ui._mage_panel_texture != null and ui._mage_panel_texture.get_size() == Vector2(160, 104), "The moon-court frame is loaded and scaled for the actual UI")

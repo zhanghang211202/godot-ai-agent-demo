@@ -10,11 +10,11 @@ const COLORS := {"spark": Color("bc9cff"), "flame_glyph": Color("ff964e"), "tide
 	"frost_bolt": Color("b9eaff"), "gale_blades": Color("a4e9c2"), "steam_burst": Color("e7dcca"), "ember_tornado": Color("ffb061"),
 	"solar_crown": Color("ffc36f"), "glacier_prism": Color("b8edff"), "storm_orbit": Color("a7efd5"), "arcane_nova": Color("e1bcff"),
 	"solar_lance": Color("ffb65c"), "frost_orbit": Color("9af1e8"), "moon_familiar": Color("a9f4ef"), "crowned_familiar": Color("d5bcff"), "wind_familiar": Color("87e6b1"),
-	"moth_bolt": Color("c5acff"), "thorn_crash": Color("9bdb95"), "scribe_rune": Color("7ce9d7"), "boss_star": Color("e1b4ff"), "boss_crash": Color("b6a3f0")}
-const ENEMY_KINDS := ["enemy", "moth_bolt", "thorn_crash", "scribe_rune", "boss_star", "boss_crash"]
+	"moth_bolt": Color("c5acff"), "thorn_crash": Color("9bdb95"), "scribe_rune": Color("7ce9d7"), "lantern_flare": Color("79ecd9"), "serpent_comet": Color("78c8ef"), "boss_star": Color("e1b4ff"), "boss_crash": Color("b6a3f0")}
+const ENEMY_KINDS := ["enemy", "moth_bolt", "thorn_crash", "scribe_rune", "lantern_flare", "serpent_comet", "boss_star", "boss_crash"]
 const DURATIONS := {"spark": 0.48, "flame_glyph": LIFE, "tide_lances": 0.64, "enemy": 0.48,
 	"frost_bolt": 0.62, "gale_blades": 0.68, "steam_burst": 0.78, "ember_tornado": 0.82,
-	"solar_crown": 0.78, "glacier_prism": 0.75, "storm_orbit": 0.72, "arcane_nova": 0.82, "solar_lance": 0.82, "frost_orbit": 0.76, "moon_familiar": 0.62, "crowned_familiar": 0.68, "wind_familiar": 0.62, "moth_bolt": 0.52, "thorn_crash": 0.70, "scribe_rune": 0.64, "boss_star": 0.62, "boss_crash": 0.82}
+	"solar_crown": 0.78, "glacier_prism": 0.75, "storm_orbit": 0.72, "arcane_nova": 0.82, "solar_lance": 0.82, "frost_orbit": 0.76, "moon_familiar": 0.62, "crowned_familiar": 0.68, "wind_familiar": 0.62, "moth_bolt": 0.52, "thorn_crash": 0.70, "scribe_rune": 0.64, "lantern_flare": 0.65, "serpent_comet": 0.72, "boss_star": 0.62, "boss_crash": 0.82}
 const MAX_EFFECTS := 8
 const MAX_CASTS := 6
 
@@ -84,7 +84,7 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 	if remaining > FLIGHT:
 		return
 	var flight := clampf(1.0 - remaining / FLIGHT, 0, 1)
-	var count := clampi(int(cast.planned_hits), 1, 5) if kind in ["tide_lances", "gale_blades", "moth_bolt", "scribe_rune", "boss_star", "solar_crown", "storm_orbit", "frost_orbit", "crowned_familiar"] else 1
+	var count := clampi(int(cast.planned_hits), 1, 5) if kind in ["tide_lances", "gale_blades", "moth_bolt", "scribe_rune", "lantern_flare", "serpent_comet", "boss_star", "solar_crown", "storm_orbit", "frost_orbit", "crowned_familiar"] else 1
 	for index in range(count):
 		var offset := (index - (count - 1) * 0.5) * 22
 		var tip := trajectory(from, to + Vector2(0, offset), flight, kind, index)
@@ -138,6 +138,14 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 			diamond(canvas, tip, 13, Color("164b56"))
 			seal(canvas, tip, Vector2.ONE * 12, progress * 2 + index, Color("9affea"), 4)
 			star(canvas, tip, 6, Color("e8fff8"))
+		elif kind == "lantern_flare":
+			diamond(canvas, tip, 13, Color("318e8c"))
+			star(canvas, tip, 8, Color("dffff2"))
+			seal(canvas, tip, Vector2(13, 18), progress * 2, Color("9affed"), 6)
+		elif kind == "serpent_comet":
+			pixel_sprite(canvas, "shard", tip, 2, 1.0)
+			seal(canvas, tip, Vector2(18, 11), progress * 3 + index, Color("b6e9ff"), 8)
+			star(canvas, tip, 8, Color("fff2c7"))
 		elif kind == "boss_star":
 			diamond(canvas, tip, 15, Color("564078"))
 			seal(canvas, tip, Vector2.ONE * 14, progress * 2, Color("eccbff"), 8)
@@ -189,7 +197,7 @@ static func draw_effect(canvas: CanvasItem, effect: Dictionary, hero: Vector2, e
 	if progress < 0.24:
 		var sign_x := -1 if effect.target == "hero" else 1
 		canvas.draw_line(snap(at - Vector2(sign_x * 90, 0)), snap(at), Color(color, (1.0 - progress / 0.24) * 0.6), 3, false)
-	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "solar_lance", "frost_orbit", "moon_familiar", "crowned_familiar", "wind_familiar", "moth_bolt", "thorn_crash", "scribe_rune", "boss_star", "boss_crash"]:
+	if kind in ["frost_bolt", "gale_blades", "steam_burst", "ember_tornado", "solar_crown", "glacier_prism", "storm_orbit", "arcane_nova", "solar_lance", "frost_orbit", "moon_familiar", "crowned_familiar", "wind_familiar", "moth_bolt", "thorn_crash", "scribe_rune", "lantern_flare", "serpent_comet", "boss_star", "boss_crash"]:
 		expansion_impact(canvas, effect, at)
 	elif kind == "flame_glyph":
 		flame_impact(canvas, at, progress)
@@ -324,6 +332,11 @@ static func expansion_impact(canvas: CanvasItem, effect: Dictionary, at: Vector2
 			diamond(canvas, point + Vector2(progress * 14, -progress * 8), 6 * fade + 2, Color("c7fff0", fade))
 			canvas.draw_line(snap(point - Vector2(6, 0)), snap(point + Vector2(6, 0)), Color("f1fff8", fade), 2, false)
 			canvas.draw_line(snap(point - Vector2(0, 6)), snap(point + Vector2(0, 6)), Color("f1fff8", fade), 2, false)
+	elif kind in ["lantern_flare", "serpent_comet"]:
+		for hit in range(hits):
+			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 24)
+			seal(canvas, point, Vector2.ONE * (13 + progress * 38), progress * 2, Color(color, fade), 6 if kind == "lantern_flare" else 8)
+			star(canvas, point, 20 * fade, Color("dffff2" if kind == "lantern_flare" else "fff0c7", fade))
 	elif kind == "boss_star":
 		for hit in range(hits):
 			var point := at + Vector2(0, (hit - (hits - 1) * 0.5) * 22)

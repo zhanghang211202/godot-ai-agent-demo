@@ -13,9 +13,12 @@ const LEGACY_VERSION := 1
 const MAX_BYTES := 65536
 
 static func save_run(run: RefCounted, stage: int, path: String = DEFAULT_PATH, completed: bool = false, completion_hp: int = 0) -> Dictionary:
-	if not run is Run or (run.phase != "prepare" and not (completed and run.phase == "won" and stage == Campaign.REWARDS.size() - 1)):
+	if not run is Run:
+		return _failure("遠征の保存対象が無効です。")
+	var last_stage := Campaign.stage_count(run.campaign_rules_version) - 1
+	if run.phase != "prepare" and not (completed and run.phase == "won" and stage == last_stage):
 		return _failure("遠征は戦前の準備中のみ保存できます。")
-	if completed and (run.phase != "won" or stage != Campaign.REWARDS.size() - 1):
+	if completed and (run.phase != "won" or stage != last_stage):
 		return _failure("未踏破の遠征を完了として保存できません。")
 	var snapshot: Dictionary = ExistingSave._snapshot(run)
 	if not snapshot.ok:
@@ -67,7 +70,7 @@ static func save_run(run: RefCounted, stage: int, path: String = DEFAULT_PATH, c
 		ExistingSave._remove_file(temporary)
 		return _failure("遠征を保存できません。元のデータまたはバックアップは保持されます。")
 	ExistingSave._remove_file(backup)
-	return {"ok": true, "message": "五つの試練の踏破を保存しました。" if completed else "第%d戦の準備を保存しました。" % (stage + 1)}
+	return {"ok": true, "message": "%d戦の踏破を保存しました。" % (last_stage + 1) if completed else "第%d戦の準備を保存しました。" % (stage + 1)}
 
 static func load_run(run: RefCounted, path: String = DEFAULT_PATH) -> Dictionary:
 	if not run is Run:
@@ -89,7 +92,7 @@ static func load_run(run: RefCounted, path: String = DEFAULT_PATH) -> Dictionary
 	run._next_uid = int(data.next_uid)
 	run.discarded_materials = data.discarded_materials.duplicate(true)
 	run.phase = "prepare"
-	return {"ok": true, "stage": int(data.stage), "completed": bool(data.completed), "completed_hp": int(data.completed_hp), "message": "五つの試練を踏破した記録を復元しました。" if data.completed else "第%d戦の準備を復元しました。" % (int(data.stage) + 1)}
+	return {"ok": true, "stage": int(data.stage), "completed": bool(data.completed), "completed_hp": int(data.completed_hp), "message": "%d戦を踏破した記録を復元しました。" % Campaign.stage_count(run.campaign_rules_version) if data.completed else "第%d戦の準備を復元しました。" % (int(data.stage) + 1)}
 
 static func _read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
@@ -110,10 +113,11 @@ static func _read(path: String) -> Dictionary:
 static func _validate(raw: Variant) -> Dictionary:
 	if typeof(raw) != TYPE_DICTIONARY or raw.get("kind") != KIND or not ExistingSave._integer(raw.get("schema_version"), LEGACY_VERSION, VERSION) or not ExistingSave._integer(raw.get("rules_version"), LEGACY_VERSION, VERSION) or int(raw.schema_version) != int(raw.rules_version):
 		return _failure("未対応の遠征データです。元のファイルは保持されます。")
-	if raw.get("class_id") != "mage" or raw.get("phase") != "prepare" or not ExistingSave._integer(raw.get("stage"), 0, Campaign.REWARDS.size() - 1):
+	var last_stage := Campaign.stage_count(int(raw.rules_version)) - 1
+	if raw.get("class_id") != "mage" or raw.get("phase") != "prepare" or not ExistingSave._integer(raw.get("stage"), 0, last_stage):
 		return _failure("遠征の職業、進行または状態が無効です。")
 	var completed: Variant = raw.get("completed", false)
-	if typeof(completed) != TYPE_BOOL or (completed and int(raw.stage) != Campaign.REWARDS.size() - 1):
+	if typeof(completed) != TYPE_BOOL or (completed and int(raw.stage) != last_stage):
 		return _failure("遠征の踏破状態が無効です。")
 	var initial: Dictionary = Catalog.create_info("mage")
 	if not ExistingSave._integer(raw.get("completed_hp", 0), 1 if completed else 0, int(initial.max_hp) if completed else 0):
@@ -141,8 +145,9 @@ static func _validate(raw: Variant) -> Dictionary:
 		ExistingSave._add_materials(expected, Catalog.definition(base.kind).materials, used)
 		sources.append({"id": base.id, "kind": base.kind, "remaining": int(source.remaining), "cost": int(base.cost)})
 	var earned := 0
+	var stage_rewards := Campaign.rewards(int(raw.rules_version))
 	for index in range(int(raw.stage)):
-		earned += int(Campaign.REWARDS[index])
+		earned += int(stage_rewards[index])
 	if not ExistingSave._integer(raw.get("gold"), 0, earned) or int(raw.gold) != earned - spent:
 		return _failure("魔力残滓の収支が一致しません。")
 	var initial_items: Array = Catalog.initial_inventory("mage")
