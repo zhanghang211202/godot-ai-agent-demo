@@ -159,6 +159,11 @@ func _run() -> void:
 	check(ui.source_buttons.size() == 9 and ui.source_buttons[3].disabled and ui.resources_label.text.contains("残滓"), "Free elements and residue condensation are available in one preparation UI")
 	ui._rehearse()
 	check(not ui._rehearsal_signature.is_empty() and ui.details_content.get_child(0) == ui.summary_label, "The forecast appears first after rehearsal")
+	var forecast_text: String = ui.summary_label.text
+	ui._on_grid_hovered(1)
+	check(ui.detail_label.text.contains("確認中 · 微光の術式") and ui.summary_label.get_index() == ui.details_content.get_child_count() - 1 and ui.summary_label.text == forecast_text, "Hover shows the item while retaining the forecast")
+	ui._on_grid_hovered(-1)
+	check(ui.details_content.get_child(0) == ui.summary_label and ui.summary_label.text == forecast_text, "Leaving the board restores the unchanged forecast")
 	ui._select_source(0)
 	var selected_style := ui.source_buttons[0].get_theme_stylebox("normal") as StyleBoxFlat
 	var other_style := ui.source_buttons[1].get_theme_stylebox("normal") as StyleBoxFlat

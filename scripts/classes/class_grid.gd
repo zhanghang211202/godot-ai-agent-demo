@@ -5,6 +5,7 @@ signal cell_selected(cell: Vector2i)
 signal drop_requested(data: Dictionary, cell: Vector2i)
 signal preview_changed(preview: Dictionary)
 signal drag_started(data: Dictionary)
+signal item_hovered(uid: int)
 
 const Catalog = preload("res://scripts/classes/class_catalog.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
@@ -38,6 +39,7 @@ func _ready() -> void:
 	clip_contents = true
 	mouse_exited.connect(func():
 		hover_cell = Vector2i(-1, -1)
+		item_hovered.emit(-1)
 		update_preview())
 
 func _process(delta: float) -> void:
@@ -90,7 +92,11 @@ func cell_at(local_position: Vector2) -> Vector2i:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		hover_cell = cell_at(event.position)
+		var next_cell := cell_at(event.position)
+		if next_cell != hover_cell:
+			hover_cell = next_cell
+			var item: Dictionary = run.item_at(hover_cell) if run != null and hover_cell.x >= 0 else {}
+			item_hovered.emit(int(item.get("uid", -1)))
 		update_preview()
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var cell := cell_at(event.position)

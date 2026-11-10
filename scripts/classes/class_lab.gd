@@ -25,6 +25,7 @@ var arena
 var held: Dictionary = {}
 var _guided_product := ""
 var selected_uid := -1
+var hover_uid := -1
 var source_buttons: Array[Button] = []
 var class_buttons: Dictionary = {}
 var status_label: Label
@@ -228,6 +229,7 @@ func _build_interface() -> void:
 	grid.cell_selected.connect(_on_cell_selected)
 	grid.drop_requested.connect(_on_drop)
 	grid.drag_started.connect(_on_drag_started)
+	grid.item_hovered.connect(_on_grid_hovered)
 	grid.preview_changed.connect(_show_placement_preview)
 	inventory.add_child(grid)
 	inventory.add_child(_label("ドラッグ · R 回転 · 右クリック取消  /  青：配置 · 金：合成", 14, Color("a7b4c5")))
@@ -685,6 +687,7 @@ func _new_class(id: String) -> void:
 		return
 	_close_recipe_book()
 	_has_battle_summary = false
+	_clear_grid_hover()
 	_condense_view = false
 	if condense_button != null:
 		condense_button.text = "凝結 ↓"
@@ -898,6 +901,7 @@ func _load() -> void:
 			campaign_stage = int(result.stage)
 			encounter_id = Campaign.encounter(campaign_stage)
 		_has_battle_summary = false
+		_clear_grid_hover()
 		_set_workspace_open(true)
 		_rehearsal_signature = ""
 		details_content.move_child(summary_label, details_content.get_child_count() - 1)
@@ -975,6 +979,7 @@ func _advance_campaign() -> void:
 	_before_battle = {}
 	grid.clear_merge_feedback()
 	_has_battle_summary = false
+	_clear_grid_hover()
 	_set_workspace_open(true)
 	_clear_selection()
 	summary_label.text = "次の戦いに備えよう。HPは全回復、配置・元素・魔力残滓は引き継ぎます。凝結欄はスクロールできます。"
@@ -1004,6 +1009,7 @@ func _start_battle() -> void:
 	grid.clear_merge_feedback()
 	run.phase = "battle"
 	_has_battle_summary = false
+	_clear_grid_hover()
 	_set_workspace_open(false)
 	_last_phase = "battle"
 	_clear_selection()
@@ -1016,6 +1022,7 @@ func _restore_before_battle() -> void:
 		return
 	_clear_undo()
 	_has_battle_summary = false
+	_clear_grid_hover()
 	_set_workspace_open(true)
 	run.new_run(str(_before_battle.class_id), int(_before_battle.seed_value))
 	run.campaign_rules_version = int(_before_battle.campaign_rules_version)
@@ -1091,6 +1098,23 @@ func _rehearse() -> void:
 	details_scroll.scroll_vertical = 0
 	_notice("予行演習の結果を表示しました。配置を変えると結果は消えます。")
 
+func _clear_grid_hover() -> void:
+	hover_uid = -1
+	if grid != null:
+		grid.hover_cell = Vector2i(-1, -1)
+
+func _on_grid_hovered(uid: int) -> void:
+	if hover_uid == uid:
+		return
+	hover_uid = uid
+	if run.phase == "prepare" and held.is_empty() and selected_uid < 0:
+		if uid >= 0:
+			details_content.move_child(summary_label, details_content.get_child_count() - 1)
+		elif not _rehearsal_signature.is_empty():
+			details_content.move_child(summary_label, 0)
+		details_scroll.scroll_vertical = 0
+		_sync()
+
 func _sync() -> void:
 	if not _rehearsal_signature.is_empty() and _rehearsal_signature != _rehearsal_state_signature():
 		_rehearsal_signature = ""
@@ -1139,6 +1163,10 @@ func _sync() -> void:
 	recipe_label.text = "上の「レシピ」で%d種類の組み合わせを確認。\n完成品は重ねた相手の位置に配置されます。" % recipes.size() if mage_focus else "\n\n".join(recipes) + "\n\n完成品は重ねた相手の位置に配置。空き不足では素材や金貨を消費しません。"
 	phase_label.text = "準備 · 配置可能" if run.phase == "prepare" else "戦闘 · 配置変更不可" if run.phase == "battle" else "戦闘終了 · 振り返り"
 	var item: Dictionary = run.item_by_uid(selected_uid)
+	var hovering_item := false
+	if item.is_empty() and held.is_empty() and run.phase == "prepare" and hover_uid >= 0:
+		item = run.item_by_uid(hover_uid)
+		hovering_item = not item.is_empty()
 	var selected_source: Dictionary = {}
 	if mage_focus and run.phase == "prepare" and held.get("origin", "") == "source":
 		var index := int(held.get("index", -1))
@@ -1149,7 +1177,7 @@ func _sync() -> void:
 	detail_icon.texture = selected_art.get("atlas", null)
 	if not item.is_empty():
 		var definition: Dictionary = run.get_definition(item.kind)
-		detail_label.text = "%s\n\n%s\n\n使用マス：%d × %d" % [definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y]
+		detail_label.text = "%s%s\n\n%s\n\n使用マス：%d × %d" % ["確認中 · " if hovering_item else "", definition.name, definition.description, run.get_item_size(item).x, run.get_item_size(item).y]
 		if definition.category in ["attack", "summon"]:
 			var action: Array = run.get_combat_config().actions.filter(func(entry: Dictionary): return entry.uid == item.uid)
 			if not action.is_empty():
