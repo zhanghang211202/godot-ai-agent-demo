@@ -184,6 +184,20 @@ func get_footer_note() -> String:
 			spells += 1
 	return "編成：術式 %d · 使い魔 %d" % [spells, familiars]
 
+func get_hero_hud_text() -> String:
+	if run == null or battle == null:
+		return ""
+	var hp_value: int = battle.hp if battle.phase != "idle" else run.hp
+	var hp_max: int = battle.max_hp if battle.phase != "idle" else run.max_hp
+	var name := "月庭の魔術師" if run.class_id == "mage" else "聖堂騎士"
+	var result := "%s  %d / %d" % [name, hp_value, hp_max]
+	if run.class_id == "mage":
+		var config: Dictionary = battle.get("_config") if battle.phase != "idle" else run.get_combat_config()
+		var armor := int(config.get("armor", 0))
+		if armor > 0:
+			result += "  ·  法盾 %d" % armor
+	return result
+
 func _hero_id() -> String:
 	if run == null:
 		return ""
@@ -481,7 +495,7 @@ func _draw_hud(layout: Dictionary, tint: Color) -> void:
 	var enemy_hp: int = battle.enemy_hp if battle.phase != "idle" else int(encounter.hp)
 	var enemy_max: int = battle.enemy_max_hp if battle.phase != "idle" else int(encounter.hp)
 	_bar(layout.health_rects[1], enemy_hp, enemy_max, Color("d3858b"))
-	draw_string(font, Vector2(16, 44), "%s  %d / %d" % ["月庭の魔術師" if run.class_id == "mage" else "聖堂騎士", hp_value, hp_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, tint)
+	draw_string(font, Vector2(16, 44), get_hero_hud_text(), HORIZONTAL_ALIGNMENT_LEFT, -1, 17, tint)
 	draw_string(font, Vector2(size.x * 0.70 - 16, 44), "%s  %d / %d" % [str(encounter.name) if run.class_id == "mage" else "訓練用の守衛（仮）", enemy_hp, enemy_max], HORIZONTAL_ALIGNMENT_LEFT, -1, 17, Color("d9a2a7"))
 	var center_text := "準備後に自動戦闘"
 	if battle.phase == "battle":
