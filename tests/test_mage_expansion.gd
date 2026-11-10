@@ -50,7 +50,7 @@ func _weave(run: RefCounted, kind: String) -> void:
 
 func _recipes_and_saves() -> void:
 	var recipes: Array = Catalog.recipes_for("mage")
-	check(recipes.size() == 15, "Fifteen recipes include spells, support and two familiar contracts")
+	check(recipes.size() == 16, "Sixteen recipes include spells, support and three familiar contracts")
 	var run := Run.new()
 	run.new_run("mage")
 	for recipe in recipes:

@@ -16,9 +16,25 @@ static var _advanced_icons: Dictionary = {}
 static var _wind_prism: Dictionary = {}
 static var _familiar: Dictionary = {}
 static var _crowned_familiar: Dictionary = {}
+static var _wind_familiar: Dictionary = {}
 static var _enemies: Dictionary = {}
 
 static func icon(kind: String) -> Dictionary:
+	if kind == "wind_familiar":
+		if _wind_familiar.is_empty():
+			var path := "res://assets/art/mage-familiar-wind-v1/wind-moth.png"
+			var image := ClassImage.load_image(path)
+			if image == null or image.is_empty():
+				return {}
+			image.convert(Image.FORMAT_RGBA8)
+			var region := Rect2i(Vector2i.ZERO, image.get_size())
+			var bounds := _bounds(image, region)
+			var texture := ImageTexture.create_from_image(image)
+			var atlas := AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(bounds)
+			_wind_familiar = {"path": path, "texture": texture, "atlas": atlas, "source_rect": Rect2(bounds), "region": Rect2(region), "source_size": image.get_size()}
+		return _wind_familiar
 	if kind == "crowned_familiar":
 		if _crowned_familiar.is_empty():
 			var path := "res://assets/art/mage-familiar-upgrade-v1/crowned-moth.png"

@@ -62,6 +62,8 @@ static func definition(kind: String) -> Dictionary:
 			result = {"name": "月蛾の契約", "class_id": "mage", "size": Vector2i(2, 2), "color": "b4e8e5", "category": "summon", "description": "結晶核と水で月蛾を召喚。1契約につき1体、最大2体。初回0.8秒、以後2.2秒ごとに8ダメージ。敵は使い魔を狙わず、結晶核の強化や結晶環の加速も受けない。", "damage": 8, "hits": 1, "interval": 2.2, "warmup": 0.8, "event_type": "familiar_attack", "materials": {"arcane_focus": 1, "water_mote": 1}}
 		"crowned_familiar":
 			result = {"name": "月冠蛾の契約", "class_id": "mage", "size": Vector2i(3, 2), "color": "d7c4ff", "category": "summon", "description": "月蛾の契約に水を重ねて強化。1体分の上限と6マスを使い、初回1.1秒、以後2.6秒ごとに6ダメージを2回。敵は使い魔を狙わず、結晶核と結晶環の支援は受けない。", "damage": 6, "hits": 2, "interval": 2.6, "warmup": 1.1, "event_type": "familiar_attack", "materials": {"arcane_focus": 1, "water_mote": 2}}
+		"wind_familiar":
+			result = {"name": "風月蛾の契約", "class_id": "mage", "size": Vector2i(2, 2), "color": "9fe9cc", "category": "summon", "description": "月蛾の契約に風を重ねる。4マスで1体、初回0.6秒、以後1.5秒ごとに6ダメージ。素早いが一撃は軽い。敵は使い魔を狙わず、結晶核と結晶環の支援は受けない。", "damage": 6, "hits": 1, "interval": 1.5, "warmup": 0.6, "event_type": "familiar_attack", "materials": {"arcane_focus": 1, "water_mote": 1, "wind_mote": 1}}
 		"mage_ward":
 			result = {"name": "護符の板", "class_id": "mage", "size": Vector2i(2, 1), "color": "91a6dd", "category": "armor", "description": "被弾時に月の盾を展開し、各段のダメージを2軽減。盤上に置くと常時有効。", "armor": 2}
 		"iron_blade":
@@ -95,6 +97,7 @@ static func recipes_for(class_id: String) -> Array[Dictionary]:
 			recipes.append({"first": "arcane_focus", "second": "wind_mote", "result": "wind_prism", "label": "結晶核 + 風 → 疾風の結晶環"})
 			recipes.append({"first": "arcane_focus", "second": "water_mote", "result": "moon_familiar", "label": "結晶核 + 水 → 月蛾の契約"})
 			recipes.append({"first": "moon_familiar", "second": "water_mote", "result": "crowned_familiar", "label": "月蛾 + 水 → 月冠蛾の契約"})
+			recipes.append({"first": "moon_familiar", "second": "wind_mote", "result": "wind_familiar", "label": "月蛾 + 風 → 風月蛾の契約"})
 		"knight":
 			recipes.append({"first": "iron_blade", "second": "charge_seal", "result": "greatblade", "label": "長剣 + 溜めの紋章 → 誓約の大剣"})
 	return recipes

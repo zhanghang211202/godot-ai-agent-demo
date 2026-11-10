@@ -1,0 +1,14 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "reference": "assets/art/mage-familiar-v1/moon-familiar.png",
+  "prompt": "Use case: identity-preserving variation. Create a wind-element evolution of the exact moon moth in the reference for a 16-bit fantasy tactical RPG battle sprite. Preserve its tiny pale cyan body, two amber eyes, two antennae, four complete wings, recognizable gold crescent motifs and right-facing three-quarter pose. Change the wing color palette to vivid jade green and pale turquoise with gold accents and add restrained wind-swirl markings on the wings so it reads as swift; no extra character or new limbs. Keep its entire silhouette fully in frame, isolated on genuine transparent background, readable at 80 pixels tall. Match the original detailed pixel-art treatment. No text, labels, UI, borders, detached effects, watermark or sprite sheet.",
+  "assets": [
+    {
+      "file": "wind-moth.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "aff274e269a250fd106b626939124823722c6753b06efdaecd35165ad851af77",
+      "role": "One wind familiar battle sprite and contract icon. The original PNG is retained; runtime bounds use alpha >= 128."
+    }
+  ]
+}

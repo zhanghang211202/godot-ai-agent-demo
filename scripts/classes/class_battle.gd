@@ -265,7 +265,7 @@ func _validate(config: Dictionary) -> String:
 		if action.get("event_type") == "familiar_attack" and not action.get("summon", false):
 			return "使い魔の攻撃元がありません"
 		if action.get("summon", false):
-			if config.class_id != "mage" or action.get("kind") not in ["moon_familiar", "crowned_familiar"] or action.get("event_type") != "familiar_attack":
+			if config.class_id != "mage" or action.get("kind") not in ["moon_familiar", "crowned_familiar", "wind_familiar"] or action.get("event_type") != "familiar_attack":
 				return "使い魔の契約が無効です"
 			summon_count += 1
 			if summon_count > MAX_SUMMONS:

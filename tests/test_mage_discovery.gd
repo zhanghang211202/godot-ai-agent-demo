@@ -33,7 +33,7 @@ func _model() -> void:
 	var recipes: Array[Dictionary] = Catalog.recipes_for("mage")
 	var before := _state(run)
 	for recipe in recipes:
-		if recipe.result in ["solar_lance", "frost_orbit", "crowned_familiar"]:
+		if recipe.result in ["solar_lance", "frost_orbit", "crowned_familiar", "wind_familiar"]:
 			check(not Guide.availability(run, recipe).available, str(recipe.result) + " requires its base spell to be woven first")
 		else:
 			check(Guide.availability(run, recipe).available, str(recipe.result) + " ingredients are counted from actual board and finite source")
@@ -87,7 +87,7 @@ func _run() -> void:
 	ui.grid.set_process(false)
 	var original := _state(ui.run)
 	await _click(ui.recipe_button.get_global_rect().get_center())
-	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 15, "Real button opens fifteen actual recipe cards")
+	check(ui.recipe_overlay.visible and ui.recipe_cards.size() == 16, "Real button opens sixteen actual recipe cards")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _frame in range(4): await process_frame

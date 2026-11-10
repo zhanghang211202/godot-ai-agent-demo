@@ -32,7 +32,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	_legacy_save()
 	await _legacy_ui()
-	for kind in ["mixed", "solar", "frost", "same", "haste", "familiar", "crowned"]:
+	for kind in ["mixed", "solar", "frost", "same", "haste", "familiar", "crowned", "wind-familiar"]:
 		await _play_route(kind)
 	for path in fingerprints:
 		check((FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing") == fingerprints[path], "Player save unchanged: " + path)
@@ -132,11 +132,37 @@ func _play_route(kind: String) -> void:
 			_drop(ui, 1, Vector2i(2, 1))
 			_drop(ui, 0, Vector2i.ZERO)
 			_drop(ui, 2, Vector2i(0, 2))
+		"wind-familiar":
+			ui._open_recipe_book()
+			for _i in range(3): await process_frame
+			ui.recipe_scroll.ensure_control_visible(ui.recipe_cards[15])
+			for _i in range(3): await process_frame
+			check(not ui.recipe_cards[15].disabled, "The first-stage recipe book offers the wind branch")
+			await _capture("wind-familiar-recipe.png")
+			ui.recipe_cards[15].pressed.emit()
+			check(ui.held.get("index") == 1 and ui.grid.recipe_hints[3].product == "moon_familiar", "The wind recipe first guides the basic contract")
+			ui._on_cell_selected(Vector2i(2, 1))
+			ui._open_recipe_book()
+			ui.recipe_cards[15].pressed.emit()
+			check(ui.held.get("index") == 2 and ui.grid.recipe_hints[3].product == "wind_familiar", "The second step guides wind into the existing contract")
+			ui._on_cell_selected(Vector2i(2, 1))
+			check(ui.run.item_by_uid(3).kind == "wind_familiar", "The free initial elements create the wind familiar through the normal UI")
+			_drop(ui, 0, Vector2i.ZERO)
+			await _capture("wind-familiar-prepare.png")
 	var last_stage := -1
 	for stage in range(5):
 		var reference := Battle.new()
 		check(reference.start(ui.run.get_combat_config(), Campaign.encounter(stage)).ok, kind + " stage %d reference starts" % (stage + 1))
 		ui._start_battle()
+		if kind == "wind-familiar" and stage == 2:
+			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
+				root.size = dimensions
+				for _i in range(4): await process_frame
+				var layout: Dictionary = ui.arena.get_art_layout()
+				check(layout.familiars.size() == 1 and layout.familiars[0].kind == "wind_familiar" and Rect2(layout.scene_rect).encloses(layout.familiars[0].rect) and not Rect2(layout.familiars[0].rect).intersects(layout.hero_rect) and not Rect2(layout.familiars[0].rect).intersects(layout.enemy_rect), str(dimensions) + " wind companion appears without obscuring the actors")
+				if dimensions.x == 1440: await _capture("wind-familiar-battle.png")
+			root.size = Vector2i(1440, 960)
+			for _i in range(4): await process_frame
 		if kind in ["familiar", "crowned"] and stage == 2:
 			check(ui.battle.get_summons().size() == 2, "Normal rewards and weaving produce two independent companions")
 			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
@@ -221,6 +247,7 @@ func _play_route(kind: String) -> void:
 				"frost": _drop(ui, 2, Vector2i.ZERO)
 				"same": _drop(ui, 6, Vector2i(3, 1))
 				"haste": _drop(ui, 3, Vector2i(1, 2))
+				"wind-familiar": _drop(ui, 5, Vector2i(4, 2))
 		elif stage == 1:
 			match kind:
 				"mixed": _drop(ui, 4, Vector2i(4, 1))
@@ -237,6 +264,7 @@ func _play_route(kind: String) -> void:
 					check(ui.run.item_by_uid(3).pos == Vector2i(2, 2), "The larger contract is moved to make space for a second companion")
 					_drop(ui, 3, Vector2i(2, 0))
 					_drop(ui, 7, Vector2i(2, 0))
+				"wind-familiar": _drop(ui, 4, Vector2i(4, 1))
 		elif stage == 2 and kind == "haste":
 			_drop(ui, 5, Vector2i(3, 2))
 			await _capture("haste-stage-four.png")
@@ -244,6 +272,8 @@ func _play_route(kind: String) -> void:
 			_drop(ui, 4, Vector2i(4, 1))
 		elif stage == 2 and kind == "crowned":
 			_drop(ui, 4, Vector2i(0, 3))
+		elif stage == 2 and kind == "wind-familiar":
+			_drop(ui, 6, Vector2i(0, 2))
 		if kind == "solar" and stage == 0:
 			check(ui.run.item_by_uid(1).kind == "solar_lance" and ui.run.gold == 2, "Solar upgrade consumes exactly two earned residue")
 			await _capture("solar-stage-two-after.png")

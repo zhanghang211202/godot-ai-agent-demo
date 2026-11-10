@@ -34,6 +34,7 @@ func _run() -> void:
 		hashes[path] = FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "missing"
 	_model()
 	_crowned_model()
+	_wind_model()
 	await _timeline()
 	await _ui()
 	for path in hashes:
@@ -138,6 +139,35 @@ func _crowned_model() -> void:
 	var art := MageArt.icon("crowned_familiar")
 	check(not art.is_empty() and Rect2(art.region).encloses(Rect2(art.source_rect).grow(1)), "The evolved companion has a complete independent sprite")
 
+func _wind_model() -> void:
+	var run := Run.new()
+	run.new_run("mage")
+	run.campaign_rules_version = 2
+	run.sources = Campaign.initial_sources(2)
+	var recipe: Dictionary = Catalog.recipes_for("mage")[15]
+	var plan: Dictionary = Guide.plan(run, recipe)
+	check(recipe.result == "wind_familiar" and plan.available and not plan.direct and plan.required_cost == 0 and plan.prerequisite.result == "moon_familiar", "The wind route uses only one initial water and one initial wind")
+	check(run.acquire(1, Vector2i(2, 1)).ok, "First weave the regular familiar")
+	var before := _state(run)
+	var preview: Dictionary = run.preview_placement({"origin": "source", "index": 2}, Vector2i(2, 1))
+	check(preview.ok and preview.item.kind == "wind_familiar" and preview.size == Vector2i(2, 2) and _state(run) == before, "Wind upgrade previews the compact contract without consuming resources")
+	check(run.acquire(2, Vector2i(2, 1)).ok and run.get_combat_config() == preview.combat, "Actual wind weaving agrees with the preview")
+	var actions: Array = run.get_combat_config().actions.filter(func(action: Dictionary): return action.get("summon", false))
+	check(actions.size() == 1 and actions[0].kind == "wind_familiar" and actions[0].damage == 6 and actions[0].hits == 1 and is_equal_approx(actions[0].warmup, 0.6) and is_equal_approx(actions[0].interval, 1.5), "The fast companion retains one UID and its distinct attack clock")
+	var path := OUTPUT.path_join("wind-trial-%d.json" % Time.get_ticks_usec())
+	check(CampaignSave.save_run(run, 0, path).ok, "The wind contract saves its exact campaign raw ingredients")
+	var restored := Run.new()
+	check(CampaignSave.load_run(restored, path).ok and _state(restored) == _state(run), "The wind contract restores its original UID and elemental ledger")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	var config: Dictionary = run.get_combat_config()
+	config.actions = actions
+	var battle := Battle.new()
+	check(battle.start(config, Campaign.encounter(0)).ok and battle.get_summons()[0].kind == "wind_familiar", "A wind contract creates one fast companion")
+	var hits: Array = battle.tick(3.6).filter(func(event: Dictionary): return event.type == "familiar_attack")
+	check(hits.size() == 3 and hits.all(func(event: Dictionary): return event.amount == 6 and event.source_uid == 3) and is_equal_approx(hits[0].time, 0.6) and is_equal_approx(hits[1].time, 2.1) and is_equal_approx(hits[2].time, 3.6), "Fast companion attacks follow their actual independent clock")
+	var icon := MageArt.icon("wind_familiar")
+	check(not icon.is_empty() and Rect2(icon.region).encloses(Rect2(icon.source_rect).grow(1)), "Wind familiar has its own complete sprite")
+
 func _timeline() -> void:
 	var timeline = Timeline.instantiate()
 	root.add_child(timeline)
@@ -146,6 +176,8 @@ func _timeline() -> void:
 	check(timeline.mode == "idle" and timeline.pose == 0, "An approaching familiar shot does not make the mage cast")
 	timeline.sync_prediction([{"target": "enemy", "kind": "crowned_familiar", "source_uid": 3, "summon": true, "remaining": 0.1}])
 	check(timeline.mode == "idle" and timeline.pose == 0, "The upgraded companion prediction does not animate the mage")
+	timeline.sync_prediction([{"target": "enemy", "kind": "wind_familiar", "source_uid": 3, "summon": true, "remaining": 0.1}])
+	check(timeline.mode == "idle" and timeline.pose == 0, "The wind companion prediction does not animate the mage")
 	timeline.show_event({"type": "familiar_attack", "target": "enemy", "time": 0.8, "source_uid": 3})
 	check(timeline.mode == "idle" and timeline.pose == 0, "A familiar hit does not trigger the mage's own AnimationPlayer")
 	timeline.queue_free()
