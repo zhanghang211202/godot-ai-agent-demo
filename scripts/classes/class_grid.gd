@@ -216,7 +216,11 @@ func _draw() -> void:
 	if run == null:
 		return
 	var board := grid_rect()
-	draw_style_box(_box(Color("17202c"), Color("475368")), board.grow(7))
+	draw_style_box(_box(Color("161c2c"), Color("8a7766") if run.class_id == "mage" else Color("475368")), board.grow(7))
+	if run.class_id == "mage":
+		var trim := Color("c7aa79", 0.72)
+		for corner in [board.position, Vector2(board.end.x, board.position.y), Vector2(board.position.x, board.end.y), board.end]:
+			draw_colored_polygon(PackedVector2Array([corner + Vector2(0, -3), corner + Vector2(3, 0), corner + Vector2(0, 3), corner + Vector2(-3, 0)]), trim)
 	for y in range(4):
 		for x in range(6):
 			var cell := cell_rect(Vector2i(x, y))

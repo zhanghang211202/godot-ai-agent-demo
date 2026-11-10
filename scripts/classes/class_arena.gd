@@ -442,7 +442,7 @@ func _draw() -> void:
 	var note := get_footer_note()
 	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x
 	draw_string(font, Vector2(size.x - note_width - 14, size.y - 5), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("e2d4b8"))
-	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
+	draw_rect(layout.stage_rect, Color("8c796e") if run.class_id == "mage" else Color("78694e"), false, 1)
 	for layer: Control in [ground_effects_layer, effects_layer]:
 		layer.position = layout.scene_rect.position
 		layer.size = layout.scene_rect.size

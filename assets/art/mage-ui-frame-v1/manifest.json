@@ -1,0 +1,13 @@
+{
+  "tool": "built-in imagegen, transparent background enabled",
+  "prompt": "Use case: game UI production asset. Create exactly one empty rectangular fantasy RPG panel frame, straight-on orthographic view, for a detailed 16-bit tactical RPG set in a moonlit palace. A deep midnight indigo, nearly uniform opaque inner surface with a thin antique gold border and restrained, carefully balanced crescent-and-star filigree decorating the four corners. Four continuous straight edges, clean precise 90-degree outer silhouette, generous even corner space, no drop shadow. The center must be completely empty and unobstructed for readable UI text. Frame fills most of the image, complete and uncropped, isolated on genuine transparent background outside its outer edges. High-quality clustered pixel art, dark navy-purple and muted warm gold, readable at game panel size. Exactly one frame, no text, words, letters, numerals, icons, characters, logos, watermark, UI mockup, or extra panels.",
+  "assets": [
+    {
+      "file": "moon-panel.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "5dc03902521a58f8e1e99bf28c87e0cee9f5739ab63403f7c9c123bb53479bdc",
+      "role": "Source nine-slice frame for mage preparation panels and recipe modal. Original PNG remains unchanged; runtime crops transparent outer margin and scales with nearest-neighbor before creating the style."
+    }
+  ]
+}

@@ -8,6 +8,7 @@ const Save = preload("res://scripts/classes/class_save.gd")
 const GridView = preload("res://scripts/classes/class_grid.gd")
 const ArenaView = preload("res://scripts/classes/class_arena.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
+const ClassImage = preload("res://scripts/classes/class_image.gd")
 const Encounters = preload("res://scripts/classes/mage_encounters.gd")
 const RecipeGuide = preload("res://scripts/classes/mage_recipe_guide.gd")
 const Rehearsal = preload("res://scripts/classes/mage_rehearsal.gd")
@@ -61,6 +62,7 @@ var campaign_stage := 0
 var recipe_button: Button
 var condense_button: Button
 var _condense_view := false
+var _mage_panel_texture: Texture2D
 var source_scroll: ScrollContainer
 var recipe_overlay: ColorRect
 var recipe_scroll: ScrollContainer
@@ -128,14 +130,32 @@ func _build_interface() -> void:
 	ui_theme.default_font_size = 17
 	ui_theme.set_color("font_color", "Label", Color("dce2ed"))
 	ui_theme.set_color("font_color", "Button", Color("e4e7ef"))
-	ui_theme.set_stylebox("normal", "Button", _style(Color("283348"), Color("516077")))
-	ui_theme.set_stylebox("hover", "Button", _style(Color("37455e"), Color("bca4e5")))
-	ui_theme.set_stylebox("pressed", "Button", _style(Color("47415e"), Color("d4b8ff")))
-	ui_theme.set_stylebox("disabled", "Button", _style(Color("202735"), Color("333d4e")))
+	ui_theme.set_stylebox("normal", "Button", _style(Color("252d43"), Color("665c78")))
+	ui_theme.set_stylebox("hover", "Button", _style(Color("393a56"), Color("d1b883")))
+	ui_theme.set_stylebox("pressed", "Button", _style(Color("4a405f"), Color("f0d59d")))
+	ui_theme.set_stylebox("disabled", "Button", _style(Color("1a2231"), Color("343847")))
+	var focus_style := StyleBoxFlat.new()
+	focus_style.bg_color = Color(0, 0, 0, 0)
+	focus_style.border_color = Color("f0d59d")
+	focus_style.set_border_width_all(2)
+	focus_style.set_corner_radius_all(5)
+	ui_theme.set_stylebox("focus", "Button", focus_style)
 	ui_theme.set_stylebox("panel", "PanelContainer", _style(Color("1c2534"), Color("3c485d")))
 	theme = ui_theme
-	var background := ColorRect.new()
-	background.color = Color("101722")
+	var background := TextureRect.new()
+	var background_gradient := Gradient.new()
+	background_gradient.set_color(0, Color("1b1830"))
+	background_gradient.set_color(1, Color("0d1724"))
+	var background_texture := GradientTexture2D.new()
+	background_texture.gradient = background_gradient
+	background_texture.width = 2
+	background_texture.height = 256
+	background_texture.fill_from = Vector2(0, 0)
+	background_texture.fill_to = Vector2(0, 1)
+	background.texture = background_texture
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.stretch_mode = TextureRect.STRETCH_SCALE
+	background.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
@@ -149,7 +169,7 @@ func _build_interface() -> void:
 	margin.add_child(root)
 	var header := HBoxContainer.new()
 	root.add_child(header)
-	var heading := _label("月庭の魔術師 · 五つの試練" if campaign_focus else "月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
+	var heading := _label("☾  月庭の魔術師 · 五つの試練" if campaign_focus else "☾  月庭の魔術師の試練" if mage_focus else "職業ビルドの試練", 25)
 	if mage_focus:
 		heading.add_theme_color_override("font_color", Color("e2d3ff"))
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -333,9 +353,9 @@ func _build_interface() -> void:
 	primary_button = _button("戦闘開始  /  Space", _primary_action)
 	primary_button.custom_minimum_size.x = 245
 	if mage_focus:
-		primary_button.add_theme_stylebox_override("normal", _style(Color("544374"), Color("d9bd83")))
-		primary_button.add_theme_stylebox_override("hover", _style(Color("6a538e"), Color("f3dca8")))
-		primary_button.add_theme_stylebox_override("pressed", _style(Color("41345c"), Color("e6c882")))
+		primary_button.add_theme_stylebox_override("normal", _style(Color("584270"), Color("ddbf80")))
+		primary_button.add_theme_stylebox_override("hover", _style(Color("765988"), Color("f5dda2")))
+		primary_button.add_theme_stylebox_override("pressed", _style(Color("453454"), Color("f1d397")))
 	footer.add_child(primary_button)
 	status_label = _label("", 16, Color("dfc394"))
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -366,7 +386,11 @@ func _build_recipe_book() -> void:
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(850, 0)
 	panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	panel.add_theme_stylebox_override("panel", _style(Color("1c2539"), Color("b5a0d9")))
+	if _mage_panel_texture != null:
+		panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		panel.add_theme_stylebox_override("panel", _mage_frame_box())
+	else:
+		panel.add_theme_stylebox_override("panel", _style(Color("1c2539"), Color("b5a0d9")))
 	row.add_child(panel)
 	var right := Control.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -537,9 +561,49 @@ func _panel(parent: Control, minimum_width: float, ratio: float) -> VBoxContaine
 
 func _decorate_panel(column: VBoxContainer, accent: Color) -> void:
 	var panel := column.get_parent().get_parent() as PanelContainer
-	var box := _style(Color("192332"), accent.darkened(0.28))
+	if _mage_panel_texture == null:
+		var image := ClassImage.load_image("res://assets/art/mage-ui-frame-v1/moon-panel.png")
+		if image != null and not image.is_empty():
+			var bounds := image.get_used_rect()
+			if bounds.has_area():
+				image = image.get_region(bounds)
+				image.resize(160, 104, Image.INTERPOLATE_NEAREST)
+				_mage_panel_texture = ImageTexture.create_from_image(image)
+	if _mage_panel_texture != null:
+		panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		panel.add_theme_stylebox_override("panel", _mage_frame_box())
+		return
+	var box := _style(Color("171f31"), Color("776b69"))
 	box.border_width_top = 2
+	box.shadow_color = Color(0.01, 0.01, 0.025, 0.5)
+	box.shadow_size = 4
 	panel.add_theme_stylebox_override("panel", box)
+	panel.draw.connect(func(): _draw_panel_ornament(panel, accent))
+
+func _mage_frame_box() -> StyleBoxTexture:
+	var texture_box := StyleBoxTexture.new()
+	texture_box.texture = _mage_panel_texture
+	for side in [SIDE_LEFT, SIDE_RIGHT, SIDE_TOP, SIDE_BOTTOM]:
+		texture_box.set_texture_margin(side, 25)
+	texture_box.content_margin_left = 12
+	texture_box.content_margin_right = 12
+	texture_box.content_margin_top = 8
+	texture_box.content_margin_bottom = 8
+	return texture_box
+
+func _draw_panel_ornament(panel: PanelContainer, accent: Color) -> void:
+	var width := panel.size.x
+	var height := panel.size.y
+	var gold := Color("c9ad7b", 0.70)
+	var soft := Color(accent, 0.52)
+	panel.draw_line(Vector2(12, 7), Vector2(53, 7), gold, 1, false)
+	panel.draw_line(Vector2(width - 53, 7), Vector2(width - 12, 7), gold, 1, false)
+	panel.draw_line(Vector2(7, 12), Vector2(7, 32), soft, 1, false)
+	panel.draw_line(Vector2(width - 7, 12), Vector2(width - 7, 32), soft, 1, false)
+	panel.draw_line(Vector2(12, height - 7), Vector2(40, height - 7), soft, 1, false)
+	panel.draw_line(Vector2(width - 40, height - 7), Vector2(width - 12, height - 7), soft, 1, false)
+	for point in [Vector2(8, 8), Vector2(width - 8, 8), Vector2(8, height - 8), Vector2(width - 8, height - 8)]:
+		panel.draw_colored_polygon(PackedVector2Array([point + Vector2(0, -3), point + Vector2(3, 0), point + Vector2(0, 3), point + Vector2(-3, 0)]), gold)
 
 func _label(text: String, point_size: int, color: Color = Color("dce2ed")) -> Label:
 	var label := Label.new()
