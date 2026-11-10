@@ -163,6 +163,11 @@ func _play_route(kind: String) -> void:
 				if dimensions.x == 1440: await _capture("wind-familiar-battle.png")
 			root.size = Vector2i(1440, 960)
 			for _i in range(4): await process_frame
+			ui._process(0.4)
+			ui.arena._process(0.4)
+			reference.tick(0.4)
+			check(ui.arena.get_footer_note().contains("風月蛾の契約") and ui.arena.get_footer_note().contains("0.2秒"), "The next-cast display uses the actual independent companion timer")
+			await _capture("wind-familiar-countdown.png")
 		if kind in ["familiar", "crowned"] and stage == 2:
 			check(ui.battle.get_summons().size() == 2, "Normal rewards and weaving produce two independent companions")
 			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:

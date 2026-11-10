@@ -2,7 +2,6 @@ extends Control
 ## Dedicated action-frame sample over the unchanged C0 event engine.
 
 const Art = preload("res://scripts/classes/class_art.gd")
-const Catalog = preload("res://scripts/classes/class_catalog.gd")
 const Motion = preload("res://scripts/classes/class_motion.gd")
 const Feedback = preload("res://scripts/classes/class_feedback.gd")
 const MageArt = preload("res://scripts/classes/mage_art.gd")
@@ -151,6 +150,39 @@ func _upcoming_casts() -> Array[Dictionary]:
 	if run == null or run.class_id != "mage" or battle == null or battle.phase != "battle":
 		return []
 	return MageEffects.visible_casts(_active_actions(), battle.get_presentation_timing())
+
+func get_footer_note() -> String:
+	if run == null or run.class_id != "mage":
+		return "命中 / 被弾 / フェード演出"
+	var actions := _active_actions()
+	if battle != null and battle.phase == "battle":
+		var timing: Dictionary = battle.get_presentation_timing()
+		var soonest := INF
+		var next_name := ""
+		var simultaneous := 0
+		for action: Dictionary in actions:
+			var uid := int(action.uid)
+			if not timing.sources.has(uid):
+				continue
+			var remaining := maxf(0.0, float(timing.sources[uid].remaining) - float(timing.substep))
+			if remaining < soonest - 0.001:
+				soonest = remaining
+				next_name = str(action.name)
+				simultaneous = 1
+			elif absf(remaining - soonest) < 0.001:
+				simultaneous += 1
+		if next_name.is_empty():
+			return "発動できる術式なし"
+		var display_seconds := ceilf(soonest * 10.0 - 0.000001) / 10.0
+		return "次の発動：%s %.1f秒%s" % [next_name, display_seconds, "（同時%d件）" % simultaneous if simultaneous > 1 else ""]
+	var spells := 0
+	var familiars := 0
+	for action: Dictionary in actions:
+		if bool(action.get("summon", false)):
+			familiars += 1
+		else:
+			spells += 1
+	return "編成：術式 %d · 使い魔 %d" % [spells, familiars]
 
 func _hero_id() -> String:
 	if run == null:
@@ -393,15 +425,9 @@ func _draw() -> void:
 	var footer_name := "月光の観測庭" if run.class_id == "mage" else "残火の聖堂"
 	draw_rect(Rect2(1, size.y - 21, size.x - 2, 20), Color("111925"))
 	draw_string(font, Vector2(14, size.y - 6), footer_name + (" · 元素の試練" if run.class_id == "mage" else " · 動作サンプル"), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
-	var recipes_count := Catalog.recipes_for("mage").size()
-	var spells_count := 1
-	var familiar_count := 0
-	for recipe: Dictionary in Catalog.recipes_for("mage"):
-		if Catalog.definition(recipe.result).category == "attack": spells_count += 1
-		if Catalog.definition(recipe.result).category == "summon": familiar_count += 1
-	var note := "%d種の術式 · 契約%d種 · %d種の組合せ" % [spells_count, familiar_count, recipes_count] if run.class_id == "mage" else "命中 / 被弾 / フェード演出"
-	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
-	draw_string(font, Vector2(size.x - note_width - 14, size.y - 6), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color("b6b4c6"))
+	var note := get_footer_note()
+	var note_width := font.get_string_size(note, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x
+	draw_string(font, Vector2(size.x - note_width - 14, size.y - 5), note, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("e2d4b8"))
 	draw_rect(layout.stage_rect, Color("6a6073") if run.class_id == "mage" else Color("78694e"), false, 1)
 	for layer: Control in [ground_effects_layer, effects_layer]:
 		layer.position = layout.scene_rect.position
