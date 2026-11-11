@@ -501,9 +501,11 @@ func _build_recipe_book() -> void:
 		card.add_theme_stylebox_override("normal", _style(Color("2a263f"), Color("675b75")))
 		card.add_theme_stylebox_override("hover", _style(Color("423650"), Color("d3b77e")))
 		card.add_theme_stylebox_override("pressed", _style(Color("54435d"), Color("efcf8f")))
+		card.add_theme_color_override("font_disabled_color", Color("b8bdd1"))
+		card.add_theme_color_override("icon_disabled_color", Color("c5c1d2"))
 		recipe_cards.append(card)
 		cards.add_child(card)
-	var footer := _label("素材数には盤上の未合成素材も含みます。選択時には消費しません。Esc で閉じる。", 14, Color("9eb0c5"))
+	var footer := _label("素材数は盤上と残り在庫の合計（残滓不足を含む）。選択時には消費しません。Esc で閉じる。", 14, Color("9eb0c5"))
 	footer.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	column.add_child(footer)
 
@@ -563,7 +565,11 @@ func _refresh_recipe_book() -> void:
 		var first: Dictionary = Catalog.definition(recipe.first)
 		var second: Dictionary = Catalog.definition(recipe.second)
 		var counts := "%s %d / 2" % [first.name, available.counts[recipe.first]] if recipe.first == recipe.second else "%s %d · %s %d" % [first.name, available.counts[recipe.first], second.name, available.counts[recipe.second]]
-		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "魔力残滓が不足" if route.insufficient_funds else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name)))
+		var status := counts if available.available else "先に%sを紡ぐ" % Catalog.definition(route.prerequisite.result).name if route.available else "不足：" + "、".join(route.missing.map(func(kind): return str(Catalog.definition(kind).name))) if not route.missing.is_empty() else "魔力残滓が不足"
+		if int(route.required_cost) > 0 and route.missing.is_empty():
+			status += " · %s%d残滓" % ["合計" if route.available and not route.direct else "必要", int(route.required_cost)]
+		if not route.available and route.insufficient_funds and not route.missing.is_empty():
+			status += " · 残滓不足"
 		var card: Button = recipe_cards[index]
 		card.visible = recipe_filter == "all" or str(definition.category) == recipe_filter
 		var effect := "%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "attack" else "使い魔：%d×%d回 / %.1f秒" % [definition.damage, definition.hits, definition.interval] if definition.category == "summon" else "接続術式の間隔 約20%短縮"

@@ -16,7 +16,8 @@ static func availability(run: RefCounted, recipe: Dictionary) -> Dictionary:
 			counts[item.kind] += 1
 			owned[item.kind] += 1
 	for source: Dictionary in run.sources:
-		if counts.has(source.kind) and run.gold >= int(source.cost):
+		# Stock and budget are separate: an unaffordable source still exists.
+		if counts.has(source.kind):
 			counts[source.kind] += int(source.remaining)
 	var missing: Array[String] = []
 	var total_cost := 0

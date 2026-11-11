@@ -44,6 +44,10 @@ func _model() -> void:
 	budget.sources.append_array(Campaign.shop_sources())
 	# Synthetic stock fixture isolates shared-cost accounting; it is never saved.
 	budget.sources[0].remaining = 0
+	budget.gold = 0
+	var direct_budget: Dictionary = Guide.availability(budget, recipes[0])
+	check(direct_budget.counts.fire_mote == 2 and direct_budget.missing.is_empty() and direct_budget.insufficient_funds and direct_budget.required_cost == 2, "Unaffordable stock is counted as stock, with its actual price rather than a missing material")
+	check(not Guide.choose_planned(budget, recipes[0]).ok, "The guide cannot buy an unaffordable ingredient")
 	budget.gold = 3
 	var before := _state(budget)
 	var route: Dictionary = Guide.plan(budget, recipes[10])
@@ -71,9 +75,39 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
 	for kind in ["solar_lance", "frost_orbit"]:
 		await _ui_route(kind)
+	await _ui_prices()
 	check(_fingerprints() == player_saves, "Guide fixture leaves actual player saves unchanged")
 	print("Mage chain guide: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
+
+func _ui_prices() -> void:
+	root.size = Vector2i(1440, 960)
+	var ui = load("res://scenes/mage_campaign.tscn").instantiate()
+	ui.persistence_enabled = false
+	root.add_child(ui)
+	for _i in range(4): await process_frame
+	ui.set_process(false)
+	ui.arena.set_process(false)
+	ui.run.sources[0].remaining = 0
+	ui.run.gold = 0
+	var before := _state(ui.run)
+	ui._open_recipe_book()
+	for _i in range(3): await process_frame
+	check(ui.recipe_cards[0].disabled and ui.recipe_cards[0].text.contains("魔力残滓が不足") and ui.recipe_cards[0].text.contains("必要2残滓") and not ui.recipe_cards[0].text.contains("不足：火"), "Recipe card distinguishes an unaffordable source from missing stock")
+	check(_state(ui.run) == before, "Displaying prices does not spend any resources")
+	await RenderingServer.frame_post_draw
+	check(root.get_texture().get_image().save_png(OUTPUT.path_join("recipe-prices.png")) == OK, "Actual priced recipe book screenshot saved")
+	ui.run.gold = 2
+	ui._refresh_recipe_book()
+	check(not ui.recipe_cards[0].disabled and ui.recipe_cards[0].text.contains("必要2残滓"), "Exact budget enables a direct recipe and shows its cost")
+	ui.run.gold = 4
+	ui._refresh_recipe_book()
+	check(not ui.recipe_cards[10].disabled and ui.recipe_cards[10].text.contains("先に") and ui.recipe_cards[10].text.contains("合計4残滓"), "A two-step recipe shows the total for both steps")
+	ui.run.sources[6].remaining = 1
+	ui._refresh_recipe_book()
+	check(ui.recipe_cards[10].disabled and ui.recipe_cards[10].text.contains("不足：") and not ui.recipe_cards[10].text.contains("必要2残滓"), "Missing stock does not misrepresent the partial cost as a complete price")
+	ui.queue_free()
+	await process_frame
 
 func _ui_route(kind: String) -> void:
 	root.size = Vector2i(1440, 960)
