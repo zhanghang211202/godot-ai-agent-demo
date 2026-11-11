@@ -3,6 +3,7 @@ extends SceneTree
 
 const CastScene = preload("res://scenes/components/mage_cast_timeline.tscn")
 const Battle = preload("res://scripts/classes/class_battle.gd")
+const Effects = preload("res://scripts/classes/mage_effects.gd")
 const OUTPUT := "res://.tools/mage-cast-sync-review"
 const PLAYER_PATHS := ["user://mage-trial-run.json", "user://class-prototype-run.json", "user://emberpack-run.json"]
 var checks := 0
@@ -31,6 +32,14 @@ func _run() -> void:
 	root.add_child(timeline)
 	await process_frame
 	check(timeline.player.has_animation("cast") and timeline.pose == 0, "Native AnimationPlayer starts in idle")
+	var simultaneous := [{"uid": 2, "kind": "tide_lances", "hits": 3}, {"uid": 1, "kind": "flame_glyph", "hits": 1}]
+	var shared_timing := {"sources": {1: {"remaining": 0.2}, 2: {"remaining": 0.2}}}
+	timeline.sync_prediction(Effects.visible_casts(simultaneous, shared_timing))
+	var chosen_clip: String = timeline.clip
+	simultaneous.reverse()
+	timeline.sync_prediction(Effects.visible_casts(simultaneous, shared_timing))
+	check(chosen_clip == "mage-swing" and timeline.clip == chosen_clip and timeline.pose == 2, "Simultaneous different spells keep the same AnimationPlayer clip when source order changes")
+	timeline.reset()
 	timeline.sync_prediction([_cast(0.50)])
 	check(timeline.pose == 1 and timeline.mode == "prediction", "Gather uses the windup pose")
 	timeline.sync_prediction([_cast(0.24), _cast(0.24, 2)])

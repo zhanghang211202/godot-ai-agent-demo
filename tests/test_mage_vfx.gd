@@ -43,6 +43,16 @@ func _model() -> void:
 		sources[index] = {"remaining": 0.6 - index * 0.02}
 	casts = Effects.visible_casts(many, {"sources": sources})
 	check(casts.size() == 6 and casts[0].source_uid == 23, "Twenty-four legal sources retain six imminent casts, not an unbounded particle queue")
+	var simultaneous: Array = []
+	var shared := {}
+	for uid in range(1, 9):
+		simultaneous.append({"uid": uid, "kind": "spark" if uid % 2 == 0 else "flame_glyph", "hits": 1})
+		shared[uid] = {"remaining": 0.2}
+	var tied_timing := {"sources": shared, "enemy_remaining": 0.2}
+	var ordered := Effects.visible_casts(simultaneous, tied_timing)
+	simultaneous.reverse()
+	var reversed := Effects.visible_casts(simultaneous, tied_timing)
+	check(ordered == reversed and ordered.size() == 6 and ordered[0].target == "hero" and ordered[1].source_uid == 1 and ordered[5].source_uid == 5, "Equal-time casts keep enemy warning and a deterministic source order even above the visual limit")
 	var hits := [{"kind": "tide_lances", "target": "enemy", "age": 0.0, "hits": 1, "amount": 1}]
 	var impact := Effects.visible_effects(hits)
 	check(impact.size() == 1 and impact[0].hits == 1 and impact[0].phase == "impact", "Lethal tide shows one true hit, not the three planned lances")

@@ -51,8 +51,15 @@ static func visible_casts(actions: Array, timing: Dictionary) -> Array[Dictionar
 	if incoming > 0 and incoming <= enemy_windup:
 		casts.append({"kind": str(timing.get("enemy_kind", "enemy")), "target": "hero", "source_uid": 0, "remaining": incoming,
 			"progress": 1.0 - incoming / enemy_windup, "phase": "flight" if incoming <= FLIGHT else "gather", "planned_hits": int(timing.get("enemy_hits", 1))})
-	# Keep imminent attacks when many legal sources charge together.
-	casts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.remaining < b.remaining)
+	# Keep imminent attacks; exact simultaneous ties have a stable ordering so
+	# the AnimationPlayer does not select a different source on each redraw.
+	# Enemy warnings win ties before the limited presentation slots are cut.
+	casts.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if a.remaining != b.remaining:
+			return a.remaining < b.remaining
+		if a.target != b.target:
+			return a.target == "hero"
+		return a.source_uid < b.source_uid)
 	if casts.size() > MAX_CASTS:
 		casts.resize(MAX_CASTS)
 	return casts
