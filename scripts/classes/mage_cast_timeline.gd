@@ -6,6 +6,7 @@ const RELEASE_AT := Effects.WINDUP - Effects.FLIGHT
 const IMPACT_AT := Effects.WINDUP
 const END_AT := 1.06
 @export var pose := 0
+@export var lean := 0.0
 @onready var player: AnimationPlayer = $AnimationPlayer
 var mode := "idle"
 var clip := "mage-cast"
@@ -23,6 +24,7 @@ func _clip_for(kind: String) -> String:
 func reset() -> void:
 	player.stop()
 	pose = 0
+	lean = 0.0
 	mode = "idle"
 	clip = "mage-cast"
 	_last_hit_time = -1.0
@@ -46,6 +48,7 @@ func advance(delta: float, paused: bool, speed: float) -> void:
 	player.advance(delta * speed)
 	if not player.is_playing():
 		pose = 0
+		lean = 0.0
 		mode = "idle"
 
 func sync_prediction(casts: Array) -> void:
