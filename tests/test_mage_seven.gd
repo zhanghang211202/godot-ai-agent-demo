@@ -261,14 +261,25 @@ func _play(kind: String) -> void:
 			root.size = Vector2i(1440, 960)
 			for _i in range(4): await process_frame
 		var effect_kind := "lantern_flare" if stage == 3 else "serpent_comet" if stage == 5 else ""
+		var saw_gather := false
 		var saw_flight := false
 		var saw_impact := false
+		var sequence_started := false
+		var sequence_frames := 0
 		while ui.battle.phase == "battle":
 			ui._process(0.05)
 			ui.arena._process(0.05)
 			reference.tick(0.05)
 			if kind == "mixed" and not effect_kind.is_empty():
 				var layout: Dictionary = ui.arena.get_art_layout()
+				if layout.spell_casts.any(func(cast: Dictionary): return cast.kind == effect_kind):
+					sequence_started = true
+				if OS.get_environment("MAGE_CAPTURE_SEQUENCE") == "1" and sequence_started and sequence_frames < 24:
+					await _capture("sequence-%s-%02d.png" % [id, sequence_frames])
+					sequence_frames += 1
+				if not saw_gather and layout.spell_casts.any(func(cast: Dictionary): return cast.kind == effect_kind and cast.phase == "gather" and cast.progress >= 0.58):
+					saw_gather = true
+					await _capture("gather-%s.png" % id)
 				if not saw_flight and layout.spell_casts.any(func(cast: Dictionary): return cast.kind == effect_kind and cast.phase == "flight"):
 					saw_flight = true
 					await _capture("flight-%s.png" % id)
@@ -276,7 +287,7 @@ func _play(kind: String) -> void:
 					saw_impact = true
 					await _capture("impact-%s.png" % id)
 		if kind == "mixed" and not effect_kind.is_empty():
-			check(saw_flight and saw_impact, id + " shows its actual two-hit attack flight and impact")
+			check(saw_gather and saw_flight and saw_impact, id + " shows its actual charge, two-hit attack flight and impact")
 		check(ui.battle.phase == "won" and ui.battle.get_summary() == reference.get_summary(), kind + " wins stage %d with exact independent combat results" % (stage + 1))
 		print("Seven ", kind, " stage ", stage + 1, " ", id, ": ", ui.battle.phase, " HP ", ui.battle.hp, " time ", ui.battle.battle_time)
 		if ui.battle.phase != "won": break

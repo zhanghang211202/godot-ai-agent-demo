@@ -63,6 +63,15 @@ static func draw_ground(canvas: CanvasItem, casts: Array, effects: Array, hero: 
 		var at := enemy if cast.target == "hero" else hero
 		var alpha := 0.18 + float(cast.progress) * 0.30
 		seal(canvas, at - Vector2(0, 11), Vector2(43, 10), float(cast.progress) * 0.6, Color(COLORS[cast.kind], alpha), 8)
+		if cast.target == "hero" and cast.kind in ["lantern_flare", "serpent_comet"]:
+			var progress := float(cast.progress)
+			var color := Color("8affea" if cast.kind == "lantern_flare" else "edcd8d", 0.25 + progress * 0.45)
+			var origin := at - Vector2(0, 11)
+			canvas.draw_polyline(arc_points(origin, Vector2(66, 15), progress * 1.5, PI * 1.6, 24), color, 2, false)
+			for index in range(2 if cast.kind == "lantern_flare" else 4):
+				var angle := progress * 1.5 + index * TAU / (2 if cast.kind == "lantern_flare" else 4)
+				var mark := origin + Vector2(cos(angle) * 66, sin(angle) * 15)
+				diamond(canvas, mark, 5, color)
 	for effect: Dictionary in effects:
 		if effect.kind == "flame_glyph":
 			var progress := float(effect.progress)
@@ -81,6 +90,8 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 		var point := from + Vector2.from_angle(angle) * (46 - gathering * 30)
 		diamond(canvas, point, 2, Color(color, gathering * 0.85))
 	star(canvas, from, 5 + gathering * 5, Color("fff2d5", gathering * 0.9))
+	if remaining > FLIGHT and kind in ["lantern_flare", "serpent_comet"]:
+		_enemy_charge(canvas, kind, from, progress)
 	if remaining > FLIGHT:
 		return
 	var flight := clampf(1.0 - remaining / FLIGHT, 0, 1)
@@ -142,10 +153,12 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 			diamond(canvas, tip, 13, Color("318e8c"))
 			star(canvas, tip, 8, Color("dffff2"))
 			seal(canvas, tip, Vector2(13, 18), progress * 2, Color("9affed"), 6)
+			canvas.draw_polyline(arc_points(tip, Vector2(17, 22), flight * 2.0 + index * PI, PI * 1.15, 12), Color("c1fff0", 0.8), 2, false)
 		elif kind == "serpent_comet":
 			pixel_sprite(canvas, "shard", tip, 2, 1.0)
 			seal(canvas, tip, Vector2(18, 11), progress * 3 + index, Color("b6e9ff"), 8)
 			star(canvas, tip, 8, Color("fff2c7"))
+			canvas.draw_polyline(arc_points(tip, Vector2(25, 13), -flight * 3.0 + index * PI, PI * 0.9, 12), Color("f5d594", 0.8), 2, false)
 		elif kind == "boss_star":
 			diamond(canvas, tip, 15, Color("564078"))
 			seal(canvas, tip, Vector2.ONE * 14, progress * 2, Color("eccbff"), 8)
@@ -163,6 +176,27 @@ static func draw_cast(canvas: CanvasItem, cast: Dictionary, from: Vector2, to: V
 			diamond(canvas, tip, 12, Color("245a99"))
 			diamond(canvas, tip, 8, color)
 			star(canvas, tip, 10, Color("eeffff"))
+
+static func _enemy_charge(canvas: CanvasItem, kind: String, origin: Vector2, progress: float) -> void:
+	# Extra ornaments remain purely presentational and follow the battle clock.
+	# Their modest radius keeps the enemy silhouette legible at small windows.
+	var strength := smoothstep(0.05, 0.5, progress)
+	if kind == "lantern_flare":
+		var radius := 56.0 - 12.0 * progress
+		for index in range(2):
+			var angle := progress * 2.2 + index * PI
+			var at := origin + Vector2(cos(angle) * radius, sin(angle) * radius * 0.62)
+			canvas.draw_polyline(arc_points(at, Vector2(17, 21), angle, PI * 1.45, 12), Color("a9ffed", strength * 0.95), 4, false)
+			star(canvas, at + Vector2(0, -5), 6, Color("fff3c5", strength * 0.95))
+		seal(canvas, origin, Vector2(42, 30), -progress * 1.7, Color("8affea", strength * 0.9), 8)
+	else:
+		var radius := 62.0 - 14.0 * progress
+		for index in range(4):
+			var angle := progress * 2.0 + index * TAU / 4.0
+			var at := origin + Vector2(cos(angle) * radius, sin(angle) * radius * 0.6)
+			diamond(canvas, at, 10, Color("397fb3", strength * 0.9))
+			diamond(canvas, at, 6, Color("c2f4ff", strength))
+		canvas.draw_polyline(arc_points(origin, Vector2(50, 30), -progress * 2.5, PI * 1.25, 18), Color("f8d895", strength * 0.95), 3, false)
 
 static func trajectory(from: Vector2, to: Vector2, progress: float, kind: String, index: int) -> Vector2:
 	var bend := -42.0 if kind == "spark" else -24.0 if kind == "flame_glyph" else (index - 1) * 19.0 if kind == "tide_lances" else -18.0
