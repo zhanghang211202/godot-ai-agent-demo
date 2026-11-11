@@ -17,7 +17,6 @@ var shield_effects_enabled := true
 var mage_motion_variants_enabled := false
 var actor_sprite: Sprite2D
 var mage_hit_motion: Node2D
-var mage_cast_body: Node2D
 var mage_cast_timeline: Node
 var actor_material: ShaderMaterial
 var enemy_sprite: Sprite2D
@@ -46,8 +45,6 @@ func _ready() -> void:
 	add_child(ground_effects_layer)
 	mage_hit_motion = MageHitMotion.instantiate()
 	add_child(mage_hit_motion)
-	mage_cast_body = Node2D.new()
-	mage_hit_motion.add_child(mage_cast_body)
 	mage_cast_timeline = MageCastTimeline.instantiate()
 	mage_cast_timeline.variants_enabled = mage_motion_variants_enabled
 	add_child(mage_cast_timeline)
@@ -58,7 +55,7 @@ func _ready() -> void:
 	actor_material = ShaderMaterial.new()
 	actor_material.shader = preload("res://scripts/classes/class_actor.gdshader")
 	actor_sprite.material = actor_material
-	mage_cast_body.add_child(actor_sprite)
+	mage_hit_motion.add_child(actor_sprite)
 	enemy_sprite = Sprite2D.new()
 	enemy_sprite.centered = false
 	enemy_sprite.region_enabled = true
@@ -219,11 +216,6 @@ func _encounter() -> Dictionary:
 
 func _mage_recoil() -> Vector2:
 	return mage_hit_motion.position if run != null and run.class_id == "mage" and mage_hit_motion != null else Vector2.ZERO
-
-func _mage_animated_point(layout: Dictionary, point: Vector2) -> Vector2:
-	var pivot := Vector2(layout.ground_anchor)
-	var angle: float = mage_cast_timeline.lean if run != null and run.class_id == "mage" and mage_cast_timeline != null else 0.0
-	return pivot + (point - pivot).rotated(angle) + _mage_recoil()
 
 func _mage_effect_rect(layout: Dictionary) -> Rect2:
 	var rect: Rect2 = layout.hero_rect
@@ -425,9 +417,7 @@ func _draw() -> void:
 		actor_sprite.region_rect = layout.source_rect
 		# Mage recoil belongs to the AnimationPlayer wrapper, not this layout.
 		var legacy_shake := roundf(sin(feedback.hero_hit * 90.0) * 3.0) if run.class_id != "mage" and feedback.hero_hit > 0 else 0.0
-		mage_cast_body.position = layout.ground_anchor
-		mage_cast_body.rotation = mage_cast_timeline.lean if run.class_id == "mage" else 0.0
-		actor_sprite.position = layout.hero_rect.position - Vector2(layout.ground_anchor) + Vector2(legacy_shake, 0)
+		actor_sprite.position = layout.hero_rect.position + Vector2(legacy_shake, 0)
 		actor_sprite.scale = layout.source_scale
 		actor_material.set_shader_parameter("cutout_enabled", pixel_cutout_enabled)
 		actor_material.set_shader_parameter("hurt_strength", 0.65 * feedback.hero_hit / Feedback.HIT_TIME)
@@ -561,7 +551,7 @@ func _draw_feedback() -> void:
 			effects_layer.draw_texture_rect_region(familiar_art.texture, familiar.rect, familiar_art.source_rect)
 	if run.class_id == "mage":
 		for cast: Dictionary in layout.spell_casts:
-			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else _mage_animated_point(layout, Vector2(layout.hero_release_point if cast.phase == "flight" else layout.hero_cast_point)) + _source_cast_offset(int(cast.source_uid))
+			var from: Vector2 = layout.enemy_cast_point if cast.target == "hero" else Vector2(layout.hero_release_point if cast.phase == "flight" else layout.hero_cast_point) + _mage_recoil() + _source_cast_offset(int(cast.source_uid))
 			if bool(cast.get("summon", false)):
 				var matching: Array = layout.familiars.filter(func(familiar: Dictionary): return familiar.uid == cast.source_uid)
 				if matching.is_empty(): continue

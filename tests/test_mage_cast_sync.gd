@@ -4,7 +4,6 @@ extends SceneTree
 const CastScene = preload("res://scenes/components/mage_cast_timeline.tscn")
 const Battle = preload("res://scripts/classes/class_battle.gd")
 const Effects = preload("res://scripts/classes/mage_effects.gd")
-const Motion = preload("res://scripts/classes/class_motion.gd")
 const OUTPUT := "res://.tools/mage-cast-sync-review"
 const PLAYER_PATHS := ["user://mage-trial-run.json", "user://class-prototype-run.json", "user://emberpack-run.json"]
 var checks := 0
@@ -33,6 +32,7 @@ func _run() -> void:
 	root.add_child(timeline)
 	await process_frame
 	check(timeline.player.has_animation("cast") and timeline.pose == 0, "Native AnimationPlayer starts in idle")
+	check(timeline.player.get_animation("swing").get_track_count() == 1, "Swing animates only the existing pose track, without whole-character lean")
 	var simultaneous := [{"uid": 2, "kind": "tide_lances", "hits": 3}, {"uid": 1, "kind": "flame_glyph", "hits": 1}]
 	var shared_timing := {"sources": {1: {"remaining": 0.2}, 2: {"remaining": 0.2}}}
 	timeline.sync_prediction(Effects.visible_casts(simultaneous, shared_timing))
@@ -42,22 +42,20 @@ func _run() -> void:
 	check(chosen_clip == "mage-swing" and timeline.clip == chosen_clip and timeline.pose == 2, "Simultaneous different spells keep the same AnimationPlayer clip when source order changes")
 	timeline.reset()
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.30}])
-	check(timeline.clip == "mage-swing" and timeline.lean < -0.02 and timeline.lean > -0.036, "Swing has its own bounded anticipation curve")
+	check(timeline.clip == "mage-swing" and timeline.pose == 3, "Swing uses the existing diagonal staff pose between windup and release")
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.14}])
-	check(timeline.lean > 0.0 and timeline.lean < 0.021, "Swing releases into a small forward follow-through")
+	check(timeline.pose == 2, "Swing reaches the existing release pose before the attack")
 	timeline.reset()
 	timeline.sync_prediction([_cast(0.50)])
 	check(timeline.pose == 1 and timeline.mode == "prediction", "Gather uses the windup pose")
-	check(timeline.lean < 0.0 and absf(timeline.lean) < 0.04, "AnimationPlayer adds a bounded continuous anticipation lean")
 	timeline.sync_prediction([_cast(0.24), _cast(0.24, 2)])
 	check(timeline.pose == 2, "Two simultaneous flights use a single release pose at the projectile boundary")
 	timeline.show_event(_hit(1.0))
 	var hit_position: float = timeline.player.current_animation_position
-	var hit_lean: float = timeline.lean
 	timeline.show_event(_hit(1.0, 2))
 	check(timeline.mode == "recovery" and is_equal_approx(timeline.player.current_animation_position, hit_position), "Same-step source or multi-hit does not restart follow-through")
 	timeline.advance(0.17, true, 2.0)
-	check(is_equal_approx(timeline.player.current_animation_position, hit_position) and is_equal_approx(timeline.lean, hit_lean), "Pause freezes AnimationPlayer and body lean")
+	check(is_equal_approx(timeline.player.current_animation_position, hit_position), "Pause freezes AnimationPlayer")
 	timeline.advance(0.085, false, 2.0)
 	check(timeline.pose == 3, "Double speed advances recovery with the combat clock")
 	timeline.sync_prediction([_cast(0.5, 3)])
@@ -65,7 +63,7 @@ func _run() -> void:
 	timeline.sync_prediction([_cast(0.2, 3)])
 	check(timeline.pose == 2 and timeline.mode == "prediction", "A nearby next flight switches directly back to release")
 	timeline.sync_prediction([])
-	check(timeline.pose == 0 and timeline.mode == "idle" and is_zero_approx(timeline.lean), "A cancelled forecast resets both pose and lean")
+	check(timeline.pose == 0 and timeline.mode == "idle", "A cancelled forecast resets the pose")
 	timeline.sync_prediction([_cast(0.1)])
 	timeline.finish_battle()
 	check(timeline.pose == 0 and timeline.mode == "idle", "A defeated mage cancels a predicted flight")
@@ -73,7 +71,7 @@ func _run() -> void:
 	timeline.finish_battle()
 	check(timeline.mode == "recovery" and timeline.pose == 2, "A real finishing hit retains follow-through")
 	timeline.advance(1.0, false, 1.0)
-	check(timeline.mode == "idle" and timeline.pose == 0 and is_zero_approx(timeline.lean), "Finishing follow-through settles without a permanent tilt")
+	check(timeline.mode == "idle" and timeline.pose == 0, "Finishing follow-through settles")
 	timeline.queue_free()
 	await process_frame
 	await _integration()
@@ -116,18 +114,11 @@ func _integration() -> void:
 			check(layout.motion_frame == 2 and ui.arena.mage_cast_timeline.mode == "prediction", "Real simultaneous projectile flight uses the release frame before damage")
 			check(ui.battle.get_summary().damage_dealt == 0, "Release pose does not cause early damage")
 			await _capture("volley-flight.png")
-			var pivot: Vector2 = ui.arena.get_global_transform().affine_inverse() * ui.arena.mage_cast_body.to_global(Vector2.ZERO)
-			check(pivot.distance_to(Vector2(layout.ground_anchor) + ui.arena._mage_recoil()) < 0.01 and ui.arena.mage_cast_body.scale == Vector2.ONE, "AnimationPlayer lean rotates around the fixed foot anchor without scaling the sprite")
-			var frame: Dictionary = Motion.get_asset(layout.motion_clip).frames[2]
-			var staff_in_sprite := Vector2(frame.cast_point) - Vector2(layout.source_rect.position)
-			var actual_staff: Vector2 = ui.arena.get_global_transform().affine_inverse() * ui.arena.actor_sprite.to_global(staff_in_sprite)
-			check(actual_staff.distance_to(ui.arena._mage_animated_point(layout, layout.hero_release_point)) < 0.05, "Projectile release follows the rotated staff point in the actual sprite transform")
 			ui._pause()
 			var frozen: Dictionary = ui.arena.get_art_report().duplicate(true)
-			var frozen_lean: float = ui.arena.mage_cast_timeline.lean
 			ui._process(1.0)
 			ui.arena._process(1.0)
-			check(ui.arena.get_art_report() == frozen and is_equal_approx(ui.arena.mage_cast_timeline.lean, frozen_lean), "Pausing an actual volley freezes pose, lean and VFX")
+			check(ui.arena.get_art_report() == frozen, "Pausing an actual volley freezes pose and VFX")
 			ui._pause()
 			ui._speed()
 			paused = true
@@ -180,6 +171,11 @@ func _record_swing(ui: Control) -> void:
 	var directory := OUTPUT.path_join("swing-frames")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory))
 	var saw_swing := false
+	var saw_transition := false
+	var saw_release := false
+	var minimum_body := INF
+	var maximum_body := 0.0
+	var unmoved_rotation := true
 	var saved := true
 	for index in range(25):
 		ui.arena.queue_redraw()
@@ -187,9 +183,19 @@ func _record_swing(ui: Control) -> void:
 		await RenderingServer.frame_post_draw
 		saved = root.get_texture().get_image().save_png(directory.path_join("frame-%02d.png" % index)) == OK and saved
 		saw_swing = saw_swing or ui.arena.mage_cast_timeline.clip == "mage-swing"
+		var layout: Dictionary = ui.arena.get_art_layout()
+		var casts: Array = layout.spell_casts
+		var flame_casts: Array = casts.filter(func(cast: Dictionary): return cast.kind == "flame_glyph")
+		if not flame_casts.is_empty() and ui.arena.mage_cast_timeline.clip == "mage-swing":
+			minimum_body = minf(minimum_body, layout.hero_body_height)
+			maximum_body = maxf(maximum_body, layout.hero_body_height)
+			unmoved_rotation = unmoved_rotation and is_zero_approx(ui.arena.actor_sprite.rotation) and is_zero_approx(ui.arena.mage_hit_motion.rotation)
+			saw_transition = saw_transition or (flame_casts[0].phase == "gather" and ui.arena.mage_cast_timeline.pose == 3)
+			saw_release = saw_release or (flame_casts[0].phase == "flight" and ui.arena.mage_cast_timeline.pose == 2)
 		ui._process(0.05)
 		ui.arena._process(0.05)
-	check(saved and saw_swing, "Saved 25 real swing frames at controlled 50 ms intervals")
+	check(saved and saw_swing and saw_transition and saw_release, "Saved 25 real swing frames showing anticipation, diagonal pose and release")
+	check(unmoved_rotation and minimum_body > 0.0 and maximum_body - minimum_body < 0.01, "Swing keeps the original character angle and normalized body height throughout")
 
 func _capture(name: String) -> void:
 	await process_frame
