@@ -17,6 +17,7 @@ const CampaignSave = preload("res://scripts/classes/mage_campaign_save.gd")
 
 @export var mage_focus := false
 @export var campaign_focus := false
+@export var developer_tools_enabled := false
 
 var run = RunRules.new()
 var battle = BattleRules.new()
@@ -74,6 +75,7 @@ var recipe_filter_buttons: Dictionary = {}
 var recipe_close_button: Button
 var restart_dialog: ConfirmationDialog
 var persistence_enabled := true
+var _campaign_save_problem := false
 @export var checkpoint_path := Save.DEFAULT_PATH
 @export var campaign_checkpoint_path := CampaignSave.DEFAULT_PATH
 var _capture_directory := ""
@@ -300,6 +302,7 @@ func _build_interface() -> void:
 		phase_header.add_child(phase_label)
 		rehearsal_button = _button("予行演習", _rehearse)
 		rehearsal_button.tooltip_text = "この敵との戦闘を試算。報酬や素材の消費はありません。"
+		rehearsal_button.visible = developer_tools_enabled
 		phase_header.add_child(rehearsal_button)
 	else:
 		details.add_child(phase_label)
@@ -712,6 +715,7 @@ func _confirm_campaign_restart() -> void:
 	_new_class("mage")
 	if persistence_enabled:
 		var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path)
+		_set_campaign_save_problem(not result.ok)
 		if not result.ok:
 			_notice("新しい遠征を保存できません：" + str(result.message))
 
@@ -740,6 +744,7 @@ func _new_class(id: String) -> void:
 	_clear_undo()
 	if campaign_focus:
 		campaign_stage = 0
+		_campaign_save_problem = false
 		run.campaign_rules_version = Campaign.CURRENT_RULES_VERSION
 		encounter_id = Campaign.encounter(campaign_stage, run.campaign_rules_version)
 		run.sources = Campaign.initial_sources(run.campaign_rules_version)
@@ -906,15 +911,30 @@ func _autosave_campaign_change() -> void:
 	if not campaign_focus or not persistence_enabled or run.phase != "prepare":
 		return
 	var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path)
+	_set_campaign_save_problem(not result.ok)
 	if not result.ok:
 		_notice("配置は変更されましたが保存できません：" + str(result.message))
+
+func _set_campaign_save_problem(problem: bool) -> void:
+	if not campaign_focus:
+		return
+	_campaign_save_problem = problem
+	if save_button != null:
+		save_button.visible = problem
+		save_button.text = "保存を再試行" if problem else "準備を保存"
+		save_button.disabled = not persistence_enabled or run.phase == "battle"
 
 func _save() -> bool:
 	if not persistence_enabled:
 		_notice("検証・撮影モードではプレイヤーのデータを保存しません。")
 		return false
 	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1
-	var result: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, final_victory, battle.hp if final_victory else 0) if campaign_focus else Save.save_run(run, checkpoint_path)
+	var result: Dictionary
+	if campaign_focus and run.phase == "won" and not final_victory:
+		result = _save_next_campaign_preparation()
+	else:
+		result = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, final_victory, battle.hp if final_victory else 0) if campaign_focus else Save.save_run(run, checkpoint_path)
+	_set_campaign_save_problem(not result.ok)
 	_notice(str(result.message))
 	return bool(result.ok)
 
@@ -1130,7 +1150,7 @@ func _rehearse() -> void:
 		var outcome := "勝利" if summary.result == "won" else "時間切れ" if summary.result == "timeout" else "敗北"
 		lines.append("%s：%s · %.2f秒\n残りHP %d / %d · 与ダメージ %d\n法盾で軽減 %d · 被弾 %d回" % [encounter.name, outcome, summary.duration, summary.hp, summary.max_hp, summary.damage_dealt, summary.armor_mitigated, summary.enemy_attacks])
 		for source: Dictionary in summary.by_source:
-			lines.append("  %s #%d：%dダメージ · %d回発動 / %dヒット" % [source.name, source.uid, source.damage, source.activations, source.hits])
+			lines.append("  %s：%dダメージ · %d回発動 / %dヒット" % [_display_source(str(source.name), int(source.uid)), source.damage, source.activations, source.hits])
 	summary_label.text = "\n".join(lines)
 	_rehearsal_signature = _rehearsal_state_signature()
 	details_content.move_child(summary_label, 0)
@@ -1254,8 +1274,12 @@ func _sync() -> void:
 	primary_button.disabled = run.phase != "prepare" and not (campaign_focus and run.phase == "won" and campaign_stage + 1 < Campaign.stage_count(run.campaign_rules_version))
 	primary_button.text = "次の戦いへ  /  Space" if campaign_focus and run.phase == "won" and campaign_stage + 1 < Campaign.stage_count(run.campaign_rules_version) else "試練を踏破" if campaign_focus and run.phase == "won" else "戦闘開始  /  Space"
 	var final_victory: bool = campaign_focus and run.phase == "won" and campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1
-	save_button.disabled = (run.phase != "prepare" and not final_victory) or not persistence_enabled
-	save_button.text = "踏破を保存" if final_victory else "準備を保存"
+	if campaign_focus:
+		primary_button.visible = run.phase == "prepare" or (run.phase == "won" and not final_victory)
+	save_button.visible = not campaign_focus or _campaign_save_problem
+	load_button.visible = not campaign_focus
+	save_button.disabled = (run.phase != "prepare" and not final_victory and not (campaign_focus and _campaign_save_problem and run.phase == "won")) or not persistence_enabled
+	save_button.text = "保存を再試行" if campaign_focus and _campaign_save_problem else "踏破を保存" if final_victory else "準備を保存"
 	load_button.disabled = run.phase == "battle" or not persistence_enabled
 	pause_button.disabled = battle.phase != "battle"
 	pause_button.text = "再開" if battle.paused else "一時停止"
@@ -1263,6 +1287,9 @@ func _sync() -> void:
 	discard_button.disabled = run.phase != "prepare" or selected_uid < 0
 	rotate_button.disabled = run.phase != "prepare" or held.is_empty()
 	replay_button.disabled = _before_battle.is_empty()
+	if campaign_focus:
+		replay_button.visible = not _before_battle.is_empty()
+		pause_button.visible = battle.phase == "battle"
 	if recipe_button != null:
 		recipe_button.disabled = run.phase != "prepare"
 	if rehearsal_button != null:
@@ -1271,6 +1298,8 @@ func _sync() -> void:
 		undo_button.disabled = run.phase != "prepare" or _undo_signature.is_empty()
 	for id in class_buttons:
 		class_buttons[id].disabled = run.phase == "battle"
+		if campaign_focus:
+			class_buttons[id].visible = run.phase != "battle"
 	grid.update_preview()
 
 func _process(delta: float) -> void:
@@ -1290,6 +1319,7 @@ func _process(delta: float) -> void:
 				arena.show_campaign_reward(reward)
 				if persistence_enabled:
 					var saved: Dictionary = CampaignSave.save_run(run, campaign_stage, campaign_checkpoint_path, true, battle.hp) if campaign_stage == Campaign.stage_count(run.campaign_rules_version) - 1 else _save_next_campaign_preparation()
+					_set_campaign_save_problem(not saved.ok)
 					if not saved.ok:
 						completion_error = str(saved.message)
 			_show_summary()
@@ -1342,18 +1372,27 @@ func _show_placement_preview(preview: Dictionary) -> void:
 			if not is_equal_approx(float(old.interval), float(action.interval)):
 				changes.append("間隔%.2f→%.2f秒" % [old.interval, action.interval])
 			if not changes.is_empty():
-				preview_label.text += "\n%s #%d\n  %s" % [action.name, action.uid, " · ".join(changes)]
+				preview_label.text += "\n%s\n  %s" % [_display_source(str(action.name), int(action.uid)), " · ".join(changes)]
 	if str(preview.event) == "merge":
 		for action: Dictionary in before.actions:
 			if not remaining_uids.has(int(action.uid)):
-				preview_label.text += "\n合成で消費：%s #%d" % [action.name, action.uid]
+				preview_label.text += "\n合成で消費：%s" % _display_source(str(action.name), int(action.uid))
+
+func _display_source(name: String, uid: int) -> String:
+	if not campaign_focus:
+		return "%s #%d" % [name, uid]
+	var item: Dictionary = run.item_by_uid(uid)
+	if item.is_empty():
+		return name
+	var cell: Vector2i = item.pos
+	return "%s（%d列%d行）" % [name, cell.x + 1, cell.y + 1]
 
 func _show_summary() -> void:
 	var summary: Dictionary = battle.get_summary()
 	var lines: PackedStringArray = ["戦闘の振り返り · %s" % ("勝利" if battle.phase == "won" else "失敗"), "%.2f 秒 · 与ダメージ %d · 被ダメージ %d" % [float(summary.duration), int(summary.damage_dealt), int(summary.damage_taken)]]
 	lines.append("術式別：ダメージ · 発動 / ヒット")
 	for source in summary.by_source:
-		lines.append("%s #%d：%d · %d / %d" % [source.name, int(source.uid), int(source.damage), int(source.activations), int(source.hits)])
+		lines.append("%s：%d · %d / %d" % [_display_source(str(source.name), int(source.uid)), int(source.damage), int(source.activations), int(source.hits)])
 	if campaign_focus and battle.phase == "won":
 		lines.append("魔力残滓 +%d · 所持 %d" % [int(Campaign.rewards(run.campaign_rules_version)[campaign_stage]), run.gold])
 	summary_label.text = "\n".join(lines)

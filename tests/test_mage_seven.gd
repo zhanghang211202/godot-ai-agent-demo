@@ -215,6 +215,9 @@ func _play(kind: String) -> void:
 	ui.grid.set_process(false)
 	check(ui.run.campaign_rules_version == 3 and ui.campaign_stage_label.text.contains("/ 7") and ui.run.sources.slice(0, 3).all(func(source: Dictionary): return source.remaining == 1), kind + " starts the new seven-stage budget")
 	check(ui.run.sources[3].remaining == 2 and ui.run.sources[6].remaining == 3, kind + " starts the v3 finite shop ledger")
+	check(not ui.rehearsal_button.visible and not ui.save_button.visible and not ui.load_button.visible and not ui.pause_button.visible and not ui.replay_button.visible, kind + " preparation shows player controls without developer or inactive controls")
+	if kind == "mixed":
+		await _capture("player-preparation.png")
 	match kind:
 		"mixed":
 			_drop(ui, 0, Vector2i.ZERO)
@@ -237,13 +240,16 @@ func _play(kind: String) -> void:
 		if kind == "mixed" and stage in [3, 5]:
 			await _capture("prepare-%s.png" % id)
 		ui._start_battle()
+		if kind == "mixed" and stage == 0:
+			check(ui.pause_button.visible and ui.replay_button.visible and not ui.save_button.visible and not ui.rehearsal_button.visible and not ui.primary_button.visible and not ui.class_buttons["mage"].visible, "Battle shows useful controls and hides inactive or developer actions")
+			await _capture("player-battle.png")
 		if kind == "mixed" and stage in [3, 5]:
 			for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 				root.size = dimensions
 				for _i in range(4): await process_frame
 				var layout: Dictionary = ui.arena.get_art_layout()
 				var viewport := Rect2(Vector2.ZERO, Vector2(dimensions))
-				check(viewport.encloses(ui.campaign_stage_label.get_global_rect()) and not ui.campaign_stage_label.get_global_rect().intersects(ui.class_buttons["mage"].get_global_rect()), str(dimensions) + " seven-stage progress does not overlap restart")
+				check(viewport.encloses(ui.campaign_stage_label.get_global_rect()) and (not ui.class_buttons["mage"].visible or not ui.campaign_stage_label.get_global_rect().intersects(ui.class_buttons["mage"].get_global_rect())), str(dimensions) + " seven-stage progress remains visible and avoids any visible restart control")
 				check(layout.enemy_path.contains("moon-lantern.png" if stage == 3 else "astral-serpent.png") and Rect2(layout.scene_rect).encloses(layout.enemy_rect) and not Rect2(layout.enemy_rect).intersects(layout.hero_rect), str(dimensions) + " " + id + " is complete and separated from the mage")
 				if stage == 5:
 					check(Rect2(layout.enemy_rect).size.y > Rect2(layout.hero_rect).size.y * 1.1, str(dimensions) + " serpent is visibly larger than the mage")
@@ -266,10 +272,14 @@ func _play(kind: String) -> void:
 		var saw_impact := false
 		var sequence_started := false
 		var sequence_frames := 0
+		var player_frames := 0
 		while ui.battle.phase == "battle":
 			ui._process(0.05)
 			ui.arena._process(0.05)
 			reference.tick(0.05)
+			if OS.get_environment("MAGE_CAPTURE_PLAYER_UI") == "1" and kind == "mixed" and stage == 0 and player_frames < 25:
+				await _capture("player-sequence-%02d.png" % player_frames)
+				player_frames += 1
 			if kind == "mixed" and not effect_kind.is_empty():
 				var layout: Dictionary = ui.arena.get_art_layout()
 				if layout.spell_casts.any(func(cast: Dictionary): return cast.kind == effect_kind):

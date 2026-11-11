@@ -200,9 +200,9 @@ func _play_route(kind: String) -> void:
 			check(captured_crowned_flight, "The actual upgraded companion displays its two-hit attack in flight")
 		check(ui.battle.phase == "won" and ui.battle.get_summary() == reference.get_summary(), kind + " stage %d wins under actual independent rules" % (stage + 1))
 		if kind == "familiar" and stage == 2:
-			check(ui.summary_label.text.contains("月蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #8"), "The battle recap distinguishes the two actual companion sources")
+			check(ui.summary_label.text.contains("月蛾の契約（3列2行）") and ui.summary_label.text.contains("月蛾の契約（5列3行）"), "The recap distinguishes companion sources by board position")
 		if kind == "crowned" and stage == 2:
-			check(ui.summary_label.text.contains("月冠蛾の契約 #3") and ui.summary_label.text.contains("月蛾の契約 #9"), "The recap distinguishes upgraded and basic companion sources")
+			check(ui.summary_label.text.contains("月冠蛾の契約（3列3行）") and ui.summary_label.text.contains("月蛾の契約（3列1行）"), "The recap distinguishes upgraded and basic companions by board position")
 			check(not ui.workspace_panel.visible and ui.workspace_button.text == "戦闘結果を見る" and ui.status_label.text.contains("戦闘結果を見る"), "Victory makes the hidden recap discoverable without shrinking the stage")
 			await _capture("crowned-recap-button.png")
 			ui.workspace_button.pressed.emit()

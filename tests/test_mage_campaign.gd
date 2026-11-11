@@ -216,7 +216,7 @@ func _run() -> void:
 		var viewport := Rect2(Vector2.ZERO, Vector2(dimensions))
 		check(viewport.encloses(ui.campaign_stage_label.get_global_rect()) and viewport.encloses(ui.class_buttons["mage"].get_global_rect()) and not ui.campaign_stage_label.get_global_rect().intersects(ui.class_buttons["mage"].get_global_rect()), str(dimensions) + " stage progress and restart do not overlap")
 		check(viewport.encloses(ui.condense_button.get_global_rect()) and viewport.encloses(ui.recipe_button.get_global_rect()) and not ui.condense_button.get_global_rect().intersects(ui.recipe_button.get_global_rect()), str(dimensions) + " recipe and condensation controls are visible and separate")
-		check(viewport.encloses(ui.save_button.get_global_rect()) and viewport.encloses(ui.load_button.get_global_rect()) and viewport.encloses(ui.primary_button.get_global_rect()) and not ui.load_button.get_global_rect().intersects(ui.primary_button.get_global_rect()), str(dimensions) + " save and battle controls remain usable")
+		check(not ui.save_button.visible and not ui.load_button.visible and not ui.rehearsal_button.visible and viewport.encloses(ui.primary_button.get_global_rect()), str(dimensions) + " player UI hides developer and redundant save controls while retaining battle")
 		if dimensions.x == 1920: await _capture("ui-prepare-1920.png")
 	root.size = Vector2i(1440, 960)
 	for _i in range(4): await process_frame

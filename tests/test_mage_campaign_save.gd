@@ -117,7 +117,7 @@ func _ui_roundtrip() -> void:
 	ui.run.campaign_rules_version = 2
 	ui.run.sources = Campaign.initial_sources(2)
 	ui._sync()
-	check(ui.persistence_enabled and ui.save_button.visible and ui.load_button.visible, "Campaign exposes independent save and load controls")
+	check(ui.persistence_enabled and not ui.save_button.visible and not ui.load_button.visible and not ui.rehearsal_button.visible, "Campaign automatically saves without exposing developer or redundant save controls")
 	check(ui.run.acquire(0, Vector2i.ZERO).ok and ui.run.acquire(1, Vector2i(3, 2)).ok and ui.run.acquire(2, Vector2i(3, 2)).ok, "UI checkpoint fixture uses ordinary weaving")
 	ui._start_battle()
 	check(ui.battle.phase == "battle" and FileAccess.file_exists(UI_FILE), "Starting combat automatically writes a stage-one preparation")
@@ -167,13 +167,19 @@ func _ui_roundtrip() -> void:
 	for stage in range(1, 5):
 		ui._start_battle()
 		check(ui.battle.phase == "battle", "Restored campaign starts stage %d" % (stage + 1))
-		if stage == 4:
+		if stage in [1, 4]:
 			_write(UI_FILE + ".tmp", "keep")
 		while ui.battle.phase == "battle":
 			ui._process(0.1)
 			ui.arena._process(0.1)
 		check(ui.battle.phase == "won", "Restored campaign wins stage %d" % (stage + 1))
 		if ui.battle.phase != "won": break
+		if stage == 1:
+			check(ui.save_button.visible and ui.save_button.text == "保存を再試行" and ui.status_label.text.contains("保存できません"), "A nonfinal victory exposes a retry when its automatic save fails")
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(UI_FILE + ".tmp"))
+			ui.save_button.pressed.emit()
+			var recovered: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(UI_FILE))
+			check(not ui.save_button.visible and recovered.stage == 2 and recovered.gold == ui.run.gold, "Retry saves the next preparation without advancing the displayed victory")
 		if stage < 4:
 			ui._primary_action()
 			var progress: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(UI_FILE))
@@ -183,16 +189,18 @@ func _ui_roundtrip() -> void:
 				ui.source_buttons[4].pressed.emit()
 				ui._on_cell_selected(Vector2i(4, 1))
 				check(ui.run.gold == 0 and ui.run.item_at(Vector2i(4, 1)).kind == "mage_ward", "Restored run can spend the next reward on a ward")
-				check(ui.status_label.text.contains("保存できません") and FileAccess.get_file_as_string(UI_FILE + ".tmp") == "keep", "Failed automatic save reports its error and preserves the sidecar")
+				check(ui.status_label.text.contains("保存できません") and ui.save_button.visible and FileAccess.get_file_as_string(UI_FILE + ".tmp") == "keep", "Failed automatic save reports its error, shows retry and preserves the sidecar")
 				ui._start_battle()
 				check(ui.run.phase == "prepare" and ui.battle.phase == "idle", "Combat does not start when its required checkpoint cannot be saved")
 				DirAccess.remove_absolute(ProjectSettings.globalize_path(UI_FILE + ".tmp"))
-				check(ui._save(), "Preparation can be saved after the conflict is resolved")
+				ui.save_button.pressed.emit()
+				check(not ui.save_button.visible, "The retry button saves preparation after the conflict is resolved and hides")
 		else:
 			var winning_hp: int = ui.battle.hp
-			check(ui.status_label.text.contains("保存できません") and not ui.save_button.disabled, "Final victory remains manually saveable after an automatic save failure")
+			check(ui.status_label.text.contains("保存できません") and ui.save_button.visible and not ui.save_button.disabled, "Final victory offers a visible save retry after an automatic save failure")
 			DirAccess.remove_absolute(ProjectSettings.globalize_path(UI_FILE + ".tmp"))
-			check(ui._save(), "Completed campaign can be saved after the conflict is resolved")
+			ui.save_button.pressed.emit()
+			check(not ui.save_button.visible, "The retry button saves a completed campaign and hides")
 			var cleared: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(UI_FILE))
 			check(cleared.stage == 4 and cleared.completed and cleared.completed_hp == winning_hp, "Boss victory saves the actual completed result and remaining HP")
 			ui._new_class("mage")

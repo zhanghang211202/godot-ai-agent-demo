@@ -207,7 +207,7 @@ func _ui() -> void:
 	await _capture("prepare.png")
 	var prepared := _state(ui.run)
 	ui._rehearse()
-	check(ui.summary_label.text.contains("月蛾の契約 #3") and _state(ui.run) == prepared, "Rehearsal attributes companion damage without consuming the contract")
+	check(ui.summary_label.text.contains("月蛾の契約（3列2行）") and _state(ui.run) == prepared, "Rehearsal attributes companion damage to its board position without consuming the contract")
 	var path := OUTPUT.path_join("campaign-%d.json" % Time.get_ticks_usec())
 	check(CampaignSave.save_run(ui.run, 0, path).ok, "A new campaign can save the familiar with exact materials")
 	var restored := Run.new()

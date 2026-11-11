@@ -48,7 +48,7 @@ func _run() -> void:
 	var initial := _state()
 	var preview: Dictionary = ui.run.preview_placement({"origin": "bag", "uid": 2}, Vector2i.ZERO)
 	ui._show_placement_preview(preview)
-	check(preview.ok and ui.preview_label.text.contains("合成で消費：微光の術式 #2") and _state() == initial, "A preview identifies the consumed owned spell without changing the board")
+	check(preview.ok and ui.preview_label.text.contains("合成で消費：微光の術式（1列3行）") and _state() == initial, "A preview identifies the consumed spell by its player-visible position without changing the board")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _i in range(4): await process_frame

@@ -34,6 +34,7 @@ func _run() -> void:
 	var fixture_path := "res://.tools/test-saves/campaign-rehearsal-%d.json" % Time.get_ticks_usec()
 	root.size = Vector2i(1440, 960)
 	ui = load("res://scenes/mage_campaign.tscn").instantiate()
+	ui.developer_tools_enabled = true
 	ui.campaign_checkpoint_path = fixture_path
 	root.add_child(ui)
 	for _i in range(4): await process_frame

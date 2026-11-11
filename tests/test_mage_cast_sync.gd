@@ -42,7 +42,11 @@ func _run() -> void:
 	check(chosen_clip == "mage-swing" and timeline.clip == chosen_clip and timeline.pose == 2, "Simultaneous different spells keep the same AnimationPlayer clip when source order changes")
 	timeline.reset()
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.30}])
-	check(timeline.clip == "mage-swing" and timeline.pose == 3, "Swing uses the existing diagonal staff pose between windup and release")
+	check(timeline.clip == "mage-swing" and timeline.pose == 1, "Swing holds the raised staff until its release")
+	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.241}])
+	check(timeline.pose == 1, "Swing keeps the raised pose immediately before the projectile boundary")
+	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.24}])
+	check(timeline.pose == 2, "Swing changes directly to the release pose at the projectile boundary")
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.14}])
 	check(timeline.pose == 2, "Swing reaches the existing release pose before the attack")
 	timeline.reset()
@@ -171,7 +175,8 @@ func _record_swing(ui: Control) -> void:
 	var directory := OUTPUT.path_join("swing-frames")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory))
 	var saw_swing := false
-	var saw_transition := false
+	var saw_windup := false
+	var no_intermediate := true
 	var saw_release := false
 	var minimum_body := INF
 	var maximum_body := 0.0
@@ -190,11 +195,13 @@ func _record_swing(ui: Control) -> void:
 			minimum_body = minf(minimum_body, layout.hero_body_height)
 			maximum_body = maxf(maximum_body, layout.hero_body_height)
 			unmoved_rotation = unmoved_rotation and is_zero_approx(ui.arena.actor_sprite.rotation) and is_zero_approx(ui.arena.mage_hit_motion.rotation)
-			saw_transition = saw_transition or (flame_casts[0].phase == "gather" and ui.arena.mage_cast_timeline.pose == 3)
+			saw_windup = saw_windup or (flame_casts[0].phase == "gather" and ui.arena.mage_cast_timeline.pose == 1)
+			if flame_casts[0].phase == "gather":
+				no_intermediate = no_intermediate and ui.arena.mage_cast_timeline.pose != 3
 			saw_release = saw_release or (flame_casts[0].phase == "flight" and ui.arena.mage_cast_timeline.pose == 2)
 		ui._process(0.05)
 		ui.arena._process(0.05)
-	check(saved and saw_swing and saw_transition and saw_release, "Saved 25 real swing frames showing anticipation, diagonal pose and release")
+	check(saved and saw_swing and saw_windup and saw_release and no_intermediate, "Saved 25 real swing frames showing a direct windup-to-release change")
 	check(unmoved_rotation and minimum_body > 0.0 and maximum_body - minimum_body < 0.01, "Swing keeps the original character angle and normalized body height throughout")
 
 func _capture(name: String) -> void:
