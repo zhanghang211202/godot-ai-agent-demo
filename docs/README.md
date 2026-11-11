@@ -1,64 +1,64 @@
-# 多职业背包构筑 RPG 文档入口（新标题待定）
+# 複数職業と道具の組み合わせ RPG：文書一覧（タイトル未定）
 
-**当前先做法师，骑士与C2后置。** 运行`npm run game:mage`游玩法师一战首版：巡卫敌人、八种现有物件图标、三类法术效果、编织预览和实际冷却。[当前计划](mage-first-plan.md) · [实际交付](iteration-mage-trial.md)。下方双职业记录为此前阶段与长期设计。
+**現在は魔法使いを優先し、騎士と C2 は後回しにしています。** `npm run game:mage` は七戦の魔法使い遠征、`npm run game:mage:trial` は以前の一戦版を起動します。[魔法使いの当初の計画](mage-first-plan.md) · [一戦版の実装](iteration-mage-trial.md) · [七戦版の記録](devlog/2026-11-10-mage-seven-battles.ja.md)
 
-最新[法师扩展](iteration-mage-expansion.md)接入受击法盾、镜翼灵蛾和荆棘石像，以及四种新魔法；现在共有三个可选对手和六种元素配方。[日语记录](devlog/2026-10-27-mage-expansion.ja.md)。
+以前の[魔法使いの拡張](iteration-mage-expansion.md)では、受撃時の法盾、鏡翼の蛾、茨の石像と四種類の魔法を追加し、三体から敵を選べる一戦と六つの元素配方を作りました。[開発記録](devlog/2026-10-27-mage-expansion.ja.md)
 
-最新[法师特效第二版](iteration-mage-vfx.md)已接入聚能、曲线飞行、分层命中、残留与专用小像素图样；保持同一战斗结果，相关1350项检查通过。[日语记录](devlog/2026-10-27-mage-vfx.ja.md)。
+[魔法エフェクトの第二版](iteration-mage-vfx.md)では、溜め、曲線の飛行、段階を分けた命中、残光、小さなピクセル模様を追加しました。戦闘結果は変更せず、関連する1350項目の確認が通っています。[開発記録](devlog/2026-10-27-mage-vfx.ja.md)
 
-2026-10-27：`npm run game:classes` 已增加[战斗反馈样板](iteration-c1-feedback.md)：命中/多段/护甲数字、受击闪色与轻晃、胜负淡出、角色alpha过滤。受控源像素和专用受击/退场姿势尚未完成，下述四帧动作是此前阶段记录。
+2026-10-27 に `npm run game:classes` へ[戦闘フィードバックの試作](iteration-c1-feedback.md)を追加しました。命中・多段・装甲の数字、受撃時の点滅と揺れ、勝敗のフェード、キャラクター画像の透明部分の処理を含みます。元画像のピクセル密度の統一と、専用の受撃・退場姿勢は未完成です。
 
-默认 `npm run game` 为 **v0.3森林美术样板（M1-A/B）**。运行 `npm run game:classes` 可玩[C0规则](iteration-c0-rules.md)上的[C1四帧动作样板](iteration-c1-motion.md)：MA施法、KA长剑／重刃，实际事件、暂停与倍速同步，两套背景、地面与真实一战。受击／退场、专用敌人／物件和完整六路线仍待完成；旧森林与存档保持兼容。
+`npm run game` は v0.3 の森林美術試作（M1-A/B）です。`npm run game:classes` は[C0 ルール](iteration-c0-rules.md)と[C1 の四姿勢の動き](iteration-c1-motion.md)を試せます。MA の施法、KA の長剣と重刃、二つの背景と一戦があり、動きは実際のイベント、一時停止、再生速度と連動します。当時は専用の受撃・退場姿勢、敵・道具、六流派が未完成でした。森林版とその保存データは引き続き使えます。
 
-2026-10-23 后续决策：**背包仍是核心，不同角色有独立职业玩法、资源获取与背景，每角色至少三种构筑。初期魔法师＋H近战骑士，炼金术士后续。** [职业与流派设计](classes-and-builds.md)细化六条首批路线；C0只实现其中两条的首原型，其他机制仍为计划。16-bit fantasy / tactical RPG角色细节是美术目标。[八案](art-style-exploration.md)与[离线对照页](concepts/2026-10-23/index.html)保留为早期探索。
+2026-10-23 の方針では、バッグを中心にしつつ、職業ごとに戦い方・資源の集め方・背景を変え、各キャラクターに少なくとも三つの流派を設けます。初期候補は魔法使いと H 方向の近接騎士、錬金術師は将来の候補です。[職業と流派の設計](classes-and-builds.md)は初期の六案を説明しています。C0 で実装したのは二案の最初の試作で、それ以外は計画です。キャラクターの美術目標は細かな 16-bit fantasy / tactical RPG です。[八つの設定案](art-style-exploration.md)と[オフライン比較ページ](concepts/2026-10-23/index.html)は初期の探索資料です。
 
-## 当前开发基线
+## 現在の開発基準と実装記録
 
-| 文档 | 用途 |
+| 文書 | 内容 |
 | --- | --- |
-| [法师优先计划](mage-first-plan.md) | 当前范围、生产顺序与后置内容 |
-| [法师法盾与内容扩展](iteration-mage-expansion.md) | 法盾受击、两种敌人、四种新魔法、存档与实机对照 |
-| [法师一战首版](iteration-mage-trial.md) | 专用入口、敌人/道具/特效、布局对照、预览与验证 |
-| [法师特效第二版](iteration-mage-vfx.md) | 三法术与敌方攻击的四阶段、实际时序、分层与GPU边界验证 |
-| [C1战斗反馈实际交付](iteration-c1-feedback.md) | 受击/淡出与伤害数字、GPU透明度检查、合法胜负fixture与源图限制 |
-| [C1四帧动作实际交付](iteration-c1-motion.md) | 三组动作、事件时序、暂停倍速、实际GIF与源图限制 |
-| [C1静态美术实际交付](iteration-c1-static-art.md) | 三姿态、两背景、武器对应、实机截图、检查与待修画面问题 |
-| [首发角色外观基准](character-baselines.md) | 用户已选MA月庭礼装＋KA旌旗长枪；采用特征、武器适配与专用素材任务 |
-| [双职业六套人设比较](character-design-review.md) | 全身／细节／缩小轮廓、离线页与 Godot 审稿台；保留六案与实际不足 |
-| [产品需求](requirements.md) | 目标体验、现状差距、内容预算、FR/NFR、验收与不做范围 |
-| [C0实际交付](iteration-c0-rules.md) | 原生规则实验入口、操作、检查、实机fixture与限制 |
-| [C0规则契约](class-prototype-contract.md) | 本轮资源、物件、配方、固定时序、事件和独立存档 |
-| [职业与流派设计](classes-and-builds.md) | 法师/骑士各三路线、资源来源、空间取舍、战斗与兼容边界 |
-| [开发计划](development-plan.md) | 里程碑、工作拆分、依赖、验证、风险和下一步任务 |
-| [美术规格](art-direction.md) | 现状截图审计、像素比例、色板、资产清单、动作与验收 |
-| [美术与设定探索](art-style-exploration.md) | 八个工作名、主角、背景、构筑器具与概念配图 |
-| [多职业美术计划](art-retheme-plan.md) | 两职业造型比较、独立背景、准备界面与实机验收 |
-| [参考研究](reference-research.md) | Wiki、官方资料、三条 YouTube 实机采样证据及其限制 |
-| [素材来源](asset-credits.md) | 当前已使用素材的制作方式、来源和许可 |
+| [魔法使い優先の計画](mage-first-plan.md) | 当初の範囲、制作順、後回しにする内容 |
+| [法盾とコンテンツの拡張](iteration-mage-expansion.md) | 受撃時の法盾、二種類の敵、四種類の魔法、保存と実機比較 |
+| [魔法使い一戦版](iteration-mage-trial.md) | 専用の起動方法、敵・道具・効果、配置、プレビューと検証 |
+| [魔法エフェクト第二版](iteration-mage-vfx.md) | 三つの魔法と敵の攻撃の四段階、タイミング、重ね順と GPU の確認 |
+| [C1 戦闘フィードバック](iteration-c1-feedback.md) | 受撃、フェード、数字、透明度、勝敗の自動操作と元画像の制限 |
+| [C1 四姿勢の動き](iteration-c1-motion.md) | 三組の動き、イベントのタイミング、一時停止、速度、実機 GIF と元画像の制限 |
+| [C1 静止画の組み込み](iteration-c1-static-art.md) | 三姿勢、二背景、武器、実機画像、検査と残る問題 |
+| [初期キャラクターの外観基準](character-baselines.md) | 選択済みの MA 月庭礼装と KA 旗の長槍、武器と専用素材の課題 |
+| [二職業・六案の比較](character-design-review.md) | 全身、細部、縮小表示、オフラインページと Godot 上の確認 |
+| [製品要件](requirements.md) | 目標、現状との差、必要な内容、機能・非機能要件、受け入れ条件と対象外 |
+| [C0 の実装](iteration-c0-rules.md) | ルール実験の起動、操作、検査、実機での自動操作と制限 |
+| [C0 ルールの契約](class-prototype-contract.md) | 資源、道具、配方、時間、イベントと独立した保存 |
+| [職業と流派の設計](classes-and-builds.md) | 魔法使いと騎士の各三案、資源、空間、戦闘と互換性 |
+| [開発計画](development-plan.md) | マイルストーン、作業、依存関係、検証、リスクと次の作業 |
+| [美術仕様](art-direction.md) | 現状の画面、ピクセルの大きさ、配色、素材、動きと受け入れ条件 |
+| [美術と設定の探索](art-style-exploration.md) | 八つの仮名、主人公、背景、道具とコンセプト画像 |
+| [複数職業の美術計画](art-retheme-plan.md) | 二職業の比較、背景、準備画面、実機確認 |
+| [参考資料の調査](reference-research.md) | Wiki、公式資料、YouTube の三動画から確認した情報とその範囲 |
+| [素材の出典](asset-credits.md) | 使用素材の制作方法、出典とライセンス |
 
-目标顺序：**C0 职业规则与接口 → C1 双职业各一流派的一战切片 → C2 各三流派五战 → C3 教学、平衡与 Windows 交付**。C1 不代表完整初期 Demo，旧单英雄版本预算不套用为新职业总量。
+従来の計画順は **C0 職業ルールと接続 → C1 二職業各一流派の一戦 → C2 各三流派・五戦 → C3 説明、バランス、Windows 向け完成** でした。C1 は初期 Demo 全体の完成を意味せず、旧単一主人公版の素材数を新しい職業の総量には使いません。その後、騎士と C2 は後回しになりました。
 
-## 开发过程与博客素材
+## 開発過程とブログ用の資料
 
-- [日语开发日志和版本截图](devlog/README.ja.md)
-- [魔法使い一人へ絞った一戦（日语）](devlog/2026-10-27-mage-trial.ja.md)
-- [実際の命中を読める画面へ（日语）](devlog/2026-10-27-c1-feedback.ja.md)
-- [施法・長剣・重刃の四コマを実戦へ（日语）](devlog/2026-10-26-c1-motion.ja.md)
-- [双职业静态美术接入与修正（日语）](devlog/2026-10-26-c1-static-art.ja.md)
-- [A＋A 外观选定反映（日语）](devlog/2026-10-25-character-selection.ja.md)
-- [六套人设与原生审稿台记录（日语）](devlog/2026-10-24-character-studies.ja.md)
-- [C0双职业可玩原型记录（日语）](devlog/2026-10-24-class-rules.ja.md)
-- [双职业需求整理记录（日语）](devlog/2026-10-23-dual-class-planning.ja.md)
-- [精细像素设定探索记录（日语）](devlog/2026-10-23-art-exploration.ja.md)
-- [本轮美术样板开发记录（日语）](devlog/2026-10-22-art-sample.ja.md)
-- [本轮需求整理记录（日语）](devlog/2026-10-21-planning.ja.md)
-- [日语博客草稿](blog/emberpack-making-of.ja.md)
+- [開発ログと各版のスクリーンショット](devlog/README.ja.md)
+- [魔法使い一人へ絞った一戦](devlog/2026-10-27-mage-trial.ja.md)
+- [実際の命中を読める画面へ](devlog/2026-10-27-c1-feedback.ja.md)
+- [施法・長剣・重刃の四コマを実戦へ](devlog/2026-10-26-c1-motion.ja.md)
+- [二職業の静止画の組み込みと修正](devlog/2026-10-26-c1-static-art.ja.md)
+- [A＋A の外観の選択と反映](devlog/2026-10-25-character-selection.ja.md)
+- [六つのキャラクター案と Godot 上の比較](devlog/2026-10-24-character-studies.ja.md)
+- [C0 二職業の試作](devlog/2026-10-24-class-rules.ja.md)
+- [二職業の要件整理](devlog/2026-10-23-dual-class-planning.ja.md)
+- [細かなピクセルアートの設定探索](devlog/2026-10-23-art-exploration.ja.md)
+- [森林美術試作の記録](devlog/2026-10-22-art-sample.ja.md)
+- [要件整理の記録](devlog/2026-10-21-planning.ja.md)
+- [ブログ草稿](blog/emberpack-making-of.ja.md)
 
-截图目录保留各版本实机画面；未来概念稿或新资产提案需要另标，不能覆盖历史截图，也不能作为实装完成证明。
+スクリーンショットのフォルダーには各版の実機画面を残します。将来のコンセプト画像や素材案は別に明記し、過去の画像を上書きせず、実装済みの証拠としても扱いません。
 
-## 已完成版本的历史资料
+## 旧版の資料
 
-- [v0.1 首个 Demo 计划](demo-plan.md)：首版范围和当时的简化，包含已被后续版本调整的规则。
-- [v0.2 迭代范围与验收](iteration-02.md)：12 装备、方向协同、祝福与存档的完成记录。
-- [启动与操作](../README.md)
-- [本机 MCP 配置](../MCP_SETUP.md)
+- [v0.1 最初の Demo 計画](demo-plan.md)：初期の範囲と簡略化。当時のルールには後に変更されたものもあります。
+- [v0.2 の範囲と確認](iteration-02.md)：12装備、方向支援、祝福、保存の記録。
+- [起動と操作](../README.md)
+- [ローカル MCP の設定](../MCP_SETUP.md)

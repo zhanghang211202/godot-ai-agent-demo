@@ -1,44 +1,46 @@
-# 美术素材与字体出处
+# 美術素材とフォントの出典
 
-## 法师敌人与法术扩展 · 2026-10-27
+## 魔法使いの敵と魔法の拡張・2026-10-27
 
-`assets/art/mage-expansion-v1/`的镜翼灵蛾、荆棘石像四姿势和四法术图标由内置 imagegen 生成，原PNG及真实alpha保留；[逐字提示](../assets/art/mage-expansion-v1/prompts.json)与[尺寸、取区、alpha与哈希](../assets/art/mage-expansion-v1/manifest.json)已保存。它们是为运行制作的独立图集，未输入或上传用户私人参考图。新法盾、光线、风刃、蒸汽和涡旋由项目代码绘制，旧生成素材保持不变。
+`assets/art/mage-expansion-v1/` の鏡翼の蛾、茨の石像の四姿勢、四つの魔法アイコンは内蔵の imagegen で生成しました。元の PNG と alpha を保持し、[生成時の指示](../assets/art/mage-expansion-v1/prompts.json)と[寸法、使用範囲、alpha、ハッシュ](../assets/art/mage-expansion-v1/manifest.json)を保存しています。実行用に作った独立した画像であり、ユーザーの非公開の参考画像は入力・アップロードしていません。新しい法盾、光、風刃、蒸気、渦はプロジェクトのコードで描画し、以前に生成した素材は変更していません。
 
-本 Demo 的角色、装备图标和森林场景为本项目制作。参考游戏《靠装勇者：背包合成 RPG》及其 Wiki、视频仅用于研究玩法与表现方向；项目未使用该游戏的原始美术、截图裁切、图标、角色精灵或音频素材。
+この Demo の人物、道具アイコン、森林は本プロジェクトのために制作しました。参考ゲーム『靠装勇者：背包合成 RPG』とその Wiki、動画は遊びと見せ方の調査に使用しています。そのゲームの元画像、スクリーンショットの切り抜き、アイコン、キャラクター画像、音声は使用していません。
 
-| 文件 | 来源与制作方式 |
+| ファイル | 出典と制作方法 |
 | --- | --- |
-| `scripts/visuals/pixel_art.gd` | 本项目原创代码像素美术。英雄、史莱姆、哥布林、狼、树人及装备、金币、生命等图标，使用手工编写的像素矩阵与调色板，通过 Godot `Image` 在运行时生成；没有加载参考游戏素材。 |
-| `scripts/visuals/pixel_art_v03.gd`、`assets/art/v03/` | 原创代码像素美术样板：主角与苔团各 14 帧、剑盾磨刀石的缩略图及占格图。PNG 由代码导出，原生绘制与导出一致；资源和 SHA-256 见 [manifest](../assets/art/v03/manifest.json)。其余装备和敌人明确登记为旧素材占位。 |
-| `scripts/ui/forest_stage.gd`、`assets/art/v03/environments/forest/stage.png` | 本轮原创代码绘制的 512×144 森林舞台，限定调色板、固定独立随机源，运行时缓存；层次合成为一张，没有使用原作或外部图片。 |
-| `scripts/ui/ember_theme.gd` | 本轮原创代码绘制的皮革、纸张、铜件与按钮样式。 |
-| `assets/art/forest_background.png` | v0.1/v0.2 采用的原创 **imagegen** 森林背景；保留供历史对比，当前样板使用上面的代码森林。生成提示保留在 [art-direction.md](art-direction.md) 附录；不是参考游戏的原图或截图。 |
-| `assets/fonts/NotoSansCJKsc-Regular.otf` | **Noto Sans CJK SC Regular**，字体内嵌版本为 **2.004**，版权声明为 **© 2014–2021 Adobe (http://www.adobe.com/)**。来源为 [Noto CJK 官方仓库中的字体文件](https://github.com/notofonts/noto-cjk/blob/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf)。 |
+| `scripts/visuals/pixel_art.gd` | 本プロジェクト独自のコードによるピクセルアート。主人公、スライム、ゴブリン、狼、樹人、装備、金貨、体力のアイコンなどを、手書きのピクセル配列と色から Godot の `Image` で実行時に生成。参考ゲームの素材は読み込まない。 |
+| `scripts/visuals/pixel_art_v03.gd`、`assets/art/v03/` | コードによる独自の美術試作。主人公と苔団の各14フレーム、剣・盾・砥石の小アイコンと盤面用画像。PNG は同じコードから書き出したもの。[一覧](../assets/art/v03/manifest.json)に素材と SHA-256 を記録。残りの装備と敵は旧素材を仮使用している。 |
+| `scripts/ui/forest_stage.gd`、`assets/art/v03/environments/forest/stage.png` | コードで描いた独自の 512×144 森林。色数を限定し、独立した固定乱数を使い、実行時にキャッシュする。複数の層を一枚に合成しており、参考ゲームや外部の画像は使用していない。 |
+| `scripts/ui/ember_theme.gd` | コードで描いた革、紙、銅の部品、ボタン。 |
+| `assets/art/forest_background.png` | v0.1/v0.2 で使った独自の **imagegen** 森林背景。過去との比較用に残し、現在の森林試作は上記のコードによる背景を使う。生成指示は [art-direction.md](art-direction.md) の付録に記録。参考ゲームの画像やスクリーンショットではない。 |
+| `assets/fonts/NotoSansCJKsc-Regular.otf` | **Noto Sans CJK SC Regular**。内蔵バージョンは **2.004**、著作権表示は **© 2014–2021 Adobe (http://www.adobe.com/)**。[Noto CJK 公式リポジトリのフォント](https://github.com/notofonts/noto-cjk/blob/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf)を使用。 |
 
-Noto Sans CJK 字体采用 **SIL Open Font License 1.1**。仓库随附完整许可证 [assets/fonts/OFL.txt](../assets/fonts/OFL.txt)，亦可查阅 [Noto CJK 官方许可证](https://github.com/notofonts/noto-cjk/blob/main/Sans/LICENSE)。字体保留其独立许可证及内嵌版权信息；随项目分发时应一并保留这些信息。
+Noto Sans CJK は **SIL Open Font License 1.1** を使用します。[同梱のライセンス全文](../assets/fonts/OFL.txt)と [Noto CJK 公式ライセンス](https://github.com/notofonts/noto-cjk/blob/main/Sans/LICENSE)を参照してください。フォントのライセンスと内蔵著作権表示は、プロジェクトと共に配布する際にも保持します。
 
-## 角色外观概念 · 2026-10-24
+## キャラクターの外観案・2026-10-24
 
-`docs/concepts/2026-10-24-characters/` 的六张PNG由内置 **imagegen** 按本项目法师与H骑士方向分别生成，保留原始alpha，用于外观比较。它们不是战斗精灵、动画表或游戏实机截图。[完整提示集](concepts/2026-10-24-characters/prompts.json)、[尺寸与SHA-256](concepts/2026-10-24-characters/manifest.json)、[审查与限制](character-design-review.md)一并保存。旧A/H概念只作项目方向参考，用户两张图鉴仅作像素工艺参考，原图及其导入文件未随仓库公开。
+`docs/concepts/2026-10-24-characters/` の六枚の PNG は、魔法使いと H 騎士の方向に沿って内蔵 **imagegen** で個別に生成しました。元の alpha を保った外観比較用の画像で、戦闘用の画像、アニメーション表、ゲーム画面ではありません。[生成指示](concepts/2026-10-24-characters/prompts.json)、[寸法と SHA-256](concepts/2026-10-24-characters/manifest.json)、[確認と制限](character-design-review.md)を保存しています。以前の A/H 案は方向の参考です。ユーザーの二枚の図鑑はピクセル表現の参考としてのみ使い、元画像とそのインポートファイルは公開していません。
 
-## C1 静态角色与背景 · 2026-10-26
+## C1 静止キャラクターと背景・2026-10-26
 
-`assets/art/c1-static-v1/` 中三张战斗站姿与两张职业背景使用内置 **imagegen** 分别生成。角色以本项目已选MA／KA原创概念作身份参考，重新绘制姿态；没有裁切旧概念板或用户图鉴。原PNG保持生成结果，[完整提示集](../assets/art/c1-static-v1/prompts.json)与[原始尺寸／alpha／SHA-256](../assets/art/c1-static-v1/manifest.json)一并保存。它们已接入本地原生职业场景，仍是待整理像素网格、色阶与透明边缘的静态候选，不含逐帧动画。舞台前景地面、接触阴影与标明占位的训练木靶由本项目代码绘制。
+`assets/art/c1-static-v1/` の戦闘用の立ち姿三枚と職業ごとの背景二枚は、内蔵 **imagegen** でそれぞれ生成しました。人物は本プロジェクトで選んだ MA／KA の独自コンセプトを外観の参考に、姿勢を新たに描いたものです。旧コンセプトの比較画像やユーザーの図鑑を切り取っていません。元 PNG の生成結果、[生成指示](../assets/art/c1-static-v1/prompts.json)、[元の寸法・alpha・SHA-256](../assets/art/c1-static-v1/manifest.json)を保持しています。ローカルの職業シーンに組み込んだ静止候補ですが、ピクセル格子、色、透明な縁の整理が必要で、連続した姿勢は含みません。手前の地面、接地する影、仮素材と明記した木製標的はコードで描いています。
 
-## C1 四帧动作 · 2026-10-26
+## C1 四姿勢の動き・2026-10-26
 
-`assets/art/c1-motion-v1/` 的三张专用动作图集由内置 **imagegen** 生成及编辑，以项目MA／KA人设和静态姿态为身份参考。它们是为四帧动作专门绘制的图集，不是旧概念裁切。原PNG保持生成alpha；Godot使用独立源区域、统一组倍率和脚底锚点播放。[提示与留存范围](../assets/art/c1-motion-v1/prompts.json)、[实际尺寸／alpha／SHA-256及限制](../assets/art/c1-motion-v1/manifest.json)均保存。法师早期逐字提示未完整留存，清单明确区分保留下来的规格摘要与本轮逐字编辑提示。用户指出的手部与法杖裁图只用于定位问题，未公开用户临时截图或私有参考图。运行GIF来自Godot实际帧，按16FPS固定录制、整数最近邻缩小与GIF量化；不是把生成图直接拼成运行证明。
+`assets/art/c1-motion-v1/` の三枚の専用画像は、プロジェクトの MA／KA の外観と静止姿勢を参考に、内蔵 **imagegen** で生成・編集しました。四姿勢の動きのために描いた画像で、旧コンセプトの切り抜きではありません。PNG は生成された alpha を保持し、Godot では各姿勢の使用範囲、共通の倍率、足元の基準点を使います。[指示と保存範囲](../assets/art/c1-motion-v1/prompts.json)、[実際の寸法・alpha・SHA-256と制限](../assets/art/c1-motion-v1/manifest.json)を残しています。
 
-## C1 战斗反馈 · 2026-10-27
+魔法使いの初期の指示文は完全には残っていないため、一覧では保存済みの仕様の要約と、この段階で記録した編集指示を区別しています。ユーザーが手と杖の問題を示すために送った切り抜きは問題の特定にのみ使い、一時画像や非公開の参考画像は公開していません。実行 GIF は Godot の実フレームを16 FPS固定で録画し、整数倍率の最近傍縮小と GIF 変換を行ったものです。生成画像を並べただけの実行証拠ではありません。
 
-2026-10-27反馈样板继续使用`c1-motion-v1`原图，源文件未改。`class_actor.gdshader`仅在运行中进行角色alpha阈值、受击色与淡出；木靶、浮字、命中环与轻晃为项目代码。三次内置imagegen像素整理试验未采用，[试验记录与提示](concepts/2026-10-26-pixel-cleanup/README.ja.md)单独标明非实机、非生产素材。实际游戏截图/GIF与GPU程序纹理的读回记录分开归档于[本轮清单](devlog/screenshots/c1-feedback-v1/manifest.json)。
+## C1 戦闘フィードバック・2026-10-27
 
-## 法师一战 · 2026-10-27
+この試作は `c1-motion-v1` の元画像を引き続き使い、元ファイルを変更していません。`class_actor.gdshader` は実行時のみ alpha のしきい値、受撃色、フェードを適用します。標的、浮く文字、命中の輪と小さな揺れはプロジェクトのコードで作成。内蔵 imagegen による三回のピクセル整理の試みは採用せず、[試行記録と指示](concepts/2026-10-26-pixel-cleanup/README.ja.md)で実機画面・完成素材ではないことを明記しています。実際の画面／GIF と GPU のテクスチャ読み戻し結果は[一覧](devlog/screenshots/c1-feedback-v1/manifest.json)に分けて保存しています。
 
-后续特效第二版的`mage_spell_art.gd`由本项目代码定义四种五色pixel mask与火舌三变化，`mage_effects.gd`绘制聚能/轨迹/命中/余韵，没有新增外部素材或imagegen输出。运行纹理采用最近邻整数放大并缓存。实际Movie Maker帧只经裁剪和GIF量化，转换参数见[证据清单](devlog/screenshots/mage-vfx-v2/manifest.json)；不把代码绘制截图称为生成概念。
+## 魔法使いの一戦・2026-10-27
 
-`assets/art/mage-trial-v1/`的巡卫四姿势图集和八格道具图集使用内置**imagegen**生成，是专为运行绘制的两个图集，未裁切旧概念或用户图鉴。原PNG保留，[逐字提示](../assets/art/mage-trial-v1/prompts.json)和[实际尺寸、alpha、取源区域与SHA-256](../assets/art/mage-trial-v1/manifest.json)一并保存。三法术和巡卫星辉效果由`mage_effects.gd`代码绘制，不是外部游戏素材或图生视频。主角、月庭背景和字体沿用上面已登记来源，当前仅做法师，新增骑士工作后置。
+後のエフェクト第二版では `mage_spell_art.gd` が四種類の五色のピクセルマスクと三種類の炎を定義し、`mage_effects.gd` が溜め、軌跡、命中、余韻を描きます。外部素材や imagegen による新規出力はありません。実行時の画像は最近傍の整数倍率で拡大してキャッシュします。Movie Maker の実フレームは切り抜きと GIF 変換のみを行い、変換設定は[証拠の一覧](devlog/screenshots/mage-vfx-v2/manifest.json)にあります。コード描画の画像を生成コンセプトとは呼びません。
 
-## 第三方编辑器工具
+`assets/art/mage-trial-v1/` の衛兵四姿勢と八つの道具の画像は、実行用に内蔵 **imagegen** で生成した二枚の専用画像です。旧コンセプトやユーザーの図鑑の切り抜きではありません。元 PNG、[生成指示](../assets/art/mage-trial-v1/prompts.json)、[寸法、alpha、使用範囲と SHA-256](../assets/art/mage-trial-v1/manifest.json)を保存しています。三つの魔法と衛兵の星の効果は `mage_effects.gd` で描いたもので、外部ゲームの素材や画像生成による動画ではありません。主人公、月庭、フォントは上記の素材を引き続き使い、当時は魔法使いを優先して騎士の新規作業を後回しにしました。
 
-`addons/godot_mcp/` 来自 [IvanMurzak/Godot-MCP v0.31.0](https://github.com/IvanMurzak/Godot-MCP/tree/v0.31.0)，采用 Apache-2.0，随附 [完整许可证](../addons/godot_mcp/LICENSE)。其 NuGet 依赖通过工程引用恢复，不包含在本仓库中。
+## 外部のエディターツール
+
+`addons/godot_mcp/` は [IvanMurzak/Godot-MCP v0.31.0](https://github.com/IvanMurzak/Godot-MCP/tree/v0.31.0) に由来し、Apache-2.0 を使用します。[ライセンス全文](../addons/godot_mcp/LICENSE)を同梱しています。NuGet の依存パッケージはプロジェクトの参照から復元し、このリポジトリには含めていません。

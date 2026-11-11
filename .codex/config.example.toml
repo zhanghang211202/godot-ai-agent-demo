@@ -1,7 +1,7 @@
-# 在实际项目目录执行下列命令，以生成该目录对应的端口与项目路由：
-# npm run godot:cli -- setup-mcp codex . --url http://127.0.0.1:<项目端口>
-# npm run godot:status 可检查当前目录的本地端口。
-# 实际 config.toml 属于本机配置，已排除在 Git 之外。
+# 実際のプロジェクトで次を実行し、そのディレクトリ用のポートと経路を生成します：
+# npm run godot:cli -- setup-mcp codex . --url http://127.0.0.1:<PORT>
+# npm run godot:status でこのプロジェクトのローカルポートを確認できます。
+# 実際の config.toml はローカル設定であり、Git に含めません。
 
 [mcp_servers.ai-game-developer]
 enabled = true
