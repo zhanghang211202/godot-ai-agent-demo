@@ -53,7 +53,7 @@
 复现请先创建新目录`.tools/new-feedback/movie/`：
 
 ```powershell
-node scripts/godot.mjs class-capture --resolution 1440x960 --fixed-fps 16 --write-movie .tools/new-feedback/movie/frame.png -- --class=mage --capture-dir=<PROJECT_DIR>/.tools/new-feedback --auto-quit
+node scripts/godot.mjs class-capture --resolution 1440x960 --fixed-fps 16 --write-movie .tools/new-feedback/movie/frame.png -- --class=mage --capture-dir=D:/path/to/project/.tools/new-feedback --auto-quit
 ```
 
 失败配置加`--capture-loss`（法师限定），重刃改`--class=knight`。alpha对照仅准备截图加`--capture-prepare-only`，关闭过滤另加`--compare-original-alpha`。输出目录必须未含旧证据，同名PNG拒绝覆盖。

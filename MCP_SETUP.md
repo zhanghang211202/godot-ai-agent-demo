@@ -24,8 +24,7 @@ npm run godot:cli -- --help
 
 ## 安装位置
 
-- Godot .NET 编辑器：`<PROGRAM_FILES>\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe`。
-- 原标准版备份：`<PROGRAM_FILES>\Godot_v4.7.2-stable_win64.exe.standard-backup-20261020`。
+- Godot .NET 编辑器：在终端通过 `GODOT_BIN` 指定，或将路径写入项目内的 `.tools/godot-editor-path.txt`。
 - .NET SDK：`.tools/dotnet/`。
 - NuGet 依赖及缓存：`.tools/nuget/`。
 - 编辑器插件：`addons/godot_mcp/`。
@@ -33,8 +32,8 @@ npm run godot:cli -- --help
 - 编辑器日志：`.tools/logs/editor.log`。
 - Codex MCP 配置：`.codex/config.toml`；当前项目已登记为 Codex 受信任项目。
 
-编辑器路径已按用户最新目录更新，也可以用当前终端的 `GODOT_BIN` 指定其他路径。启动脚本会将编辑器配套 NuGet 包复制到 `.tools/godot-nupkgs/`，供 `NuGet.Config` 读取。
+启动脚本优先使用当前终端的 `GODOT_BIN`，再读取未提交的本地路径文件。脚本会将编辑器配套 NuGet 包复制到 `.tools/godot-nupkgs/`，供 `NuGet.Config` 读取。
 
-MCP 通过 `http://127.0.0.1:<PORT>/mcp` 连接本项目，仅监听本机回环地址。项目路径变化时，应重新生成 MCP 配置；本地服务端口和项目路由由项目路径计算得到。新增配置后，重新打开本项目的 Codex 会话。
+MCP 仅监听本机回环地址。项目路径变化时，应重新生成 MCP 配置；本地服务端口和项目路由由项目路径计算得到。新增配置后，重新打开本项目的 Codex 会话。
 
 SDK 的环境变量通过启动命令传给子进程。为确保编辑器构建时使用项目内 SDK，使用 `npm run godot:open` 启动本项目。

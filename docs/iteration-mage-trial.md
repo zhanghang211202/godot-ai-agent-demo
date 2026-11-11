@@ -78,7 +78,7 @@ npm run game:mage
 先创建新的`.tools/new-mage/movie/`目录，再执行：
 
 ```powershell
-node scripts/godot.mjs mage-capture --resolution 1440x960 --fixed-fps 16 --write-movie .tools/new-mage/movie/frame.png -- --capture-dir=<PROJECT_DIR>/.tools/new-mage --auto-quit
+node scripts/godot.mjs mage-capture --resolution 1440x960 --fixed-fps 16 --write-movie .tools/new-mage/movie/frame.png -- --capture-dir=D:/path/to/project/.tools/new-mage --auto-quit
 ```
 
 同资源潮汐支援对照加`--capture-tide-focus`，失败配置加`--capture-loss`，准备截图加`--capture-prepare-only`。请使用未含旧证据的目录，同名PNG拒绝覆盖。

@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync } from 'node:child_process';
@@ -8,11 +8,17 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const tools = path.join(projectRoot, '.tools');
 const dotnetRoot = path.join(tools, 'dotnet');
 const dotnet = path.join(dotnetRoot, 'dotnet.exe');
-const editor = process.env.GODOT_BIN ?? process.env.GODOT4_BIN ?? '<PROGRAM_FILES>\\Godot_v4.7.2-stable_mono_win64\\Godot_v4.7.2-stable_mono_win64.exe';
+const editorPathFile = path.join(tools, 'godot-editor-path.txt');
+const localEditor = existsSync(editorPathFile) ? readFileSync(editorPathFile, 'utf8').trim() : '';
+const editor = process.env.GODOT_BIN || process.env.GODOT4_BIN || localEditor;
 const cli = path.join(projectRoot, 'node_modules', 'godot-cli', 'bin', 'godot-cli.js');
 const { port } = deriveProjectIdentityV2(projectRoot);
 const [command = 'open', ...args] = process.argv.slice(2);
 
+if (!editor) {
+  console.error('Set GODOT_BIN or put the Godot .NET editor path in .tools/godot-editor-path.txt.');
+  process.exit(1);
+}
 for (const executable of [dotnet, editor]) {
   if (!existsSync(executable)) {
     console.error(`Missing project-local tool: ${executable}`);

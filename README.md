@@ -84,17 +84,11 @@ npm run game
 
 在 Godot 编辑器中打开 `project.godot`，按 **F6/F5** 也可运行主场景；F6 需要先打开 `scenes/main.tscn`。
 
-当前本机 Godot 路径：
-
-```text
-<PROGRAM_FILES>\Godot_v4.7.2-stable_mono_win64\Godot_v4.7.2-stable_mono_win64.exe
-```
-
 ## 新环境准备
 
 1. 准备 Godot 4.7.2 .NET 版和 .NET SDK 8.0.426。SDK ZIP 解压到 `.tools/dotnet/`，该目录应直接包含 `dotnet.exe`。
 2. `npm ci` 安装项目内 CLI。
-3. Godot 路径与上面不同时，在当前终端设置 `$env:GODOT_BIN = '你的Godot.exe路径'`。
+3. 在当前终端设置 `$env:GODOT_BIN = '你的Godot.exe路径'`；也可以把 Godot .NET 编辑器的完整路径写入 `.tools/godot-editor-path.txt`（此文件不会提交）。
 4. 首次执行 `npm run godot:open`，让编辑器完成 C# 构建与素材导入；之后可以用 `npm run game` 直接游玩。
 
 游戏主体使用 GDScript；C# 工程和 SDK 用于 Godot-MCP 编辑器插件。启动脚本仅为子进程设置 SDK 环境，SDK、NuGet 包和缓存保留在 `.tools/` 内；这些文件不提交到仓库。编辑器自带的 Godot NuGet 包会复制到 `.tools/godot-nupkgs/`。

@@ -80,7 +80,7 @@ GIF再生成には任意の変換ライブラリをプロジェクト内だけ�
 ```powershell
 npm install --prefix .tools/media --cache .tools/npm-cache --no-save --no-audit --no-fund pngjs@7.0.0 gifenc@1.0.3
 # .tools/recordings/v03-final ディレクトリを先に用意する
-node scripts/godot.mjs play --write-movie <PROJECT_DIR>/.tools/recordings/v03-final/frame.png --fixed-fps 16 --quit-after 80 -- --no-save --demo-battle
+node scripts/godot.mjs play --write-movie D:/path/to/project/.tools/recordings/v03-final/frame.png --fixed-fps 16 --quit-after 80 -- --no-save --demo-battle
 # Godot終了後に変換する（Movie Makerはprojectの1440×960を使用）
 node scripts/capture-demo-gif.cjs .tools/recordings/v03-final D:/path/to/battle-motion.gif
 ```

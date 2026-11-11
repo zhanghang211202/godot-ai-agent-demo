@@ -45,7 +45,7 @@
 复现例，先创建 `.tools/my-new-capture/movie/`，使用未含旧证据的输出目录：
 
 ```powershell
-node scripts/godot.mjs class-capture --resolution 1440x960 --fixed-fps 16 --write-movie .tools/my-new-capture/movie/frame.png -- --class=mage --capture-dir=<PROJECT_DIR>/.tools/my-new-capture --auto-quit
+node scripts/godot.mjs class-capture --resolution 1440x960 --fixed-fps 16 --write-movie .tools/my-new-capture/movie/frame.png -- --class=mage --capture-dir=D:/path/to/project/.tools/my-new-capture --auto-quit
 ```
 
 骑士改为`--class=knight`；初始长剑另加`--capture-sword`，默认骑士fixture锻造重刃。同名PNG会拒绝覆盖。

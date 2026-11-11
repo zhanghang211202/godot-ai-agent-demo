@@ -10,7 +10,10 @@
 
 # Generated AI-agent reference files and local MCP routing
 /.claude/
-/.codex/config.toml
+/.agents/
+/.ai-game-dev/
+/.codex/*
+!/.codex/config.example.toml
 
 # Local exports and editor/OS files
 /builds/
