@@ -5,6 +5,11 @@ extends Node2D
 @onready var player: AnimationPlayer = $AnimationPlayer
 var _last_hit_time := -1.0
 var _seen_event_ids: Array[int] = []
+var guard_frame := 0
+var rng := RandomNumberGenerator.new()
+
+func _ready() -> void:
+	rng.randomize()
 
 func show_hit(event: Dictionary) -> bool:
 	if str(event.get("type", "")) != "enemy_attack" or str(event.get("target", "")) != "hero":
@@ -22,6 +27,7 @@ func show_hit(event: Dictionary) -> bool:
 	if time >= 0 and is_equal_approx(time, _last_hit_time):
 		return false
 	_last_hit_time = time
+	guard_frame = 0
 	player.stop()
 	position = Vector2.ZERO
 	player.play("hit")
@@ -38,3 +44,4 @@ func reset_motion() -> void:
 	position = Vector2.ZERO
 	_last_hit_time = -1.0
 	_seen_event_ids.clear()
+	guard_frame = 0

@@ -75,9 +75,17 @@ func show_event(event: Dictionary) -> void:
 	motion.show_event(event)
 	feedback.show_event(event)
 	if run != null and run.class_id == "mage" and mage_hit_motion != null:
-		mage_hit_motion.show_hit(event)
+		if mage_hit_motion.show_hit(event):
+			var casting: bool = mage_cast_timeline != null and mage_cast_timeline.mode != "idle"
+			for cast: Dictionary in _upcoming_casts():
+				if cast.target == "enemy" and not bool(cast.get("summon", false)):
+					casting = true
+			if mage_motion_variants_enabled and not casting and int(event.get("armor_mitigated", 0)) > 0:
+				mage_hit_motion.guard_frame = mage_hit_motion.rng.randi_range(4, 6)
 		if battle != null and battle.phase != "idle":
 			mage_cast_timeline.show_event(event)
+			if mage_cast_timeline.mode != "idle":
+				mage_hit_motion.guard_frame = 0
 	if str(event.get("type", "")) == "battle_end":
 		motion.finish_battle()
 		mage_cast_timeline.finish_battle()
@@ -117,6 +125,8 @@ func _process(delta: float) -> void:
 		motion.advance(delta * playback_speed)
 		if run != null and run.class_id == "mage":
 			mage_cast_timeline.sync_prediction(_upcoming_casts())
+			if mage_cast_timeline.mode != "idle":
+				mage_hit_motion.guard_frame = 0
 		if motion.state == "idle":
 			for cast: Dictionary in _upcoming_casts():
 				if cast.target == "enemy" and not bool(cast.get("summon", false)):
@@ -249,18 +259,19 @@ func get_art_layout() -> Dictionary:
 	var hero: Dictionary = Art.get_asset(hero_id)
 	var default_clip := {"mage-idle": "mage-cast", "knight-sword-idle": "knight-sword", "knight-greatblade-idle": "knight-greatblade"}.get(hero_id, "") as String
 	var clip_id: String = motion.clip if not motion.clip.is_empty() else default_clip
-	# The focused mage uses the first swing pose even while idle, so the
-	# character does not switch illustrations between attacks.
+	# The selected atlas contains an idle, three attacks and three wards.
 	if hero_id == "mage-idle" and mage_motion_variants_enabled:
-		clip_id = "mage-swing"
+		clip_id = "mage-poses"
 	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
 		clip_id = str(mage_cast_timeline.clip)
 	var animated_hero := Motion.get_asset(clip_id)
 	var frame_index: int = motion.frame_index() if not motion.clip.is_empty() else 0
 	if hero_id == "mage-idle" and mage_motion_variants_enabled:
 		frame_index = 0
+		if mage_hit_motion != null and mage_hit_motion.guard_frame > 0 and mage_hit_motion.player.is_playing():
+			frame_index = mage_hit_motion.guard_frame
 	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
-		frame_index = int(mage_cast_timeline.pose)
+		frame_index = int(mage_cast_timeline.attack_variant) if clip_id == "mage-poses" and mage_cast_timeline.pose == 2 else (0 if clip_id == "mage-poses" else int(mage_cast_timeline.pose))
 	var background: Dictionary = Art.get_asset(background_id)
 	var scene := Rect2(1, 61, maxf(0, size.x - 2), maxf(0, size.y - 89))
 	var background_crop := _background_crop(background, scene)
@@ -289,7 +300,7 @@ func get_art_layout() -> Dictionary:
 		if normalize_mage:
 			clip_height = 0.0
 			clip_width = 0.0
-			for variant in ["mage-cast", "mage-swing", "mage-gesture"]:
+			for variant in ["mage-cast", "mage-swing", "mage-gesture", "mage-poses"]:
 				var other: Dictionary = Motion.get_asset(variant)
 				if not other.is_empty():
 					clip_height = maxf(clip_height, float(other.normalized_height))
@@ -299,8 +310,9 @@ func get_art_layout() -> Dictionary:
 		destination = Rect2(anchor + (source.position - Vector2(frame.pivot)) * factor, source.size * factor)
 		cast_point = anchor + (Vector2(frame.cast_point) - Vector2(frame.pivot)) * factor
 		body_height = float(frame.body_height) * factor
-		if clip_id in ["mage-cast", "mage-swing", "mage-gesture"]:
-			var release_frame: Dictionary = animated_hero.frames[2]
+		if clip_id in ["mage-cast", "mage-swing", "mage-gesture", "mage-poses"]:
+			var release_index: int = int(mage_cast_timeline.attack_variant) if clip_id == "mage-poses" else 2
+			var release_frame: Dictionary = animated_hero.frames[release_index]
 			var release_factor := base_factor * (float(release_frame.body_scale) if normalize_mage else 1.0)
 			release_point = anchor + (Vector2(release_frame.cast_point) - Vector2(release_frame.pivot)) * release_factor
 		else:
@@ -373,12 +385,12 @@ func get_art_layout() -> Dictionary:
 		"enemy_rect": enemy, "health_rects": health, "phase_rect": phase,
 		"source_scale": Vector2.ONE * factor, "source_scale_is_integer": factor >= 1.0 and is_equal_approx(factor, roundf(factor)),
 		"scaling_mode": "body landmarks and boot anchors, nearest source-fit; logical pixel grid pending" if mage_motion_variants_enabled and run != null and run.class_id == "mage" else "common clip scale and measured boot anchors, nearest source-fit; logical pixel grid pending",
-		"alpha_threshold": 128, "assets_ready": missing.is_empty(), "missing_assets": missing,
+		"alpha_threshold": 16 if clip_id == "mage-poses" else 128, "assets_ready": missing.is_empty(), "missing_assets": missing,
 		"hero_visible": destination.has_area(), "animated": not animated_hero.is_empty(), "enemy_placeholder": enemy_art.is_empty(),
 		"enemy_path": enemy_art.get("path", ""), "enemy_source_rect": enemy_source, "enemy_scale": enemy_factor, "enemy_frame": enemy_index, "enemy_anchor": enemy_anchor,
 		"motion_clip": clip_id, "motion_state": motion.state, "motion_frame": frame_index,
 		"cast_timeline_mode": mage_cast_timeline.mode if mage_cast_timeline != null else "idle",
-		"alpha_render_mode": "cutout >=128, opaque interior" if pixel_cutout_enabled else "original alpha comparison",
+		"alpha_render_mode": "original alpha with painted effects" if clip_id == "mage-poses" else ("cutout >=128, opaque interior" if pixel_cutout_enabled else "original alpha comparison"),
 		"feedback": feedback.report(), "spell_effects": MageEffects.visible_effects(feedback.numbers) if run != null and run.class_id == "mage" else [],
 		"spell_casts": _upcoming_casts(), "effect_clip_rect": scene, "encounter_id": encounter.id,
 		"enemy_cast_point": enemy_cast_point,
@@ -425,7 +437,7 @@ func _draw() -> void:
 		var legacy_shake := roundf(sin(feedback.hero_hit * 90.0) * 3.0) if run.class_id != "mage" and feedback.hero_hit > 0 else 0.0
 		actor_sprite.position = layout.hero_rect.position + Vector2(legacy_shake, 0)
 		actor_sprite.scale = layout.source_scale
-		actor_material.set_shader_parameter("cutout_enabled", pixel_cutout_enabled)
+		actor_material.set_shader_parameter("cutout_enabled", pixel_cutout_enabled and layout.motion_clip != "mage-poses")
 		actor_material.set_shader_parameter("hurt_strength", 0.65 * feedback.hero_hit / Feedback.HIT_TIME)
 		actor_material.set_shader_parameter("actor_opacity", feedback.opacity("hero"))
 	else:
@@ -544,7 +556,8 @@ func _draw_ground_effects() -> void:
 	var layout := get_art_layout()
 	ground_effects_layer.draw_set_transform(-Vector2(layout.scene_rect.position))
 	MageEffects.draw_ground(ground_effects_layer, layout.spell_casts, layout.spell_effects, Vector2(layout.ground_anchor) + _mage_recoil(), layout.enemy_anchor)
-	Shield.draw_back(ground_effects_layer, layout.shields, _mage_effect_rect(layout))
+	if not (layout.motion_clip == "mage-poses" and int(layout.motion_frame) >= 4):
+		Shield.draw_back(ground_effects_layer, layout.shields, _mage_effect_rect(layout))
 
 func _draw_feedback() -> void:
 	if run == null or battle == null:
@@ -567,7 +580,8 @@ func _draw_feedback() -> void:
 		for effect: Dictionary in layout.spell_effects:
 			var hero_point: Vector2 = _incoming_point(layout) if effect.target == "hero" else Vector2(layout.hero_cast_point) + _mage_recoil()
 			MageEffects.draw_effect(effects_layer, effect, hero_point, layout.enemy_cast_point)
-		Shield.draw_front(effects_layer, layout.shields, _mage_effect_rect(layout))
+		if not (layout.motion_clip == "mage-poses" and int(layout.motion_frame) >= 4):
+			Shield.draw_front(effects_layer, layout.shields, _mage_effect_rect(layout))
 		if campaign_reward > 0 and battle.phase == "won":
 			var origin: Vector2 = layout.enemy_rect.get_center()
 			var reward_text := "魔力残滓 +%d" % campaign_reward

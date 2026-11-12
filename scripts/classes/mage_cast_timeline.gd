@@ -11,12 +11,18 @@ var mode := "idle"
 var clip := "mage-cast"
 var variants_enabled := true
 var _last_hit_time := -1.0
+var attack_variant := 1
+var _active_source_uid := -1
+var rng := RandomNumberGenerator.new()
+
+func _ready() -> void:
+	rng.randomize()
 
 func _clip_for(_kind: String) -> String:
 	if variants_enabled:
-		# The mage campaign uses one consistent four-pose staff illustration
-		# for every spell; the source kind still controls combat and effects.
-		return "mage-swing"
+		# The selected atlas is shared by all spells; source kind still
+		# controls combat and elemental effects independently.
+		return "mage-poses"
 	return "mage-cast"
 
 func reset() -> void:
@@ -25,6 +31,12 @@ func reset() -> void:
 	mode = "idle"
 	clip = "mage-cast"
 	_last_hit_time = -1.0
+	_active_source_uid = -1
+
+func _choose_attack(uid: int) -> void:
+	if variants_enabled and (mode == "idle" or mode == "recovery" or uid != _active_source_uid):
+		attack_variant = rng.randi_range(1, 3)
+	_active_source_uid = uid
 
 func show_event(event: Dictionary) -> void:
 	if str(event.get("type", "")) not in ["spell", "spell_burst", "spell_multi"] or str(event.get("target", "")) != "enemy":
@@ -35,6 +47,7 @@ func show_event(event: Dictionary) -> void:
 		return
 	_last_hit_time = time
 	if mode == "idle":
+		_choose_attack(int(event.get("source_uid", -1)))
 		clip = _clip_for(str(event.get("source_kind", "")))
 	mode = "recovery"
 	_seek(IMPACT_AT)
@@ -61,10 +74,12 @@ func sync_prediction(casts: Array) -> void:
 	# Release has priority over a previous recovery. A gather does not interrupt
 	# follow-through, which prevents very close sources flickering between poses.
 	if remaining <= Effects.FLIGHT:
+		_choose_attack(int(next.get("source_uid", -1)))
 		mode = "prediction"
 		clip = _clip_for(str(next.get("kind", "")))
 		_seek(clampf(Effects.WINDUP - remaining, RELEASE_AT + 0.0001, IMPACT_AT - 0.0001))
 	elif mode != "recovery":
+		_choose_attack(int(next.get("source_uid", -1)))
 		mode = "prediction"
 		clip = _clip_for(str(next.get("kind", "")))
 		_seek(clampf(Effects.WINDUP - remaining, 0.0, RELEASE_AT - 0.0001))
@@ -77,6 +92,6 @@ func _seek(time: float) -> void:
 	# Discrete tracks do not reliably replay an earlier key when seeking
 	# backwards from recovery. Start at zero and cross the keys in order.
 	player.stop()
-	player.play("swing" if clip == "mage-swing" else "gesture" if clip == "mage-gesture" else "cast")
+	player.play("swing" if clip in ["mage-swing", "mage-poses"] else "gesture" if clip == "mage-gesture" else "cast")
 	player.seek(0.0, true)
 	player.advance(clampf(time, 0.0, END_AT))

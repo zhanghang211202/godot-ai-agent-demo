@@ -34,7 +34,7 @@ func _run() -> void:
 		var state := str(layout.motion_state)
 		if not captured.has(state):
 			captured[state] = true
-			check(str(layout.hero_path).ends_with("mage-motion-v2/characters/mage-swing.png"), state + " uses the selected four-pose sheet")
+			check(str(layout.hero_path).ends_with("mage-pose-set-v1/characters/mage-poses.png"), state + " uses the selected seven-pose sheet")
 			check(Rect2(layout.scene_rect).encloses(layout.hero_rect), state + " sprite stays inside stage")
 			check(Rect2(layout.hero_rect).has_point(layout.hero_cast_point), state + " casting point stays on the sprite")
 			await RenderingServer.frame_post_draw

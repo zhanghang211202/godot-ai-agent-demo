@@ -37,12 +37,13 @@ func _run() -> void:
 	var shared_timing := {"sources": {1: {"remaining": 0.2}, 2: {"remaining": 0.2}}}
 	timeline.sync_prediction(Effects.visible_casts(simultaneous, shared_timing))
 	var chosen_clip: String = timeline.clip
+	var chosen_variant: int = timeline.attack_variant
 	simultaneous.reverse()
 	timeline.sync_prediction(Effects.visible_casts(simultaneous, shared_timing))
-	check(chosen_clip == "mage-swing" and timeline.clip == chosen_clip and timeline.pose == 2, "Simultaneous different spells keep the same AnimationPlayer clip when source order changes")
+	check(chosen_clip == "mage-poses" and timeline.clip == chosen_clip and timeline.pose == 2 and timeline.attack_variant == chosen_variant, "Simultaneous spells keep the same chosen pose when source order changes")
 	timeline.reset()
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.30}])
-	check(timeline.clip == "mage-swing" and timeline.pose == 1, "Swing holds the raised staff until its release")
+	check(timeline.clip == "mage-poses" and timeline.pose == 1, "Attack timeline reaches windup before release")
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.241}])
 	check(timeline.pose == 1, "Swing keeps the raised pose immediately before the projectile boundary")
 	timeline.sync_prediction([{"target": "enemy", "source_uid": 1, "kind": "flame_glyph", "remaining": 0.24}])
@@ -117,7 +118,7 @@ func _integration() -> void:
 			check(ui.arena._source_cast_offset(int(friendly[0].source_uid)) != ui.arena._source_cast_offset(int(friendly[1].source_uid)), "Simultaneous equipped sources have distinct stable emitters")
 		if friendly.size() >= 2 and friendly[0].phase == "flight" and not seen.has("flight"):
 			seen.flight = true
-			check(layout.motion_frame == 2 and ui.arena.mage_cast_timeline.mode == "prediction", "Real simultaneous projectile flight uses the release frame before damage")
+			check(layout.motion_frame in [1, 2, 3] and ui.arena.mage_cast_timeline.mode == "prediction", "Real simultaneous projectile flight uses a selected attack pose before damage")
 			check(ui.battle.get_summary().damage_dealt == 0, "Release pose does not cause early damage")
 			await _capture("volley-flight.png")
 			ui._pause()
@@ -130,7 +131,7 @@ func _integration() -> void:
 			paused = true
 		if ui.battle.get_summary().damage_dealt > 0 and not seen.has("impact"):
 			seen.impact = true
-			check(layout.motion_frame == 2 and ui.arena.mage_cast_timeline.mode == "recovery", "Actual damage begins follow-through in release pose")
+			check(layout.motion_frame in [1, 2, 3] and ui.arena.mage_cast_timeline.mode == "recovery", "Actual damage begins follow-through in the selected attack pose")
 			await _capture("volley-impact.png")
 		if ui.arena.mage_cast_timeline.pose == 3 and not seen.has("recover"):
 			seen.recover = true
@@ -189,11 +190,11 @@ func _record_swing(ui: Control) -> void:
 		await process_frame
 		await RenderingServer.frame_post_draw
 		saved = root.get_texture().get_image().save_png(directory.path_join("frame-%02d.png" % index)) == OK and saved
-		saw_swing = saw_swing or ui.arena.mage_cast_timeline.clip == "mage-swing"
+		saw_swing = saw_swing or ui.arena.mage_cast_timeline.clip == "mage-poses"
 		var layout: Dictionary = ui.arena.get_art_layout()
 		var casts: Array = layout.spell_casts
 		var flame_casts: Array = casts.filter(func(cast: Dictionary): return cast.kind == "flame_glyph")
-		if not flame_casts.is_empty() and ui.arena.mage_cast_timeline.clip == "mage-swing":
+		if not flame_casts.is_empty() and ui.arena.mage_cast_timeline.clip == "mage-poses":
 			minimum_body = minf(minimum_body, layout.hero_body_height)
 			maximum_body = maxf(maximum_body, layout.hero_body_height)
 			unmoved_rotation = unmoved_rotation and is_zero_approx(ui.arena.actor_sprite.rotation) and is_zero_approx(ui.arena.mage_hit_motion.rotation)

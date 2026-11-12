@@ -3,7 +3,7 @@ extends Node
 const ClassImage = preload("res://class_image.gd")
 
 func _ready() -> void:
-	var paths := ["res://mage-idle.png", "res://moon-sentinel.png", "res://advanced-spells-v2.png", "res://wind-prism.png", "res://moon-familiar.png", "res://crowned-moth.png", "res://wind-moth.png", "res://moon-panel.png", "res://moon-button.png", "res://moon-lantern.png", "res://astral-serpent.png"]
+	var paths := ["res://mage-idle.png", "res://mage-poses.png", "res://moon-sentinel.png", "res://advanced-spells-v2.png", "res://wind-prism.png", "res://moon-familiar.png", "res://crowned-moth.png", "res://wind-moth.png", "res://moon-panel.png", "res://moon-button.png", "res://moon-lantern.png", "res://astral-serpent.png"]
 	for path in paths:
 		if FileAccess.file_exists(path):
 			printerr("PACK FIXTURE FAILED: unexpectedly found loose source ", path)
@@ -19,5 +19,5 @@ func _ready() -> void:
 		printerr("PACK FIXTURE FAILED: missing texture")
 		get_tree().quit(1)
 		return
-	print("Image pack fixture: 12 checks, 0 failures")
+	print("Image pack fixture: %d checks, 0 failures" % (paths.size() + 1))
 	get_tree().quit(0)

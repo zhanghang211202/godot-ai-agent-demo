@@ -6,11 +6,14 @@ const ROOT := "res://assets/art/c1-motion-v1/characters/"
 const MAGE_CAST_PATH := "res://assets/art/mage-leg-revision-v1/characters/mage-cast.png"
 const MAGE_SWING_PATH := "res://assets/art/mage-motion-v2/characters/mage-swing.png"
 const MAGE_GESTURE_PATH := "res://assets/art/mage-motion-v2/characters/mage-gesture.png"
-const FILES := {"mage-cast": "mage-cast.png", "mage-swing": "mage-swing.png", "mage-gesture": "mage-gesture.png", "knight-sword": "knight-sword.png", "knight-greatblade": "knight-greatblade.png"}
+const MAGE_POSES_PATH := "res://assets/art/mage-pose-set-v1/characters/mage-poses.png"
+const FILES := {"mage-cast": "mage-cast.png", "mage-swing": "mage-swing.png", "mage-gesture": "mage-gesture.png", "mage-poses": "mage-poses.png", "knight-sword": "knight-sword.png", "knight-greatblade": "knight-greatblade.png"}
 # Measured boot-midpoint x anchors in original PNG coordinates. Y is the last
 # alpha>=128 row. Hat-to-foot landmarks exclude the staff and its ornaments.
-const FOOT_X := {"mage-cast": [307, 879, 340, 880], "mage-swing": [299, 828, 284, 855], "mage-gesture": [305, 870, 316, 872], "knight-sword": [260, 923, 246, 903], "knight-greatblade": [249, 924, 250, 842]}
-const MAGE_HAT_Y := {"mage-cast": [73, 87, 751, 749], "mage-swing": [155, 162, 823, 819], "mage-gesture": [71, 82, 750, 748]}
+const FOOT_X := {"mage-cast": [307, 879, 340, 880], "mage-swing": [299, 828, 284, 855], "mage-gesture": [305, 870, 316, 872], "mage-poses": [236, 605, 1063, 1501, 223, 640, 1099], "knight-sword": [260, 923, 246, 903], "knight-greatblade": [249, 924, 250, 842]}
+const MAGE_HAT_Y := {"mage-cast": [73, 87, 751, 749], "mage-swing": [155, 162, 823, 819], "mage-gesture": [71, 82, 750, 748], "mage-poses": [74, 82, 94, 78, 496, 493, 496]}
+const MAGE_POSE_FEET := [420, 417, 415, 419, 856, 854, 853]
+const MAGE_POSE_POINTS := [Vector2(99, 96), Vector2(770, 174), Vector2(1176, 54), Vector2(1640, 178), Vector2(100, 524), Vector2(751, 570), Vector2(986, 530)]
 const MAGE_REFERENCE_BODY_HEIGHT := 570.0
 const MAGE_CAST_POINTS := [Vector2(452, 135), Vector2(1026, 155), Vector2(508, 810), Vector2(1028, 812)]
 const MAGE_SWING_POINTS := [Vector2(95, 160), Vector2(990, 75), Vector2(528, 870), Vector2(1042, 880)]
@@ -100,7 +103,7 @@ static func get_asset(id: String) -> Dictionary:
 		return _assets[id]
 	if not FILES.has(id):
 		return {}
-	var path := MAGE_CAST_PATH if id == "mage-cast" else MAGE_SWING_PATH if id == "mage-swing" else MAGE_GESTURE_PATH if id == "mage-gesture" else ROOT + str(FILES[id])
+	var path := MAGE_CAST_PATH if id == "mage-cast" else MAGE_SWING_PATH if id == "mage-swing" else MAGE_GESTURE_PATH if id == "mage-gesture" else MAGE_POSES_PATH if id == "mage-poses" else ROOT + str(FILES[id])
 	var image := ClassImage.load_image(path)
 	if image == null or image.is_empty():
 		return {}
@@ -120,6 +123,10 @@ static func get_asset(id: String) -> Dictionary:
 		regions[2].size.x = 600
 		regions[3].position.x = 600
 		regions[3].size.x = dimensions.x - 600
+	if id == "mage-poses":
+		# The user selected this seven-pose image with its painted effects.
+		# Individually measured non-overlapping cells preserve every glow.
+		regions = [Rect2i(0, 0, 410, 445), Rect2i(410, 0, 490, 445), Rect2i(900, 0, 420, 445), Rect2i(1320, 0, 454, 445), Rect2i(0, 445, 410, 442), Rect2i(410, 445, 490, 442), Rect2i(900, 445, 420, 442)]
 	var frames: Array[Dictionary] = []
 	var above := 0.0
 	var left := 0.0
@@ -127,9 +134,9 @@ static func get_asset(id: String) -> Dictionary:
 	var normalized_above := 0.0
 	var normalized_left := 0.0
 	var normalized_right := 0.0
-	for index in range(4):
-		var bounds := _bounds(image, regions[index])
-		var pivot := Vector2(float(FOOT_X[id][index]), bounds.end.y)
+	for index in range(regions.size()):
+		var bounds := _bounds(image, regions[index], 16 if id == "mage-poses" else 128)
+		var pivot := Vector2(float(FOOT_X[id][index]), MAGE_POSE_FEET[index] if id == "mage-poses" else bounds.end.y)
 		var body_height := pivot.y - float(MAGE_HAT_Y[id][index]) if MAGE_HAT_Y.has(id) else 0.0
 		var body_scale := MAGE_REFERENCE_BODY_HEIGHT / body_height if body_height > 0.0 else 1.0
 		above = maxf(above, pivot.y - bounds.position.y)
@@ -140,20 +147,20 @@ static func get_asset(id: String) -> Dictionary:
 		normalized_right = maxf(normalized_right, (bounds.end.x - pivot.x) * body_scale)
 		frames.append({"source_rect": Rect2(bounds), "region": Rect2(regions[index]), "pivot": pivot,
 			"body_height": body_height, "body_scale": body_scale,
-			"cast_point": MAGE_CAST_POINTS[index] if id == "mage-cast" else MAGE_SWING_POINTS[index] if id == "mage-swing" else MAGE_GESTURE_POINTS[index] if id == "mage-gesture" else pivot})
+			"cast_point": MAGE_CAST_POINTS[index] if id == "mage-cast" else MAGE_SWING_POINTS[index] if id == "mage-swing" else MAGE_GESTURE_POINTS[index] if id == "mage-gesture" else MAGE_POSE_POINTS[index] if id == "mage-poses" else pivot})
 	var result := {"id": id, "path": path, "texture": ImageTexture.create_from_image(image), "size": dimensions,
 		"frames": frames, "height": above, "left": left, "right": right,
 		"normalized_height": normalized_above, "normalized_left": normalized_left, "normalized_right": normalized_right}
 	_assets[id] = result
 	return result
 
-static func _bounds(image: Image, region: Rect2i) -> Rect2i:
+static func _bounds(image: Image, region: Rect2i, threshold := 128) -> Rect2i:
 	var data := image.get_data()
 	var minimum := region.end
 	var maximum := Vector2i(-1, -1)
 	for y in range(region.position.y, region.end.y):
 		for x in range(region.position.x, region.end.x):
-			if data[(y * image.get_width() + x) * 4 + 3] < 128:
+			if data[(y * image.get_width() + x) * 4 + 3] < threshold:
 				continue
 			minimum.x = mini(minimum.x, x)
 			minimum.y = mini(minimum.y, y)

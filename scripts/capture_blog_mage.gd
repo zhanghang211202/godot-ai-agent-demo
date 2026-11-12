@@ -77,7 +77,7 @@ func _run() -> void:
 			_fail("Boss battle ended before capture finished")
 			return
 		var layout: Dictionary = ui.arena.get_art_layout()
-		if layout.motion_clip != "mage-swing":
+		if layout.motion_clip != "mage-poses":
 			_fail("Unexpected mage sprite in boss battle")
 			return
 		seen_poses[int(layout.motion_frame)] = true
@@ -87,8 +87,8 @@ func _run() -> void:
 			return
 		ui._process(0.1)
 		ui.arena._process(0.1)
-	if seen_poses.size() < 3:
-		_fail("Boss capture did not show enough mage poses")
+	if not seen_poses.has(0) or not (seen_poses.has(1) or seen_poses.has(2) or seen_poses.has(3)):
+		_fail("Boss capture did not show both idle and an attack pose")
 		return
 	print("Blog capture: normal stages 1-6 won; stage 6 and recipes captured; 45 boss frames at 0.1 seconds; poses ", seen_poses.keys(), "; saves disabled")
 	ui.queue_free()

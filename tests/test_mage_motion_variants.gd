@@ -25,7 +25,7 @@ func _run() -> void:
 	await process_frame
 	check(timeline.player.has_animation("cast") and timeline.player.has_animation("swing") and timeline.player.has_animation("gesture"), "Three AnimationPlayer timelines exist")
 	timeline.sync_prediction([_cast(0.64, "flame_glyph")])
-	check(timeline.clip == "mage-swing" and timeline.pose == 0, "Fire uses the initial staff swing pose")
+	check(timeline.clip == "mage-poses" and timeline.pose == 0, "Fire uses the selected staff pose set")
 	timeline.sync_prediction([_cast(0.42, "flame_glyph")])
 	check(timeline.pose == 1 and timeline.player.current_animation == "swing", "Staff rises on its own AnimationPlayer timeline")
 	timeline.sync_prediction([_cast(0.24, "flame_glyph")])
@@ -35,12 +35,12 @@ func _run() -> void:
 	timeline.advance(0.2, true, 2.0)
 	check(is_equal_approx(timeline.player.current_animation_position, before), "Pause freezes the swing")
 	timeline.advance(0.085, false, 2.0)
-	check(timeline.pose == 3 and timeline.clip == "mage-swing", "Recovery follows the combat clock at double speed")
+	check(timeline.pose == 3 and timeline.clip == "mage-poses", "Recovery follows the combat clock at double speed")
 	timeline.advance(1.0, false, 1.0)
 	timeline.sync_prediction([_cast(0.5, "spark")])
-	check(timeline.clip == "mage-swing" and timeline.player.current_animation == "swing", "Basic magic uses the selected staff pose set")
+	check(timeline.clip == "mage-poses" and timeline.player.current_animation == "swing", "Basic magic uses the selected staff pose set")
 	timeline.sync_prediction([_cast(0.24, "frost_bolt")])
-	check(timeline.clip == "mage-swing" and timeline.pose == 2 and timeline.player.current_animation == "swing", "Water magic releases from the same staff pose set")
+	check(timeline.clip == "mage-poses" and timeline.pose == 2 and timeline.player.current_animation == "swing", "Water magic releases from the same staff pose set")
 	timeline.variants_enabled = false
 	timeline.sync_prediction([_cast(0.24, "frost_bolt")])
 	check(timeline.clip == "mage-cast" and timeline.player.current_animation == "cast", "Legacy class prototype retains its original pose set")
@@ -66,7 +66,7 @@ func _integration() -> void:
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
 	var idle: Dictionary = ui.arena.get_art_layout()
-	check(idle.motion_clip == "mage-swing" and idle.motion_frame == 0, "Preparation uses the first selected staff pose")
+	check(idle.motion_clip == "mage-poses" and idle.motion_frame == 0, "Preparation uses the selected idle pose")
 	ui.arena.queue_redraw()
 	await process_frame
 	await RenderingServer.frame_post_draw
@@ -85,7 +85,7 @@ func _integration() -> void:
 		reference.tick(0.05)
 		ui.arena._process(0.05)
 		var layout: Dictionary = ui.arena.get_art_layout()
-		if str(layout.motion_clip) == "mage-swing":
+		if str(layout.motion_clip) == "mage-poses":
 			seen[int(layout.motion_frame)] = true
 			check(Rect2(layout.scene_rect).encloses(layout.hero_rect) and not Rect2(layout.hero_rect).intersects(layout.enemy_rect), "Swing stays on stage and clear of enemy")
 		if step >= 17 and step <= 42:
@@ -93,7 +93,7 @@ func _integration() -> void:
 			await RenderingServer.frame_post_draw
 			if root.get_texture().get_image().save_png(directory.path_join("frame-%02d.png" % captured)) == OK:
 				captured += 1
-	check(seen.has(0) and seen.has(1) and seen.has(2) and seen.has(3), "Actual spell visits all four swing poses")
+	check(seen.has(0) and (seen.has(1) or seen.has(2) or seen.has(3)), "Actual fire spell visits idle and a selected attack")
 	check(captured == 26, "Captured 26 actual 50ms game steps")
 	check(ui.battle.get_summary() == reference.get_summary(), "Animation does not alter damage, timings or combat result")
 	ui.queue_free()
@@ -120,14 +120,14 @@ func _gesture_integration() -> void:
 		reference.tick(0.05)
 		ui.arena._process(0.05)
 		var layout: Dictionary = ui.arena.get_art_layout()
-		if str(layout.motion_clip) == "mage-swing":
+		if str(layout.motion_clip) == "mage-poses":
 			seen[int(layout.motion_frame)] = true
 			check(Rect2(layout.scene_rect).encloses(layout.hero_rect) and not Rect2(layout.hero_rect).intersects(layout.enemy_rect), "Water spell's staff poses stay on stage and clear of enemy")
 		await process_frame
 		await RenderingServer.frame_post_draw
 		if root.get_texture().get_image().save_png(directory.path_join("frame-%02d.png" % step)) == OK:
 			captured += 1
-	check(seen.has(1) and seen.has(2) and seen.has(3), "Real water spell uses staff gather, release and recovery")
+	check(seen.has(0) and (seen.has(1) or seen.has(2) or seen.has(3)), "Real water spell uses idle and a selected attack")
 	check(captured == 25 and ui.battle.get_summary() == reference.get_summary(), "Water spell capture leaves all combat results unchanged")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions

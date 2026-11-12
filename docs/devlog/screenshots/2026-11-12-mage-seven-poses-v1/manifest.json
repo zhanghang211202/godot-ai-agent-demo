@@ -1,0 +1,10 @@
+{
+  "capture": "Godot game view with saves disabled",
+  "files": [
+    {"file": "preparation.png", "sha256": "b856f455c622fa4b19451638291567b9d03a474c01bfedc3dbb61a00c17bba21", "description": "Preparation, normal opening configuration"},
+    {"file": "recipes.png", "sha256": "27d6f7c1091b8a364901b9888b5b7b712503003194ee61bc75739de0bc5ab1ac", "description": "Recipe view after normal opening item placement"},
+    {"file": "sixth-stage.png", "sha256": "33778365c9c5290f46843ecc1000cd10c597403dab051b626501e730b0e55cc5", "description": "Stage six preparation after five victories"},
+    {"file": "real-guard.png", "sha256": "8e0d57c82c823b0f3d1d89d361ac38556b56bc753e4bcd1ae669e5e14aa96def", "description": "Real enemy hit, with player spells delayed by the test fixture to expose the guard pose"},
+    {"file": "boss.gif", "sha256": "87c510952748f27a45d9cd1937a28116e7787b66fe0a847af31918081c0aebca", "description": "Stage seven boss, 45 game frames advanced at 0.1 seconds, 720x480, silent"}
+  ]
+}

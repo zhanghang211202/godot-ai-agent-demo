@@ -90,6 +90,7 @@ if (command === 'cli') {
   for (const [source, target] of [
     ['scripts/classes/class_image.gd', 'class_image.gd'],
     ['assets/art/mage-leg-revision-v1/characters/mage-idle.png', 'mage-idle.png'],
+    ['assets/art/mage-pose-set-v1/characters/mage-poses.png', 'mage-poses.png'],
     ['assets/art/mage-trial-v1/enemies/moon-sentinel.png', 'moon-sentinel.png'],
     ['assets/art/mage-advanced-v1/items/advanced-spells-v2.png', 'advanced-spells-v2.png'],
     ['assets/art/mage-haste-v1/items/wind-prism.png', 'wind-prism.png'],

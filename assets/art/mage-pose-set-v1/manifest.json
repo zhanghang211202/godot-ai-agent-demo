@@ -1,0 +1,9 @@
+{
+  "tool": "built-in image generation with transparent background",
+  "reference": "assets/art/mage-motion-v2/characters/mage-swing.png",
+  "decision": "The user explicitly selected the seven-pose generated comparison for direct use in the game; the original image and its painted effects are preserved.",
+  "assets": [
+    {"file": "characters/mage-poses.png", "width": 1774, "height": 887, "sha256": "dd49370f38a6489d8e73a065903ece200ab1716a63098e96e13e508f22bc0282", "role": "One idle, three spell releases and three ward reactions; original transparent RGBA"}
+  ],
+  "limitations": "The glow and shield are painted into the poses, cannot move independently and remain blue-violet for all spell elements."
+}
