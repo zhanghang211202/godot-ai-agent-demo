@@ -249,10 +249,16 @@ func get_art_layout() -> Dictionary:
 	var hero: Dictionary = Art.get_asset(hero_id)
 	var default_clip := {"mage-idle": "mage-cast", "knight-sword-idle": "knight-sword", "knight-greatblade-idle": "knight-greatblade"}.get(hero_id, "") as String
 	var clip_id: String = motion.clip if not motion.clip.is_empty() else default_clip
+	# The focused mage uses the first swing pose even while idle, so the
+	# character does not switch illustrations between attacks.
+	if hero_id == "mage-idle" and mage_motion_variants_enabled:
+		clip_id = "mage-swing"
 	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
 		clip_id = str(mage_cast_timeline.clip)
 	var animated_hero := Motion.get_asset(clip_id)
 	var frame_index: int = motion.frame_index() if not motion.clip.is_empty() else 0
+	if hero_id == "mage-idle" and mage_motion_variants_enabled:
+		frame_index = 0
 	if run != null and run.class_id == "mage" and mage_cast_timeline != null and mage_cast_timeline.mode != "idle":
 		frame_index = int(mage_cast_timeline.pose)
 	var background: Dictionary = Art.get_asset(background_id)

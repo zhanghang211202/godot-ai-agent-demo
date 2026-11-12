@@ -12,12 +12,11 @@ var clip := "mage-cast"
 var variants_enabled := true
 var _last_hit_time := -1.0
 
-func _clip_for(kind: String) -> String:
+func _clip_for(_kind: String) -> String:
 	if variants_enabled:
-		if kind in ["flame_glyph", "ember_tornado", "solar_crown", "arcane_nova", "solar_lance"]:
-			return "mage-swing"
-		if kind in ["tide_lances", "frost_bolt", "gale_blades", "steam_burst", "glacier_prism", "storm_orbit", "frost_orbit"]:
-			return "mage-gesture"
+		# The mage campaign uses one consistent four-pose staff illustration
+		# for every spell; the source kind still controls combat and effects.
+		return "mage-swing"
 	return "mage-cast"
 
 func reset() -> void:

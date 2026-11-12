@@ -1,0 +1,38 @@
+{
+  "description": "Godot runtime fixture, player saves disabled; battle advanced in controlled 0.05-second steps, not a real-time recording. Fire and water use the same four-pose staff illustration.",
+  "capture": "tests/test_mage_motion_variants.gd",
+  "gif": {
+    "frames": 26,
+    "milliseconds_per_frame": 50,
+    "width": 720,
+    "height": 480,
+    "audio": false
+  },
+  "files": [
+    {
+      "file": "fire-impact.png",
+      "bytes": 1701770,
+      "sha256": "672aa6df560bdc9a18e24fe531c7e58c3ea24473d543703db5fd836e5e282264"
+    },
+    {
+      "file": "fire-windup.png",
+      "bytes": 1721042,
+      "sha256": "22a0a6ddc5b8e1d6f58eec83243ad11b86cc0acd9adc09d54ec6ea41a32d454a"
+    },
+    {
+      "file": "preparation.png",
+      "bytes": 1225628,
+      "sha256": "ef5ed8a06570bc1da058b4efebf4f67c06c405742392d8b43242b841a235cfbc"
+    },
+    {
+      "file": "staff-swing.gif",
+      "bytes": 530733,
+      "sha256": "72c21105fa2fdcf66a1b0424d522c23e9fdea88789895608fe63b04928a1416e"
+    },
+    {
+      "file": "water-impact.png",
+      "bytes": 1702626,
+      "sha256": "8b68ef7d602028aa6877082c000d1d789995216808f0e177d18e89f51f4687d0"
+    }
+  ]
+}

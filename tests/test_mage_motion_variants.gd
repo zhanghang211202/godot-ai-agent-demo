@@ -38,9 +38,12 @@ func _run() -> void:
 	check(timeline.pose == 3 and timeline.clip == "mage-swing", "Recovery follows the combat clock at double speed")
 	timeline.advance(1.0, false, 1.0)
 	timeline.sync_prediction([_cast(0.5, "spark")])
-	check(timeline.clip == "mage-cast" and timeline.player.current_animation == "cast", "Basic magic retains the original pose set")
+	check(timeline.clip == "mage-swing" and timeline.player.current_animation == "swing", "Basic magic uses the selected staff pose set")
 	timeline.sync_prediction([_cast(0.24, "frost_bolt")])
-	check(timeline.clip == "mage-gesture" and timeline.pose == 2 and timeline.player.current_animation == "gesture", "Water magic releases from the open-hand pose")
+	check(timeline.clip == "mage-swing" and timeline.pose == 2 and timeline.player.current_animation == "swing", "Water magic releases from the same staff pose set")
+	timeline.variants_enabled = false
+	timeline.sync_prediction([_cast(0.24, "frost_bolt")])
+	check(timeline.clip == "mage-cast" and timeline.player.current_animation == "cast", "Legacy class prototype retains its original pose set")
 	for clip in ["mage-swing", "mage-gesture"]:
 		var asset: Dictionary = Motion.get_asset(clip)
 		check(asset.frames.size() == 4, clip + " has four separate source poses")
@@ -62,6 +65,13 @@ func _integration() -> void:
 	ui.set_process(false)
 	ui.arena.set_process(false)
 	ui.grid.set_process(false)
+	var idle: Dictionary = ui.arena.get_art_layout()
+	check(idle.motion_clip == "mage-swing" and idle.motion_frame == 0, "Preparation uses the first selected staff pose")
+	ui.arena.queue_redraw()
+	await process_frame
+	await RenderingServer.frame_post_draw
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
+	check(root.get_texture().get_image().save_png(OUTPUT.path_join("preparation.png")) == OK, "Captured the selected staff pose in preparation")
 	check(ui.run.acquire(0, Vector2i.ZERO).ok and ui.run.discard(2).ok, "A normal fire merge and discard create a single-spell fixture")
 	var reference := Battle.new()
 	check(reference.start(ui.run.get_combat_config(), ui.encounter_id).ok, "Independent reference battle starts")
@@ -110,15 +120,15 @@ func _gesture_integration() -> void:
 		reference.tick(0.05)
 		ui.arena._process(0.05)
 		var layout: Dictionary = ui.arena.get_art_layout()
-		if str(layout.motion_clip) == "mage-gesture":
+		if str(layout.motion_clip) == "mage-swing":
 			seen[int(layout.motion_frame)] = true
-			check(Rect2(layout.scene_rect).encloses(layout.hero_rect) and not Rect2(layout.hero_rect).intersects(layout.enemy_rect), "Gesture stays on stage and clear of enemy")
+			check(Rect2(layout.scene_rect).encloses(layout.hero_rect) and not Rect2(layout.hero_rect).intersects(layout.enemy_rect), "Water spell's staff poses stay on stage and clear of enemy")
 		await process_frame
 		await RenderingServer.frame_post_draw
 		if root.get_texture().get_image().save_png(directory.path_join("frame-%02d.png" % step)) == OK:
 			captured += 1
-	check(seen.has(1) and seen.has(2) and seen.has(3), "Real water spell visits gather, release and recovery")
-	check(captured == 25 and ui.battle.get_summary() == reference.get_summary(), "Gesture capture leaves all combat results unchanged")
+	check(seen.has(1) and seen.has(2) and seen.has(3), "Real water spell uses staff gather, release and recovery")
+	check(captured == 25 and ui.battle.get_summary() == reference.get_summary(), "Water spell capture leaves all combat results unchanged")
 	for dimensions in [Vector2i(1280, 800), Vector2i(1440, 960), Vector2i(1920, 1080)]:
 		root.size = dimensions
 		for _i in range(4): await process_frame
