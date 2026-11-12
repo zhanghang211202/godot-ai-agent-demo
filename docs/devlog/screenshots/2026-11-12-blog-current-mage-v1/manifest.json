@@ -1,0 +1,9 @@
+{
+  "capture": "Godot viewport, isolated campaign with persistence disabled",
+  "capture_script": "scripts/capture_blog_mage.gd",
+  "files": [
+    {"file": "recipes.png", "sha256": "27d6f7c1091b8a364901b9888b5b7b712503003194ee61bc75739de0bc5ab1ac", "description": "Recipe screen after normal opening item placement, 1440x960"},
+    {"file": "sixth-stage.png", "sha256": "2b4476b489dbfd00e534947afe73220df43a88c05c8a6b160f346f1cffaf16d4", "description": "Stage six preparation after five victories, 1440x960"},
+    {"file": "boss.gif", "sha256": "a98e44edcede6fb6160f0b5bf0bac7dd65eb97a52829fb3ec70f9b92e7b63263", "description": "Stage seven boss, 45 game frames advanced at 0.1 seconds, 720x480, silent"}
+  ]
+}
