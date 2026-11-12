@@ -12,7 +12,7 @@
 | `scripts/visuals/pixel_art_v03.gd`、`assets/art/v03/` | コードによる独自の美術試作。主人公と苔団の各14フレーム、剣・盾・砥石の小アイコンと盤面用画像。PNG は同じコードから書き出したもの。[一覧](../assets/art/v03/manifest.json)に素材と SHA-256 を記録。残りの装備と敵は旧素材を仮使用している。 |
 | `scripts/ui/forest_stage.gd`、`assets/art/v03/environments/forest/stage.png` | コードで描いた独自の 512×144 森林。色数を限定し、独立した固定乱数を使い、実行時にキャッシュする。複数の層を一枚に合成しており、参考ゲームや外部の画像は使用していない。 |
 | `scripts/ui/ember_theme.gd` | コードで描いた革、紙、銅の部品、ボタン。 |
-| `assets/art/forest_background.png` | v0.1/v0.2 で使った独自の **imagegen** 森林背景。過去との比較用に残し、現在の森林試作は上記のコードによる背景を使う。生成指示は [art-direction.md](art-direction.md) の付録に記録。参考ゲームの画像やスクリーンショットではない。 |
+| `assets/art/forest_background.png` | v0.1/v0.2 で使った独自の **imagegen** 森林背景。過去との比較用に残し、現在の森林試作は上記のコードによる背景を使う。参考ゲームの画像やスクリーンショットではない。 |
 | `assets/fonts/NotoSansCJKsc-Regular.otf` | **Noto Sans CJK SC Regular**。内蔵バージョンは **2.004**、著作権表示は **© 2014–2021 Adobe (http://www.adobe.com/)**。[Noto CJK 公式リポジトリのフォント](https://github.com/notofonts/noto-cjk/blob/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf)を使用。 |
 
 Noto Sans CJK は **SIL Open Font License 1.1** を使用します。[同梱のライセンス全文](../assets/fonts/OFL.txt)と [Noto CJK 公式ライセンス](https://github.com/notofonts/noto-cjk/blob/main/Sans/LICENSE)を参照してください。フォントのライセンスと内蔵著作権表示は、プロジェクトと共に配布する際にも保持します。
