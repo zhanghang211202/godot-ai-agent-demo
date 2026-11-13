@@ -8,17 +8,6 @@
   "classification": "Actual native Godot static concept review fixture showing selected MA and KA. Not combat, animation, or dedicated battle-sprite evidence.",
   "engine": "Godot 4.7.2 .NET, Windows, OpenGL compatibility renderer",
   "mode": "Default MA/KA appearance review; no player-save access; generated source concepts unchanged.",
-  "files": [
-    {
-      "file": "character-study-MA-KA-1440x960.png",
-      "width": 1440,
-      "height": 960,
-      "bytes": 913027,
-      "sha256": "1a2289ef7f730f339a33e8a3bc45ba31c361a766c2d88a73e396da1b4ac997ee",
-      "role": "native static review capture reflecting selected appearance baselines",
-      "save_access": false,
-      "combat": false,
-      "final_art": false
-    }
-  ]
+  "files": [],
+  "cleanup_note": "2026-11-13：比較画面の旧画像は中国語表示を含むため削除。生成した人物案の原図は別の concepts フォルダーに保管。"
 }

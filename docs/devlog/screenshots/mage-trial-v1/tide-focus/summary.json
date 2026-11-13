@@ -1,4 +1,5 @@
 {
+  "localization_note": "旧中国語表示を日本語に翻訳。数値と状態は当時の記録のまま。",
   "type": "derived_runtime_capture_summary",
   "note": "Selected fields from the native fixture report; transient samples omitted because only selected screenshots are published for this comparison.",
   "class_id": "mage",
@@ -18,7 +19,7 @@
         "cost": 0,
         "event": "merge",
         "kind": "flame_glyph",
-        "message": "合成完成：焰爆法印",
+        "message": "合成完了：爆炎の法印",
         "ok": true,
         "source_id": "observatory_fire",
         "uid": 1
@@ -34,7 +35,7 @@
         "cost": 0,
         "event": "acquire",
         "kind": "water_mote",
-        "message": "已放置：水元素",
+        "message": "配置しました：水の元素",
         "ok": true,
         "source_id": "observatory_water",
         "uid": 6
@@ -50,7 +51,7 @@
         "cost": 0,
         "event": "merge",
         "kind": "tide_lances",
-        "message": "合成完成：潮汐连枪",
+        "message": "合成完了：潮汐の連槍",
         "ok": true,
         "source_id": "observatory_wind",
         "uid": 6
@@ -66,7 +67,7 @@
       "result": {
         "event": "move",
         "kind": "arcane_focus",
-        "message": "已放置：聚能晶核",
+        "message": "配置しました：集中の結晶核",
         "ok": true,
         "uid": 3
       },
@@ -102,7 +103,7 @@
         "damage": 52,
         "hits": 3,
         "kind": "flame_glyph",
-        "name": "焰爆法印",
+        "name": "爆炎の法印",
         "raw_damage": 54,
         "uid": 1
       },
@@ -111,7 +112,7 @@
         "damage": 25,
         "hits": 5,
         "kind": "spark",
-        "name": "微光术式",
+        "name": "微光の術式",
         "raw_damage": 25,
         "uid": 2
       },
@@ -120,7 +121,7 @@
         "damage": 63,
         "hits": 9,
         "kind": "tide_lances",
-        "name": "潮汐连枪",
+        "name": "潮汐の連槍",
         "raw_damage": 63,
         "uid": 6
       }

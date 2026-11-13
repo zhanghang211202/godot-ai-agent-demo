@@ -1,6 +1,6 @@
 # 参考ゲームの調査
 
-『Overgeared Hero（靠装勇者）』の道具の配置と自動戦闘を参考に、本プロジェクト独自の魔法使いの遊びを検討しました。参考先の数値やすべてのルールを再現したものではありません。
+『Overgeared Hero』の道具の配置と自動戦闘を参考に、本プロジェクト独自の魔法使いの遊びを検討しました。参考先の数値やすべてのルールを再現したものではありません。
 
 調査では [Wiki](https://tatakingdom.tw/zh-TW/games/overgeared-hero)、[公式サイト](https://overgeared.app/)、[Google Play の紹介](https://play.google.com/store/apps/details?hl=en&id=com.fiveminlab.overgeared.hero.backpack.merge) と、YouTube 動画のプレビュー画像を確認しました。動画全体を視聴したわけではなく、プレビューから細かなタイミングや確率を確定していません。参考動画は [動画1](https://www.youtube.com/watch?v=9WkzU8AMfuQ)、[動画2](https://www.youtube.com/watch?v=OiVQdJ-XikI)、[動画3](https://www.youtube.com/watch?v=ydIPYpirNjY) です。
 

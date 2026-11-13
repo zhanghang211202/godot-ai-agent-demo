@@ -1,4 +1,5 @@
 {
+  "localization_note": "旧中国語表示を日本語に翻訳。数値と状態は当時の記録のまま。",
   "type": "derived_runtime_capture_report",
   "source_report_sha256": "169c99d172113b335c3bffc96f40b98b4e1b2902ba90aecb66efc2e84850900c",
   "note": "Selected fields and published feedback samples from an actual native fixture; not the complete original report.",
@@ -23,7 +24,7 @@
         "cost": 0,
         "event": "merge",
         "kind": "frost_bolt",
-        "message": "合成完成：霜晶冰矢",
+        "message": "合成完了：霜晶の氷矢",
         "ok": true,
         "source_id": "observatory_water",
         "uid": 1
@@ -39,7 +40,7 @@
         "cost": 0,
         "event": "merge",
         "kind": "gale_blades",
-        "message": "合成完成：回旋风刃",
+        "message": "合成完了：旋回する風刃",
         "ok": true,
         "source_id": "observatory_wind",
         "uid": 2
@@ -76,7 +77,7 @@
         "damage": 52,
         "hits": 6,
         "kind": "frost_bolt",
-        "name": "霜晶冰矢",
+        "name": "霜晶の氷矢",
         "raw_damage": 54,
         "uid": 1
       },
@@ -85,7 +86,7 @@
         "damage": 56,
         "hits": 14,
         "kind": "gale_blades",
-        "name": "回旋风刃",
+        "name": "旋回する風刃",
         "raw_damage": 56,
         "uid": 2
       }

@@ -1,6 +1,6 @@
 {
   "kind": "derived-runtime-crops-not-new-recordings",
-  "note": "Original historical GIFs remain unchanged. Fixed mosaic zones obscure floating text and may obscure some effects.",
+  "note": "Historical source GIFs were removed on 2026-11-13 because they contained Chinese UI. Fixed mosaic zones obscure floating text and may obscure some effects; source paths are retained only as provenance.",
   "records": [
     {
       "file": "mage-vfx.gif",

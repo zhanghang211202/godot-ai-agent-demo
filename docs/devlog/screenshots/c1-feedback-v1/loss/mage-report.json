@@ -1,10 +1,11 @@
 {
+  "localization_note": "旧中国語表示を日本語に翻訳。数値と状態は当時の記録のまま。",
 	"actions": [
 		{
 			"operation": "discard",
 			"result": {
 				"event": "discard",
-				"message": "已舍弃；不会退款或返还元素。",
+				"message": "捨てました。返金や元素の返還はありません。",
 				"ok": true
 			},
 			"uid": 1
@@ -753,7 +754,7 @@
 				"damage": 85,
 				"hits": 17,
 				"kind": "spark",
-				"name": "微光术式",
+				"name": "微光の術式",
 				"raw_damage": 85,
 				"uid": 2
 			}

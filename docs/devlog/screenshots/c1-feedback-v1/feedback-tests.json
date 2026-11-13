@@ -1,4 +1,5 @@
 {
+  "localization_note": "旧中国語表示を日本語に翻訳。数値と状態は当時の記録のまま。",
 	"checks": 62,
 	"failures": 0,
 	"fixtures": [
@@ -11,7 +12,7 @@
 						"damage": 60,
 						"hits": 3,
 						"kind": "flame_glyph",
-						"name": "焰爆法印",
+						"name": "爆炎の法印",
 						"raw_damage": 60,
 						"uid": 1
 					},
@@ -20,7 +21,7 @@
 						"damage": 30,
 						"hits": 6,
 						"kind": "spark",
-						"name": "微光术式",
+						"name": "微光の術式",
 						"raw_damage": 30,
 						"uid": 2
 					},
@@ -29,7 +30,7 @@
 						"damage": 50,
 						"hits": 10,
 						"kind": "tide_lances",
-						"name": "潮汐连枪",
+						"name": "潮汐の連槍",
 						"raw_damage": 50,
 						"uid": 6
 					}
@@ -166,7 +167,7 @@
 						"damage": 140,
 						"hits": 4,
 						"kind": "greatblade",
-						"name": "誓约重刃",
+						"name": "誓約の大剣",
 						"raw_damage": 144,
 						"uid": 1
 					}
@@ -303,7 +304,7 @@
 						"damage": 140,
 						"hits": 16,
 						"kind": "iron_blade",
-						"name": "制式长剑",
+						"name": "制式長剣",
 						"raw_damage": 144,
 						"uid": 1
 					}
@@ -440,7 +441,7 @@
 						"damage": 85,
 						"hits": 17,
 						"kind": "spark",
-						"name": "微光术式",
+						"name": "微光の術式",
 						"raw_damage": 85,
 						"uid": 2
 					}

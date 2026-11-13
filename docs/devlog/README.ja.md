@@ -1,6 +1,8 @@
 # 格子合成 RPG 開発記録（新タイトルは選定中）
 
-> 動画は当時の実機録画を戦闘部分に切り出し、文字が出る領域にモザイクを施した派生版です。元の録画は各マイルストーンのフォルダーに保存し、派生元と処理内容は各 manifest に記録しています。
+> 2026-11-13：旧画像に中国語の画面が含まれていたため、該当ファイルを削除しました。当時の数値と説明は記録として残しています。
+
+> 動画は当時の実機録画を戦闘部分に切り出し、文字が出る領域にモザイクを施した派生版です。中国語表示を含む元の録画は削除し、撮影条件と処理内容は各 manifest に記録しています。
 
 ブログ用の素材を、実際のコード・実行結果・スクリーンショットと一緒に残すための記録です。
 記録日は日本時間（JST）を基準にします。作業時間は計測していないため、所要時間や生産性の数値は記載しません。
@@ -20,7 +22,7 @@
 - [2026-10-23：精細なピクセルキャラクターと八つの世界観](2026-10-23-art-exploration.ja.md)
 - [2026-10-23：バックパックを核にした二職業・六構築の要件](2026-10-23-dual-class-planning.ja.md)
 - [2026-10-24：二職業の資源・編織・一戦が動くC0原型](2026-10-24-class-rules.ja.md)
-- [2026-10-24：各三つの人物造形と顔の静的審稿台](2026-10-24-character-studies.ja.md)
+- [2026-10-24：各三つの人物造形と顔の静的比較画面](2026-10-24-character-studies.ja.md)
 - [2026-10-25：魔法使いMA・騎士KAの選定反映を完了](2026-10-25-character-selection.ja.md)
 - [2026-10-26：選んだ二人を職業場面へ接続、文字と地面を修正](2026-10-26-c1-static-art.ja.md)
 - [2026-10-26：施法・長剣・重刃の四コマを実戦へ](2026-10-26-c1-motion.ja.md)
@@ -37,38 +39,20 @@
 
 | 版 | 内容 | 画像 |
 | --- | --- | --- |
-| 0.1 | 最初の準備画面 | [prepare.png](screenshots/v0.1/prepare.png) |
-| 0.1 | 自動戦闘 | [battle.png](screenshots/v0.1/battle.png) |
-| 0.2 | 方向付きの支援マス | [prepare.png](screenshots/v0.2/prepare.png) |
-| 0.2 | 自動戦闘と装備のクールダウン | [battle.png](screenshots/v0.2/battle.png) |
-| 0.2 | 初期資源だけで作れる合成例 | [forging.png](screenshots/v0.2/forging.png) |
-| 0.2 | 勝利後の祝福選択 | [blessings.png](screenshots/v0.2/blessings.png) |
-| 0.2 | 一時停止とセーブのメニュー | [menu.png](screenshots/v0.2/menu.png) |
-| 0.3 sample | 主役・苔団と皮革バッグ / 紙の手記 | [prepare.png](screenshots/v0.3-sample/prepare.png) |
-| 0.3 sample | 実行中の戦闘、5秒 / 無音 / 縮小GIF | [battle-motion.gif](screenshots/2026-11-02-text-obscured-v2/v03-battle.gif) |
-| 0.3 sample | ドラッグの占有範囲プレビュー | [drag-preview.png](screenshots/v0.3-sample/drag-preview.png) |
-| 0.3 sample | 初期資源だけの合成例、旧素材を含む | [forging.png](screenshots/v0.3-sample/forging.png) |
-| 0.3 sample | 祝福カードと全画面マスク | [blessings.png](screenshots/v0.3-sample/blessings.png) |
-| 0.3 sample | 1280×800 / 1920×1080 | [小ウィンドウ](screenshots/v0.3-sample/prepare-1280x800.png) / [大ウィンドウ](screenshots/v0.3-sample/prepare-1920x1080.png) |
-| C0 rules v1 | 法師：有限元素の取得と二つの法術。規則fixture、完成美術ではない | [構築](screenshots/c0-class-rules-v1/mage-built.png) / [結果](screenshots/c0-class-rules-v1/mage-result.png) |
-| C0 rules v1 | 騎士：有限購入で重刃を鍛造。規則fixture、完成美術ではない | [構築](screenshots/c0-class-rules-v1/knight-built.png) / [結果](screenshots/c0-class-rules-v1/knight-result.png) |
-| C0 rules v1 | 実際の1280×800準備画面、長い列はスクロール | [小ウィンドウ](screenshots/c0-class-rules-v1/mage-prepare-1280x800.png) |
-| C1 static art v1 | MA月杖と月庭、実際の構築／戦闘。人物は静止素材 | [構築](screenshots/c1-static-art-v1/mage-built.png)／[戦闘](screenshots/c1-static-art-v1/mage-battle.png) |
-| C1 static art v1 | KA長剣から重刃へ、聖堂の地面と同じ訓練相手 | [長剣](screenshots/c1-static-art-v1/knight-prepare.png)／[重刃](screenshots/c1-static-art-v1/knight-built.png) |
-| C1 static art v1 | 1280のラベル溢れと石床立面への足合わせを修正 | [文字修正前](screenshots/c1-static-art-v1/before-label-fix-1280x800.png)／[修正後](screenshots/c1-static-art-v1/mage-prepare-1280x800.png) |
+| 森林版 | 後日日本語化した準備画面 | [準備画面](screenshots/2026-11-02-japanese-v1/legacy-prepare.png) |
 
-上表は Godot で実行したゲーム／規則fixture画面です。0.1 の画像は公開済みコミット `ac878e9` からバイト単位で取り出しました。
+上表は Godot で実行したゲーム／規則fixtureの派生映像です。0.1 の画像は以前、公開済みコミット `ac878e9` から取り出しましたが、現在の作業ツリーからは削除しました。
 0.2 の合成例は、デバッグ用に資源を増やしたものではなく、初期アイテムと18ゴールドだけを通常の購入・合成APIで操作した状態です。
 祝福画面は最初の戦闘を通常の装備で勝った後の状態を再現しています。
 
 画像の幅・高さ・サイズ・SHA-256・出典は [manifest.json](screenshots/manifest.json) に記録しています。
 バージョン別の画像は上書きせず、将来の変更は新しい版のフォルダーに追加します。
 
-C0の9枚はネイティブGodotの実行画面ですが、人物と背景は規則のための図式です。[版別マニフェスト](screenshots/c0-class-rules-v1/manifest.json)と魔法使い・騎士の取得/結果JSONも保存しました。撮影fixtureは通常の取得・合成APIを使い、所持金や完成装備を直接注入せず、プレイヤー保存を無効化しています。新しいキャラクター美術の完成証拠とは区別します。
+C0の9枚はネイティブGodotの実行画面でしたが、中国語表示を含むため削除しました。人物と背景は規則のための図式です。[版別マニフェスト](screenshots/c0-class-rules-v1/manifest.json)と、表示文字を翻訳した魔法使い・騎士の取得/結果JSONは残しています。撮影fixtureは通常の取得・合成APIを使い、所持金や完成装備を直接注入せず、プレイヤー保存を無効化しました。新しいキャラクター美術の完成証拠とは区別します。
 
 2026-10-23 の[八つのコンセプト画像](../art-style-exploration.md)は別の `docs/concepts/2026-10-23/` に保存しています。上の表とは異なり、Godot の実行画面ではありません。[比較ページ](../concepts/2026-10-23/index.html)はリポジトリーを取得後、ローカルブラウザーで開けます。
 
-2026-10-24の人設比較では[別版の四枚](screenshots/character-studies-v1/manifest.json)を追加しました。これはネイティブGodotで実行した**静的審稿台**であり、戦闘や専用spriteの完成画像ではありません。[記録](2026-10-24-character-studies.ja.md)と[六案の原PNG／オフライン頁](../concepts/2026-10-24-characters/index.html)を分けて参照してください。
+2026-10-24のキャラクター設定比較では四枚を撮影しました。ネイティブGodotで実行した静的比較画面であり、戦闘や専用spriteの完成画像ではありません。旧画像は中国語表示を含むため削除し、[記録](2026-10-24-character-studies.ja.md)と[六案の原PNG／オフライン頁](../concepts/2026-10-24-characters/index.html)を残しています。
 
 ## 次の記録で残すもの
 

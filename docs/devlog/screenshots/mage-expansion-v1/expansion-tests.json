@@ -1,4 +1,5 @@
 {
+  "localization_note": "旧中国語表示を日本語に翻訳。数値と状態は当時の記録のまま。",
 	"checks": 142,
 	"failures": 0,
 	"layouts": [
@@ -1290,7 +1291,7 @@
 						"damage": 60,
 						"hits": 3,
 						"kind": "flame_glyph",
-						"name": "焰爆法印",
+						"name": "爆炎の法印",
 						"raw_damage": 60,
 						"uid": 1
 					},
@@ -1299,7 +1300,7 @@
 						"damage": 30,
 						"hits": 6,
 						"kind": "spark",
-						"name": "微光术式",
+						"name": "微光の術式",
 						"raw_damage": 30,
 						"uid": 2
 					},
@@ -1308,7 +1309,7 @@
 						"damage": 50,
 						"hits": 10,
 						"kind": "tide_lances",
-						"name": "潮汐连枪",
+						"name": "潮汐の連槍",
 						"raw_damage": 50,
 						"uid": 6
 					}
@@ -1347,7 +1348,7 @@
 						"damage": 52,
 						"hits": 6,
 						"kind": "frost_bolt",
-						"name": "霜晶冰矢",
+						"name": "霜晶の氷矢",
 						"raw_damage": 54,
 						"uid": 1
 					},
@@ -1356,7 +1357,7 @@
 						"damage": 56,
 						"hits": 14,
 						"kind": "gale_blades",
-						"name": "回旋风刃",
+						"name": "旋回する風刃",
 						"raw_damage": 56,
 						"uid": 2
 					}
@@ -1395,7 +1396,7 @@
 						"damage": 92,
 						"hits": 4,
 						"kind": "steam_burst",
-						"name": "蒸汽爆破",
+						"name": "蒸気爆破",
 						"raw_damage": 96,
 						"uid": 5
 					},
@@ -1404,7 +1405,7 @@
 						"damage": 128,
 						"hits": 16,
 						"kind": "ember_tornado",
-						"name": "焰风涡旋",
+						"name": "炎風の渦",
 						"raw_damage": 128,
 						"uid": 7
 					}

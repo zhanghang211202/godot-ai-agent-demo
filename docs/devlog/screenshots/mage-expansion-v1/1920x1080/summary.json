@@ -1,4 +1,5 @@
 {
+  "localization_note": "旧中国語表示を日本語に翻訳。数値と状態は当時の記録のまま。",
   "type": "derived_runtime_capture_report",
   "source_report_sha256": "6fc6bc69e68a7100838e3c016d22e78924db80935c3184bed4cef99df844a1eb",
   "note": "Selected fields and published feedback samples from an actual native fixture; not the complete original report.",
@@ -18,7 +19,7 @@
       "operation": "discard",
       "result": {
         "event": "discard",
-        "message": "已舍弃；不会退款或返还元素。",
+        "message": "捨てました。返金や元素の返還はありません。",
         "ok": true
       },
       "uid": 1
@@ -27,7 +28,7 @@
       "operation": "discard",
       "result": {
         "event": "discard",
-        "message": "已舍弃；不会退款或返还元素。",
+        "message": "捨てました。返金や元素の返還はありません。",
         "ok": true
       },
       "uid": 2
@@ -41,7 +42,7 @@
         "cost": 0,
         "event": "acquire",
         "kind": "fire_mote",
-        "message": "已放置：火元素",
+        "message": "配置しました：火の元素",
         "ok": true,
         "source_id": "observatory_fire",
         "uid": 5
@@ -57,7 +58,7 @@
         "cost": 0,
         "event": "merge",
         "kind": "steam_burst",
-        "message": "合成完成：蒸汽爆破",
+        "message": "合成完了：蒸気爆破",
         "ok": true,
         "source_id": "observatory_water",
         "uid": 5
@@ -73,7 +74,7 @@
         "cost": 0,
         "event": "acquire",
         "kind": "fire_mote",
-        "message": "已放置：火元素",
+        "message": "配置しました：火の元素",
         "ok": true,
         "source_id": "observatory_fire",
         "uid": 7
@@ -89,7 +90,7 @@
         "cost": 0,
         "event": "merge",
         "kind": "ember_tornado",
-        "message": "合成完成：焰风涡旋",
+        "message": "合成完了：炎風の渦",
         "ok": true,
         "source_id": "observatory_wind",
         "uid": 7
@@ -126,7 +127,7 @@
         "damage": 92,
         "hits": 4,
         "kind": "steam_burst",
-        "name": "蒸汽爆破",
+        "name": "蒸気爆破",
         "raw_damage": 96,
         "uid": 5
       },
@@ -135,7 +136,7 @@
         "damage": 128,
         "hits": 16,
         "kind": "ember_tornado",
-        "name": "焰风涡旋",
+        "name": "炎風の渦",
         "raw_damage": 128,
         "uid": 7
       }

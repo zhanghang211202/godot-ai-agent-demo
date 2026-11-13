@@ -17,7 +17,7 @@
   "files": [
     {
       "id": "MA",
-      "title": "法师A · 月庭礼装",
+      "title": "魔法使いA · 月庭の礼装",
       "file": "mage-a-lunar.png",
       "bytes": 2597062,
       "sha256": "d218f740f0cb2656c1c76ff80e9bb02870e33a45c7a864a06b1cd21bcce94e32",
@@ -47,7 +47,7 @@
     },
     {
       "id": "MB",
-      "title": "法师B · 巡游短装",
+      "title": "魔法使いB · 巡遊の装い",
       "file": "mage-b-wayfarer.png",
       "bytes": 2386718,
       "sha256": "35a1e7d376d55bd68fb775da03eecf4b6f79909b96d40d46db4e76b602de03d9",
@@ -77,7 +77,7 @@
     },
     {
       "id": "MC",
-      "title": "法师C · 奥术战装",
+      "title": "魔法使いC · 奥術の戦装",
       "file": "mage-c-arcane.png",
       "bytes": 2466445,
       "sha256": "94be082fb840e9746e40fb0b7c723e57266b697097c907ba6341f0fe1f695db4",
@@ -107,7 +107,7 @@
     },
     {
       "id": "KA",
-      "title": "骑士A · 旌旗长枪",
+      "title": "騎士A · 旗と長槍",
       "file": "knight-a-banner.png",
       "bytes": 2239084,
       "sha256": "2e1a17e8436437e38b17165021ac7f703c802b945e5473358daf39e325705660",
@@ -137,7 +137,7 @@
     },
     {
       "id": "KB",
-      "title": "骑士B · 轻甲先锋",
+      "title": "騎士B · 軽装の先鋒",
       "file": "knight-b-vanguard.png",
       "bytes": 2231547,
       "sha256": "b67c9c26db45de9576bf0e96215ea051726b4c519cd0e13e2691b74225f6524d",
@@ -167,7 +167,7 @@
     },
     {
       "id": "KC",
-      "title": "骑士C · 遗物重刃",
+      "title": "騎士C · 遺物の大剣",
       "file": "knight-c-relic.png",
       "bytes": 2375056,
       "sha256": "ca475c3247d19c65e512cd9d72d8e332b3f9c6a71d6c260ea62e4a39ca2e0b7b",
