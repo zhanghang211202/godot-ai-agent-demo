@@ -2,7 +2,7 @@
   "tool": "built-in imagegen, transparent background enabled",
   "reference": "assets/art/mage-leg-revision-v1/characters/mage-cast.png",
   "assets": [
-    {"file": "characters/mage-swing.png", "width": 1122, "height": 1402, "sha256": "b4ef96e3cc13141abfff38fb24b986457fdaab0cdae9d8d9b1e0320848d3ef", "role": "Four separate staff-swing poses"},
+    {"file": "characters/mage-swing.png", "width": 1122, "height": 1402, "sha256": "b4ef96e3cc13141abfff38fb24b986457fdaab0cdae9d8f8d9b1e0320848d3ef", "role": "Four separate staff-swing poses"},
     {"file": "characters/mage-gesture.png", "width": 1122, "height": 1402, "sha256": "5f1b0ef57667b94fe300415287bb892c76f751cedb99ea29576d8a750ee04a69", "role": "Four separate open-hand spell poses"}
   ]
 }

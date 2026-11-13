@@ -9,7 +9,10 @@
 
 ## 記録
 
-- [2026-11-02：被弾の動きと三体の予行演習（最新）](2026-11-02-mage-rehearsal.ja.md)
+- [2026-11-13：公開前の整理](2026-11-13-repository-cleanup.ja.md)
+- [2026-11-13：日本語文書と画像の再確認](2026-11-13-japanese-image-audit.ja.md)
+- [2026-11-12：魔法使いの七つの姿勢](2026-11-12-mage-seven-poses.ja.md)
+- [2026-11-02：被弾の動きと三体の予行演習](2026-11-02-mage-rehearsal.ja.md)
 - [2026-11-02：ブログ内の画像表示を日本語 UI に揃える](2026-11-02-blog-images.ja.md)
 - [2026-11-02：ローカル Godot MCP の接続を検証](2026-11-02-mcp-connection.ja.md)
 - [2026-11-02：レシピ発見とゲーム画面の日本語化](2026-11-02-japanese-discovery.ja.md)

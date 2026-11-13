@@ -34,7 +34,7 @@ npm run godot:cli -- --help
 - エディタープラグイン：`addons/godot_mcp/`。
 - MCP サーバー：`.godot/mcp-server/`。
 - エディターのログ：`.tools/logs/editor.log`。
-- Codex の MCP 設定：`.codex/config.toml`。このプロジェクトはローカルの Codex で信頼済みプロジェクトとして登録しています。
+- Codex の MCP 設定：`.codex/config.toml`。実際の設定ファイルは Git に含めません。
 
 起動スクリプトは、まずターミナルの `GODOT_BIN` を使い、設定がない場合に Git 管理外のパスファイルを読みます。エディター付属の NuGet パッケージは `.tools/godot-nupkgs/` にコピーし、`NuGet.Config` から参照します。
 
